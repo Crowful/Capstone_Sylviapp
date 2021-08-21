@@ -203,7 +203,12 @@ class SettingsPage extends ConsumerWidget {
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, "/register");
                 },
-                child: Text('try registe'))
+                child: Text('try registe')),
+                 ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, "/register");
+                },
+                child: Text('test'))
           ],
         ),
       ),
