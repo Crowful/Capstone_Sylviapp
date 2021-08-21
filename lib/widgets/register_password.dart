@@ -17,7 +17,7 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
     bool _isVisible = false;
     bool _isPasswordEightCharacters = false;
     bool _hasPasswordOneNumber = false;
-
+    bool hello = false;
     onPasswordChanged(String password) {
       final numericRegex = RegExp(r'[0-9]');
 
