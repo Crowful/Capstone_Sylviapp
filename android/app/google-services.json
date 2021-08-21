@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "92670595275",
+    "project_id": "sylviapp-77c5e",
+    "storage_bucket": "sylviapp-77c5e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:92670595275:android:0675048b9c8ad27f308b4e",
+        "android_client_info": {
+          "package_name": "com.example.sylviapp_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "92670595275-7uiebmql9lkufq6psik633c88k13c3j9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdXXEyqdpj5zkEHEjZzfLe68g4frLDnJ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "92670595275-7uiebmql9lkufq6psik633c88k13c3j9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
