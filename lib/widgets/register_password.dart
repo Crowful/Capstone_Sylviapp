@@ -4,7 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 class PasswordRegPage extends StatefulWidget {
   final double height;
   final double width;
-  const PasswordRegPage({Key? key, required this.height, required this.width})
+  final Widget previousButton;
+  final Widget nextButton;
+  const PasswordRegPage(
+      {Key? key,
+      required this.height,
+      required this.width,
+      required this.previousButton,
+      required this.nextButton})
       : super(key: key);
 
   @override
