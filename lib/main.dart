@@ -40,7 +40,6 @@ class MyApp extends ConsumerWidget {
         "/settings": (_) => SettingsPage(),
         "/register": (_) => RegisterPage(),
         "/forgot_password": (_) => ForgotPasswordScreen(),
-        "/basicReg": (_) => BasicInfoPage()
       },
     );
   }

@@ -4,14 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 class PasswordRegPage extends StatefulWidget {
   final double height;
   final double width;
-  final Widget previousButton;
   final Widget nextButton;
+  final Widget previousButton;
   const PasswordRegPage(
       {Key? key,
       required this.height,
       required this.width,
-      required this.previousButton,
-      required this.nextButton})
+      required this.nextButton,
+      required this.previousButton})
       : super(key: key);
 
   @override
@@ -19,45 +19,56 @@ class PasswordRegPage extends StatefulWidget {
 }
 
 class _PasswordRegPageState extends State<PasswordRegPage> {
-      final TextEditingController _primaryPaswword = TextEditingController();
-    final TextEditingController _confirmPassword = TextEditingController();
+  final TextEditingController _primaryPaswword = TextEditingController();
+  final TextEditingController _confirmPassword = TextEditingController();
 
   bool _isVisible = false;
-    bool _isPasswordEightCharacters = false;
-    bool _hasPasswordOneNumber = false;
-    bool _isMatch = false;
-    bool _isVisibleCP = false;
+  bool _isPasswordEightCharacters = false;
+  bool _hasPasswordOneNumber = false;
+  bool _isMatch = false;
+  bool _isVisibleCP = false;
+  bool _overall = false;
 
-    onPasswordChanged(String password) {
-      final numericRegex = RegExp(r'[0-9]');
+  onValidate() {
+    setState(() {
+      _overall = false;
+      if (_isMatch == true &&
+          _hasPasswordOneNumber == true &&
+          _isPasswordEightCharacters == true) {
+        _overall = true;
+      }
+    });
+  }
 
-      setState(() {
-        _isPasswordEightCharacters = false;
-        if (password.length >= 8) _isPasswordEightCharacters = true;
+  onPasswordChanged(String password) {
+    final numericRegex = RegExp(r'[0-9]');
 
-        _hasPasswordOneNumber = false;
-        if (numericRegex.hasMatch(password)) _hasPasswordOneNumber = true;
-      });
-    }
+    setState(() {
+      _isPasswordEightCharacters = false;
+      if (password.length >= 8) {
+        _isPasswordEightCharacters = true;
+        onValidate();
+      }
+      _hasPasswordOneNumber = false;
+      if (numericRegex.hasMatch(password)) {
+        _hasPasswordOneNumber = true;
+        onValidate();
+      }
+    });
+  }
 
-    onConfirmPasswordChange(String password) {
-      setState(() {
-        _isMatch = false;
-        if (_confirmPassword.text == _primaryPaswword.text) {
-          _isMatch = true;
-        }
-      });
-    }
-
-
-
+  onConfirmPasswordChange(String password) {
+    setState(() {
+      _isMatch = false;
+      if (_confirmPassword.text == _primaryPaswword.text) {
+        _isMatch = true;
+        onValidate();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-
-
-  
-
     return Container(
       padding: EdgeInsets.all(18),
       height: widget.height,
@@ -235,26 +246,31 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
                     color: Colors.white,
                     size: 15,
                   ),
-                  
                 ),
               ),
-
               SizedBox(
                 width: 10,
               ),
               Text("Password Matched"),
- ],
- ),
-  SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  AbsorbPointer(
-                    absorbing:
-                        _hasPasswordOneNumber && _isPasswordEightCharacters && _isMatch
-                            ? true
-                            : false,
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            padding: EdgeInsets.all(5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                    child: Container(
+                        padding: EdgeInsets.all(5),
+                        height: 30,
+                        color: Colors.red[300],
+                        child: widget.previousButton)),
+                Expanded(
+                  child: AbsorbPointer(
+                    absorbing: _overall ? true : false,
                     child: AnimatedContainer(
                       padding: EdgeInsets.all(5),
                       duration: Duration(milliseconds: 500),
@@ -270,10 +286,10 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
                       ),
                     ),
                   ),
-                ],
-              ),
-           
-         
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

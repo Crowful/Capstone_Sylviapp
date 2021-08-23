@@ -11,13 +11,24 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final PageController registerPageController = PageController(initialPage: 0);
+  int currentPage = 0;
+  @override
+  void initState() {
+    super.initState();
+    currentPage = 0;
+    registerPageController.addListener(() {
+      setState(() {
+        currentPage = registerPageController.page!.toInt();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    int add = 0;
-    final PageController registerPageController =
-        PageController(initialPage: add);
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -36,52 +47,77 @@ class _RegisterPageState extends State<RegisterPage> {
             UserRegPage(
               height: height,
               width: width,
-              previousButton: Expanded(
-                child: InkWell(
-                    onTap: () {
-                      registerPageController.animateToPage(
-                          registerPageController.page!.toInt() - 1,
-                          duration: Duration(milliseconds: 1000),
-                          curve: Curves.fastOutSlowIn);
-                    },
-                    child: Text('Back')),
-              ),
-              nextButton: Expanded(
-                child: InkWell(
-                    onTap: () {
-                      registerPageController.animateToPage(
-                          registerPageController.page!.toInt() + 1,
-                          duration: Duration(milliseconds: 1000),
-                          curve: Curves.fastOutSlowIn);
-                    },
-                    child: Center(child: Text('Next'))),
-              ),
+              previousButton: InkWell(
+                  onTap: () {
+                    registerPageController.animateToPage(
+                        registerPageController.page!.toInt() - 1,
+                        duration: Duration(milliseconds: 1000),
+                        curve: Curves.fastOutSlowIn);
+                  },
+                  child: Text('Back')),
+              nextButton: InkWell(
+                  onTap: () {
+                    registerPageController.animateToPage(
+                        registerPageController.page!.toInt() + 1,
+                        duration: Duration(milliseconds: 1000),
+                        curve: Curves.fastOutSlowIn);
+                  },
+                  child: Center(child: Text('Next'))),
             ),
             PasswordRegPage(
               height: height,
               width: width,
-              previousButton: Expanded(
-                child: InkWell(
-                    onTap: () {
-                      registerPageController.animateToPage(
-                          registerPageController.page!.toInt() - 1,
-                          duration: Duration(milliseconds: 1000),
-                          curve: Curves.fastOutSlowIn);
-                    },
-                    child: Text('Back')),
-              ),
-              nextButton: Expanded(
-                child: InkWell(
-                    onTap: () {
-                      registerPageController.animateToPage(
-                          registerPageController.page!.toInt() + 1,
-                          duration: Duration(milliseconds: 1000),
-                          curve: Curves.fastOutSlowIn);
-                    },
-                    child: Center(child: Text('Next'))),
-              ),
+              previousButton: currentPage == 0
+                  ? SizedBox(
+                      width: 0,
+                    )
+                  : InkWell(
+                      onTap: () {
+                        print(currentPage);
+                        registerPageController.animateToPage(
+                            registerPageController.page!.toInt() - 1,
+                            duration: Duration(milliseconds: 1000),
+                            curve: Curves.fastOutSlowIn);
+                      },
+                      child: Center(child: Text('Go Back'))),
+              nextButton: InkWell(
+                  onTap: () {
+                    registerPageController.animateToPage(
+                        registerPageController.page!.toInt() + 1,
+                        duration: Duration(milliseconds: 1000),
+                        curve: Curves.fastOutSlowIn);
+                  },
+                  child: Center(child: Text('Next'))),
             ),
-            BasicInfoPage()
+            BasicInfoPage(
+              height: height,
+              width: width,
+              previousButton: currentPage == 0
+                  ? SizedBox(
+                      width: 0,
+                    )
+                  : InkWell(
+                      onTap: () {
+                        print(currentPage);
+                        registerPageController.animateToPage(
+                            registerPageController.page!.toInt() - 1,
+                            duration: Duration(milliseconds: 1000),
+                            curve: Curves.fastOutSlowIn);
+                      },
+                      child: Center(child: Text('Go Back'))),
+              nextButton: Row(
+                children: [
+                  InkWell(
+                      onTap: () {
+                        registerPageController.animateToPage(
+                            registerPageController.page!.toInt() + 1,
+                            duration: Duration(milliseconds: 1000),
+                            curve: Curves.fastOutSlowIn);
+                      },
+                      child: Center(child: Text('Next'))),
+                ],
+              ),
+            )
           ],
         ));
   }
