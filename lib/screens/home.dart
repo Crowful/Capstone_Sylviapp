@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, "/register");
+                  Navigator.pushNamed(context, "/register");
                 },
                 child: Text('Register')),
             ElevatedButton(
@@ -28,6 +28,11 @@ class _HomePageState extends State<HomePage> {
                   Navigator.pushNamed(context, "/settings");
                 },
                 child: Text('Settings')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/basicReg");
+                },
+                child: Text('bsic'))
           ],
         ),
       ),

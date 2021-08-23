@@ -5,19 +5,6 @@ import 'package:sylviapp_project/widgets/register_user_email.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key? key}) : super(key: key);
-
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _firstnameController = TextEditingController();
-  final TextEditingController _middlenameController = TextEditingController();
-  final TextEditingController _lastnameController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _contactnumberController =
-      TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmpasswordController =
-      TextEditingController();
-  final GlobalKey<FormState> _formRegister = GlobalKey<FormState>();
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
