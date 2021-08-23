@@ -10,25 +10,30 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   bool _isVisible = false;
-  bool _isPasswordEightCharacters = false;
+  bool _isValidEmail = false;
   bool _hasPasswordOneNumber = false;
 
-  onPasswordChanged(String password) {
-    final numericRegex = RegExp(r'[0-9]');
+  
 
+  onEmailChanged(String email) {
+    final charRegex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9]+@[a-zA-Z0-9]+[.]+[com]+");
     setState(() {
-      _isPasswordEightCharacters = false;
-      if (password.length >= 8) _isPasswordEightCharacters = true;
-
-      _hasPasswordOneNumber = false;
-      if (numericRegex.hasMatch(password)) _hasPasswordOneNumber = true;
+      _isValidEmail = false;
+      if (charRegex.hasMatch(email)) _isValidEmail = true;
     });
   }
+
+
   @override
   Widget build(BuildContext context) {
 
 
     return Scaffold(
+      appBar: AppBar(title:  Text(
+              'Forgot Password',
+              style:
+                  GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.w700),
+            ),),
       body: Container(
         padding: EdgeInsets.all(18),  
        
@@ -36,19 +41,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Forgot Password',
-              style:
-                  GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.w700),
-            ),
+           
             SizedBox(
               height: 0,
             ),
             Text(
-              'Enter your designated username for Sylviapp.',
+              'Enter your email and we will email you a form for your new password',
               style: GoogleFonts.openSans(
                   fontSize: 13,
-                  color: Colors.black.withOpacity(0.5),
                   fontWeight: FontWeight.w600),
             ),
             SizedBox(
@@ -56,25 +56,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
             Container(
               child: TextField(
-                onChanged: (password) => onPasswordChanged(password),
-                obscureText: !_isVisible,
+                onChanged: (email) => onEmailChanged(email),
                 decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isVisible = !_isVisible;
-                      });
-                    },
-                    icon: _isVisible
-                        ? Icon(
-                            Icons.visibility,
-                            color: Colors.black,
-                          )
-                        : Icon(
-                            Icons.visibility_off,
-                            color: Colors.grey,
-                          ),
-                  ),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(color: Colors.black)),
@@ -97,10 +80,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
-                      color: _isPasswordEightCharacters
+                      color: _isValidEmail
                           ? Colors.green
                           : Colors.transparent,
-                      border: _isPasswordEightCharacters
+                      border: _isValidEmail
                           ? Border.all(color: Colors.transparent)
                           : Border.all(color: Colors.grey.withOpacity(0.5)),
                       borderRadius: BorderRadius.circular(50)),
@@ -115,62 +98,35 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 SizedBox(
                   width: 10,
                 ),
-                Text("Contains at least 8 characters")
+                Text("Valid Email")
               ],
             ),
             SizedBox(
               height: 10,
             ),
-            Row(
-              children: [
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 500),
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                      color: _hasPasswordOneNumber
-                          ? Colors.green
-                          : Colors.transparent,
-                      border: _hasPasswordOneNumber
-                          ? Border.all(color: Colors.transparent)
-                          : Border.all(color: Colors.grey.withOpacity(0.5)),
-                      borderRadius: BorderRadius.circular(50)),
-                  child: Center(
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size: 15,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("Contains at least 1 number"),
-                SizedBox(
-                  height: 20,
-                ),
-              ]),
                 Row(
                   children: [
                     AbsorbPointer(
                       absorbing:
-                          _hasPasswordOneNumber && _isPasswordEightCharacters
+                          _isValidEmail
                               ? false
                               : true,
-                      child: AnimatedContainer(
-                        padding: EdgeInsets.all(5),
-                        duration: Duration(milliseconds: 500),
-                        height: 30,
-                        curve: Curves.ease,
-                        child: ElevatedButton(onPressed: (){
-                          print("button pressed");
-                        }, child: Text("Request for new password"),),
-                        decoration: BoxDecoration(
-                          color:
-                              _hasPasswordOneNumber && _isPasswordEightCharacters
-                                  ? Colors.green
-                                  : Colors.grey,
+                      child: GestureDetector(
+                        onTap: (){
+                          print("request new pass");
+                        },
+                        child: AnimatedContainer(
+                          padding: EdgeInsets.all(5),
+                          duration: Duration(milliseconds: 500),
+                          height: 30,
+                          curve: Curves.ease,
+                          child: Text("Request for new Password"),
+                          decoration: BoxDecoration(
+                            color:
+                                _isValidEmail
+                                    ? Colors.green
+                                    : Colors.grey,
+                          ),
                         ),
                       ),
                     ),
