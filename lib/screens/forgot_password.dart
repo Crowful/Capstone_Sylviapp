@@ -30,7 +30,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.all(18),
+        padding: EdgeInsets.all(18),  
        
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
