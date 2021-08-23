@@ -9,6 +9,7 @@ import 'package:sylviapp_project/screens/home.dart';
 import 'package:sylviapp_project/screens/register.dart';
 import 'package:sylviapp_project/screens/settings.dart';
 import 'package:sylviapp_project/translations/codegen_loader.g.dart';
+import 'package:sylviapp_project/widgets/register_basic_info.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +40,7 @@ class MyApp extends ConsumerWidget {
         "/settings": (_) => SettingsPage(),
         "/register": (_) => RegisterPage(),
         "/forgot_password": (_) => ForgotPasswordScreen(),
+        "/basicReg": (_) => BasicInfoPage()
       },
     );
   }
