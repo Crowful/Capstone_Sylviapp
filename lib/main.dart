@@ -32,7 +32,7 @@ class MyApp extends ConsumerWidget {
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,
       theme: isDark.darkTheme == false ? light : dark,
-      initialRoute: "/forgot_password",
+      initialRoute: "/",
       routes: {
         "/": (_) => SettingsPage(),
         "/register": (_) => RegisterPage(),
