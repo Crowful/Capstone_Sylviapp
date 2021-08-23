@@ -18,11 +18,15 @@ class BasicInfoPage extends StatefulWidget {
   _BasicInfoPageState createState() => _BasicInfoPageState();
 }
 
+enum Gender { male, female }
+
 class _BasicInfoPageState extends State<BasicInfoPage> {
   bool overall = false;
 
   @override
   Widget build(BuildContext context) {
+    Gender? _gender = Gender.male;
+
     return Container(
       padding: EdgeInsets.all(18),
       height: widget.height,
@@ -47,6 +51,9 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
                   color: Colors.black.withOpacity(0.5),
                   fontWeight: FontWeight.w600),
             ),
+            SizedBox(
+              height: 15,
+            ),
             Container(
               child: TextField(
                 decoration: InputDecoration(
@@ -65,6 +72,79 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
                       EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 ),
               ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Card(
+              elevation: 0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Gender"),
+                  RadioListTile<Gender>(
+                      title: Text("Male"),
+                      value: Gender.male,
+                      groupValue: _gender,
+                      onChanged: (Gender? value) {
+                        setState(() {
+                          _gender = value;
+                        });
+                      }),
+                  RadioListTile<Gender>(
+                      title: Text("Female"),
+                      value: Gender.female,
+                      groupValue: _gender,
+                      onChanged: (Gender? value) {
+                        setState(() {
+                          _gender = value;
+                        });
+                      }),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                prefixIcon: IconButton(
+                  icon: Icon(Icons.location_city),
+                  onPressed: null,
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.black)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.black)),
+                hintText: "Address",
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                prefixIcon: IconButton(
+                  icon: Icon(Icons.phone),
+                  onPressed: null,
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.black)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.black)),
+                hintText: "Contact Number",
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              ),
+            ),
+            SizedBox(
+              height: 15,
             ),
             Row(
               children: [

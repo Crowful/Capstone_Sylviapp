@@ -105,18 +105,14 @@ class _RegisterPageState extends State<RegisterPage> {
                             curve: Curves.fastOutSlowIn);
                       },
                       child: Center(child: Text('Go Back'))),
-              nextButton: Row(
-                children: [
-                  InkWell(
-                      onTap: () {
-                        registerPageController.animateToPage(
-                            registerPageController.page!.toInt() + 1,
-                            duration: Duration(milliseconds: 1000),
-                            curve: Curves.fastOutSlowIn);
-                      },
-                      child: Center(child: Text('Next'))),
-                ],
-              ),
+              nextButton: InkWell(
+                  onTap: () {
+                    registerPageController.animateToPage(
+                        registerPageController.page!.toInt() + 1,
+                        duration: Duration(milliseconds: 1000),
+                        curve: Curves.fastOutSlowIn);
+                  },
+                  child: Center(child: Text('Next'))),
             )
           ],
         ));

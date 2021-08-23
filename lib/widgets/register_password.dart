@@ -257,38 +257,35 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
           SizedBox(
             height: 10,
           ),
-          Container(
-            padding: EdgeInsets.all(5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                    child: Container(
-                        padding: EdgeInsets.all(5),
-                        height: 30,
-                        color: Colors.red[300],
-                        child: widget.previousButton)),
-                Expanded(
-                  child: AbsorbPointer(
-                    absorbing: _overall ? true : false,
-                    child: AnimatedContainer(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                  child: Container(
                       padding: EdgeInsets.all(5),
-                      duration: Duration(milliseconds: 500),
                       height: 30,
-                      curve: Curves.ease,
-                      child: widget.nextButton,
-                      decoration: BoxDecoration(
-                        color: _hasPasswordOneNumber &&
-                                _isPasswordEightCharacters &&
-                                _isMatch
-                            ? Colors.green
-                            : Colors.grey,
-                      ),
+                      color: Colors.red[300],
+                      child: widget.previousButton)),
+              Expanded(
+                child: AbsorbPointer(
+                  absorbing: _overall ? true : false,
+                  child: AnimatedContainer(
+                    padding: EdgeInsets.all(5),
+                    duration: Duration(milliseconds: 500),
+                    height: 30,
+                    curve: Curves.ease,
+                    child: widget.nextButton,
+                    decoration: BoxDecoration(
+                      color: _hasPasswordOneNumber &&
+                              _isPasswordEightCharacters &&
+                              _isMatch
+                          ? Colors.green
+                          : Colors.grey,
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

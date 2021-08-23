@@ -193,18 +193,20 @@ class UserRegPageState extends State<UserRegPage> {
           ),
           Row(
             children: [
-              AbsorbPointer(
-                absorbing: overall ? false : true,
-                child: AnimatedContainer(
-                  padding: EdgeInsets.all(5),
-                  duration: Duration(milliseconds: 500),
-                  height: 30,
-                  curve: Curves.ease,
-                  child: widget.nextButton,
-                  decoration: BoxDecoration(
-                    color: _isUserFourCharacters && _isValidEmail
-                        ? Colors.green
-                        : Colors.grey,
+              Expanded(
+                child: AbsorbPointer(
+                  absorbing: overall ? false : true,
+                  child: AnimatedContainer(
+                    padding: EdgeInsets.all(5),
+                    duration: Duration(milliseconds: 500),
+                    height: 30,
+                    curve: Curves.ease,
+                    child: widget.nextButton,
+                    decoration: BoxDecoration(
+                      color: _isUserFourCharacters && _isValidEmail
+                          ? Colors.green
+                          : Colors.grey,
+                    ),
                   ),
                 ),
               ),
