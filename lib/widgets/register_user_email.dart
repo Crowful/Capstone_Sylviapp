@@ -26,17 +26,29 @@ class UserRegPage extends StatefulWidget {
 }
 
 class UserRegPageState extends State<UserRegPage> {
-  bool _isVisible = false;
+  final TextEditingController _usernameController = TextEditingController();
+
+  final TextEditingController _emailController = TextEditingController();
   bool _isUserFourCharacters = false;
   bool _isValidEmail = false;
   Color active = Colors.grey;
   bool overall = false;
+
+  onValidate() {
+    setState(() {
+      overall = false;
+      if (_isValidEmail == true && _isUserFourCharacters == true) {
+        overall = true;
+      }
+    });
+  }
 
   onUserChanged(String user) {
     setState(() {
       _isUserFourCharacters = false;
       if (user.length >= 4) {
         _isUserFourCharacters = true;
+        onValidate();
       }
     });
   }
@@ -46,8 +58,8 @@ class UserRegPageState extends State<UserRegPage> {
     setState(() {
       _isValidEmail = false;
       if (charRegex.hasMatch(email)) _isValidEmail = true;
+      onValidate();
     });
-    charRegex.hasMatch(email);
   }
 
   @override
@@ -81,6 +93,7 @@ class UserRegPageState extends State<UserRegPage> {
           ),
           Container(
             child: TextField(
+              controller: _usernameController,
               onChanged: (user) => onUserChanged(user),
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -100,6 +113,7 @@ class UserRegPageState extends State<UserRegPage> {
           ),
           Container(
             child: TextField(
+              controller: _emailController,
               onChanged: (email) => onEmailChanged(email),
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -180,8 +194,7 @@ class UserRegPageState extends State<UserRegPage> {
           Row(
             children: [
               AbsorbPointer(
-                absorbing:
-                    _isUserFourCharacters && _isValidEmail ? false : true,
+                absorbing: overall ? false : true,
                 child: AnimatedContainer(
                   padding: EdgeInsets.all(5),
                   duration: Duration(milliseconds: 500),
