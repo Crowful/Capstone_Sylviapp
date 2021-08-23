@@ -23,8 +23,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
-
   @override
   Widget build(BuildContext context) {
     int add = 0;
@@ -71,7 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Center(child: Text('Next'))),
               ),
             ),
-           PasswordRegPage(
+            PasswordRegPage(
               height: height,
               width: width,
               previousButton: Expanded(

@@ -4,19 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 class PasswordRegPage extends StatefulWidget {
   final double height;
   final double width;
-  final Widget nextButton;
   final Widget previousButton;
-  final Color? disableButton;
-  final Color? activeButton;
-
+  final Widget nextButton;
   const PasswordRegPage(
       {Key? key,
       required this.height,
       required this.width,
-      required this.nextButton,
-      this.disableButton,
-      this.activeButton,
-      required this.previousButton})
+      required this.previousButton,
+      required this.nextButton})
       : super(key: key);
 
   @override
@@ -24,47 +19,35 @@ class PasswordRegPage extends StatefulWidget {
 }
 
 class _PasswordRegPageState extends State<PasswordRegPage> {
-  bool _isVisible = false;
-  bool _isVisibleCP = false;
-  bool _isPasswordEightCharacters = false;
-  bool _hasPasswordOneNumber = false;
-  bool _isMatch = false;
-
-  TextEditingController _primaryPaswword = TextEditingController();
-  TextEditingController _confirmPassword = TextEditingController();
-
-
-  onPasswordChanged(String password) {
-    final numericRegex = RegExp(r'[0-9]');
-
-    setState(() {
-      _isPasswordEightCharacters = false;
-      if (password.length >= 8) _isPasswordEightCharacters = true;
-
-      _hasPasswordOneNumber = false;
-      if (numericRegex.hasMatch(password)) _hasPasswordOneNumber = true;
-
-
-      
-    });
-  }
-
- onConfirmPasswordChange(String password) {
-    final numericRegex = RegExp(r'[0-9]');
-
-    setState(() {
-
-      _isMatch = false;
-      if(_confirmPassword.text == _primaryPaswword.text) _isMatch = true;
-      
-    });
-  }
-
-
-
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _primaryPaswword = TextEditingController();
+    final TextEditingController _confirmPassword = TextEditingController();
+    bool _isVisible = false;
+    bool _isPasswordEightCharacters = false;
+    bool _hasPasswordOneNumber = false;
+    bool _isMatch = false;
 
+    onPasswordChanged(String password) {
+      final numericRegex = RegExp(r'[0-9]');
+
+      setState(() {
+        _isPasswordEightCharacters = false;
+        if (password.length >= 8) _isPasswordEightCharacters = true;
+
+        _hasPasswordOneNumber = false;
+        if (numericRegex.hasMatch(password)) _hasPasswordOneNumber = true;
+      });
+    }
+
+    onConfirmPasswordChange(String password) {
+      setState(() {
+        _isMatch = false;
+        if (_confirmPassword.text == _primaryPaswword.text) {
+          _isMatch = true;
+        }
+      });
+    }
 
     return Container(
       padding: EdgeInsets.all(18),
@@ -129,7 +112,7 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
           SizedBox(
             height: 30,
           ),
-           Container(
+          Container(
             child: TextField(
               controller: _confirmPassword,
               onChanged: (password) => onConfirmPasswordChange(password),
@@ -163,9 +146,9 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
               ),
             ),
           ),
-            SizedBox(
-                height: 10,
-              ),
+          SizedBox(
+            height: 10,
+          ),
           Row(
             children: [
               AnimatedContainer(
@@ -197,6 +180,34 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
           SizedBox(
             height: 10,
           ),
+          Row(children: [
+            AnimatedContainer(
+              duration: Duration(milliseconds: 500),
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                  color:
+                      _hasPasswordOneNumber ? Colors.green : Colors.transparent,
+                  border: _hasPasswordOneNumber
+                      ? Border.all(color: Colors.transparent)
+                      : Border.all(color: Colors.grey.withOpacity(0.5)),
+                  borderRadius: BorderRadius.circular(50)),
+              child: Center(
+                child: Icon(
+                  Icons.check,
+                  color: Colors.white,
+                  size: 15,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text("Contains at least 1 number"),
+          ]),
+          SizedBox(
+            height: 10,
+          ),
           Row(
             children: [
               AnimatedContainer(
@@ -204,40 +215,7 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
                 width: 20,
                 height: 20,
                 decoration: BoxDecoration(
-                    color: _hasPasswordOneNumber
-                        ? Colors.green
-                        : Colors.transparent,
-                    border: _hasPasswordOneNumber
-                        ? Border.all(color: Colors.transparent)
-                        : Border.all(color: Colors.grey.withOpacity(0.5)),
-                    borderRadius: BorderRadius.circular(50)),
-                child: Center(
-                  child: Icon(
-                    Icons.check,
-                    color: Colors.white,
-                    size: 15,
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text("Contains at least 1 number"),
-            
-            ]),
-              SizedBox(
-                height: 10,
-              ),
-            Row(
-            children: [
-              AnimatedContainer(
-                duration: Duration(milliseconds: 500),
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                    color: _isMatch
-                        ? Colors.green
-                        : Colors.transparent,
+                    color: _isMatch ? Colors.green : Colors.transparent,
                     border: _isMatch
                         ? Border.all(color: Colors.transparent)
                         : Border.all(color: Colors.grey.withOpacity(0.5)),
@@ -253,37 +231,32 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
               SizedBox(
                 width: 10,
               ),
-              Text("Password  matched"),
-            
-            ]),
-             SizedBox(
-                height: 20,
-              ),
               Row(
                 children: [
                   AbsorbPointer(
                     absorbing:
-                        _hasPasswordOneNumber && _isPasswordEightCharacters && _isMatch
-                            ? false
-                            : true,
+                        _hasPasswordOneNumber && _isPasswordEightCharacters
+                            ? true
+                            : false,
                     child: AnimatedContainer(
                       padding: EdgeInsets.all(5),
                       duration: Duration(milliseconds: 500),
                       height: 30,
                       curve: Curves.ease,
-                      child: widget.nextButton,
                       decoration: BoxDecoration(
-                        color:
-                            _hasPasswordOneNumber && _isPasswordEightCharacters && _isMatch
-                                ? Colors.green
-                                : Colors.grey,
+                        color: _hasPasswordOneNumber &&
+                                _isPasswordEightCharacters &&
+                                _isMatch
+                            ? Colors.green
+                            : Colors.grey,
                       ),
                     ),
                   ),
                 ],
               ),
             ],
-         
+          ),
+        ],
       ),
     );
   }

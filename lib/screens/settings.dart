@@ -205,8 +205,7 @@ class SettingsPage extends ConsumerWidget {
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, "/register");
                 },
-                child: Text('try register')),
-             
+                child: Text('try registe')),
           ],
         ),
       ),
