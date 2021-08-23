@@ -12,18 +12,57 @@ class LoginScreen extends StatelessWidget {
       key: _formLogin,
       child: Column(
         children: [
-          Text("Email"),
-          TextFormField(
-            controller: _etEmailController,
-          ),
-          Text("Password"),
-          TextFormField(
+        
+        Container(
+                margin: EdgeInsets.fromLTRB(20, 150, 20, 0),
+          child:Text("Login Now")),
+
+          Container(
+            margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: TextField(
+                controller: _etEmailController,
+                onChanged: (email) => {},
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.black)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.black)),
+                  hintText: "Email",
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                ),
+              ),
+            ),
+
+
+SizedBox(height: 20),
+
+             Container(
+               margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: TextField(
             controller: _etPasswordController,
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            child: Text("Login"),
-          )
+                onChanged: (email) => {},
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.black)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.black)),
+                  hintText: "Password",
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                ),
+              ),
+            ),
+
+            SizedBox(height: 20),
+
+            ElevatedButton(onPressed:(){
+              print("Login");
+            } ,child: Text("Login"),)
         ],
       ),
     ));

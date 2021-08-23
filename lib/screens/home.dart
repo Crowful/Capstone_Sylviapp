@@ -32,7 +32,17 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.pushNamed(context, "/basicReg");
                 },
-                child: Text('bsic'))
+                child: Text('bsic')),
+                   ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/forgot_password");
+                },
+                child: Text('Forgotpass')),
+                  ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/login");
+                },
+                child: Text('login screen'))
           ],
         ),
       ),
