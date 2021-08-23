@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sylviapp_project/widgets/register_basic_info.dart';
 import 'package:sylviapp_project/widgets/register_password.dart';
 import 'package:sylviapp_project/widgets/register_user_email.dart';
 
@@ -79,7 +80,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     },
                     child: Center(child: Text('Next'))),
               ),
-            )
+            ),
+            BasicInfoPage()
           ],
         ));
   }

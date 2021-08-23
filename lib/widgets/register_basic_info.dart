@@ -11,27 +11,25 @@ class BasicInfoPage extends StatefulWidget {
 class _BasicInfoPageState extends State<BasicInfoPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Text(
-              'Set up your account',
-              style: GoogleFonts.openSans(
-                  fontSize: 20, fontWeight: FontWeight.w700),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              'Enter your username and email to identify yourself',
-              style: GoogleFonts.openSans(
-                  fontSize: 13,
-                  color: Colors.black.withOpacity(0.5),
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Text(
+            'Set up your account',
+            style:
+                GoogleFonts.openSans(fontSize: 20, fontWeight: FontWeight.w700),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            'Enter your username and email to identify yourself',
+            style: GoogleFonts.openSans(
+                fontSize: 13,
+                color: Colors.black.withOpacity(0.5),
+                fontWeight: FontWeight.w600),
+          ),
+        ],
       ),
     );
   }
