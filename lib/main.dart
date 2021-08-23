@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sylviapp_project/config/theme_config.dart';
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/screens/forgot_password.dart';
 import 'package:sylviapp_project/screens/register.dart';
 import 'package:sylviapp_project/screens/settings.dart';
 import 'package:sylviapp_project/translations/codegen_loader.g.dart';
@@ -31,10 +32,12 @@ class MyApp extends ConsumerWidget {
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,
       theme: isDark.darkTheme == false ? light : dark,
-      initialRoute: "/",
+      initialRoute: "/forgot_password",
       routes: {
         "/": (_) => SettingsPage(),
-        "/register": (_) => new RegisterPage()
+        "/register": (_) => RegisterPage(),
+        "/forgot_password": (_) => ForgotPasswordScreen(),
+        
       },
     );
   }
