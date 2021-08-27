@@ -86,7 +86,7 @@ class UserRegPageState extends State<UserRegPage> {
               style: GoogleFonts.openSans(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xff63FF7D)),
+                  color: Color(0xff403d55)),
             ),
             SizedBox(
               height: 5,
@@ -111,7 +111,7 @@ class UserRegPageState extends State<UserRegPage> {
                       borderSide: BorderSide(color: Colors.black12)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(color: Colors.black87)),
+                      borderSide: BorderSide(color: Color(0xff403d55))),
                   hintText: "Enter your Username",
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 20, vertical: 0),
@@ -119,27 +119,7 @@ class UserRegPageState extends State<UserRegPage> {
               ),
             ),
             SizedBox(
-              height: 20,
-            ),
-            Container(
-              child: TextField(
-                controller: _emailController,
-                onChanged: (email) => onEmailChanged(email),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(color: Colors.black12)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(color: Colors.black87)),
-                  hintText: "Enter your Email",
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
+              height: 10,
             ),
             Row(
               children: [
@@ -149,7 +129,7 @@ class UserRegPageState extends State<UserRegPage> {
                   height: 20,
                   decoration: BoxDecoration(
                       color: _isUserFourCharacters
-                          ? Colors.green
+                          ? Color(0xff63FFA4)
                           : Colors.transparent,
                       border: _isUserFourCharacters
                           ? Border.all(color: Colors.transparent)
@@ -170,6 +150,27 @@ class UserRegPageState extends State<UserRegPage> {
               ],
             ),
             SizedBox(
+              height: 20,
+            ),
+            Container(
+              child: TextField(
+                controller: _emailController,
+                onChanged: (email) => onEmailChanged(email),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(color: Colors.black12)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(color: Color(0xff403d55))),
+                  hintText: "Enter your Email",
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                ),
+              ),
+            ),
+
+            SizedBox(
               height: 10,
             ),
             Row(
@@ -179,7 +180,9 @@ class UserRegPageState extends State<UserRegPage> {
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
-                      color: _isValidEmail ? Colors.green : Colors.transparent,
+                      color: _isValidEmail
+                          ? Color(0xff63FFA4)
+                          : Colors.transparent,
                       border: _isValidEmail
                           ? Border.all(color: Colors.transparent)
                           : Border.all(color: Colors.grey.withOpacity(0.5)),
@@ -214,7 +217,7 @@ class UserRegPageState extends State<UserRegPage> {
                       child: widget.nextButton,
                       decoration: BoxDecoration(
                         color: _isUserFourCharacters && _isValidEmail
-                            ? Colors.green
+                            ? Color(0xff63FFBD)
                             : Colors.grey,
                       ),
                     ),

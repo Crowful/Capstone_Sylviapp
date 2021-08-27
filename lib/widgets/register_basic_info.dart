@@ -37,9 +37,11 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
+                height: 150,
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('register1.png'),
+                        image: AssetImage('assets/images/register1.png'),
                         fit: BoxFit.contain))),
             Text(
               'Set up your account',
@@ -50,7 +52,7 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
               height: 5,
             ),
             Text(
-              'Enter your username and email to identify yourself',
+              'Fill-in the basic information that is needed for using our beloved application Sylviapp!',
               style: GoogleFonts.openSans(
                   fontSize: 13,
                   color: Colors.black.withOpacity(0.5),
