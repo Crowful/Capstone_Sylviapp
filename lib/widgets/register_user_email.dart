@@ -68,151 +68,162 @@ class UserRegPageState extends State<UserRegPage> {
       padding: EdgeInsets.all(18),
       height: widget.height,
       width: widget.width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          //   ElevatedButton(onPressed: ()=> context.of(themingProvider) , child: Text()),
-          Text(
-            'Set up your account',
-            style:
-                GoogleFonts.openSans(fontSize: 20, fontWeight: FontWeight.w700),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Text(
-            'Enter your username and email to identify yourself',
-            style: GoogleFonts.openSans(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                height: 200,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/images/register3.png"),
+                        fit: BoxFit.contain))),
+            //   ElevatedButton(onPressed: ()=> context.of(themingProvider) , child: Text()),
+            Text(
+              'Set up your account',
+              style: GoogleFonts.openSans(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xff63FF7D)),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              'Enter your username and e-mail that you will be using in our beloved application Sylviapp!',
+              style: GoogleFonts.openSans(
                 fontSize: 13,
-                color: Colors.black.withOpacity(0.5),
-                fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Container(
-            child: TextField(
-              controller: _usernameController,
-              onChanged: (user) => onUserChanged(user),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(color: Colors.black12)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(color: Colors.black87)),
-                hintText: "Enter your Username",
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                color: Colors.black.withOpacity(0.6),
               ),
             ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-            child: TextField(
-              controller: _emailController,
-              onChanged: (email) => onEmailChanged(email),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(color: Colors.black12)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(color: Colors.black87)),
-                hintText: "Enter your Email",
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              child: TextField(
+                controller: _usernameController,
+                onChanged: (user) => onUserChanged(user),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(color: Colors.black12)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(color: Colors.black87)),
+                  hintText: "Enter your Username",
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Row(
-            children: [
-              AnimatedContainer(
-                duration: Duration(milliseconds: 500),
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                    color: _isUserFourCharacters
-                        ? Colors.green
-                        : Colors.transparent,
-                    border: _isUserFourCharacters
-                        ? Border.all(color: Colors.transparent)
-                        : Border.all(color: Colors.grey.withOpacity(0.5)),
-                    borderRadius: BorderRadius.circular(50)),
-                child: Center(
-                  child: Icon(
-                    Icons.check,
-                    color: Colors.white,
-                    size: 15,
-                  ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              child: TextField(
+                controller: _emailController,
+                onChanged: (email) => onEmailChanged(email),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(color: Colors.black12)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(color: Colors.black87)),
+                  hintText: "Enter your Email",
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                 ),
               ),
-              SizedBox(
-                width: 10,
-              ),
-              Text("Contains at least 4 characters")
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              AnimatedContainer(
-                duration: Duration(milliseconds: 500),
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                    color: _isValidEmail ? Colors.green : Colors.transparent,
-                    border: _isValidEmail
-                        ? Border.all(color: Colors.transparent)
-                        : Border.all(color: Colors.grey.withOpacity(0.5)),
-                    borderRadius: BorderRadius.circular(50)),
-                child: Center(
-                  child: Icon(
-                    Icons.check,
-                    color: Colors.white,
-                    size: 15,
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text("Valid Email")
-            ],
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: AbsorbPointer(
-                  absorbing: overall ? false : true,
-                  child: AnimatedContainer(
-                    padding: EdgeInsets.all(5),
-                    duration: Duration(milliseconds: 500),
-                    height: 30,
-                    curve: Curves.ease,
-                    child: widget.nextButton,
-                    decoration: BoxDecoration(
-                      color: _isUserFourCharacters && _isValidEmail
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                      color: _isUserFourCharacters
                           ? Colors.green
-                          : Colors.grey,
+                          : Colors.transparent,
+                      border: _isUserFourCharacters
+                          ? Border.all(color: Colors.transparent)
+                          : Border.all(color: Colors.grey.withOpacity(0.5)),
+                      borderRadius: BorderRadius.circular(50)),
+                  child: Center(
+                    child: Icon(
+                      Icons.check,
+                      color: Colors.white,
+                      size: 15,
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                SizedBox(
+                  width: 10,
+                ),
+                Text("Contains at least 4 characters")
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                      color: _isValidEmail ? Colors.green : Colors.transparent,
+                      border: _isValidEmail
+                          ? Border.all(color: Colors.transparent)
+                          : Border.all(color: Colors.grey.withOpacity(0.5)),
+                      borderRadius: BorderRadius.circular(50)),
+                  child: Center(
+                    child: Icon(
+                      Icons.check,
+                      color: Colors.white,
+                      size: 15,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text("Valid Email")
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: AbsorbPointer(
+                    absorbing: overall ? false : true,
+                    child: AnimatedContainer(
+                      padding: EdgeInsets.all(5),
+                      duration: Duration(milliseconds: 500),
+                      height: 30,
+                      curve: Curves.ease,
+                      child: widget.nextButton,
+                      decoration: BoxDecoration(
+                        color: _isUserFourCharacters && _isValidEmail
+                            ? Colors.green
+                            : Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

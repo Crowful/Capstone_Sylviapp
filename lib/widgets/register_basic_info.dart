@@ -36,6 +36,11 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('register1.png'),
+                        fit: BoxFit.contain))),
             Text(
               'Set up your account',
               style: GoogleFonts.openSans(
