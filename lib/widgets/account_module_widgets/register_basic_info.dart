@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+enum Gender { male, female }
+
 class BasicInfoPage extends StatefulWidget {
   final double height;
   final double width;
@@ -18,15 +20,63 @@ class BasicInfoPage extends StatefulWidget {
   _BasicInfoPageState createState() => _BasicInfoPageState();
 }
 
-enum Gender { male, female }
-
 class _BasicInfoPageState extends State<BasicInfoPage> {
-  bool overall = false;
+  final _fullNameController = TextEditingController();
 
+  final _addressController = TextEditingController();
+
+  final _contactController = TextEditingController();
+  bool _fullNameValidate = false;
+  bool _genderValidate = false;
+  bool _addressValidate = false;
+  bool _contactNumberValidate = false;
+  bool _overall = false;
+
+  onValidate() {
+    setState(() {
+      _overall = false;
+      if (_fullNameValidate == true &&
+          _genderValidate == true &&
+          _addressValidate == true &&
+          _contactNumberValidate == true) {
+        _overall = true;
+      }
+    });
+  }
+
+  onFullNameChanged(String name) {
+    setState(() {
+      _fullNameValidate = false;
+      if (name.length >= 4) {
+        _fullNameValidate = true;
+        onValidate();
+      }
+    });
+  }
+
+  onAddressChanged(String address) {
+    setState(() {
+      _addressValidate = false;
+      if (address.length >= 4) {
+        _addressValidate = true;
+        onValidate();
+      }
+    });
+  }
+
+  onContactChanged(int? number) {
+    setState(() {
+      _contactNumberValidate = false;
+      if (number! >= 11) {
+        _contactNumberValidate = true;
+        onValidate();
+      }
+    });
+  }
+
+  Gender? _gender = Gender.male;
   @override
   Widget build(BuildContext context) {
-    Gender? _gender = Gender.male;
-
     return Container(
       padding: EdgeInsets.all(18),
       height: widget.height,
@@ -63,6 +113,8 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
             ),
             Container(
               child: TextField(
+                controller: _fullNameController,
+                onChanged: (fullname) => onFullNameChanged(fullname),
                 decoration: InputDecoration(
                   prefixIcon: IconButton(
                     icon: Icon(Icons.person),
@@ -134,6 +186,8 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
               height: 15,
             ),
             TextField(
+              controller: _contactController,
+              onChanged: (contact) => onContactChanged(int.tryParse(contact)),
               decoration: InputDecoration(
                 prefixIcon: IconButton(
                   icon: Icon(Icons.phone),
@@ -162,7 +216,7 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
                         child: widget.previousButton)),
                 Expanded(
                   child: AbsorbPointer(
-                    absorbing: overall ? false : true,
+                    absorbing: _overall ? false : true,
                     child: AnimatedContainer(
                       padding: EdgeInsets.all(5),
                       duration: Duration(milliseconds: 500),
