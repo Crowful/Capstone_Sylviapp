@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/onboarding_widgets/first_onboarding.dart';
+import 'package:sylviapp_project/widgets/account_module_widgets/onboarding_widgets/second_onboarding.dart';
+import 'package:sylviapp_project/widgets/account_module_widgets/onboarding_widgets/third_onboarding.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -26,7 +28,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       height: 8.0,
       width: isActive ? 24.0 : 16.0,
       decoration: BoxDecoration(
-        color: isActive ? Colors.white : Color(0xFF7B51D3),
+        color:
+            isActive ? Color(0xff403d55) : Color(0xff403d55).withOpacity(0.5),
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
     );
@@ -41,7 +44,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       body: Container(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 40.0),
+          padding: EdgeInsets.only(top: 30.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -59,7 +62,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ))),
               ),
               Container(
-                  height: 600,
+                  height: height / 1.3,
                   width: width,
                   child: PageView(
                     physics: ClampingScrollPhysics(),
@@ -69,12 +72,67 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         _currentPage = page;
                       });
                     },
-                    children: [FirstOnboarding()],
+                    children: [
+                      FirstOnboarding(),
+                      SecondOnboarding(),
+                      ThirdOnboarding()
+                    ],
                   )),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: _buildPageIndicator(),
               ),
+              SizedBox(
+                height: 80,
+              ),
+              _currentPage != _numPages - 1
+                  ? Expanded(
+                      child: Align(
+                        alignment: FractionalOffset.bottomRight,
+                        child: InkWell(
+                          onTap: () {
+                            _onboardingController.nextPage(
+                              duration: Duration(milliseconds: 500),
+                              curve: Curves.fastOutSlowIn,
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Next'),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: Colors.black,
+                                size: 25,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : Expanded(
+                      child: Align(
+                        alignment: FractionalOffset.bottomCenter,
+                        child: Container(
+                          height: 100,
+                          width: double.infinity,
+                          color: Color(0xff403d55),
+                          child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Get Started',
+                                style: GoogleFonts.roboto(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w400),
+                              )),
+                        ),
+                      ),
+                    )
             ],
           ),
         ),
