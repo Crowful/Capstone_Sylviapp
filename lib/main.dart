@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sylviapp_project/config/theme_config.dart';
 import 'package:sylviapp_project/providers/providers.dart';
-import 'package:sylviapp_project/screens/forgot_password.dart';
+import 'package:sylviapp_project/screens/account_module/forgot_password.dart';
+import 'package:sylviapp_project/screens/account_module/onboarding.dart';
 import 'package:sylviapp_project/screens/home.dart';
-import 'package:sylviapp_project/screens/login.dart';
-import 'package:sylviapp_project/screens/register.dart';
-import 'package:sylviapp_project/screens/settings.dart';
+import 'package:sylviapp_project/screens/account_module/login.dart';
+import 'package:sylviapp_project/screens/account_module/register.dart';
+import 'package:sylviapp_project/screens/settings_module/settings.dart';
 import 'package:sylviapp_project/translations/codegen_loader.g.dart';
-import 'package:sylviapp_project/widgets/register_basic_info.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,6 +41,7 @@ class MyApp extends ConsumerWidget {
         "/settings": (_) => SettingsPage(),
         "/register": (_) => RegisterPage(),
         "/forgot_password": (_) => ForgotPasswordScreen(),
+        "/onboarding": (_) => OnboardingScreen(),
       },
     );
   }
