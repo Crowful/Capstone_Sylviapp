@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.pushNamed(context, "/login");
                 },
-                child: Text('onboarding Screen')),
+                child: Text('login Screen')),
             ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, "/onboarding");
