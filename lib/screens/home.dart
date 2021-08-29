@@ -33,16 +33,21 @@ class _HomePageState extends State<HomePage> {
                   Navigator.pushNamed(context, "/basicReg");
                 },
                 child: Text('bsic')),
-                   ElevatedButton(
+            ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, "/forgot_password");
                 },
                 child: Text('Forgotpass')),
-                  ElevatedButton(
+            ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, "/login");
                 },
-                child: Text('login screen'))
+                child: Text('onboarding Screen')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/onboarding");
+                },
+                child: Text('onboarding screen'))
           ],
         ),
       ),
