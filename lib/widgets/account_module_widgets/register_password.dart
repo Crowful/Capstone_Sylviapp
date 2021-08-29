@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PasswordRegPage extends StatefulWidget {
@@ -21,7 +22,7 @@ class PasswordRegPage extends StatefulWidget {
 class _PasswordRegPageState extends State<PasswordRegPage> {
   final TextEditingController _primaryPaswword = TextEditingController();
   final TextEditingController _confirmPassword = TextEditingController();
-
+  final userName = "";
   bool _isVisible = false;
   bool _isPasswordEightCharacters = false;
   bool _hasPasswordOneNumber = false;

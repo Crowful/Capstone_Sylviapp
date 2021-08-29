@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sylviapp_project/widgets/register_basic_info.dart';
-import 'package:sylviapp_project/widgets/register_password.dart';
-import 'package:sylviapp_project/widgets/register_user_email.dart';
+import 'package:sylviapp_project/widgets/account_module_widgets/register_basic_info.dart';
+import 'package:sylviapp_project/widgets/account_module_widgets/register_password.dart';
+import 'package:sylviapp_project/widgets/account_module_widgets/register_user_email.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key? key}) : super(key: key);
@@ -107,10 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Center(child: Text('Go Back'))),
               nextButton: InkWell(
                   onTap: () {
-                    registerPageController.animateToPage(
-                        registerPageController.page!.toInt() + 1,
-                        duration: Duration(milliseconds: 1000),
-                        curve: Curves.fastOutSlowIn);
+                    Navigator.pushReplacementNamed(context, "/onboarding");
                   },
                   child: Center(child: Text('Next'))),
             )
