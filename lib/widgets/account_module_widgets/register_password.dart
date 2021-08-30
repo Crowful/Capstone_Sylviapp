@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sylviapp_project/providers/providers.dart';
 
 class PasswordRegPage extends StatefulWidget {
   final double height;
@@ -37,6 +38,8 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
           _hasPasswordOneNumber == true &&
           _isPasswordEightCharacters == true) {
         _overall = true;
+
+        context.read(userAccountProvider).setPassword(_primaryPaswword.text);
       }
     });
   }

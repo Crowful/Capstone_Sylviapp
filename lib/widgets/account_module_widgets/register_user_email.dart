@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sylviapp_project/providers/providers.dart';
 
 class UserRegPage extends StatefulWidget {
   final double height;
@@ -27,7 +28,6 @@ class UserRegPage extends StatefulWidget {
 
 class UserRegPageState extends State<UserRegPage> {
   final TextEditingController _usernameController = TextEditingController();
-
   final TextEditingController _emailController = TextEditingController();
   bool _isUserFourCharacters = false;
   bool _isValidEmail = false;
@@ -39,6 +39,10 @@ class UserRegPageState extends State<UserRegPage> {
       overall = false;
       if (_isValidEmail == true && _isUserFourCharacters == true) {
         overall = true;
+
+        context.read(userAccountProvider).setEmail(_emailController.text);
+
+        context.read(userAccountProvider).setUserName(_usernameController.text);
       }
     });
   }

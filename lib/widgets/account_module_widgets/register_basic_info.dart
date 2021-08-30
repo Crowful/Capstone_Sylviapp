@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sylviapp_project/providers/providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum Gender { male, female }
 
@@ -40,6 +42,14 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
           _addressValidate == true &&
           _contactNumberValidate == true) {
         _overall = true;
+
+        context.read(userAccountProvider).setFullname(_fullNameController.text);
+
+        context.read(userAccountProvider).setGender(_gender);
+
+        context.read(userAccountProvider).setAddress(_addressController.text);
+
+        context.read(userAccountProvider).setContact(_contactController.text);
       }
     });
   }
@@ -74,7 +84,8 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
     });
   }
 
-  Gender? _gender = Gender.male;
+  String _gender = "male";
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -141,22 +152,22 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Gender"),
-                  RadioListTile<Gender>(
+                  RadioListTile<String>(
                       title: Text("Male"),
-                      value: Gender.male,
+                      value: "male",
                       groupValue: _gender,
-                      onChanged: (Gender? value) {
+                      onChanged: (value) {
                         setState(() {
-                          _gender = value;
+                          _gender = value!;
                         });
                       }),
-                  RadioListTile<Gender>(
+                  RadioListTile<String>(
                       title: Text("Female"),
-                      value: Gender.female,
+                      value: "female",
                       groupValue: _gender,
-                      onChanged: (Gender? value) {
+                      onChanged: (value) {
                         setState(() {
-                          _gender = value;
+                          _gender = value!;
                         });
                       }),
                 ],
@@ -166,6 +177,7 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
               height: 15,
             ),
             TextField(
+              controller: _addressController,
               decoration: InputDecoration(
                 prefixIcon: IconButton(
                   icon: Icon(Icons.location_city),
@@ -216,7 +228,7 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
                         child: widget.previousButton)),
                 Expanded(
                   child: AbsorbPointer(
-                    absorbing: _overall ? false : true,
+                    absorbing: _overall ? true : false,
                     child: AnimatedContainer(
                       padding: EdgeInsets.all(5),
                       duration: Duration(milliseconds: 500),
