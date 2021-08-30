@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sylviapp_project/providers/providers.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/register_basic_info.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/register_password.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/register_user_email.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key? key}) : super(key: key);
@@ -108,18 +107,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                       child: Center(child: Text('Go Back'))),
               nextButton: InkWell(
-                  onTap: () async {
+                  onTap: () {
                     Navigator.pushReplacementNamed(context, "/onboarding");
-                    String signupEmail =
-                        context.read(userAccountProvider).getEmail;
-                    String signupPassword =
-                        context.read(userAccountProvider).getPassword;
-                    String signupFullname =
-                        context.read(userAccountProvider).getUserName;
-                    await context
-                        .read(authserviceProvider)
-                        .signUp(signupEmail, signupPassword, signupFullname)
-                        .whenComplete(() => print("User Registered"));
                   },
                   child: Center(child: Text('Next'))),
             )

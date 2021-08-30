@@ -4,6 +4,7 @@ import 'package:sylviapp_project/screens/home.dart';
 class RouteTrans {
   Route createRoute() {
     return PageRouteBuilder(
+      transitionDuration: Duration(seconds: 2),
       pageBuilder: (context, animation, secondaryAnimation) => HomePage(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
