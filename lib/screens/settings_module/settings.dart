@@ -16,8 +16,6 @@ class SettingsPage extends ConsumerWidget {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
-    final pakyujosh = "pakyu";
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0.3,

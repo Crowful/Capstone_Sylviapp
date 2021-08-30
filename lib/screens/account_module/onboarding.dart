@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sylviapp_project/animations/route_transitions.dart';
+import 'package:sylviapp_project/screens/home.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/onboarding_widgets/first_onboarding.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/onboarding_widgets/second_onboarding.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/onboarding_widgets/third_onboarding.dart';
@@ -20,6 +22,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     }
     return list;
   }
+  //Transistio
 
   Widget _indicator(bool isActive) {
     return AnimatedContainer(
@@ -123,12 +126,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           color: Color(0xff403d55),
                           child: Align(
                               alignment: Alignment.center,
-                              child: Text(
-                                'Get Started',
-                                style: GoogleFonts.roboto(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w400),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context, RouteTrans().createRoute());
+                                },
+                                child: Text(
+                                  'Get Started',
+                                  style: GoogleFonts.roboto(
+                                      color: Colors.white,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w400),
+                                ),
                               )),
                         ),
                       ),
