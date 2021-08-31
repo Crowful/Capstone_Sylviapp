@@ -128,8 +128,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               alignment: Alignment.center,
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.push(
-                                      context, RouteTrans().createRoute());
+                                  // Navigator.pushNamed(context, Home);
                                 },
                                 child: Text(
                                   'Get Started',

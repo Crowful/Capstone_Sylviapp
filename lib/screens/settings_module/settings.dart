@@ -8,12 +8,7 @@ import 'package:sylviapp_project/translations/locale_keys.g.dart';
 class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, watch) {
-    String dropdownValue = "English";
-    String newValues = "Tagalog";
-    bool isSwitched = false;
     final isDark = watch(themingProvider);
-    final isEnglish = watch(languageProvider);
-    final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -204,6 +199,11 @@ class SettingsPage extends ConsumerWidget {
                   Navigator.pushReplacementNamed(context, "/register");
                 },
                 child: Text('try registe')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, "/home");
+                },
+                child: Text('try home')),
           ],
         ),
       ),

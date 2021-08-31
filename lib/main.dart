@@ -9,6 +9,7 @@ import 'package:sylviapp_project/screens/account_module/onboarding.dart';
 import 'package:sylviapp_project/screens/home.dart';
 import 'package:sylviapp_project/screens/account_module/login.dart';
 import 'package:sylviapp_project/screens/account_module/register.dart';
+import 'package:sylviapp_project/screens/layout_screen.dart';
 import 'package:sylviapp_project/screens/settings_module/settings.dart';
 import 'package:sylviapp_project/translations/codegen_loader.g.dart';
 
@@ -37,11 +38,12 @@ class MyApp extends ConsumerWidget {
       theme: isDark.darkTheme == false ? light : dark,
       initialRoute: "/",
       routes: {
-        "/": (_) => HomePage(),
+        "/": (_) => SettingsPage(),
         "/settings": (_) => SettingsPage(),
         "/register": (_) => RegisterPage(),
         "/forgot_password": (_) => ForgotPasswordScreen(),
         "/onboarding": (_) => OnboardingScreen(),
+        "/home": (_) => LayoutScreen()
       },
     );
   }
