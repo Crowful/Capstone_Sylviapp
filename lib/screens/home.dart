@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sylviapp_project/widgets/campaign_widget.dart';
 
 class HomePage extends StatefulWidget {
   final AnimationController controller;
@@ -35,56 +36,65 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           decoration: BoxDecoration(
               borderRadius: menuOpen
-                  ? BorderRadius.circular(30)
+                  ? BorderRadius.circular(15)
                   : BorderRadius.circular(0)),
           child: SingleChildScrollView(
             padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                SizedBox(height: 35),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    !menuOpen
-                        ? IconButton(
-                            icon: Icon(Icons.menu),
-                            onPressed: () {
-                              setState(() {
-                                widget.controller.forward();
-                                menuOpen = true;
-                              });
-                            },
-                            color: Color(0xff403d55),
-                          )
-                        : IconButton(
-                            icon: Icon(Icons.arrow_back_ios),
-                            onPressed: () {
-                              setState(() {
-                                widget.controller.reverse();
-                                menuOpen = false;
-                              });
-                            },
-                            color: Color(0xff403d55),
-                          ),
-                    IconButton(
-                      icon: Icon(Icons.notifications),
-                      onPressed: null,
-                      color: Colors.blueAccent,
-                    )
-                  ],
-                ),
-                SizedBox(height: 15),
-                Container(
-                  height: 200,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(color: Colors.black26),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text('Campaigns',
-                    style: GoogleFonts.roboto(fontWeight: FontWeight.bold))
-              ],
+            child: Expanded(
+              child: Column(
+                children: [
+                  SizedBox(height: 35),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      !menuOpen
+                          ? IconButton(
+                              icon: Icon(Icons.menu),
+                              onPressed: () {
+                                setState(() {
+                                  widget.controller.forward();
+                                  menuOpen = true;
+                                });
+                              },
+                              color: Color(0xff403d55),
+                            )
+                          : IconButton(
+                              icon: Icon(Icons.arrow_back_ios),
+                              onPressed: () {
+                                setState(() {
+                                  widget.controller.reverse();
+                                  menuOpen = false;
+                                });
+                              },
+                              color: Color(0xff403d55),
+                            ),
+                      IconButton(
+                        icon: Icon(Icons.notifications),
+                        onPressed: null,
+                        color: Colors.blueAccent,
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  Container(
+                    height: 200,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(color: Colors.black26),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text('Campaigns',
+                      style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: 1,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container();
+                        }),
+                  )
+                ],
+              ),
             ),
           ),
         ),
