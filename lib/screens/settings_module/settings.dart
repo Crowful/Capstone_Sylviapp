@@ -196,9 +196,9 @@ class SettingsPage extends ConsumerWidget {
             Text(LocaleKeys.greetings.tr()),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, "/register");
+                  Navigator.pushReplacementNamed(context, "/login");
                 },
-                child: Text('try registe')),
+                child: Text('Go to Login')),
             ElevatedButton(
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, "/home");
