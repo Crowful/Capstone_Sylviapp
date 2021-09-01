@@ -8,7 +8,7 @@ class AuthService extends ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   //loggedInUser
-  late User _loggedInUser;
+  late User? _loggedInUser;
 
   //UserChanges
 
@@ -23,7 +23,7 @@ class AuthService extends ChangeNotifier {
 
   //getters
 
-  User get getUser {
+  User? get getUser {
     _loggedInUser = getauthStateChange as User;
 
     return _loggedInUser;
@@ -56,7 +56,7 @@ class AuthService extends ChangeNotifier {
   Future signOut() async {
     try {
       await _auth.signOut();
-      await _loggedInUser.reload();
+      await _loggedInUser!.reload();
     } on FirebaseAuthException catch (e) {
       print(e.message);
     } on PlatformException catch (e) {
@@ -70,7 +70,7 @@ class AuthService extends ChangeNotifier {
           email: email, password: password);
       _loggedInUser = newUser.user!;
 
-      _loggedInUser.sendEmailVerification();
+      _loggedInUser!.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
       print(e.message);
     } on PlatformException catch (e) {
@@ -92,9 +92,7 @@ class AuthService extends ChangeNotifier {
 
   Future deleteAcc() async {
     try {
-      await _loggedInUser
-          .delete()
-          .whenComplete(() => print("Sucessfully Deleted"));
+      await _loggedInUser!.delete();
     } on FirebaseAuthException catch (e) {
       print(e.message);
     } on PlatformException catch (e) {
