@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/register_basic_info.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/register_password.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/register_user_email.dart';
@@ -87,6 +88,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         registerPageController.page!.toInt() + 1,
                         duration: Duration(milliseconds: 1000),
                         curve: Curves.fastOutSlowIn);
+
+                    print(context.read(userAccountProvider).getEmail);
+                    print(context.read(userAccountProvider).getPassword);
                   },
                   child: Center(child: Text('Next'))),
             ),
@@ -108,7 +112,14 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Center(child: Text('Go Back'))),
               nextButton: InkWell(
                   onTap: () {
-                    Navigator.pushReplacementNamed(context, "/onboarding");
+                    context
+                        .read(authserviceProvider)
+                        .signUp(
+                            context.read(userAccountProvider).getEmail,
+                            context.read(userAccountProvider).getPassword,
+                            context.read(userAccountProvider).getUserName)
+                        .whenComplete(() =>
+                            Navigator.pushNamed(context, "/verify_email"));
                   },
                   child: Center(child: Text('Next'))),
             )

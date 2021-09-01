@@ -68,8 +68,9 @@ class AuthService extends ChangeNotifier {
     try {
       final newUser = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-
       _loggedInUser = newUser.user!;
+
+      _loggedInUser.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
       print(e.message);
     } on PlatformException catch (e) {

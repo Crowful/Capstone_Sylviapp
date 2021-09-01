@@ -2,10 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sylviapp_project/Domain/wrapperAuth.dart';
 import 'package:sylviapp_project/config/theme_config.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/account_module/forgot_password.dart';
 import 'package:sylviapp_project/screens/account_module/onboarding.dart';
+import 'package:sylviapp_project/screens/account_module/verify_email.dart';
 import 'package:sylviapp_project/screens/home.dart';
 import 'package:sylviapp_project/screens/account_module/login.dart';
 import 'package:sylviapp_project/screens/account_module/register.dart';
@@ -43,7 +45,10 @@ class MyApp extends ConsumerWidget {
         "/register": (_) => RegisterPage(),
         "/forgot_password": (_) => ForgotPasswordScreen(),
         "/onboarding": (_) => OnboardingScreen(),
-        "/home": (_) => LayoutScreen()
+        "/home": (_) => LayoutScreen(),
+        "/verify_email": (_) => VerifyEmail(),
+        "/login": (_) => LoginScreen(),
+        "/wrapperAuth": (_) => WrapperAuth(),
       },
     );
   }

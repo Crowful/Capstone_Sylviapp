@@ -11,3 +11,6 @@ final languageProvider = ChangeNotifierProvider((ref) => ThemeNotifier());
 final userAccountProvider = Provider((ref) => UserAccount());
 
 final authserviceProvider = Provider((ref) => AuthService());
+
+final authStateProvider =
+    StreamProvider((ref) => AuthService().getauthStateChange);

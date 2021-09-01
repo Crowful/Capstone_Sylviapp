@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/sidebar_module/menu_item.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DrawerScreen extends StatefulWidget {
   final AnimationController controller;
@@ -63,20 +65,26 @@ class _DrawerScreenState extends State<DrawerScreen> {
               icon: Icons.settings,
             ),
             SizedBox(height: 15),
-            Row(
-              children: [
-                Icon(
-                  Icons.logout,
-                  color: Colors.red[400],
-                  size: 30,
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                    child: Text(
-                  'Logout',
-                  style: TextStyle(fontSize: 12, color: Colors.red),
-                ))
-              ],
+            InkWell(
+              onTap: () {
+                context.read(authserviceProvider).signOut();
+                Navigator.pushNamed(context, "/wrapperAuth");
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.logout,
+                    color: Colors.red[400],
+                    size: 30,
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                      child: Text(
+                    'Logout',
+                    style: TextStyle(fontSize: 12, color: Colors.red),
+                  ))
+                ],
+              ),
             ),
           ]),
         ),
