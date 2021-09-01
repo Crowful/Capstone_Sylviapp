@@ -38,7 +38,7 @@ class MyApp extends ConsumerWidget {
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,
       theme: isDark.darkTheme == false ? light : dark,
-      initialRoute: "/",
+      initialRoute: "/wrapperAuth",
       routes: {
         "/": (_) => SettingsPage(),
         "/settings": (_) => SettingsPage(),
