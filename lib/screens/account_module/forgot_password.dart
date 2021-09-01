@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sylviapp_project/providers/providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -10,6 +12,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   bool _isVisible = false;
   bool _isValidEmail = false;
   bool _hasPasswordOneNumber = false;
+
+  TextEditingController _emailController = TextEditingController();
 
   onEmailChanged(String email) {
     final charRegex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9]+@[a-zA-Z0-9]+[.]+[com]+");
@@ -48,6 +52,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
             Container(
               child: TextField(
+                controller: _emailController,
                 onChanged: (email) => onEmailChanged(email),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -67,50 +72,24 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
             Row(
               children: [
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 500),
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                      color: _isValidEmail ? Colors.green : Colors.transparent,
-                      border: _isValidEmail
-                          ? Border.all(color: Colors.transparent)
-                          : Border.all(color: Colors.grey.withOpacity(0.5)),
-                      borderRadius: BorderRadius.circular(50)),
-                  child: Center(
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size: 15,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("Valid Email")
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                AbsorbPointer(
-                  absorbing: _isValidEmail ? false : true,
-                  child: GestureDetector(
-                    onTap: () {
-                      print("request new pass");
-                    },
-                    child: AnimatedContainer(
-                      padding: EdgeInsets.all(5),
-                      duration: Duration(milliseconds: 500),
-                      height: 30,
-                      curve: Curves.ease,
-                      child: Text("Request for new Password"),
-                      decoration: BoxDecoration(
-                        color: _isValidEmail ? Colors.green : Colors.grey,
-                      ),
+                GestureDetector(
+                  onTap: () {
+                    context
+                        .read(authserviceProvider)
+                        .resetPass(_emailController.text)
+                        .whenComplete(() => (print(
+                            "successfully sent an reset password email")));
+
+                    _emailController.clear();
+                  },
+                  child: AnimatedContainer(
+                    padding: EdgeInsets.all(5),
+                    duration: Duration(milliseconds: 500),
+                    height: 30,
+                    curve: Curves.ease,
+                    child: Text("Request for new Password"),
+                    decoration: BoxDecoration(
+                      color: Colors.green,
                     ),
                   ),
                 ),
