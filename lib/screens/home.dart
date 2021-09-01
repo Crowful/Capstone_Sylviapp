@@ -89,6 +89,7 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: ListView.builder(
                         itemCount: 1,
+                        scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
                           return Container();
                         }),
