@@ -86,14 +86,20 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Text('Campaigns',
                       style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
-                  Expanded(
+                  Container(
+                    height: 200,
+                    width: 200,
                     child: ListView.builder(
-                        itemCount: 1,
+                        itemCount: 5,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
-                          return Container();
+                          return Container(
+                            height: 120,
+                            width: 120,
+                            child: Text("Test"),
+                          );
                         }),
-                  )
+                  ),
                 ],
               ),
             ),
