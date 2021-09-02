@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class CampaignWidget {
   Widget makeCampaign() {
     return Container(
-      height: 200,
-      width: double.infinity,
+      padding: EdgeInsets.all(10),
+      height: 100,
+      width: 300,
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
           color: Colors.grey.withOpacity(0.5),
