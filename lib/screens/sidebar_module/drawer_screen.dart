@@ -50,7 +50,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ]),
             SizedBox(height: 30),
             MenuItem(
-                route: "/settings", title: 'My Account', icon: Icons.person),
+                route: "/account_management",
+                title: 'My Account',
+                icon: Icons.person),
             MenuItem(
                 route: "/settings",
                 title: 'Recent Activity',
