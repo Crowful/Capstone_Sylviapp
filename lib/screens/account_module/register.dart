@@ -120,6 +120,13 @@ class _RegisterPageState extends State<RegisterPage> {
                             context.read(userAccountProvider).getUserName)
                         .whenComplete(() =>
                             Navigator.pushNamed(context, "/verify_email"));
+
+                    context.read(authserviceProvider).addUser(
+                        name: context.read(userAccountProvider).getFullname,
+                        address: context.read(userAccountProvider).getAddress,
+                        gender: context.read(userAccountProvider).getGender,
+                        phoneNumber:
+                            context.read(userAccountProvider).getContact);
                   },
                   child: Center(child: Text('Next'))),
             )

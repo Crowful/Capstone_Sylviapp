@@ -1,17 +1,30 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sylviapp_project/widgets/account_module_widgets/register_basic_info.dart';
+
+//Get Firestore instance
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+//Get Firestore Collection (USER)
+final CollectionReference _firestoreUser = _firestore.collection('users');
 
 class AuthService extends ChangeNotifier {
   //instance
   FirebaseAuth _auth = FirebaseAuth.instance;
 
+  //getUI
+  static String? userUid = FirebaseAuth.instance.currentUser!.uid;
+
   //loggedInUser
   late User? _loggedInUser;
 
-  //UserChanges
+  //Get Reference
 
+  //UserChanges
   Stream<User?> get getauthStateChange {
     return _auth.authStateChanges();
   }
@@ -76,6 +89,26 @@ class AuthService extends ChangeNotifier {
     } on PlatformException catch (e) {
       print(e.message);
     }
+  }
+
+  Future addUser(
+      {required String name,
+      required String address,
+      required String gender,
+      required int phoneNumber}) async {
+    DocumentReference getUserDocument =
+        _firestoreUser.doc(userUid).collection('info').doc(userUid);
+    Map<String, dynamic> data = <String, dynamic>{
+      "uid": userUid,
+      "name": name,
+      "address": address,
+      "gender": gender,
+      "phoneNumber": phoneNumber
+    };
+    await getUserDocument
+        .set(data)
+        .whenComplete(() => print("User created."))
+        .catchError((e) => print("User not created"));
   }
 
   Future resetPass(String email) async {
