@@ -78,6 +78,16 @@ class LoginScreen extends StatelessWidget {
                   .read(authserviceProvider)
                   .signIn(_etEmailController.text, _etPasswordController.text)
                   .whenComplete(
+                      () => Navigator.pushNamed(context, "/settings"));
+            },
+            child: Text("settings"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              context
+                  .read(authserviceProvider)
+                  .signIn(_etEmailController.text, _etPasswordController.text)
+                  .whenComplete(
                       () => Navigator.pushNamed(context, "/wrapperAuth"));
             },
             child: Text("Login"),
