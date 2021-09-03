@@ -100,7 +100,7 @@ class WelcomeScreenState extends State<WelcomeScreen>
           top: after ? 650 : 850,
           duration: Duration(milliseconds: 300),
           child: Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(30),
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: Column(
@@ -112,7 +112,7 @@ class WelcomeScreenState extends State<WelcomeScreen>
                           decoration: BoxDecoration(
                               color: Color(0xff2f3838),
                               borderRadius: BorderRadius.circular(5)),
-                          height: 70,
+                          height: 50,
                           width: double.infinity,
                           child: InkWell(
                             onTap: () {},
@@ -133,7 +133,7 @@ class WelcomeScreenState extends State<WelcomeScreen>
                           decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.3),
                               borderRadius: BorderRadius.circular(5)),
-                          height: 70,
+                          height: 50,
                           width: double.infinity,
                           child: InkWell(
                             onTap: () {},
