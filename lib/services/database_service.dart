@@ -20,6 +20,7 @@ class DatabaseService {
 
 //methods
 
+//User
   Future addUserData(
     String email,
     String fullname,
@@ -38,6 +39,11 @@ class DatabaseService {
     });
   }
 
+  Future deleteUserData() async {
+    return await userCollection.doc(uid).delete();
+  }
+
+//Campaign
   Future addCampaign(String title, String description) async {
     return await campaignCollection.doc(uid).set({
       'title': title,

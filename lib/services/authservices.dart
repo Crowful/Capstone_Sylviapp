@@ -108,7 +108,9 @@ class AuthService extends ChangeNotifier {
 
   Future deleteAcc() async {
     try {
-      await _loggedInUser!.delete();
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .deleteUserData()
+          .whenComplete(() => _loggedInUser!.delete());
     } on FirebaseAuthException catch (e) {
       print(e.message);
     } on PlatformException catch (e) {
