@@ -40,6 +40,7 @@ class UserRegPageState extends State<UserRegPage> {
       if (_isValidEmail == true && _isUserFourCharacters == true) {
         overall = true;
         context.read(userAccountProvider).setEmail(_emailController.text);
+        context.read(userAccountProvider).setUserName(_usernameController.text);
       }
     });
   }

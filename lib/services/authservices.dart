@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/register_basic_info.dart';
 
@@ -77,38 +77,21 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  Future signUp(String email, String password, String fullname) async {
+  Future signUp(String email, String password, String fullname, String address,
+      String gender, String phoneNumber, String username) async {
     try {
       final newUser = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       _loggedInUser = newUser.user!;
-
       _loggedInUser!.sendEmailVerification();
+
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .addUserData(email, fullname, address, gender, phoneNumber, username);
     } on FirebaseAuthException catch (e) {
       print(e.message);
     } on PlatformException catch (e) {
       print(e.message);
     }
-  }
-
-  Future addUser(
-      {required String name,
-      required String address,
-      required String gender,
-      required int phoneNumber}) async {
-    DocumentReference getUserDocument =
-        _firestoreUser.doc(userUid).collection('info').doc(userUid);
-    Map<String, dynamic> data = <String, dynamic>{
-      "uid": userUid,
-      "name": name,
-      "address": address,
-      "gender": gender,
-      "phoneNumber": phoneNumber
-    };
-    await getUserDocument
-        .set(data)
-        .whenComplete(() => print("User created."))
-        .catchError((e) => print("User not created"));
   }
 
   Future resetPass(String email) async {
@@ -125,7 +108,9 @@ class AuthService extends ChangeNotifier {
 
   Future deleteAcc() async {
     try {
-      await _loggedInUser!.delete();
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .deleteUserData()
+          .whenComplete(() => _loggedInUser!.delete());
     } on FirebaseAuthException catch (e) {
       print(e.message);
     } on PlatformException catch (e) {

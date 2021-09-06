@@ -20,12 +20,30 @@ class DatabaseService {
 
 //methods
 
-  Future addUserData(String email, String fullname) async {
-    return await userCollection
-        .doc(uid)
-        .set({'email': email, 'fullname': fullname});
+//User
+  Future addUserData(
+    String email,
+    String fullname,
+    String address,
+    String gender,
+    String phoneNumber,
+    String username,
+  ) async {
+    return await userCollection.doc(uid).set({
+      'email': email,
+      'fullname': fullname,
+      'address': address,
+      'gender': gender,
+      'phoneNumber': phoneNumber,
+      'username': username,
+    });
   }
 
+  Future deleteUserData() async {
+    return await userCollection.doc(uid).delete();
+  }
+
+//Campaign
   Future addCampaign(String title, String description) async {
     return await campaignCollection.doc(uid).set({
       'title': title,

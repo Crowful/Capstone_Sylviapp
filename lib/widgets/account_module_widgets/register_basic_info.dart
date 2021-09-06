@@ -1,3 +1,5 @@
+//TODO Finalize the validation of basic info
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sylviapp_project/providers/providers.dart';
@@ -42,15 +44,15 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
           _addressValidate == true &&
           _contactNumberValidate == true) {
         _overall = true;
-
-        context.read(userAccountProvider).setFullname(_fullNameController.text);
-
-        context.read(userAccountProvider).setGender(_gender);
-
-        context.read(userAccountProvider).setAddress(_addressController.text);
-
-        context.read(userAccountProvider).setContact(_contactController.text);
       }
+
+      context.read(userAccountProvider).setFullname(_fullNameController.text);
+
+      context.read(userAccountProvider).setGender(_gender);
+
+      context.read(userAccountProvider).setAddress(_addressController.text);
+
+      context.read(userAccountProvider).setContact(_contactController.text);
     });
   }
 
