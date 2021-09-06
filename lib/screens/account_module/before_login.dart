@@ -79,7 +79,7 @@ class WelcomeScreenState extends State<WelcomeScreen>
             width: MediaQuery.of(context).size.width,
             child: Center(
               child: AnimatedDefaultTextStyle(
-                curve: Curves.fastOutSlowIn,
+                curve: Curves.bounceInOut,
                 style: animated
                     ? GoogleFonts.roboto(
                         color: Colors.white,
@@ -89,16 +89,16 @@ class WelcomeScreenState extends State<WelcomeScreen>
                         color: Color(0xff00a3a5).withOpacity(0),
                         fontWeight: FontWeight.bold,
                         fontSize: 15),
-                duration: Duration(milliseconds: 300),
+                duration: Duration(milliseconds: 1000),
                 child: Text('SYLVIAPP'),
               ),
             ),
           ),
         ),
         AnimatedPositioned(
-          curve: Curves.fastOutSlowIn,
+          curve: Curves.bounceOut,
           top: after ? 650 : 850,
-          duration: Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 1000),
           child: Container(
               padding: EdgeInsets.all(30),
               height: MediaQuery.of(context).size.height,
