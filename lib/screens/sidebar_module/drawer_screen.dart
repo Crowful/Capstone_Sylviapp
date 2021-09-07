@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/sidebar_module/menu_item.dart';
@@ -5,8 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DrawerScreen extends StatefulWidget {
   final AnimationController controller;
-
-  const DrawerScreen({Key? key, required this.controller}) : super(key: key);
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  DrawerScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
   _DrawerScreenState createState() => _DrawerScreenState();
@@ -18,6 +19,21 @@ class _DrawerScreenState extends State<DrawerScreen> {
   late Animation<Offset> _slideAnimation =
       Tween<Offset>(begin: Offset(-1, 0), end: Offset(0, 0))
           .animate(widget.controller);
+
+  Future<String> getName() async {
+    try {
+      var userUID = context.read(authserviceProvider).getCurrentUserUID();
+      var userRef = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userUID)
+          .get();
+      var thename = userRef.data()!["username"];
+      return thename;
+    } catch (e) {
+      print(e.toString());
+    }
+    return "nothing";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +58,21 @@ class _DrawerScreenState extends State<DrawerScreen> {
               CircleAvatar(),
               SizedBox(width: 16),
               Expanded(
-                  child: Text('test user',
+                  child: FutureBuilder(
+                future: getName(),
+                builder: (context, snapshot) {
+                  var name = snapshot.data;
+
+                  if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                  }
+                  return Text(name.toString(),
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
-                          fontWeight: FontWeight.bold)))
+                          fontWeight: FontWeight.bold));
+                },
+              ))
             ]),
             SizedBox(height: 30),
             MenuItem(
