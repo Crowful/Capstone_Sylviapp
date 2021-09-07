@@ -4,8 +4,7 @@ class CampaignWidget {
   Widget makeCampaign() {
     return Container(
       padding: EdgeInsets.all(10),
-      height: 100,
-      width: 300,
+      width: 100,
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
           color: Colors.grey.withOpacity(0.5),

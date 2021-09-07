@@ -14,9 +14,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+//Animation
   bool menuOpen = false;
   late Animation<double> _scaleAnimation =
       Tween<double>(begin: 1, end: 0.6).animate(widget.controller);
+
+//Bottom Navigation bar
+  int _selectedIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,73 +37,97 @@ class _HomePageState extends State<HomePage> {
     return AnimatedPositioned(
       duration: widget.duration,
       top: 0,
-      bottom: -50,
+      bottom: menuOpen ? -50 : 0,
       left: menuOpen ? 0.3 * size.width : 0,
       right: menuOpen ? -0.4 * size.width : 0,
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(00),
           decoration: BoxDecoration(
+              color: Colors.red,
               borderRadius: menuOpen
                   ? BorderRadius.circular(15)
                   : BorderRadius.circular(0)),
-          child: Column(
-            children: [
-              SizedBox(height: 35),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Scaffold(
+            body: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
                 children: [
-                  !menuOpen
-                      ? IconButton(
-                          icon: Icon(Icons.menu),
-                          onPressed: () {
-                            setState(() {
-                              widget.controller.forward();
-                              menuOpen = true;
-                            });
-                          },
-                          color: Color(0xff403d55),
-                        )
-                      : IconButton(
-                          icon: Icon(Icons.arrow_back_ios),
-                          onPressed: () {
-                            setState(() {
-                              widget.controller.reverse();
-                              menuOpen = false;
-                            });
-                          },
-                          color: Color(0xff403d55),
-                        ),
-                  IconButton(
-                    icon: Icon(Icons.notifications),
-                    onPressed: null,
-                    color: Colors.blueAccent,
-                  )
+                  SizedBox(height: 35),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      !menuOpen
+                          ? IconButton(
+                              icon: Icon(Icons.menu),
+                              onPressed: () {
+                                setState(() {
+                                  widget.controller.forward();
+                                  menuOpen = true;
+                                });
+                              },
+                              color: Color(0xff403d55),
+                            )
+                          : IconButton(
+                              icon: Icon(Icons.arrow_back_ios),
+                              onPressed: () {
+                                setState(() {
+                                  widget.controller.reverse();
+                                  menuOpen = false;
+                                });
+                              },
+                              color: Color(0xff403d55),
+                            ),
+                      IconButton(
+                        icon: Icon(Icons.notifications),
+                        onPressed: null,
+                        color: Colors.blueAccent,
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  Container(
+                    height: 200,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(color: Colors.black26),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text('Campaigns',
+                      style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
+                  Container(
+                    height: 100,
+                    width: double.infinity,
+                    child: ListView.builder(
+                        itemCount: 5,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (BuildContext context, int index) {
+                          return CampaignWidget().makeCampaign();
+                        }),
+                  ),
                 ],
               ),
-              SizedBox(height: 15),
-              Container(
-                height: 200,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(color: Colors.black26),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text('Campaigns',
-                  style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
-              Container(
-                height: 500,
-                width: double.infinity,
-                child: ListView.builder(
-                    itemCount: 5,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext context, int index) {
-                      return CampaignWidget().makeCampaign();
-                    }),
-              ),
-            ],
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.call),
+                  label: 'Calls',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.camera),
+                  label: 'Camera',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.chat),
+                  label: 'Chats',
+                ),
+              ],
+              currentIndex: _selectedIndex, //New
+              onTap: _onItemTapped,
+            ),
           ),
         ),
       ),
