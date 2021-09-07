@@ -56,7 +56,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: Align(
                     alignment: Alignment.topRight,
                     child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, '/login');
+                        },
                         child: Text(
                           'Skip',
                           style: GoogleFonts.openSans(
@@ -128,7 +130,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               alignment: Alignment.center,
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(context, "/home");
+                                  Navigator.pushNamed(context, "/login");
                                 },
                                 child: Text(
                                   'Get Started',
