@@ -39,6 +39,7 @@ dependencies:
   flutter_riverpod: ^0.14.0+3
   easy_localization: ^3.0.0
   image_picker: ^0.8.4
+  fluttertoast: ^8.0.8
 
 dev_dependencies:
   flutter_test:
