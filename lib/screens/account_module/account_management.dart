@@ -55,6 +55,25 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
     });
   }
 
+  String? taske;
+  String? errorText;
+
+  Future showHealthID(uid) async {
+    String fileName = "pic";
+    String destination = 'files/users/$uid/ProfilePicture/$fileName';
+    Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
+    try {
+      taske = await firebaseStorageRef.getDownloadURL();
+    } catch (e) {
+      setState(() {
+        errorText = e.toString();
+      });
+    }
+    setState(() {
+      urlTest = taske.toString();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,9 +86,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                 Container(
                   child: CircleAvatar(
                     radius: 70,
-                    backgroundImage: Image.network(
-                            "https://images.unsplash.com/photo-1552058544-f2b08422138a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=644&q=80")
-                        .image,
+                    backgroundImage: Image.network(urlTest).image,
                   ),
                 ),
                 StreamBuilder<DocumentSnapshot>(
