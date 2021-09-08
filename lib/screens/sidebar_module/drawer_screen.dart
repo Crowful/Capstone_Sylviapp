@@ -20,21 +20,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
       Tween<Offset>(begin: Offset(-1, 0), end: Offset(0, 0))
           .animate(widget.controller);
 
-  Future<String> getName() async {
-    try {
-      var userUID = context.read(authserviceProvider).getCurrentUserUID();
-      var userRef = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userUID)
-          .get();
-      var thename = userRef.data()!["username"];
-      return thename;
-    } catch (e) {
-      print(e.toString());
-    }
-    return "nothing";
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_scaleAnimation == null) {
@@ -58,21 +43,29 @@ class _DrawerScreenState extends State<DrawerScreen> {
               CircleAvatar(),
               SizedBox(width: 16),
               Expanded(
-                  child: FutureBuilder(
-                future: getName(),
-                builder: (context, snapshot) {
-                  var name = snapshot.data;
-
-                  if (!snapshot.hasData) {
-                    return CircularProgressIndicator();
-                  }
-                  return Text(name.toString(),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold));
-                },
-              ))
+                child: StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(context
+                            .read(authserviceProvider)
+                            .getCurrentUserUID())
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Container(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator());
+                      } else {
+                        var name = snapshot.data!.get('username');
+                        return Text(name,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold));
+                      }
+                    }),
+              )
             ]),
             SizedBox(height: 30),
             MenuItem(
