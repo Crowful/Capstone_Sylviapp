@@ -75,6 +75,12 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
   }
 
   @override
+  void initState() {
+    showHealthID(context.read(authserviceProvider).getCurrentUserUID());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
