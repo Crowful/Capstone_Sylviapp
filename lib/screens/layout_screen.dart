@@ -23,17 +23,19 @@ class _LayoutScreenState extends State<LayoutScreen>
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: Stack(
-        children: [
-          DrawerScreen(
-            controller: _controller,
-          ),
-          HomePage(
-            controller: _controller,
-            duration: duration,
-          ),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        body: Stack(
+          children: [
+            DrawerScreen(
+              controller: _controller,
+            ),
+            HomePage(
+              controller: _controller,
+              duration: duration,
+            ),
+          ],
+        ),
       ),
     );
   }

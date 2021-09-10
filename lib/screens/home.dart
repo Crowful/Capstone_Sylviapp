@@ -33,6 +33,71 @@ class _HomePageState extends State<HomePage> {
       _scaleAnimation =
           Tween<double>(begin: 1, end: 0.6).animate(widget.controller);
     }
+
+    List _screens = [
+      Padding(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            SizedBox(height: 35),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                !menuOpen
+                    ? IconButton(
+                        icon: Icon(Icons.menu),
+                        onPressed: () {
+                          setState(() {
+                            widget.controller.forward();
+                            menuOpen = true;
+                          });
+                        },
+                        color: Color(0xff403d55),
+                      )
+                    : IconButton(
+                        icon: Icon(Icons.arrow_back_ios),
+                        onPressed: () {
+                          setState(() {
+                            widget.controller.reverse();
+                            menuOpen = false;
+                          });
+                        },
+                        color: Color(0xff403d55),
+                      ),
+                IconButton(
+                  icon: Icon(Icons.notifications),
+                  onPressed: null,
+                  color: Colors.blueAccent,
+                )
+              ],
+            ),
+            SizedBox(height: 15),
+            Container(
+              height: 200,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(color: Colors.black26),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text('Campaigns',
+                style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
+            Container(
+              padding: EdgeInsets.all(20),
+              height: 100,
+              width: double.infinity,
+              child: ListView.builder(
+                  itemCount: 5,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (BuildContext context, int index) {
+                    return CampaignWidget().makeCampaign();
+                  }),
+            ),
+          ],
+        ),
+      )
+    ];
+
     var size = MediaQuery.of(context).size;
     return AnimatedPositioned(
       duration: widget.duration,
@@ -45,70 +110,12 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           padding: EdgeInsets.all(00),
           decoration: BoxDecoration(
-              color: Colors.red,
               borderRadius: menuOpen
                   ? BorderRadius.circular(15)
                   : BorderRadius.circular(0)),
           child: Scaffold(
-            body: Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  SizedBox(height: 35),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      !menuOpen
-                          ? IconButton(
-                              icon: Icon(Icons.menu),
-                              onPressed: () {
-                                setState(() {
-                                  widget.controller.forward();
-                                  menuOpen = true;
-                                });
-                              },
-                              color: Color(0xff403d55),
-                            )
-                          : IconButton(
-                              icon: Icon(Icons.arrow_back_ios),
-                              onPressed: () {
-                                setState(() {
-                                  widget.controller.reverse();
-                                  menuOpen = false;
-                                });
-                              },
-                              color: Color(0xff403d55),
-                            ),
-                      IconButton(
-                        icon: Icon(Icons.notifications),
-                        onPressed: null,
-                        color: Colors.blueAccent,
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 15),
-                  Container(
-                    height: 200,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(color: Colors.black26),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text('Campaigns',
-                      style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
-                  Container(
-                    height: 100,
-                    width: double.infinity,
-                    child: ListView.builder(
-                        itemCount: 5,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          return CampaignWidget().makeCampaign();
-                        }),
-                  ),
-                ],
-              ),
+            body: SafeArea(
+              child: Stack(fit: StackFit.expand, children: [_screens.map((e) => null)]),
             ),
             bottomNavigationBar: BottomNavigationBar(
               items: const <BottomNavigationBarItem>[
