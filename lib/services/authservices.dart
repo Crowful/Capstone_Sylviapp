@@ -42,7 +42,7 @@ class AuthService extends ChangeNotifier {
     return _loggedInUser;
   }
 
-  String getCurrentUserUID() {
+  String flgetCurrentUserUID() {
     var currentUser = _auth.currentUser;
     return currentUser!.uid.toString();
   }

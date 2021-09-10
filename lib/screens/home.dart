@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                   : BorderRadius.circular(0)),
           child: Scaffold(
             body: SafeArea(
-              child: Stack(fit: StackFit.expand, children: [_screens.map((e) => null)]),
+              child: Stack(fit: StackFit.expand, children: []),
             ),
             bottomNavigationBar: BottomNavigationBar(
               items: const <BottomNavigationBarItem>[
