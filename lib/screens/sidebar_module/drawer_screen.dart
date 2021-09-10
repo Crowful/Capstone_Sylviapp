@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/sidebar_module/menu_item.dart';
@@ -5,8 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DrawerScreen extends StatefulWidget {
   final AnimationController controller;
-
-  const DrawerScreen({Key? key, required this.controller}) : super(key: key);
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  DrawerScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
   _DrawerScreenState createState() => _DrawerScreenState();
@@ -42,11 +43,29 @@ class _DrawerScreenState extends State<DrawerScreen> {
               CircleAvatar(),
               SizedBox(width: 16),
               Expanded(
-                  child: Text('test user',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold)))
+                child: StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(context
+                            .read(authserviceProvider)
+                            .getCurrentUserUID())
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Container(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator());
+                      } else {
+                        var name = snapshot.data!.get('username');
+                        return Text(name,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold));
+                      }
+                    }),
+              )
             ]),
             SizedBox(height: 30),
             MenuItem(

@@ -7,6 +7,7 @@ import 'package:sylviapp_project/screens/account_module/login.dart';
 import 'package:sylviapp_project/screens/account_module/onboarding.dart';
 import 'package:sylviapp_project/screens/account_module/verify_email.dart';
 import 'package:sylviapp_project/screens/home.dart';
+import 'package:sylviapp_project/screens/layout_screen.dart';
 
 class WrapperAuth extends ConsumerWidget {
   const WrapperAuth({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class WrapperAuth extends ConsumerWidget {
     return firebaseUser.when(
         data: (user) {
           if (user != null && user.emailVerified == true) {
-            return OnboardingScreen();
+            return LayoutScreen();
           } else if (user != null && user.emailVerified == false) {
             return VerifyEmail();
           } else {

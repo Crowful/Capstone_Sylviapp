@@ -117,4 +117,7 @@ class AuthService extends ChangeNotifier {
       print(e.message);
     }
   }
+
+  Future updateAcc(
+      String newFullName, String newAddress, String newPassword) async {}
 }

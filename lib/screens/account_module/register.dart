@@ -32,6 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           centerTitle: true,
           title: Text(
@@ -123,8 +124,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           context.read(userAccountProvider).getContact,
                           context.read(userAccountProvider).getUserName,
                         )
-                        .whenComplete(() =>
-                            Navigator.pushNamed(context, "/verify_email"));
+                        .whenComplete(
+                            () => Navigator.pushNamed(context, "/onboarding"));
 
                     print(
                       context.read(userAccountProvider).getFullname,
