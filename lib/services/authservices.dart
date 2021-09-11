@@ -44,7 +44,12 @@ class AuthService extends ChangeNotifier {
 
   String getCurrentUserUID() {
     var currentUser = _auth.currentUser;
-    return currentUser!.uid.toString();
+
+    if (currentUser == null) {
+      return "No user";
+    } else {
+      return currentUser!.uid.toString();
+    }
   }
 
   String getCurrentUserDisplayName() {
@@ -119,5 +124,13 @@ class AuthService extends ChangeNotifier {
   }
 
   Future updateAcc(
-      String newFullName, String newAddress, String newPassword) async {}
+      String newFullName, String newAddress, String newEmail) async {
+    try {
+      await _loggedInUser!.updateEmail(newEmail);
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .updateUserData(newEmail, newFullName, newAddress);
+    } catch (e) {
+      print(e);
+    }
+  }
 }

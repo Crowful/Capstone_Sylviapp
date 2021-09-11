@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,9 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sylviapp_project/Domain/wrapperAuth.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class AccountManagementScreen extends StatefulWidget {
   const AccountManagementScreen({Key? key}) : super(key: key);
@@ -24,6 +26,11 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
   String uploadStatus = "";
   String urlTest = "";
   File? _image;
+
+  TextEditingController fullnameController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   Future getImage() async {
     var image =
@@ -58,7 +65,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
   String? taske;
   String? errorText;
 
-  Future showHealthID(uid) async {
+  Future showProfile(uid) async {
     String fileName = "pic";
     String destination = 'files/users/$uid/ProfilePicture/$fileName';
     Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
@@ -76,7 +83,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
 
   @override
   void initState() {
-    showHealthID(context.read(authserviceProvider).getCurrentUserUID());
+    showProfile(context.read(authserviceProvider).getCurrentUserUID());
     super.initState();
   }
 
@@ -90,10 +97,18 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
             child: Column(
               children: [
                 Container(
-                  child: CircleAvatar(
-                    radius: 70,
-                    backgroundImage: Image.network(urlTest).image,
-                  ),
+                  child: urlTest != ""
+                      ? CircleAvatar(
+                          radius: 70,
+                          backgroundImage: FadeInImage.memoryNetwork(
+                            placeholder: kTransparentImage,
+                            image: urlTest,
+                            imageErrorBuilder: (context, error, stackTrace) {
+                              return CircularProgressIndicator();
+                            },
+                          ).image,
+                        )
+                      : CircularProgressIndicator(),
                 ),
                 StreamBuilder<DocumentSnapshot>(
                     stream: FirebaseFirestore.instance
@@ -113,6 +128,10 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                         var address = snapshot.data!.get('address');
                         var gender = snapshot.data!.get('gender');
                         var email = snapshot.data!.get('email');
+
+                        fullnameController.text = fullname;
+                        addressController.text = address;
+                        emailController.text = email;
                         return Container(
                           margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
                           child: Column(
@@ -121,99 +140,107 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                               Text(address),
                               Text(gender),
                               Text(email),
+                              Container(
+                                margin: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      child: TextField(
+                                        controller: fullnameController,
+                                        decoration: InputDecoration(
+                                          prefixIcon: IconButton(
+                                            icon: Icon(Icons.person),
+                                            onPressed: null,
+                                          ),
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              borderSide: BorderSide(
+                                                  color: Colors.black)),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              borderSide: BorderSide(
+                                                  color: Colors.black)),
+                                          hintText: "Full Name",
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 20),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: TextField(
+                                        controller: addressController,
+                                        decoration: InputDecoration(
+                                          prefixIcon: IconButton(
+                                            icon: Icon(Icons.person),
+                                            onPressed: null,
+                                          ),
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              borderSide: BorderSide(
+                                                  color: Colors.black)),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              borderSide: BorderSide(
+                                                  color: Colors.black)),
+                                          hintText: "Address",
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 20),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: TextField(
+                                        controller: emailController,
+                                        decoration: InputDecoration(
+                                          prefixIcon: IconButton(
+                                            icon: Icon(Icons.person),
+                                            onPressed: null,
+                                          ),
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              borderSide: BorderSide(
+                                                  color: Colors.black)),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              borderSide: BorderSide(
+                                                  color: Colors.black)),
+                                          hintText: "Email",
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 20),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         );
                       }
                     }),
                 Container(
-                  margin: EdgeInsets.fromLTRB(20, 30, 20, 50),
-                  child: Column(
-                    children: [
-                      Container(
-                        child: TextField(
-                          controller: null,
-                          decoration: InputDecoration(
-                            prefixIcon: IconButton(
-                              icon: Icon(Icons.person),
-                              onPressed: null,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.black)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.black)),
-                            hintText: "Full Name",
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: TextField(
-                          controller: null,
-                          decoration: InputDecoration(
-                            prefixIcon: IconButton(
-                              icon: Icon(Icons.person),
-                              onPressed: null,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.black)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.black)),
-                            hintText: "Address",
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: TextField(
-                          controller: null,
-                          decoration: InputDecoration(
-                            prefixIcon: IconButton(
-                              icon: Icon(Icons.person),
-                              onPressed: null,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.black)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.black)),
-                            hintText: "Email",
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: TextField(
-                          controller: null,
-                          decoration: InputDecoration(
-                            prefixIcon: IconButton(
-                              icon: Icon(Icons.person),
-                              onPressed: null,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.black)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.black)),
-                            hintText: "Password",
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ElevatedButton(onPressed: () {}, child: Text("Update Account")),
+                    margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          await context
+                              .read(authserviceProvider)
+                              .updateAcc(fullnameController.text,
+                                  addressController.text, emailController.text)
+                              .whenComplete(
+                                  () => Fluttertoast.showToast(msg: "updated"));
+                        },
+                        child: Text("Update Account"))),
+                ElevatedButton(
+                    onPressed: () {
+                      print(fullnameController.text);
+                    },
+                    child: Text("Update Password")),
                 ElevatedButton(
                     onPressed: () async {
                       var currentUser =
@@ -256,12 +283,18 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                     },
                     child: Text("Delete Account")),
                 Container(
-                    color: Colors.white,
-                    height: 200,
-                    width: 300,
-                    child: urlTest == ""
-                        ? Center(child: Text('Preview'))
-                        : Image.network(urlTest)),
+                  color: Colors.white,
+                  height: 200,
+                  width: 300,
+                  child: urlTest == ""
+                      ? Center(child: Text('Preview'))
+                      : Image.network(
+                          urlTest,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Center(child: Text("No Image"));
+                          },
+                        ),
+                )
               ],
             ),
           ),

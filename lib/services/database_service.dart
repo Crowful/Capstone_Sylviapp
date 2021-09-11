@@ -43,6 +43,18 @@ class DatabaseService {
     return await userCollection.doc(uid).delete();
   }
 
+  Future updateUserData(
+    String email,
+    String fullname,
+    String address,
+  ) async {
+    return await userCollection.doc(uid).update({
+      'email': email,
+      'fullname': fullname,
+      'address': address,
+    });
+  }
+
 //Campaign
   Future addCampaign(String title, String description) async {
     return await campaignCollection.doc(uid).set({

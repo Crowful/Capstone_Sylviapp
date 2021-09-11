@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/widgets/campaign_widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePage extends StatefulWidget {
   final AnimationController controller;
@@ -143,7 +145,10 @@ class _HomePageState extends State<HomePage> {
                             ),
                       IconButton(
                         icon: Icon(Icons.notifications),
-                        onPressed: null,
+                        onPressed: () {
+                          context.read(authserviceProvider).signOut();
+                          Navigator.pushNamed(context, "/wrapperAuth");
+                        },
                         color: Colors.blueAccent,
                       ),
                     ]),
