@@ -60,7 +60,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         var name = snapshot.data!.get('username');
                         return Text(name,
                             style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold));
                       }

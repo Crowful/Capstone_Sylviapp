@@ -68,7 +68,7 @@ class UserRegPageState extends State<UserRegPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(18),
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       height: widget.height,
       width: widget.width,
       child: SingleChildScrollView(
@@ -116,7 +116,8 @@ class UserRegPageState extends State<UserRegPage> {
                       borderSide: BorderSide(color: Colors.black12)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(color: Color(0xff403d55))),
+                      borderSide:
+                          BorderSide(color: Color(0xff403d55), width: 2.5)),
                   hintText: "Enter your Username",
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 20, vertical: 0),
@@ -167,7 +168,8 @@ class UserRegPageState extends State<UserRegPage> {
                       borderSide: BorderSide(color: Colors.black12)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(color: Color(0xff403d55))),
+                      borderSide:
+                          BorderSide(color: Color(0xff403d55), width: 2.5)),
                   hintText: "Enter your Email",
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 20, vertical: 0),

@@ -91,7 +91,7 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(18),
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       height: widget.height,
       width: widget.width,
       child: SingleChildScrollView(
@@ -138,7 +138,7 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
                       borderSide: BorderSide(color: Colors.black)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.black)),
+                      borderSide: BorderSide(color: Colors.black, width: 2.5)),
                   hintText: "Full Name",
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -190,7 +190,7 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
                     borderSide: BorderSide(color: Colors.black)),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.black)),
+                    borderSide: BorderSide(color: Colors.black, width: 2.5)),
                 hintText: "Address",
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -212,7 +212,7 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
                     borderSide: BorderSide(color: Colors.black)),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.black)),
+                    borderSide: BorderSide(color: Colors.black, width: 2.5)),
                 hintText: "Contact Number",
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 20, vertical: 20),

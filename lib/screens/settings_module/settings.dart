@@ -13,7 +13,7 @@ class SettingsPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0.3,
+        elevation: 0,
         centerTitle: true,
         title: Text(
           'Settings',
@@ -195,10 +195,12 @@ class SettingsPage extends ConsumerWidget {
             ),
             Text(LocaleKeys.greetings.tr()),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, "/login");
-                },
-                child: Text('Go to Login')),
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, "/login");
+              },
+              child: Text('Go to Login'),
+              style: ButtonStyle(),
+            ),
             ElevatedButton(
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, "/home");

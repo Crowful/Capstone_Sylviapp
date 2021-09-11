@@ -74,7 +74,7 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(18),
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       height: widget.height,
       width: widget.width,
       child: SingleChildScrollView(
@@ -139,7 +139,8 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
                       borderSide: BorderSide(color: Colors.black)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Color(0xff403d55))),
+                      borderSide:
+                          BorderSide(color: Color(0xff403d55), width: 2.5)),
                   hintText: "Password",
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -176,7 +177,8 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
                       borderSide: BorderSide(color: Colors.black)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Color(0xff403d55))),
+                      borderSide:
+                          BorderSide(color: Color(0xff403d55), width: 2.5)),
                   hintText: "Confirm Password",
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 20, vertical: 20),

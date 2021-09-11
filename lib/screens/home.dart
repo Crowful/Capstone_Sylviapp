@@ -114,8 +114,46 @@ class _HomePageState extends State<HomePage> {
                   ? BorderRadius.circular(15)
                   : BorderRadius.circular(0)),
           child: Scaffold(
-            body: SafeArea(
-              child: Stack(fit: StackFit.expand, children: [_screens.map((e) => null)]),
+            body: Column(
+              children: [
+                SizedBox(height: 35),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      !menuOpen
+                          ? IconButton(
+                              icon: Icon(Icons.menu),
+                              onPressed: () {
+                                setState(() {
+                                  widget.controller.forward();
+                                  menuOpen = true;
+                                });
+                              },
+                              color: Color(0xff403d55),
+                            )
+                          : IconButton(
+                              icon: Icon(Icons.arrow_back_ios),
+                              onPressed: () {
+                                setState(() {
+                                  widget.controller.reverse();
+                                  menuOpen = false;
+                                });
+                              },
+                              color: Color(0xff403d55),
+                            ),
+                      IconButton(
+                        icon: Icon(Icons.notifications),
+                        onPressed: null,
+                        color: Colors.blueAccent,
+                      ),
+                    ]),
+                SizedBox(height: 15),
+                Container(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(color: Colors.black26),
+                )
+              ],
             ),
             bottomNavigationBar: BottomNavigationBar(
               items: const <BottomNavigationBarItem>[
