@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/sidebar_module/menu_item.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class DrawerScreen extends StatefulWidget {
   final AnimationController controller;
@@ -19,6 +21,31 @@ class _DrawerScreenState extends State<DrawerScreen> {
   late Animation<Offset> _slideAnimation =
       Tween<Offset>(begin: Offset(-1, 0), end: Offset(0, 0))
           .animate(widget.controller);
+
+  String? taske;
+  String? errorText;
+  String urlTest = "";
+  Future showProfile(uid) async {
+    String fileName = "pic";
+    String destination = 'files/users/$uid/ProfilePicture/$fileName';
+    Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
+    try {
+      taske = await firebaseStorageRef.getDownloadURL();
+    } catch (e) {
+      setState(() {
+        errorText = e.toString();
+      });
+    }
+    setState(() {
+      urlTest = taske.toString();
+    });
+  }
+
+  @override
+  void initState() {
+    showProfile(context.read(authserviceProvider).getCurrentUserUID());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +67,18 @@ class _DrawerScreenState extends State<DrawerScreen> {
           child: Column(children: [
             SizedBox(height: 50),
             Row(children: [
-              CircleAvatar(),
+              urlTest != ""
+                  ? CircleAvatar(
+                      radius: 30,
+                      backgroundImage: FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: urlTest,
+                        imageErrorBuilder: (context, error, stackTrace) {
+                          return CircularProgressIndicator();
+                        },
+                      ).image,
+                    )
+                  : CircularProgressIndicator(),
               SizedBox(width: 16),
               Expanded(
                 child: StreamBuilder<DocumentSnapshot>(

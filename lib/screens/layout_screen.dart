@@ -1,6 +1,9 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/sidebar_module/drawer_screen.dart';
 import 'package:sylviapp_project/screens/home.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LayoutScreen extends StatefulWidget {
   const LayoutScreen({Key? key}) : super(key: key);
@@ -13,6 +16,7 @@ class _LayoutScreenState extends State<LayoutScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final Duration duration = Duration(milliseconds: 200);
+
   @override
   void initState() {
     _controller = AnimationController(duration: duration, vsync: this);
