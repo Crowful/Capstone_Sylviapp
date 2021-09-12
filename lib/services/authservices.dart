@@ -48,7 +48,7 @@ class AuthService extends ChangeNotifier {
     if (currentUser == null) {
       return "No user";
     } else {
-      return currentUser!.uid.toString();
+      return currentUser.uid.toString();
     }
   }
 

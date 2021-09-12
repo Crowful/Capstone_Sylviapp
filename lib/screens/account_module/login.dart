@@ -10,96 +10,92 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Form(
-      key: _formLogin,
-      child: Column(
-        children: [
-          Container(
-              margin: EdgeInsets.fromLTRB(20, 150, 20, 0),
-              child: Text("Login Now")),
-          Container(
-            margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-            child: TextField(
-              controller: _etEmailController,
-              onChanged: (email) => {},
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.black)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.black)),
-                hintText: "Email",
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+          child: Container(
+            color: Color(0xff65BFB8),
+            padding: EdgeInsets.all(20),
+            height: MediaQuery.of(context).size.height,
+            width: double.infinity,
+            child: Form(
+              key: _formLogin,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 100,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Login',
+                          style: TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Welcome to Sylviapp',
+                          style: TextStyle(fontSize: 18, color: Colors.black54),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15))),
+                          width: double.infinity,
+                          child: TextField(
+                            decoration: InputDecoration(
+                                focusColor: Color(0xff65BFB8),
+                                labelText: "Email",
+                                hintText: "email@mail.com",
+                                prefixIcon: Icon(Icons.email),
+                                contentPadding: EdgeInsets.all(15),
+                                border: InputBorder.none),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(15),
+                                  bottomRight: Radius.circular(15))),
+                          width: double.infinity,
+                          child: Theme(
+                            data: Theme.of(context)
+                                .copyWith(accentColor: Color(0xff65BFB8)),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                  focusColor: Colors.black,
+                                  hintText: "Password",
+                                  prefixIcon: Icon(Icons.vpn_key),
+                                  contentPadding: EdgeInsets.all(15),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-          SizedBox(height: 20),
-          Container(
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child: TextField(
-              controller: _etPasswordController,
-              onChanged: (email) => {},
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.black)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.black)),
-                hintText: "Password",
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(20, 5, 20, 0),
-            child: Row(
-              children: [
-                Text("Forgot password? "),
-                Text("Click "),
-                InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, "/forgot_password");
-                    },
-                    child: Text(
-                      "here",
-                      style: TextStyle(color: Colors.blue),
-                    ))
-              ],
-            ),
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              context
-                  .read(authserviceProvider)
-                  .signIn(_etEmailController.text, _etPasswordController.text)
-                  .whenComplete(
-                      () => Navigator.pushNamed(context, "/settings"));
-            },
-            child: Text("settings"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              context
-                  .read(authserviceProvider)
-                  .signIn(_etEmailController.text, _etPasswordController.text)
-                  .whenComplete(
-                      () => Navigator.pushNamed(context, "/wrapperAuth"));
-            },
-            child: Text("Login"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/register");
-            },
-            child: Text("Register"),
-          )
-        ],
-      ),
-    ));
+        ));
   }
 }
