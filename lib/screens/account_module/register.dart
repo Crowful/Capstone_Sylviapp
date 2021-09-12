@@ -126,22 +126,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         )
                         .whenComplete(
                             () => Navigator.pushNamed(context, "/onboarding"));
-
-                    print(
-                      context.read(userAccountProvider).getFullname,
-                    );
-
-                    print(
-                      context.read(userAccountProvider).getAddress,
-                    );
-
-                    print(
-                      context.read(userAccountProvider).getGender,
-                    );
-
-                    print(
-                      context.read(userAccountProvider).getContact,
-                    );
                   },
                   child: Center(child: Text('Next'))),
             )

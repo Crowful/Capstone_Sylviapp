@@ -9,11 +9,10 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  bool _isVisible = false;
-  bool _isValidEmail = false;
-  bool _hasPasswordOneNumber = false;
-
   TextEditingController _emailController = TextEditingController();
+  bool _hasPasswordOneNumber = false;
+  bool _isValidEmail = false;
+  bool _isVisible = false;
 
   onEmailChanged(String email) {
     final charRegex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9]+@[a-zA-Z0-9]+[.]+[com]+");
