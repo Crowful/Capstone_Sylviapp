@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen>
                   opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
                       CurvedAnimation(
                           parent: _widgetController,
-                          curve: Interval(0.5, 1.0, curve: Curves.easeIn))),
+                          curve: Interval(0.2, 1.0, curve: Curves.easeIn))),
                   child: SlideTransition(
                     position: _widgetTransition,
                     child: Column(

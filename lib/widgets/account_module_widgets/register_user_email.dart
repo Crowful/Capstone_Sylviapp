@@ -16,7 +16,7 @@ class UserRegPage extends StatefulWidget {
       required this.height,
       required this.width,
       required this.nextButton,
-      this.disableButton,
+      this.disableButton,6
       this.activeButton,
       required this.previousButton})
       : super(key: key);
