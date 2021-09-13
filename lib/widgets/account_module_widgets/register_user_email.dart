@@ -386,7 +386,7 @@ class _UserRegPageState extends State<UserRegPage>
                                     duration:
                                         const Duration(milliseconds: 1000),
                                     height: 40,
-                                    width: 90,
+                                    width: overall ? 500 : 90,
                                     decoration: BoxDecoration(
                                         color: overall
                                             ? Color(0xff3b3b3b)

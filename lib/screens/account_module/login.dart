@@ -265,6 +265,12 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                     ),
                   ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, "/settings");
+                  },
+                  child: Text('sitings'),
                 )
               ],
             ),
