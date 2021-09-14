@@ -10,11 +10,13 @@ import 'package:sylviapp_project/screens/account_module/before_login.dart';
 import 'package:sylviapp_project/screens/account_module/forgot_password.dart';
 import 'package:sylviapp_project/screens/account_module/onboarding.dart';
 import 'package:sylviapp_project/screens/account_module/verify_email.dart';
+import 'package:sylviapp_project/screens/campaign_module/ongoing_campaign.dart';
+import 'package:sylviapp_project/screens/campaign_module/recent_activity.dart';
 import 'package:sylviapp_project/screens/home.dart';
 import 'package:sylviapp_project/screens/account_module/login.dart';
 import 'package:sylviapp_project/screens/account_module/register.dart';
 import 'package:sylviapp_project/screens/layout_screen.dart';
-import 'package:sylviapp_project/screens/map.dart';
+import 'package:sylviapp_project/screens/campaign_module/map.dart';
 import 'package:sylviapp_project/screens/settings_module/settings.dart';
 import 'package:sylviapp_project/translations/codegen_loader.g.dart';
 
@@ -54,7 +56,9 @@ class MyApp extends ConsumerWidget {
         "/wrapperAuth": (_) => WrapperAuth(),
         "/account_management": (_) => AccountManagementScreen(),
         "/welcome": (_) => WelcomeScreen(),
-        "/map": (_) => MapScreen()
+        "/map": (_) => MapScreen(),
+        "/recent_activity": (_) => RecentActivity(),
+        "/ongoing_campaign": (_) => OngoingCampaign(),
       },
     );
   }
