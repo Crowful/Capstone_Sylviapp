@@ -1,5 +1,6 @@
 //TODO Finalize the validation of basic info
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sylviapp_project/providers/providers.dart';
@@ -24,11 +25,11 @@ class BasicInfoPage extends StatefulWidget {
   _BasicInfoPageState createState() => _BasicInfoPageState();
 }
 
-class _BasicInfoPageState extends State<BasicInfoPage> {
+class _BasicInfoPageState extends State<BasicInfoPage>
+    with TickerProviderStateMixin {
+  //Text Controller & Validations
   final _fullNameController = TextEditingController();
-
   final _addressController = TextEditingController();
-
   final _contactController = TextEditingController();
   bool _fullNameValidate = false;
   bool _genderValidate = false;
@@ -88,167 +89,259 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
 
   String _gender = "male";
 
+// Animation
+  late AnimationController _animationController =
+      AnimationController(vsync: this, duration: const Duration(seconds: 2))
+        ..repeat(reverse: true);
+
+  late AnimationController _widgetController =
+      AnimationController(vsync: this, duration: Duration(seconds: 1));
+
+  late Animation<Offset> _widgetTransition =
+      Tween<Offset>(begin: Offset(0, -0.5), end: Offset.zero)
+          .animate(_widgetController);
+
+  //INIT STATE and DISPOSE
+  void initState() {
+    super.initState();
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 3))
+          ..repeat(reverse: true);
+    _widgetController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-      height: widget.height,
-      width: widget.width,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                height: 150,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/register1.png'),
-                        fit: BoxFit.contain))),
-            Text(
-              'Set up your account',
-              style: GoogleFonts.openSans(
-                  fontSize: 20, fontWeight: FontWeight.w700),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              'Fill-in the basic information that is needed for using our beloved application Sylviapp!',
-              style: GoogleFonts.openSans(
-                  fontSize: 13,
-                  color: Colors.black.withOpacity(0.5),
-                  fontWeight: FontWeight.w600),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              child: TextField(
-                controller: _fullNameController,
-                onChanged: (fullname) => onFullNameChanged(fullname),
-                decoration: InputDecoration(
-                  prefixIcon: IconButton(
-                    icon: Icon(Icons.person),
-                    onPressed: null,
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.black)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.black, width: 2.5)),
-                  hintText: "Full Name",
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Card(
-              elevation: 0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Gender"),
-                  RadioListTile<String>(
-                      title: Text("Male"),
-                      value: "male",
-                      groupValue: _gender,
-                      onChanged: (value) {
-                        setState(() {
-                          _gender = value!;
-                        });
-                      }),
-                  RadioListTile<String>(
-                      title: Text("Female"),
-                      value: "female",
-                      groupValue: _gender,
-                      onChanged: (value) {
-                        setState(() {
-                          _gender = value!;
-                        });
-                      }),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            TextField(
-              controller: _addressController,
-              decoration: InputDecoration(
-                prefixIcon: IconButton(
-                  icon: Icon(Icons.location_city),
-                  onPressed: null,
-                ),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.black)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.black, width: 2.5)),
-                hintText: "Address",
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            TextField(
-              controller: _contactController,
-              onChanged: (contact) => onContactChanged(int.tryParse(contact)),
-              decoration: InputDecoration(
-                prefixIcon: IconButton(
-                  icon: Icon(Icons.phone),
-                  onPressed: null,
-                ),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.black)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.black, width: 2.5)),
-                hintText: "Contact Number",
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Row(
-              children: [
-                Expanded(
+    final Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+            height: size.height,
+            width: size.width,
+            color: Color(0xff65BFB8),
+            child: Stack(children: [
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: FadeTransition(
+                    opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                            parent: _widgetController,
+                            curve: Interval(0.1, 1.0, curve: Curves.easeIn))),
                     child: Container(
-                        height: 30,
-                        color: Colors.red[300],
-                        child: widget.previousButton)),
-                Expanded(
-                  child: AbsorbPointer(
-                    absorbing: _overall ? true : false,
-                    child: AnimatedContainer(
-                      padding: EdgeInsets.all(5),
-                      duration: Duration(milliseconds: 500),
-                      height: 30,
-                      curve: Curves.ease,
-                      child: widget.nextButton,
+                      height: 300,
+                      width: size.width,
                       decoration: BoxDecoration(
-                          // color: _isUserFourCharacters && _isValidEmail
-                          // ?
-                          color: Colors.green
-                          // : Colors.grey,
+                          color: null,
+                          image: DecorationImage(
+                              image: AssetImage("assets/images/userinfo.png"),
+                              fit: BoxFit.cover)),
+                    ),
+                  )),
+              Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, "/login");
+                            },
+                            child: Icon(Icons.arrow_back_ios,
+                                color: Colors.white)),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Create your account',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
+                        )
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  SizedBox(
+                    height: 120,
+                  ),
+                  Column(
+                    children: [
+                      Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(15),
+                                    bottomRight: Radius.circular(15),
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15))),
+                            width: double.infinity,
+                            child: TextField(
+                              controller: _fullNameController,
+                              onChanged: (name) => {onFullNameChanged(name)},
+                              decoration: InputDecoration(
+                                  focusColor: Colors.white,
+                                  labelText: "Full Name",
+                                  prefixIcon: Icon(Icons.password),
+                                  contentPadding: EdgeInsets.all(15),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                              color: Colors.white.withOpacity(0.7),
+                              semanticContainer: true,
+                              margin: EdgeInsets.all(0),
+                              elevation: 0,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Wrap(
+                                  children: [
+                                    Text("Gender",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                            color: Color(0xff2b2b2b))),
+                                    RadioListTile<String>(
+                                        title: Text(
+                                          "Male",
+                                        ),
+                                        value: "male",
+                                        groupValue: _gender,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _gender = value!;
+                                          });
+                                        }),
+                                    RadioListTile<String>(
+                                        title: Text("Female"),
+                                        value: "female",
+                                        groupValue: _gender,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _gender = value!;
+                                          });
+                                        }),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(15),
+                                    bottomRight: Radius.circular(15),
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15))),
+                            width: double.infinity,
+                            child: TextField(
+                              controller: _addressController,
+                              onChanged: (address) => onAddressChanged(address),
+                              decoration: InputDecoration(
+                                  focusColor: Colors.white,
+                                  labelText: "Address",
+                                  prefixIcon: Icon(Icons.house),
+                                  contentPadding: EdgeInsets.all(15),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(15),
+                                    bottomRight: Radius.circular(15),
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15))),
+                            width: double.infinity,
+                            child: TextField(
+                              controller: _contactController,
+                              onChanged: (contact) =>
+                                  onContactChanged(int.parse(contact)),
+                              decoration: InputDecoration(
+                                  focusColor: Colors.white,
+                                  labelText: "Contact Number",
+                                  prefixIcon: Icon(Icons.phone),
+                                  contentPadding: EdgeInsets.all(15),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Align(
+                              alignment: Alignment.bottomRight,
+                              child: AbsorbPointer(
+                                absorbing: _overall ? false : true,
+                                child: AnimatedContainer(
+                                    duration:
+                                        const Duration(milliseconds: 1000),
+                                    height: 40,
+                                    width: 90,
+                                    decoration: BoxDecoration(
+                                        color: _overall
+                                            ? Color(0xff3b3b3b)
+                                            : Color(0xff3b3b3b)
+                                                .withOpacity(0.5),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
+                                    child: Center(child: widget.nextButton)),
+                              ))
+                        ],
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ]),
+          ),
         ),
       ),
     );
