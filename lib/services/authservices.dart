@@ -74,7 +74,6 @@ class AuthService extends ChangeNotifier {
   Future signOut() async {
     try {
       await _auth.signOut();
-      await _loggedInUser!.reload();
     } on FirebaseAuthException catch (e) {
       print(e.message);
     } on PlatformException catch (e) {
