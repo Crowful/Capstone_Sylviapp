@@ -145,10 +145,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                       IconButton(
                         icon: Icon(Icons.notifications),
-                        onPressed: () {
-                          context.read(authserviceProvider).signOut();
-                          Navigator.pushNamed(context, "/wrapperAuth");
-                        },
+                        onPressed: () {},
                         color: Colors.blueAccent,
                       ),
                     ]),
@@ -157,7 +154,12 @@ class _HomePageState extends State<HomePage> {
                   height: 200,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(color: Colors.black26),
-                )
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/map');
+                    },
+                    child: Text("Map"))
               ],
             ),
             bottomNavigationBar: BottomNavigationBar(

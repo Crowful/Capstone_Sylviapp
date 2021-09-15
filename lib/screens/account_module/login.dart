@@ -40,12 +40,12 @@ class _LoginScreenState extends State<LoginScreen>
     _widgetController.forward();
   }
 
-  @override
+  /* @override
   void dispose() {
     _widgetController.dispose();
     super.dispose();
   }
-
+*/
   final TextEditingController _etEmailController = TextEditingController();
   final TextEditingController _etPasswordController = TextEditingController();
   final GlobalKey<FormState> _formLogin = GlobalKey<FormState>();
