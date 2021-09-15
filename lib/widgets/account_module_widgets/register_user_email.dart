@@ -383,6 +383,7 @@ class _UserRegPageState extends State<UserRegPage>
                               child: AbsorbPointer(
                                 absorbing: overall ? false : true,
                                 child: AnimatedContainer(
+                                    curve: Curves.fastOutSlowIn,
                                     duration:
                                         const Duration(milliseconds: 1000),
                                     height: 40,

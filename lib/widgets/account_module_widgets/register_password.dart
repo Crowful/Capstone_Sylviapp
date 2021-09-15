@@ -457,10 +457,11 @@ class _PasswordRegPageState extends State<PasswordRegPage>
                               child: AbsorbPointer(
                                 absorbing: _overall ? false : true,
                                 child: AnimatedContainer(
+                                    curve: Curves.fastOutSlowIn,
                                     duration:
                                         const Duration(milliseconds: 1000),
                                     height: 40,
-                                    width: 90,
+                                    width: _overall ? 500 : 90,
                                     decoration: BoxDecoration(
                                         color: _overall
                                             ? Color(0xff3b3b3b)

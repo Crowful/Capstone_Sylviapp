@@ -4,7 +4,7 @@ import 'app_color.dart';
 ThemeData light = ThemeData(
     brightness: Brightness.light,
     backgroundColor: AppColor.bodyColor,
-    scaffoldBackgroundColor: AppColor.bodyColor,
+    scaffoldBackgroundColor: Colors.white,
     hintColor: AppColor.textColor,
     primaryColorLight: AppColor.buttonBackgroundColor,
     textTheme: TextTheme(

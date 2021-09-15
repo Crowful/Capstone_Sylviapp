@@ -41,7 +41,6 @@ class _BasicInfoPageState extends State<BasicInfoPage>
     setState(() {
       _overall = false;
       if (_fullNameValidate == true &&
-          _genderValidate == true &&
           _addressValidate == true &&
           _contactNumberValidate == true) {
         _overall = true;
@@ -80,7 +79,7 @@ class _BasicInfoPageState extends State<BasicInfoPage>
   onContactChanged(int? number) {
     setState(() {
       _contactNumberValidate = false;
-      if (number! >= 11) {
+      if (number! == 11) {
         _contactNumberValidate = true;
         onValidate();
       }
@@ -123,7 +122,6 @@ class _BasicInfoPageState extends State<BasicInfoPage>
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
             height: size.height,
             width: size.width,
             color: Color(0xff65BFB8),
@@ -172,166 +170,220 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                     ),
                   ),
                   SizedBox(
-                    height: 120,
+                    height: 80,
                   ),
                   Column(
                     children: [
-                      Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    spreadRadius: 1,
-                                    blurRadius: 2,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(15),
-                                    bottomRight: Radius.circular(15),
-                                    topLeft: Radius.circular(15),
-                                    topRight: Radius.circular(15))),
-                            width: double.infinity,
-                            child: TextField(
-                              controller: _fullNameController,
-                              onChanged: (name) => {onFullNameChanged(name)},
-                              decoration: InputDecoration(
-                                  focusColor: Colors.white,
-                                  labelText: "Full Name",
-                                  prefixIcon: Icon(Icons.password),
-                                  contentPadding: EdgeInsets.all(15),
-                                  border: InputBorder.none),
+                      Container(
+                        padding: EdgeInsets.all(15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            FadeTransition(
+                              opacity: Tween<double>(begin: 0.0, end: 1.0)
+                                  .animate(CurvedAnimation(
+                                      parent: _widgetController,
+                                      curve: Interval(0.2, 1.0,
+                                          curve: Curves.easeIn))),
+                              child: Text(
+                                'Set your password!',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xff2b2b2b)),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Card(
-                              color: Colors.white.withOpacity(0.7),
-                              semanticContainer: true,
-                              margin: EdgeInsets.all(0),
-                              elevation: 0,
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Wrap(
-                                  children: [
-                                    Text("Gender",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
-                                            color: Color(0xff2b2b2b))),
-                                    RadioListTile<String>(
-                                        title: Text(
-                                          "Male",
-                                        ),
-                                        value: "male",
-                                        groupValue: _gender,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _gender = value!;
-                                          });
-                                        }),
-                                    RadioListTile<String>(
-                                        title: Text("Female"),
-                                        value: "female",
-                                        groupValue: _gender,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _gender = value!;
-                                          });
-                                        }),
+                            FadeTransition(
+                              opacity: Tween<double>(begin: 0.0, end: 1.0)
+                                  .animate(CurvedAnimation(
+                                      parent: _widgetController,
+                                      curve: Interval(0.2, 1.0,
+                                          curve: Curves.easeIn))),
+                              child: SlideTransition(
+                                position: Tween<Offset>(
+                                        begin: Offset(0, -0.5),
+                                        end: Offset.zero)
+                                    .animate(CurvedAnimation(
+                                        parent: _widgetController,
+                                        curve: Curves.easeIn)),
+                                child: Text(
+                                    'Enter your desired password, it must have enough complexity to protect your own information.',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff3b3b3b)
+                                            .withOpacity(0.8))),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(15),
+                        width: size.width,
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      spreadRadius: 1,
+                                      blurRadius: 2,
+                                      offset: Offset(0, 2),
+                                    ),
                                   ],
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(15),
+                                      bottomRight: Radius.circular(15),
+                                      topLeft: Radius.circular(15),
+                                      topRight: Radius.circular(15))),
+                              width: double.infinity,
+                              child: TextField(
+                                controller: _fullNameController,
+                                onChanged: (name) => {onFullNameChanged(name)},
+                                decoration: InputDecoration(
+                                    focusColor: Colors.white,
+                                    labelText: "Full Name",
+                                    prefixIcon: Icon(Icons.password),
+                                    contentPadding: EdgeInsets.all(15),
+                                    border: InputBorder.none),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Card(
+                                color: Colors.white.withOpacity(0.7),
+                                semanticContainer: true,
+                                margin: EdgeInsets.all(0),
+                                elevation: 0,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Wrap(
+                                    children: [
+                                      Text("Gender",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                              color: Color(0xff2b2b2b))),
+                                      RadioListTile<String>(
+                                          title: Text(
+                                            "Male",
+                                          ),
+                                          value: "male",
+                                          groupValue: _gender,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _gender = value!;
+                                            });
+                                          }),
+                                      RadioListTile<String>(
+                                          title: Text("Female"),
+                                          value: "female",
+                                          groupValue: _gender,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _gender = value!;
+                                            });
+                                          }),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    spreadRadius: 1,
-                                    blurRadius: 2,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(15),
-                                    bottomRight: Radius.circular(15),
-                                    topLeft: Radius.circular(15),
-                                    topRight: Radius.circular(15))),
-                            width: double.infinity,
-                            child: TextField(
-                              controller: _addressController,
-                              onChanged: (address) => onAddressChanged(address),
-                              decoration: InputDecoration(
-                                  focusColor: Colors.white,
-                                  labelText: "Address",
-                                  prefixIcon: Icon(Icons.house),
-                                  contentPadding: EdgeInsets.all(15),
-                                  border: InputBorder.none),
+                            SizedBox(
+                              height: 5,
                             ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    spreadRadius: 1,
-                                    blurRadius: 2,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(15),
-                                    bottomRight: Radius.circular(15),
-                                    topLeft: Radius.circular(15),
-                                    topRight: Radius.circular(15))),
-                            width: double.infinity,
-                            child: TextField(
-                              controller: _contactController,
-                              onChanged: (contact) =>
-                                  onContactChanged(int.parse(contact)),
-                              decoration: InputDecoration(
-                                  focusColor: Colors.white,
-                                  labelText: "Contact Number",
-                                  prefixIcon: Icon(Icons.phone),
-                                  contentPadding: EdgeInsets.all(15),
-                                  border: InputBorder.none),
+                            Container(
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      spreadRadius: 1,
+                                      blurRadius: 2,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(15),
+                                      bottomRight: Radius.circular(15),
+                                      topLeft: Radius.circular(15),
+                                      topRight: Radius.circular(15))),
+                              width: double.infinity,
+                              child: TextField(
+                                controller: _addressController,
+                                onChanged: (address) =>
+                                    onAddressChanged(address),
+                                decoration: InputDecoration(
+                                    focusColor: Colors.white,
+                                    labelText: "Address",
+                                    prefixIcon: Icon(Icons.house),
+                                    contentPadding: EdgeInsets.all(15),
+                                    border: InputBorder.none),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Align(
-                              alignment: Alignment.bottomRight,
-                              child: AbsorbPointer(
-                                absorbing: _overall ? false : true,
-                                child: AnimatedContainer(
-                                    duration:
-                                        const Duration(milliseconds: 1000),
-                                    height: 40,
-                                    width: 90,
-                                    decoration: BoxDecoration(
-                                        color: _overall
-                                            ? Color(0xff3b3b3b)
-                                            : Color(0xff3b3b3b)
-                                                .withOpacity(0.5),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10))),
-                                    child: Center(child: widget.nextButton)),
-                              ))
-                        ],
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      spreadRadius: 1,
+                                      blurRadius: 2,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(15),
+                                      bottomRight: Radius.circular(15),
+                                      topLeft: Radius.circular(15),
+                                      topRight: Radius.circular(15))),
+                              width: double.infinity,
+                              child: TextField(
+                                controller: _contactController,
+                                onChanged: (contact) =>
+                                    onContactChanged(int.parse(contact)),
+                                decoration: InputDecoration(
+                                    focusColor: Colors.white,
+                                    labelText: "Contact Number",
+                                    prefixIcon: Icon(Icons.phone),
+                                    contentPadding: EdgeInsets.all(15),
+                                    border: InputBorder.none),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Align(
+                                alignment: Alignment.bottomRight,
+                                child: AbsorbPointer(
+                                  absorbing: _overall ? true : false,
+                                  child: AnimatedContainer(
+                                      curve: Curves.bounceInOut,
+                                      duration:
+                                          const Duration(milliseconds: 1000),
+                                      height: 40,
+                                      width: _overall ? 500 : 90,
+                                      decoration: BoxDecoration(
+                                          color: _overall
+                                              ? Color(0xff3b3b3b)
+                                              : Color(0xff3b3b3b)
+                                                  .withOpacity(0.5),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
+                                      child: Center(child: widget.nextButton)),
+                                ))
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: 50,

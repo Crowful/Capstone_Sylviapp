@@ -90,7 +90,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 print(context.read(userAccountProvider).getEmail);
                 print(context.read(userAccountProvider).getPassword);
               },
-              child: Center(child: Text('Next'))),
+              child: Center(
+                  child: Text(
+                'Next',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ))),
         ),
         BasicInfoPage(
           height: height,
@@ -124,7 +131,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     .whenComplete(
                         () => Navigator.pushNamed(context, "/onboarding"));
               },
-              child: Center(child: Text('Next'))),
+              child: Center(
+                  child: Text(
+                'Next',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ))),
         )
       ],
     ));
