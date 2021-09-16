@@ -63,6 +63,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: Container(
+          color: Color(0xff65BFB8),
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Column(children: [
             SizedBox(height: 50),
@@ -140,7 +141,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   Expanded(
                       child: Text(
                     'Logout',
-                    style: TextStyle(fontSize: 12, color: Colors.red),
+                    style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.red,
+                        fontWeight: FontWeight.w500),
                   ))
                 ],
               ),

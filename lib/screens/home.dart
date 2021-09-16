@@ -1,8 +1,10 @@
+import 'dart:ui';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sylviapp_project/providers/providers.dart';
-import 'package:sylviapp_project/widgets/campaign_widget.dart';
+import 'package:sylviapp_project/widgets/campaign_module/campaign_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,17 +19,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 //Animation
+  bool hold = false;
   bool menuOpen = false;
   late Animation<double> _scaleAnimation =
       Tween<double>(begin: 1, end: 0.6).animate(widget.controller);
-
-//Bottom Navigation bar
-  int _selectedIndex = 0;
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,70 +30,6 @@ class _HomePageState extends State<HomePage> {
       _scaleAnimation =
           Tween<double>(begin: 1, end: 0.6).animate(widget.controller);
     }
-
-    List _screens = [
-      Padding(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            SizedBox(height: 35),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                !menuOpen
-                    ? IconButton(
-                        icon: Icon(Icons.menu),
-                        onPressed: () {
-                          setState(() {
-                            widget.controller.forward();
-                            menuOpen = true;
-                          });
-                        },
-                        color: Color(0xff403d55),
-                      )
-                    : IconButton(
-                        icon: Icon(Icons.arrow_back_ios),
-                        onPressed: () {
-                          setState(() {
-                            widget.controller.reverse();
-                            menuOpen = false;
-                          });
-                        },
-                        color: Color(0xff403d55),
-                      ),
-                IconButton(
-                  icon: Icon(Icons.notifications),
-                  onPressed: null,
-                  color: Colors.blueAccent,
-                )
-              ],
-            ),
-            SizedBox(height: 15),
-            Container(
-              height: 200,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(color: Colors.black26),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text('Campaigns',
-                style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
-            Container(
-              padding: EdgeInsets.all(20),
-              height: 100,
-              width: double.infinity,
-              child: ListView.builder(
-                  itemCount: 5,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (BuildContext context, int index) {
-                    return CampaignWidget().makeCampaign();
-                  }),
-            ),
-          ],
-        ),
-      )
-    ];
 
     var size = MediaQuery.of(context).size;
     return AnimatedPositioned(
@@ -110,76 +41,222 @@ class _HomePageState extends State<HomePage> {
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: Container(
-          padding: EdgeInsets.all(00),
+          padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 5,
+                  blurRadius: 10,
+                  offset: Offset(0, 5),
+                ),
+              ],
               borderRadius: menuOpen
-                  ? BorderRadius.circular(15)
-                  : BorderRadius.circular(0)),
+                  ? BorderRadius.all(Radius.circular(20))
+                  : BorderRadius.all(Radius.circular(0))),
           child: Scaffold(
-            body: Column(
-              children: [
-                SizedBox(height: 35),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      !menuOpen
-                          ? IconButton(
-                              icon: Icon(Icons.menu),
-                              onPressed: () {
-                                setState(() {
-                                  widget.controller.forward();
-                                  menuOpen = true;
-                                });
-                              },
-                              color: Color(0xff403d55),
-                            )
-                          : IconButton(
-                              icon: Icon(Icons.arrow_back_ios),
-                              onPressed: () {
-                                setState(() {
-                                  widget.controller.reverse();
-                                  menuOpen = false;
-                                });
-                              },
-                              color: Color(0xff403d55),
-                            ),
-                      IconButton(
-                        icon: Icon(Icons.notifications),
-                        onPressed: () {},
-                        color: Colors.blueAccent,
-                      ),
-                    ]),
-                SizedBox(height: 15),
-                Container(
-                  height: 200,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(color: Colors.black26),
+            body: Stack(children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 15),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        !menuOpen
+                            ? IconButton(
+                                icon: Icon(
+                                  Icons.menu,
+                                  color: Color(0xff65BFB8),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    print(menuOpen);
+                                    widget.controller.forward();
+                                    menuOpen = true;
+                                  });
+                                },
+                              )
+                            : IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Color(0xff65BFB8),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    widget.controller.reverse();
+                                    menuOpen = false;
+                                  });
+                                },
+                                color: Color(0xff403d55),
+                              ),
+                        Text(
+                          'Sylviapp',
+                          style: TextStyle(
+                              color: Color(0xff65BFB8),
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.bookmark_outline),
+                          onPressed: () {},
+                          color: Color(0xff65BFB8),
+                        ),
+                      ]),
+                  SizedBox(height: 15),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Overview',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff2b2b2b)),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        GestureDetector(
+                          onLongPress: () {
+                            Navigator.pushNamed(context, '/map');
+                          },
+                          onTapDown: (_) {
+                            setState(() {
+                              hold = true;
+                            });
+                          },
+                          onTapUp: (_) {
+                            setState(() {
+                              hold = false;
+                            });
+                          },
+                          child: Center(
+                              child: Container(
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      image: DecorationImage(
+                                          image: AssetImage(
+                                              "assets/images/map.jpg"),
+                                          fit: BoxFit.cover)),
+                                  child: ClipRRect(
+                                      child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                        // ignore: dead_code
+                                        sigmaX: hold ? 0.0 : 2.5,
+                                        sigmaY: hold ? 0.0 : 2.5),
+                                    child: Container(
+                                      color: Colors.black.withOpacity(0.2),
+                                    ),
+                                  )))),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          'Ongoing Campaigns',
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff2b2b2b)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: 2,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            color: Color(0xff65BFB8),
+                            width: 20,
+                            height: 50,
+                            child: Center(child: Text('sdasda')),
+                          );
+                        }),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                    height: 70,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              color: Color(0xff65BFB8),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.home,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    'Home',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(
+                          Icons.campaign,
+                          color: Color(0xff65BFB8),
+                        ),
+                        Icon(Icons.restore, color: Color(0xff65BFB8)),
+                        Icon(Icons.analytics, color: Color(0xff65BFB8)),
+                        // Text('Campaigns'),
+                        // Text('Analytics'),
+                        // Text('Activities')
+                      ],
+                    ),
+                  ),
                 ),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/map');
-                    },
-                    child: Text("Map"))
-              ],
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.call),
-                  label: 'Calls',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.camera),
-                  label: 'Camera',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.chat),
-                  label: 'Chats',
-                ),
-              ],
-              currentIndex: _selectedIndex, //New
-              onTap: _onItemTapped,
-            ),
+              )
+            ]),
           ),
         ),
       ),
