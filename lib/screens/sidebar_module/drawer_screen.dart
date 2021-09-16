@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/sidebar_module/menu_item.dart';
@@ -127,8 +128,28 @@ class _DrawerScreenState extends State<DrawerScreen> {
             SizedBox(height: 15),
             InkWell(
               onTap: () {
-                context.read(authserviceProvider).signOut();
-                Navigator.pushNamed(context, "/wrapperAuth");
+                showCupertinoDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CupertinoAlertDialog(
+                        title: Text("Are You sure you want to log out ?"),
+                        content: Text(
+                            "this will log out your account in this device"),
+                        actions: [
+                          CupertinoDialogAction(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text("no")),
+                          CupertinoDialogAction(
+                              onPressed: () {
+                                context.read(authserviceProvider).signOut();
+                                Navigator.pushNamed(context, "/wrapperAuth");
+                              },
+                              child: Text("yes")),
+                        ],
+                      );
+                    });
               },
               child: Row(
                 children: [
