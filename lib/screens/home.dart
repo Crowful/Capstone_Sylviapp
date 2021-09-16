@@ -174,14 +174,62 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                        itemCount: 2,
+                        itemCount: 5,
                         itemBuilder: (BuildContext context, int index) {
                           return Container(
-                            color: Color(0xff65BFB8),
-                            width: 20,
-                            height: 50,
-                            child: Center(child: Text('sdasda')),
-                          );
+                              margin: EdgeInsets.only(bottom: 5),
+                              width: 20,
+                              height: 140,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: [Color(0xff65BFB8), Colors.blue],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(24))),
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(24),
+                                    child: Image.network(
+                                      "https://images.unsplash.com/photo-1598335624134-5bceb5de202d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 30,
+                                  ),
+                                  Column(
+                                    children: <Widget>[
+                                      Container(
+                                        margin:
+                                            EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                        child: Text("Tree Planting Title",
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white)),
+                                      ),
+                                      Container(
+                                        width: 245,
+                                        child: Text(
+                                            "This is an example description example description description example, example desctriotion description",
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.white)),
+                                      ),
+                                      Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(20, 5, 0, 10),
+                                          child: Text("20 Volunteers Needed",
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.white))),
+                                    ],
+                                  ),
+                                ],
+                              ));
                         }),
                   )
                 ],
