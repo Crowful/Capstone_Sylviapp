@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sylviapp_project/animations/route_transitions.dart';
 import 'package:sylviapp_project/screens/home.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/onboarding_widgets/first_onboarding.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/onboarding_widgets/second_onboarding.dart';

@@ -1,11 +1,6 @@
 import 'dart:ui';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:sylviapp_project/providers/providers.dart';
-import 'package:sylviapp_project/widgets/campaign_module/campaign_widget.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sylviapp_project/animation/FadeAnimation.dart';
 
 class HomePage extends StatefulWidget {
   final AnimationController controller;
@@ -113,12 +108,15 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          'Overview',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff2b2b2b)),
+                        FadeAnimation(
+                          1,
+                          Text(
+                            'Overview',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff2b2b2b)),
+                          ),
                         ),
                         SizedBox(
                           height: 5,
@@ -176,130 +174,83 @@ class _HomePageState extends State<HomePage> {
                     child: ListView.builder(
                         itemCount: 5,
                         itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                              margin: EdgeInsets.only(bottom: 5),
-                              width: 20,
-                              height: 140,
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      colors: [Color(0xff65BFB8), Colors.blue],
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(24))),
-                              child: Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(24),
-                                    child: Image.network(
-                                      "https://images.unsplash.com/photo-1598335624134-5bceb5de202d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 30,
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      Container(
-                                        margin:
-                                            EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                        child: Text("Tree Planting Title",
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white)),
-                                      ),
-                                      Container(
-                                        width: 245,
-                                        child: Text(
-                                            "This is an example description example description description example, example desctriotion description",
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.white)),
-                                      ),
-                                      Container(
-                                          margin:
-                                              EdgeInsets.fromLTRB(20, 5, 0, 10),
-                                          child: Text("20 Volunteers Needed",
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w300,
-                                                  color: Colors.white))),
-                                    ],
-                                  ),
-                                ],
-                              ));
+                          return FadeAnimation(
+                            (1.0 + index) / 4,
+                            availableCampaign(),
+                          );
                         }),
                   )
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                    height: 70,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            spreadRadius: 1,
-                            blurRadius: 3,
-                            offset: Offset(0, 2),
+              FadeAnimation(
+                1.6,
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                      height: 70,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 100,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: Color(0xff65BFB8),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.home,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      'Home',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
+                          Icon(
+                            Icons.campaign,
+                            color: Color(0xff65BFB8),
+                          ),
+                          Icon(Icons.restore, color: Color(0xff65BFB8)),
+                          Icon(Icons.analytics, color: Color(0xff65BFB8)),
+                          // Text('Campaigns'),
+                          // Text('Analytics'),
+                          // Text('Activities')
                         ],
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 100,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: Color(0xff65BFB8),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.home,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  Text(
-                                    'Home',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Icon(
-                          Icons.campaign,
-                          color: Color(0xff65BFB8),
-                        ),
-                        Icon(Icons.restore, color: Color(0xff65BFB8)),
-                        Icon(Icons.analytics, color: Color(0xff65BFB8)),
-                        // Text('Campaigns'),
-                        // Text('Analytics'),
-                        // Text('Activities')
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -349,5 +300,59 @@ class _HomePageState extends State<HomePage> {
     //     ),
     //   ),
     // );
+  }
+
+  Widget availableCampaign() {
+    return Container(
+        margin: EdgeInsets.only(bottom: 5),
+        width: 20,
+        height: 140,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: [Color(0xff65BFB8), Colors.blue],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight),
+            borderRadius: BorderRadius.all(Radius.circular(24))),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Image.network(
+                "https://images.unsplash.com/photo-1598335624134-5bceb5de202d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+              ),
+            ),
+            SizedBox(
+              width: 30,
+            ),
+            Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  child: Text("Tree Planting Title",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white)),
+                ),
+                Container(
+                  width: 245,
+                  child: Text(
+                      "This is an example description example description description example, example desctriotion description",
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white)),
+                ),
+                Container(
+                    margin: EdgeInsets.fromLTRB(20, 5, 0, 10),
+                    child: Text("20 Volunteers Needed",
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white))),
+              ],
+            ),
+          ],
+        ));
   }
 }
