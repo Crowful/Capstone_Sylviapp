@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,12 +13,47 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 //Animation
   bool hold = false;
   bool menuOpen = false;
+
+  late AnimationController _hide =
+      AnimationController(vsync: this, duration: kThemeAnimationDuration);
   late Animation<double> _scaleAnimation =
       Tween<double>(begin: 1, end: 0.6).animate(widget.controller);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _hide = AnimationController(vsync: this, duration: kThemeAnimationDuration);
+  }
+
+  @override
+  void dispose() {
+    _hide.dispose();
+    super.dispose();
+  }
+
+  bool _handleScrollNotification(ScrollNotification notification) {
+    if (notification.depth == 0) {
+      if (notification is UserScrollNotification) {
+        final UserScrollNotification userScroll = notification;
+        switch (userScroll.direction) {
+          case ScrollDirection.forward:
+            _hide.forward();
+            break;
+          case ScrollDirection.reverse:
+            _hide.reverse();
+            break;
+          case ScrollDirection.idle:
+            break;
+        }
+      }
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,14 +207,17 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Expanded(
-                    child: ListView.builder(
-                        itemCount: 5,
-                        itemBuilder: (BuildContext context, int index) {
-                          return FadeAnimation(
-                            (1.0 + index) / 4,
-                            availableCampaign(),
-                          );
-                        }),
+                    child: NotificationListener(
+                      child: ListView.builder(
+                          itemCount: 5,
+                          itemBuilder: (BuildContext context, int index) {
+                            return FadeAnimation(
+                              (1.0 + index) / 4,
+                              availableCampaign(),
+                            );
+                          }),
+                      onNotification: _handleScrollNotification,
+                    ),
                   )
                 ],
               ),
@@ -188,68 +227,74 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.all(5.0),
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                      height: 70,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              spreadRadius: 1,
-                              blurRadius: 3,
-                              offset: Offset(0, 2),
+                    child: SizeTransition(
+                      sizeFactor: _hide,
+                      axisAlignment: -1.0,
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                        height: 70,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                spreadRadius: 1,
+                                blurRadius: 3,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 100,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  color: Color(0xff65BFB8),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.home,
+                                        color: Colors.white,
+                                        size: 30,
+                                      ),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      Text(
+                                        'Home',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
+                            Icon(
+                              Icons.campaign,
+                              color: Color(0xff65BFB8),
+                            ),
+                            Icon(Icons.restore, color: Color(0xff65BFB8)),
+                            Icon(Icons.analytics, color: Color(0xff65BFB8)),
+                            // Text('Campaigns'),
+                            // Text('Analytics'),
+                            // Text('Activities')
                           ],
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 50,
-                            decoration: BoxDecoration(
-                                color: Color(0xff65BFB8),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.home,
-                                      color: Colors.white,
-                                      size: 30,
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Text(
-                                      'Home',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Icon(
-                            Icons.campaign,
-                            color: Color(0xff65BFB8),
-                          ),
-                          Icon(Icons.restore, color: Color(0xff65BFB8)),
-                          Icon(Icons.analytics, color: Color(0xff65BFB8)),
-                          // Text('Campaigns'),
-                          // Text('Analytics'),
-                          // Text('Activities')
-                        ],
+                        ),
                       ),
                     ),
                   ),
@@ -304,23 +349,21 @@ class _HomePageState extends State<HomePage> {
 
   Widget availableCampaign() {
     return Container(
-        margin: EdgeInsets.only(bottom: 5),
-        width: 20,
-        height: 140,
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.only(bottom: 15),
         decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: [Color(0xff65BFB8), Colors.blue],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight),
-            borderRadius: BorderRadius.all(Radius.circular(24))),
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 0,
+                blurRadius: 2,
+                offset: Offset(0, 2),
+              ),
+            ]),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: Image.network(
-                "https://images.unsplash.com/photo-1598335624134-5bceb5de202d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
-              ),
-            ),
             SizedBox(
               width: 30,
             ),
@@ -332,7 +375,7 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white)),
+                          color: Colors.black)),
                 ),
                 Container(
                   width: 245,
