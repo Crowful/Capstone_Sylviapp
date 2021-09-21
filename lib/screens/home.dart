@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool menuOpen = false;
 
   late AnimationController _hide =
-      AnimationController(vsync: this, duration: kThemeAnimationDuration);
+      AnimationController(vsync: this, duration: Duration(milliseconds: 500));
   late Animation<double> _scaleAnimation =
       Tween<double>(begin: 1, end: 0.6).animate(widget.controller);
 
@@ -27,7 +27,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _hide = AnimationController(vsync: this, duration: kThemeAnimationDuration);
+    _hide =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _hide.forward();
   }
 
   @override
@@ -57,6 +59,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    _hide.forward();
     if (_scaleAnimation == null) {
       _scaleAnimation =
           Tween<double>(begin: 1, end: 0.6).animate(widget.controller);
