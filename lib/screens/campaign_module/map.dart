@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -9,6 +11,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  Completer<GoogleMapController> mapController = Completer();
   bool clicked = false;
   final _initialCameraPosition =
       CameraPosition(target: LatLng(14.5995, 120.9842));
@@ -19,6 +22,9 @@ class _MapScreenState extends State<MapScreen> {
       child: Scaffold(
         body: Stack(children: [
           GoogleMap(
+              onMapCreated: (GoogleMapController controller) {
+                mapController.complete(controller);
+              },
               zoomControlsEnabled: false,
               initialCameraPosition: _initialCameraPosition),
           Align(
@@ -44,6 +50,7 @@ class _MapScreenState extends State<MapScreen> {
                             GestureDetector(
                                 onTap: () {
                                   setState(() {
+                                    toAngat();
                                     clicked = false;
                                   });
                                 },
@@ -59,6 +66,8 @@ class _MapScreenState extends State<MapScreen> {
                             GestureDetector(
                                 onTap: () {
                                   setState(() {
+                                    print('angat');
+                                    toLamesa();
                                     clicked = false;
                                   });
                                 },
@@ -74,6 +83,7 @@ class _MapScreenState extends State<MapScreen> {
                             GestureDetector(
                                 onTap: () {
                                   setState(() {
+                                    toPantabangan();
                                     clicked = false;
                                   });
                                 },
@@ -85,7 +95,8 @@ class _MapScreenState extends State<MapScreen> {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(5))),
                                     child: Center(
-                                        child: Text('La Mesa \nWatershed')))),
+                                        child:
+                                            Text('Pantabangan \nWatershed')))),
                           ],
                         ),
                       ),
@@ -94,7 +105,7 @@ class _MapScreenState extends State<MapScreen> {
                       height: 10,
                     ),
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         setState(() {
                           clicked = true;
                         });
@@ -131,5 +142,27 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  moveToAngat() {}
+  Future<void> toAngat() async {
+    final GoogleMapController controller = await mapController.future;
+    controller.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      target: LatLng(14.918990, 121.165563),
+      zoom: 13,
+    )));
+  }
+
+  Future<void> toLamesa() async {
+    final GoogleMapController controller = await mapController.future;
+    controller.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      target: LatLng(14.7452, 121.0984),
+      zoom: 13,
+    )));
+  }
+
+  Future<void> toPantabangan() async {
+    final GoogleMapController controller = await mapController.future;
+    controller.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      target: LatLng(15.780574, 121.121838),
+      zoom: 13,
+    )));
+  }
 }
