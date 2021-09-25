@@ -12,8 +12,10 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  double radius = 0;
   Completer<GoogleMapController> mapController = Completer();
   bool clicked = false;
+  bool clickedRadius = false;
   final _initialCameraPosition =
       CameraPosition(target: LatLng(14.5995, 120.9842));
 
@@ -30,9 +32,16 @@ class _MapScreenState extends State<MapScreen> {
 
   void putCircle(latlng) {
     Circle circle1 = Circle(
+      onTap: () {
+        print('clicked');
+        setState(() {
+          clickedRadius = true;
+        });
+      },
       circleId: CircleId("test"),
       center: latlng,
-      fillColor: Colors.red,
+      strokeWidth: 0,
+      fillColor: Colors.pink,
       radius: 100,
     );
 
@@ -44,10 +53,10 @@ class _MapScreenState extends State<MapScreen> {
   void putMarker(latlng) {
     check();
     Marker resultMarker = Marker(
-        markerId: MarkerId("test"),
-        infoWindow: InfoWindow(title: statusPoint, snippet: "test"),
-        position: latlng,
-        icon: BitmapDescriptor.defaultMarker);
+      markerId: MarkerId("test"),
+      infoWindow: InfoWindow(title: statusPoint, snippet: "test"),
+      position: latlng,
+    );
 // Add it to Set
     markers.add(resultMarker);
   }
@@ -105,7 +114,6 @@ class _MapScreenState extends State<MapScreen> {
       child: Scaffold(
         body: Stack(children: [
           GoogleMap(
-              circles: circle,
               onTap: (latlng) {
                 setState(() {
                   currentMark = latlng;
@@ -115,13 +123,14 @@ class _MapScreenState extends State<MapScreen> {
                 });
               },
               polygons: myPolygon(),
-              markers: markers,
-              mapType: MapType.hybrid,
+              circles: circle,
+              mapType: MapType.normal,
               onMapCreated: (GoogleMapController controller) {
                 mapController.complete(controller);
               },
               zoomControlsEnabled: false,
               initialCameraPosition: _initialCameraPosition),
+          Align(alignment: Alignment.bottomCenter, child: slideRadius()),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -233,6 +242,30 @@ class _MapScreenState extends State<MapScreen> {
             ),
           )
         ]),
+      ),
+    );
+  }
+
+  Widget slideRadius() {
+    return AnimatedContainer(
+      height: 20,
+      width: clickedRadius ? MediaQuery.of(context).size.width : 0,
+      duration: Duration(milliseconds: 500),
+      decoration: BoxDecoration(color: Colors.white),
+      child: Row(
+        children: [
+          Text('Radius'),
+          Slider(
+            value: radius,
+            onChanged: (radiusSlider) {
+              setState(() {
+                radius = radiusSlider;
+              });
+            },
+            min: 0,
+            max: 100,
+          )
+        ],
       ),
     );
   }
