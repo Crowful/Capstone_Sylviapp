@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sylviapp_project/animation/pop_up.dart';
+import 'package:sylviapp_project/widgets/campaign_module/slidable.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -137,6 +139,10 @@ class _MapScreenState extends State<MapScreen> {
                     latlngtoMTK, mtkPolygon, false);
 
                 if (isPointValid == true) {
+                  Navigator.of(context)
+                      .push(HeroDialogRoute(builder: (context) {
+                    return SliderWidget(radius: radius);
+                  }));
                   setState(() {
                     circleID++;
                     circle.add(Circle(
@@ -150,7 +156,7 @@ class _MapScreenState extends State<MapScreen> {
                       center: latlng,
                       strokeWidth: 0,
                       fillColor: Colors.pink,
-                      radius: 100,
+                      radius: radius,
                     ));
                   });
                 } else if (isPointValid == false) {
@@ -165,7 +171,6 @@ class _MapScreenState extends State<MapScreen> {
               },
               zoomControlsEnabled: false,
               initialCameraPosition: _initialCameraPosition),
-          Align(alignment: Alignment.bottomCenter, child: slideRadius()),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -282,10 +287,9 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Widget slideRadius() {
-    return AnimatedContainer(
+    return Container(
       height: 20,
-      width: clickedRadius ? MediaQuery.of(context).size.width : 0,
-      duration: Duration(milliseconds: 500),
+      width: 160,
       decoration: BoxDecoration(color: Colors.white),
       child: Row(
         children: [
