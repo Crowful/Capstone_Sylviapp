@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';

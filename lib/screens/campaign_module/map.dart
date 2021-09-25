@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -37,6 +34,7 @@ class _MapScreenState extends State<MapScreen> {
       child: Scaffold(
         body: Stack(children: [
           GoogleMap(
+              polygons: polygons,
               mapType: MapType.hybrid,
               onMapCreated: (GoogleMapController controller) {
                 mapController.complete(controller);
