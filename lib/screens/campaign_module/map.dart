@@ -119,7 +119,22 @@ class _MapScreenState extends State<MapScreen> {
         body: Stack(children: [
           GoogleMap(
               onTap: (latlng) {
-                check();
+                mtk.LatLng latlngtoMTK =
+                    mtk.LatLng(latlng.latitude, latlng.longitude);
+                final mtk1 = mtk.LatLng(pointFromGoogleMap1.latitude,
+                    pointFromGoogleMap1.longitude);
+                final mtk2 = mtk.LatLng(pointFromGoogleMap2.latitude,
+                    pointFromGoogleMap2.longitude);
+                final mtk3 = mtk.LatLng(pointFromGoogleMap3.latitude,
+                    pointFromGoogleMap3.longitude);
+
+                List<mtk.LatLng> mtkPolygon = new List.empty(growable: true);
+                mtkPolygon.add(mtk1);
+                mtkPolygon.add(mtk2);
+                mtkPolygon.add(mtk3);
+
+                isPointValid = mtk.PolygonUtil.containsLocation(
+                    latlngtoMTK, mtkPolygon, false);
 
                 if (isPointValid == true) {
                   setState(() {
@@ -138,8 +153,8 @@ class _MapScreenState extends State<MapScreen> {
                       radius: 100,
                     ));
                   });
-                } else {
-                  Fluttertoast.showToast(msg: "You cannot put campaign there ");
+                } else if (isPointValid == false) {
+                  Fluttertoast.showToast(msg: "BAWAL SA LABAS NG POLYGON");
                 }
               },
               polygons: myPolygon(),
