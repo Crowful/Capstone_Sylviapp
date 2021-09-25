@@ -26,7 +26,9 @@ class _MapScreenState extends State<MapScreen> {
     polygonSet.add(Polygon(
         polygonId: PolygonId("test"),
         points: polygonCoords,
-        strokeColor: Colors.red));
+        strokeColor: Colors.green,
+        strokeWidth: 1,
+        fillColor: Colors.green.withOpacity(0.2)));
 
     return polygonSet;
   }
@@ -37,12 +39,11 @@ class _MapScreenState extends State<MapScreen> {
       child: Scaffold(
         body: Stack(children: [
           GoogleMap(
-              polygons: polygons,
+              polygons: myPolygon(),
               mapType: MapType.hybrid,
               onMapCreated: (GoogleMapController controller) {
                 mapController.complete(controller);
               },
-              polygons: myPolygon(),
               zoomControlsEnabled: false,
               initialCameraPosition: _initialCameraPosition),
           Align(
