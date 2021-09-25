@@ -33,7 +33,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
     return Scaffold(
         body: PageView(
-      physics: NeverScrollableScrollPhysics(),
       scrollDirection: Axis.horizontal,
       controller: registerPageController,
       children: [
@@ -75,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   onTap: () {
                     print(currentPage);
                     registerPageController.animateToPage(
-                        registerPageController.page!.toInt() - 1,
+                        registerPageController.page!.toInt() + 1,
                         duration: Duration(milliseconds: 1000),
                         curve: Curves.fastOutSlowIn);
                   },

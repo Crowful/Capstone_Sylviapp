@@ -45,6 +45,7 @@ dependencies:
   page_transition: ^2.0.2
   google_maps_flutter: ^2.0.8
   encrypt: ^5.0.1
+  flashy_tab_bar: ^0.0.3
 
 dev_dependencies:
   flutter_test:

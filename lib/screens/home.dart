@@ -17,19 +17,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 //Animation
   bool hold = false;
   bool menuOpen = false;
-
+  int currentPage = 0;
   late AnimationController _hide =
       AnimationController(vsync: this, duration: Duration(milliseconds: 500));
   late Animation<double> _scaleAnimation =
       Tween<double>(begin: 1, end: 0.6).animate(widget.controller);
 
+  final PageController homePageController = PageController(initialPage: 0);
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _hide =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     _hide.forward();
+    currentPage = 0;
+    homePageController.addListener(() {
+      setState(() {
+        currentPage = homePageController.page!.toInt();
+      });
+    });
   }
 
   @override
@@ -91,139 +98,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   : BorderRadius.all(Radius.circular(0))),
           child: Scaffold(
             body: Stack(children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 15),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        !menuOpen
-                            ? IconButton(
-                                icon: Icon(
-                                  Icons.menu,
-                                  color: Color(0xff65BFB8),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    print(menuOpen);
-                                    widget.controller.forward();
-                                    menuOpen = true;
-                                  });
-                                },
-                              )
-                            : IconButton(
-                                icon: Icon(
-                                  Icons.arrow_back_ios,
-                                  color: Color(0xff65BFB8),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    widget.controller.reverse();
-                                    menuOpen = false;
-                                  });
-                                },
-                                color: Color(0xff403d55),
-                              ),
-                        Text(
-                          'Sylviapp',
-                          style: TextStyle(
-                              color: Color(0xff65BFB8),
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.bookmark_outline),
-                          onPressed: () {},
-                          color: Color(0xff65BFB8),
-                        ),
-                      ]),
-                  SizedBox(height: 15),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    width: double.infinity,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        FadeAnimation(
-                          1,
-                          Text(
-                            'Overview',
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xff2b2b2b)),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        GestureDetector(
-                          onLongPress: () {
-                            Navigator.pushNamed(context, '/map');
-                          },
-                          onTapDown: (_) {
-                            setState(() {
-                              hold = true;
-                            });
-                          },
-                          onTapUp: (_) {
-                            setState(() {
-                              hold = false;
-                            });
-                          },
-                          child: Center(
-                              child: Container(
-                                  height: 150,
-                                  decoration: BoxDecoration(
-                                      color: Colors.black,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(10)),
-                                      image: DecorationImage(
-                                          image: AssetImage(
-                                              "assets/images/map.jpg"),
-                                          fit: BoxFit.cover)),
-                                  child: ClipRRect(
-                                      child: BackdropFilter(
-                                    filter: ImageFilter.blur(
-                                        // ignore: dead_code
-                                        sigmaX: hold ? 0.0 : 2.5,
-                                        sigmaY: hold ? 0.0 : 2.5),
-                                    child: Container(
-                                      color: Colors.black.withOpacity(0.2),
-                                    ),
-                                  )))),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          'Ongoing Campaigns',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff2b2b2b)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: NotificationListener(
-                      child: ListView.builder(
-                          itemCount: 5,
-                          itemBuilder: (BuildContext context, int index) {
-                            return FadeAnimation(
-                              (1.0 + index) / 4,
-                              availableCampaign(),
-                            );
-                          }),
-                      onNotification: _handleScrollNotification,
-                    ),
-                  )
-                ],
-              ),
+              PageView(
+                  scrollDirection: Axis.horizontal,
+                  controller: homePageController,
+                  children: [
+                    firstHome(),
+                    secondHome(),
+                    thirdHome(),
+                    fourthHome()
+                  ]),
               FadeAnimation(
                 1.6,
                 Padding(
@@ -238,64 +121,117 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         height: 70,
                         width: double.infinity,
                         decoration: BoxDecoration(
+                            color: Colors.white,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
+                                color: Colors.grey.withOpacity(1),
                                 spreadRadius: 1,
-                                blurRadius: 3,
-                                offset: Offset(0, 2),
+                                blurRadius: 2,
+                                offset: Offset(0, 1),
                               ),
                             ],
-                            color: Colors.white,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10))),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              width: 100,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  color: Color(0xff65BFB8),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.home,
-                                        color: Colors.white,
-                                        size: 30,
-                                      ),
-                                      SizedBox(
-                                        width: 8,
-                                      ),
-                                      Text(
-                                        'Home',
-                                        style: TextStyle(
+                            Stack(alignment: Alignment.center, children: [
+                              AnimatedContainer(
+                                duration: Duration(milliseconds: 500),
+                                width: currentPage == 0 ? 100 : 0,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    color: Color(0xff65BFB8),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    if (currentPage == 0) ...[
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.home,
                                             color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15),
-                                      )
-                                    ],
-                                  ),
-                                ],
+                                            size: 30,
+                                          ),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text(
+                                            'Home',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15),
+                                          )
+                                        ],
+                                      ),
+                                    ]
+                                  ],
+                                ),
                               ),
-                            ),
-                            Icon(
-                              Icons.campaign,
-                              color: Color(0xff65BFB8),
-                            ),
+                              AnimatedOpacity(
+                                duration: Duration(milliseconds: 500),
+                                opacity: currentPage != 0 ? 1 : 0,
+                                child: Icon(
+                                  Icons.home,
+                                  color: Color(0xff65BFB8),
+                                ),
+                              ),
+                            ]),
+                            Stack(alignment: Alignment.center, children: [
+                              AnimatedContainer(
+                                duration: Duration(milliseconds: 500),
+                                width: currentPage == 1 ? 120 : 0,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    color: Color(0xff65BFB8),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    if (currentPage == 1) ...[
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.announcement,
+                                            color: Colors.white,
+                                            size: 30,
+                                          ),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text(
+                                            'Campaign',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15),
+                                          )
+                                        ],
+                                      ),
+                                    ]
+                                  ],
+                                ),
+                              ),
+                              AnimatedOpacity(
+                                duration: Duration(milliseconds: 500),
+                                opacity: currentPage != 1 ? 1 : 0,
+                                child: Icon(
+                                  Icons.announcement,
+                                  color: Color(0xff65BFB8),
+                                ),
+                              ),
+                            ]),
                             Icon(Icons.restore, color: Color(0xff65BFB8)),
                             Icon(Icons.analytics, color: Color(0xff65BFB8)),
-                            // Text('Campaigns'),
-                            // Text('Analytics'),
-                            // Text('Activities')
                           ],
                         ),
                       ),
@@ -308,46 +244,156 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
       ),
     );
-    // return SingleChildScrollView(
-    //   child: Container(
-    //     height: height,
-    //     width: width,
-    //     child: Column(
-    //       children: [
-    //         ElevatedButton(
-    //             onPressed: () {
-    //               Navigator.pushNamed(context, "/register");
-    //             },
-    //             child: Text('Register')),
-    //         ElevatedButton(
-    //             onPressed: () {
-    //               Navigator.pushNamed(context, "/settings");
-    //             },
-    //             child: Text('Settings')),
-    //         ElevatedButton(
-    //             onPressed: () {
-    //               Navigator.pushNamed(context, "/basicReg");
-    //             },
-    //             child: Text('bsic')),
-    //         ElevatedButton(
-    //             onPressed: () {
-    //               Navigator.pushNamed(context, "/forgot_password");
-    //             },
-    //             child: Text('Forgotpass')),
-    //         ElevatedButton(
-    //             onPressed: () {
-    //               Navigator.pushNamed(context, "/login");
-    //             },
-    //             child: Text('login Screen')),
-    //         ElevatedButton(
-    //             onPressed: () {
-    //               Navigator.pushNamed(context, "/onboarding");
-    //             },
-    //             child: Text('onboarding screen'))
-    //       ],
-    //     ),
-    //   ),
-    // );
+  }
+
+  Widget secondHome() {
+    return Center(
+      child: Text('Second'),
+    );
+  }
+
+  Widget thirdHome() {
+    return Center(
+      child: Text('Second'),
+    );
+  }
+
+  Widget fourthHome() {
+    return Center(
+      child: Text('Second'),
+    );
+  }
+
+  Widget firstHome() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 15),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          !menuOpen
+              ? IconButton(
+                  icon: Icon(
+                    Icons.menu,
+                    color: Color(0xff65BFB8),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      print(menuOpen);
+                      widget.controller.forward();
+                      menuOpen = true;
+                    });
+                  },
+                )
+              : IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Color(0xff65BFB8),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      widget.controller.reverse();
+                      menuOpen = false;
+                    });
+                  },
+                  color: Color(0xff403d55),
+                ),
+          Text(
+            'Sylviapp',
+            style: TextStyle(
+                color: Color(0xff65BFB8),
+                fontSize: 22,
+                fontWeight: FontWeight.bold),
+          ),
+          IconButton(
+            icon: Icon(Icons.bookmark_outline),
+            onPressed: () {},
+            color: Color(0xff65BFB8),
+          ),
+        ]),
+        SizedBox(height: 15),
+        Container(
+          padding: EdgeInsets.all(10),
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              FadeAnimation(
+                1,
+                Text(
+                  'Overview',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff2b2b2b)),
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              GestureDetector(
+                onLongPress: () {
+                  Navigator.pushNamed(context, '/map');
+                },
+                onTapDown: (_) {
+                  setState(() {
+                    hold = true;
+                  });
+                },
+                onTapUp: (_) {
+                  setState(() {
+                    hold = false;
+                  });
+                },
+                child: Center(
+                    child: Container(
+                        height: 150,
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            image: DecorationImage(
+                                image: AssetImage("assets/images/map.jpg"),
+                                fit: BoxFit.cover)),
+                        child: ClipRRect(
+                            child: BackdropFilter(
+                          filter: ImageFilter.blur(
+                              // ignore: dead_code
+                              sigmaX: hold ? 0.0 : 2.5,
+                              sigmaY: hold ? 0.0 : 2.5),
+                          child: Container(
+                            color: Colors.black.withOpacity(0.2),
+                          ),
+                        )))),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Ongoing Campaigns',
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff2b2b2b)),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: NotificationListener(
+            child: ListView.builder(
+                itemCount: 5,
+                itemBuilder: (BuildContext context, int index) {
+                  return FadeAnimation(
+                    (1.0 + index) / 4,
+                    availableCampaign(),
+                  );
+                }),
+            onNotification: _handleScrollNotification,
+          ),
+        )
+      ],
+    );
   }
 
   Widget availableCampaign() {
@@ -362,7 +408,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 color: Colors.grey.withOpacity(0.2),
                 spreadRadius: 0,
                 blurRadius: 2,
-                offset: Offset(0, 2),
+                offset: Offset(0, 1),
               ),
             ]),
         child: Row(
