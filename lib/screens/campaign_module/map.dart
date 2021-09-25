@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -13,11 +14,14 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   double radius = 0;
+  int circleID = 1;
   Completer<GoogleMapController> mapController = Completer();
   bool clicked = false;
   bool clickedRadius = false;
   final _initialCameraPosition =
       CameraPosition(target: LatLng(14.5995, 120.9842));
+
+  late bool isPointValid;
 
   final pointFromGoogleMap1 = LatLng(14.718598, 121.071495);
   final pointFromGoogleMap2 = LatLng(14.729223, 121.071839);
@@ -92,15 +96,15 @@ class _MapScreenState extends State<MapScreen> {
     mtkPolygon.add(mtk2);
     mtkPolygon.add(mtk3);
 
-    final isPointValid2 =
+    isPointValid =
         mtk.PolygonUtil.containsLocation(currentMark2, mtkPolygon, false);
 
-    if (isPointValid2 == false) {
+    if (isPointValid == false) {
       print("nasa labas ng polyline");
       setState(() {
         statusPoint = "Nasa labas ng polyline";
       });
-    } else if (isPointValid2 == true) {
+    } else if (isPointValid == true) {
       print("nasa loob ng polyline");
       setState(() {
         statusPoint = "Nasa loob ng polyline";
@@ -115,12 +119,28 @@ class _MapScreenState extends State<MapScreen> {
         body: Stack(children: [
           GoogleMap(
               onTap: (latlng) {
-                setState(() {
-                  currentMark = latlng;
-                  currentMark2 = mtk.LatLng(latlng.latitude, latlng.longitude);
-                  putMarker(currentMark);
-                  putCircle(latlng);
-                });
+                check();
+
+                if (isPointValid == true) {
+                  setState(() {
+                    circleID++;
+                    circle.add(Circle(
+                      onTap: () {
+                        print('clicked');
+                        setState(() {
+                          clickedRadius = true;
+                        });
+                      },
+                      circleId: CircleId(circleID.toString()),
+                      center: latlng,
+                      strokeWidth: 0,
+                      fillColor: Colors.pink,
+                      radius: 100,
+                    ));
+                  });
+                } else {
+                  Fluttertoast.showToast(msg: "You cannot put campaign there ");
+                }
               },
               polygons: myPolygon(),
               circles: circle,
