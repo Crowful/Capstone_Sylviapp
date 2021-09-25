@@ -136,101 +136,132 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Stack(alignment: Alignment.center, children: [
-                              AnimatedContainer(
-                                duration: Duration(milliseconds: 500),
-                                width: currentPage == 0 ? 100 : 0,
-                                height: 50,
-                                decoration: BoxDecoration(
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  currentPage = 0;
+                                  homePageController.animateToPage(0,
+                                      duration: Duration(milliseconds: 1000),
+                                      curve: Curves.fastOutSlowIn);
+                                });
+                              },
+                              child:
+                                  Stack(alignment: Alignment.center, children: [
+                                AnimatedContainer(
+                                  duration: Duration(milliseconds: 100),
+                                  width: currentPage != 0 ? 0 : 100,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xff65BFB8),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      if (currentPage == 0) ...[
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.home,
+                                              color: Colors.white,
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            Text(
+                                              'Home',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 15),
+                                            )
+                                          ],
+                                        ),
+                                      ]
+                                    ],
+                                  ),
+                                ),
+                                AnimatedOpacity(
+                                  duration: Duration(milliseconds: 500),
+                                  opacity: currentPage != 0 ? 1 : 0,
+                                  child: Icon(
+                                    Icons.home,
                                     color: Color(0xff65BFB8),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    if (currentPage == 0) ...[
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.home,
-                                            color: Colors.white,
-                                            size: 30,
-                                          ),
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          Text(
-                                            'Home',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 15),
-                                          )
-                                        ],
-                                      ),
-                                    ]
-                                  ],
+                                  ),
                                 ),
-                              ),
-                              AnimatedOpacity(
-                                duration: Duration(milliseconds: 500),
-                                opacity: currentPage != 0 ? 1 : 0,
-                                child: Icon(
-                                  Icons.home,
-                                  color: Color(0xff65BFB8),
+                              ]),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  currentPage = 1;
+                                  homePageController.animateToPage(1,
+                                      duration: Duration(milliseconds: 1000),
+                                      curve: Curves.fastOutSlowIn);
+                                });
+                              },
+                              child:
+                                  Stack(alignment: Alignment.center, children: [
+                                AnimatedContainer(
+                                  duration: Duration(milliseconds: 500),
+                                  width: currentPage == 1 ? 120 : 0,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xff65BFB8),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      if (currentPage == 1) ...[
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.announcement,
+                                              color: Colors.white,
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            Text(
+                                              'Campaign',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 15),
+                                            )
+                                          ],
+                                        ),
+                                      ]
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ]),
-                            Stack(alignment: Alignment.center, children: [
-                              AnimatedContainer(
-                                duration: Duration(milliseconds: 500),
-                                width: currentPage == 1 ? 120 : 0,
-                                height: 50,
-                                decoration: BoxDecoration(
+                                AnimatedOpacity(
+                                  duration: Duration(milliseconds: 500),
+                                  opacity: currentPage != 1 ? 1 : 0,
+                                  child: Icon(
+                                    Icons.announcement,
                                     color: Color(0xff65BFB8),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    if (currentPage == 1) ...[
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.announcement,
-                                            color: Colors.white,
-                                            size: 30,
-                                          ),
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          Text(
-                                            'Campaign',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 15),
-                                          )
-                                        ],
-                                      ),
-                                    ]
-                                  ],
+                                  ),
                                 ),
-                              ),
-                              AnimatedOpacity(
-                                duration: Duration(milliseconds: 500),
-                                opacity: currentPage != 1 ? 1 : 0,
-                                child: Icon(
-                                  Icons.announcement,
-                                  color: Color(0xff65BFB8),
-                                ),
-                              ),
-                            ]),
-                            Icon(Icons.restore, color: Color(0xff65BFB8)),
+                              ]),
+                            ),
+                            GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    currentPage = 2;
+                                  });
+                                },
+                                child: Icon(Icons.restore,
+                                    color: Color(0xff65BFB8))),
                             Icon(Icons.analytics, color: Color(0xff65BFB8)),
                           ],
                         ),
