@@ -17,18 +17,21 @@ class _MapScreenState extends State<MapScreen> {
   final _initialCameraPosition =
       CameraPosition(target: LatLng(14.5995, 120.9842));
 
-  List<Polygon> polygons = <Polygon>[
-    new Polygon(
+  Set<Polygon> myPolygon() {
+    List<LatLng> polygonCoords = new List.empty(growable: true);
+    polygonCoords.add(LatLng(14.718598, 121.071495));
+    polygonCoords.add(LatLng(14.729223, 121.071839));
+    polygonCoords.add(LatLng(14.711292, 121.082653));
+
+    Set<Polygon> polygonSet = new Set();
+
+    polygonSet.add(Polygon(
         polygonId: PolygonId("test"),
-        points: <LatLng>[
-          LatLng(14.718598, 121.071495),
-          LatLng(14.729223, 121.071839),
-          LatLng(14.711292, 121.082653),
-        ],
-        strokeWidth: 10,
-        strokeColor: Colors.black,
-        fillColor: Colors.red)
-  ];
+        points: polygonCoords,
+        strokeColor: Colors.red));
+
+    return polygonSet;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +42,7 @@ class _MapScreenState extends State<MapScreen> {
               onMapCreated: (GoogleMapController controller) {
                 mapController.complete(controller);
               },
+              polygons: myPolygon(),
               zoomControlsEnabled: false,
               initialCameraPosition: _initialCameraPosition),
           Align(
