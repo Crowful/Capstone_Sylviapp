@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapScreen extends StatefulWidget {
@@ -15,11 +17,33 @@ class _MapScreenState extends State<MapScreen> {
   final _initialCameraPosition =
       CameraPosition(target: LatLng(14.5995, 120.9842));
 
+  final pointFromGoogleMap1 = LatLng(14.718598, 121.071495);
+  final pointFromGoogleMap2 = LatLng(14.729223, 121.071839);
+  final pointFromGoogleMap3 = LatLng(14.711292, 121.082653);
+
+  late String statusPoint = "none";
+
+  late LatLng currentMark;
+  late mtk.LatLng currentMark2;
+
+  Set<Marker> markers = Set();
+
+  void putMarker(latlng) {
+    check();
+    Marker resultMarker = Marker(
+        markerId: MarkerId("test"),
+        infoWindow: InfoWindow(title: statusPoint, snippet: "test"),
+        position: latlng,
+        icon: BitmapDescriptor.defaultMarker);
+// Add it to Set
+    markers.add(resultMarker);
+  }
+
   Set<Polygon> myPolygon() {
     List<LatLng> polygonCoords = new List.empty(growable: true);
-    polygonCoords.add(LatLng(14.718598, 121.071495));
-    polygonCoords.add(LatLng(14.729223, 121.071839));
-    polygonCoords.add(LatLng(14.711292, 121.082653));
+    polygonCoords.add(pointFromGoogleMap1);
+    polygonCoords.add(pointFromGoogleMap2);
+    polygonCoords.add(pointFromGoogleMap3);
 
     Set<Polygon> polygonSet = new Set();
 
@@ -33,13 +57,50 @@ class _MapScreenState extends State<MapScreen> {
     return polygonSet;
   }
 
+  void check() {
+    final mtk1 =
+        mtk.LatLng(pointFromGoogleMap1.latitude, pointFromGoogleMap1.longitude);
+    final mtk2 =
+        mtk.LatLng(pointFromGoogleMap2.latitude, pointFromGoogleMap2.longitude);
+    final mtk3 =
+        mtk.LatLng(pointFromGoogleMap3.latitude, pointFromGoogleMap3.longitude);
+
+    List<mtk.LatLng> mtkPolygon = new List.empty(growable: true);
+    mtkPolygon.add(mtk1);
+    mtkPolygon.add(mtk2);
+    mtkPolygon.add(mtk3);
+
+    final isPointValid2 =
+        mtk.PolygonUtil.containsLocation(currentMark2, mtkPolygon, false);
+
+    if (isPointValid2 == false) {
+      print("nasa labas ng polyline");
+      setState(() {
+        statusPoint = "Nasa labas ng polyline";
+      });
+    } else if (isPointValid2 == true) {
+      print("nasa loob ng polyline");
+      setState(() {
+        statusPoint = "Nasa loob ng polyline";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Stack(children: [
           GoogleMap(
+              onTap: (latlng) {
+                setState(() {
+                  currentMark = latlng;
+                  currentMark2 = mtk.LatLng(latlng.latitude, latlng.longitude);
+                  putMarker(currentMark);
+                });
+              },
               polygons: myPolygon(),
+              markers: markers,
               mapType: MapType.hybrid,
               onMapCreated: (GoogleMapController controller) {
                 mapController.complete(controller);
