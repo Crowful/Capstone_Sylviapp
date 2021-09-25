@@ -26,6 +26,19 @@ class _MapScreenState extends State<MapScreen> {
   late LatLng currentMark;
   late mtk.LatLng currentMark2;
 
+  Set<Circle> circle = Set();
+
+  void putCircle(latlng) {
+    Circle circle1 = Circle(
+      circleId: CircleId("test"),
+      center: latlng,
+      fillColor: Colors.red,
+      radius: 100,
+    );
+
+    circle.add(circle1);
+  }
+
   Set<Marker> markers = Set();
 
   void putMarker(latlng) {
@@ -92,11 +105,13 @@ class _MapScreenState extends State<MapScreen> {
       child: Scaffold(
         body: Stack(children: [
           GoogleMap(
+              circles: circle,
               onTap: (latlng) {
                 setState(() {
                   currentMark = latlng;
                   currentMark2 = mtk.LatLng(latlng.latitude, latlng.longitude);
                   putMarker(currentMark);
+                  putCircle(latlng);
                 });
               },
               polygons: myPolygon(),
