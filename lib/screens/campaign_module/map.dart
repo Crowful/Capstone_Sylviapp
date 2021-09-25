@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,6 +16,19 @@ class _MapScreenState extends State<MapScreen> {
   bool clicked = false;
   final _initialCameraPosition =
       CameraPosition(target: LatLng(14.5995, 120.9842));
+
+  List<Polygon> polygons = <Polygon>[
+    new Polygon(
+        polygonId: PolygonId("test"),
+        points: <LatLng>[
+          LatLng(14.718598, 121.071495),
+          LatLng(14.729223, 121.071839),
+          LatLng(14.711292, 121.082653),
+        ],
+        strokeWidth: 10,
+        strokeColor: Colors.black,
+        fillColor: Colors.red)
+  ];
 
   @override
   Widget build(BuildContext context) {
