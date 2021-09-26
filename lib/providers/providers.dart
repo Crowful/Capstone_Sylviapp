@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sylviapp_project/Domain/radiusCampaign.dart';
 import 'package:sylviapp_project/Domain/theme&language_notifier.dart';
 import 'package:sylviapp_project/models/user_account.dart';
 import 'package:sylviapp_project/services/authservices.dart';
@@ -7,6 +8,8 @@ import 'package:sylviapp_project/services/authservices.dart';
 final themingProvider = ChangeNotifierProvider((ref) => ThemeNotifier());
 
 final languageProvider = ChangeNotifierProvider((ref) => ThemeNotifier());
+
+final mapProvider = ChangeNotifierProvider((ref) => MapBackend());
 
 final userAccountProvider = Provider((ref) => UserAccount());
 

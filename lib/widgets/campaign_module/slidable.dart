@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sylviapp_project/providers/providers.dart';
 
 class SliderWidget extends StatefulWidget {
   final double radius;
@@ -32,12 +34,21 @@ class _SliderWidgetState extends State<SliderWidget> {
             Text('Radius'),
             Slider(
               value: radiuss,
-              onChanged: (radius) {
+              onChanged: (radius1) {
                 setState(() {
-                  radiuss = radius;
+                  radiuss = radius1;
                 });
               },
             ),
+            ElevatedButton(
+                onPressed: () {
+                  context
+                      .read(mapProvider)
+                      .RadiusAssign(radiuss.toDouble() * 100);
+                  print(context.read(mapProvider).valueRadius);
+                  Navigator.pop(context);
+                },
+                child: Text("Done"))
           ],
         ),
       ),

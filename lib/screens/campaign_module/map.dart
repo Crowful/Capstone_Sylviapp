@@ -5,7 +5,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sylviapp_project/animation/pop_up.dart';
+import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/widgets/campaign_module/slidable.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -36,7 +38,7 @@ class _MapScreenState extends State<MapScreen> {
 
   Set<Circle> circle = Set();
 
-  void putCircle(latlng) {
+  void putCircle(latlng, int radius1, circleID) {
     Circle circle1 = Circle(
       onTap: () {
         print('clicked');
@@ -44,11 +46,11 @@ class _MapScreenState extends State<MapScreen> {
           clickedRadius = true;
         });
       },
-      circleId: CircleId("test"),
+      circleId: CircleId(circleID.toString()),
       center: latlng,
       strokeWidth: 0,
       fillColor: Colors.pink,
-      radius: 100,
+      radius: radius1.toDouble(),
     );
 
     circle.add(circle1);
@@ -119,58 +121,64 @@ class _MapScreenState extends State<MapScreen> {
     return SafeArea(
       child: Scaffold(
         body: Stack(children: [
-          GoogleMap(
-              onTap: (latlng) {
-                mtk.LatLng latlngtoMTK =
-                    mtk.LatLng(latlng.latitude, latlng.longitude);
-                final mtk1 = mtk.LatLng(pointFromGoogleMap1.latitude,
-                    pointFromGoogleMap1.longitude);
-                final mtk2 = mtk.LatLng(pointFromGoogleMap2.latitude,
-                    pointFromGoogleMap2.longitude);
-                final mtk3 = mtk.LatLng(pointFromGoogleMap3.latitude,
-                    pointFromGoogleMap3.longitude);
+          Consumer(builder: (context, watch, child) {
+            final radiusNotifier = watch(mapProvider);
 
-                List<mtk.LatLng> mtkPolygon = new List.empty(growable: true);
-                mtkPolygon.add(mtk1);
-                mtkPolygon.add(mtk2);
-                mtkPolygon.add(mtk3);
+            return GoogleMap(
+                onTap: (latlng) {
+                  mtk.LatLng latlngtoMTK =
+                      mtk.LatLng(latlng.latitude, latlng.longitude);
+                  final mtk1 = mtk.LatLng(pointFromGoogleMap1.latitude,
+                      pointFromGoogleMap1.longitude);
+                  final mtk2 = mtk.LatLng(pointFromGoogleMap2.latitude,
+                      pointFromGoogleMap2.longitude);
+                  final mtk3 = mtk.LatLng(pointFromGoogleMap3.latitude,
+                      pointFromGoogleMap3.longitude);
 
-                isPointValid = mtk.PolygonUtil.containsLocation(
-                    latlngtoMTK, mtkPolygon, false);
+                  List<mtk.LatLng> mtkPolygon = new List.empty(growable: true);
+                  mtkPolygon.add(mtk1);
+                  mtkPolygon.add(mtk2);
+                  mtkPolygon.add(mtk3);
 
-                if (isPointValid == true) {
-                  Navigator.of(context)
-                      .push(HeroDialogRoute(builder: (context) {
-                    return SliderWidget(radius: radius);
-                  }));
-                  setState(() {
-                    circleID++;
-                    circle.add(Circle(
-                      onTap: () {
-                        print('clicked');
-                        setState(() {
-                          clickedRadius = true;
-                        });
-                      },
-                      circleId: CircleId(circleID.toString()),
-                      center: latlng,
-                      strokeWidth: 0,
-                      fillColor: Colors.pink,
-                      radius: radius,
-                    ));
-                  });
-                } else if (isPointValid == false) {
-                  Fluttertoast.showToast(msg: "BAWAL SA LABAS NG POLYGON");
-                }
-              },
-              polygons: myPolygon(),
-              circles: circle,
-              mapType: MapType.normal,
-              onMapCreated: (GoogleMapController controller) {
-                mapController.complete(controller);
-              },
-              zoomControlsEnabled: false,
-              initialCameraPosition: _initialCameraPosition),
+                  isPointValid = mtk.PolygonUtil.containsLocation(
+                      latlngtoMTK, mtkPolygon, false);
+
+                  if (isPointValid == true) {
+                    Navigator.of(context).push(
+                        HeroDialogRoute(builder: (context) {
+                      return SliderWidget(radius: radius);
+                    })).whenComplete(() => putCircle(
+                        latlng, radiusNotifier.valueRadius.toInt(), circleID));
+                    setState(() {
+                      circleID++;
+                      circle.add(Circle(
+                        onTap: () {
+                          print('clicked');
+                          setState(() {
+                            clickedRadius = true;
+                          });
+                        },
+                        circleId: CircleId(circleID.toString()),
+                        center: latlng,
+                        strokeWidth: 0,
+                        fillColor: Colors.pink,
+                        radius: radius,
+                      ));
+                    });
+                  } else if (isPointValid == false) {
+                    Fluttertoast.showToast(
+                        msg: "You cannot put campaign there");
+                  }
+                },
+                polygons: myPolygon(),
+                circles: circle,
+                mapType: MapType.normal,
+                onMapCreated: (GoogleMapController controller) {
+                  mapController.complete(controller);
+                },
+                zoomControlsEnabled: false,
+                initialCameraPosition: _initialCameraPosition);
+          }),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -290,7 +298,7 @@ class _MapScreenState extends State<MapScreen> {
     return Container(
       height: 20,
       width: 160,
-      decoration: BoxDecoration(color: Colors.white),
+      decoration: BoxDecoration(color: Colors.black),
       child: Row(
         children: [
           Text('Radius'),
