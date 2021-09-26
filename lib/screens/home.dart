@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
+import 'analytics_module/bar_graph.dart';
 
 class HomePage extends StatefulWidget {
   final AnimationController controller;
@@ -220,7 +221,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         Row(
                                           children: [
                                             Icon(
-                                              Icons.announcement,
+                                              Icons.attach_money_rounded,
                                               color: Colors.white,
                                               size: 30,
                                             ),
@@ -228,7 +229,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               width: 8,
                                             ),
                                             Text(
-                                              'Campaign',
+                                              'Donate',
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w500,
@@ -244,7 +245,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   duration: Duration(milliseconds: 500),
                                   opacity: currentPage != 1 ? 1 : 0,
                                   child: Icon(
-                                    Icons.announcement,
+                                    Icons.monetization_on,
                                     color: Color(0xff65BFB8),
                                   ),
                                 ),
@@ -255,6 +256,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 setState(() {
                                   currentPage = 2;
                                 });
+                                homePageController.jumpToPage(2);
                               },
                               child:
                                   Stack(alignment: Alignment.center, children: [
@@ -276,7 +278,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         Row(
                                           children: [
                                             Icon(
-                                              Icons.announcement,
+                                              Icons.chat_rounded,
                                               color: Colors.white,
                                               size: 30,
                                             ),
@@ -284,7 +286,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               width: 8,
                                             ),
                                             Text(
-                                              'Campaign',
+                                              'Community',
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w500,
@@ -300,7 +302,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   duration: Duration(milliseconds: 500),
                                   opacity: currentPage != 2 ? 1 : 0,
                                   child: Icon(
-                                    Icons.local_activity,
+                                    Icons.chat_rounded,
                                     color: Color(0xff65BFB8),
                                   ),
                                 ),
@@ -311,6 +313,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 setState(() {
                                   currentPage = 3;
                                 });
+                                homePageController.jumpToPage(3);
                               },
                               child:
                                   Stack(alignment: Alignment.center, children: [
@@ -332,7 +335,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         Row(
                                           children: [
                                             Icon(
-                                              Icons.announcement,
+                                              Icons.analytics,
                                               color: Colors.white,
                                               size: 30,
                                             ),
@@ -340,7 +343,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               width: 8,
                                             ),
                                             Text(
-                                              'Campaign',
+                                              'Analytics',
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w500,
@@ -377,20 +380,99 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget secondHome() {
-    return Center(
-      child: Text('Second'),
+    return Container(
+      child: Column(
+        children: [
+          Center(
+            child: Container(
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                child: Text('Available Campaigns to donate')),
+          ),
+          Container(
+            height: 500,
+            child: Expanded(
+              child: ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Center(
+                      child: Container(
+                        color: Color(0xff65BFB8),
+                        height: 100,
+                        width: 350,
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.fromLTRB(5, 5, 0, 0),
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "La mesa Forest",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                      ),
+                    );
+                  }),
+            ),
+          )
+        ],
+      ),
     );
   }
 
   Widget thirdHome() {
-    return Center(
-      child: Text('Second'),
+    return Container(
+      child: Column(
+        children: [
+          Center(
+            child: Text('Announcement'),
+          ),
+          Container(
+            height: 200,
+            child: Expanded(
+              child: ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Center(
+                      child: Container(
+                        color: Color(0xff65BFB8),
+                        height: 100,
+                        width: 350,
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.fromLTRB(5, 5, 0, 0),
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Announcement",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                      ),
+                    );
+                  }),
+            ),
+          ),
+          Container(child: Text('Community ')),
+        ],
+      ),
     );
   }
 
   Widget fourthHome() {
-    return Center(
-      child: Text('Second'),
+    return Column(
+      children: [
+        Container(height: 250, width: 360, child: BarChartSample3()),
+      ],
     );
   }
 
