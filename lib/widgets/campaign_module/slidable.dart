@@ -126,7 +126,7 @@ class _SliderWidgetState extends State<SliderWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Number of \nVolunteers'),
+              Text('Description'),
               Container(
                 decoration: BoxDecoration(
                     color: Colors.grey.withOpacity(0.08),
@@ -145,6 +145,75 @@ class _SliderWidgetState extends State<SliderWidget> {
           ),
           SizedBox(
             height: 5,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Description'),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.08),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                width: 200,
+                height: 50,
+                child: TextField(
+                  onChanged: (email) => {},
+                  decoration: InputDecoration(
+                      focusColor: Color(0xff65BFB8),
+                      contentPadding: EdgeInsets.all(15),
+                      border: InputBorder.none),
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Description'),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.08),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                width: 200,
+                height: 50,
+                child: TextField(
+                  onChanged: (email) => {},
+                  decoration: InputDecoration(
+                      focusColor: Color(0xff65BFB8),
+                      contentPadding: EdgeInsets.all(15),
+                      border: InputBorder.none),
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Description'),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.08),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                width: 200,
+                height: 50,
+                child: TextField(
+                  onChanged: (email) => {},
+                  decoration: InputDecoration(
+                      focusColor: Color(0xff65BFB8),
+                      contentPadding: EdgeInsets.all(15),
+                      border: InputBorder.none),
+                ),
+              )
+            ],
           ),
           widget.done,
         ],

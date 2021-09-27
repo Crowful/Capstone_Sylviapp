@@ -68,11 +68,11 @@ class DatabaseService {
       String time,
       String userUID,
       String userName,
-      String latitude,
-      String longitude,
+      double latitude,
+      double longitude,
       int numSeeds,
-      String currentDonations,
-      String maxDonations,
+      double currentDonations,
+      double maxDonations,
       int currentVolunteers,
       int numberVolunteers) async {
     return await campaignCollection.doc(uid).set({

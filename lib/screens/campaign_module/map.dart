@@ -8,6 +8,7 @@ import 'package:sylviapp_project/animation/pop_up.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/widgets/campaign_module/slidable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:date_format/date_format.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -21,19 +22,19 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   String title = "title test";
   String description = " description test";
   String campaignID = " campaign id test";
-  String dateCreated = " date created test";
-  String dateStart = " date start test";
-  String dateEnded = " date end test";
+  late String dateCreated;
+  late String dateStart;
+  late String dateEnded;
   String address = "address test";
   String city = "city test";
-  String time = "time test";
+  late String time;
   String userUID = "userID test";
   String userName = "username test";
-  String latitude = "latitude test";
-  String longitude = "longitudetest";
+  double latitude = 14.5995;
+  double longitude = 120.9842;
   int numSeeds = 0;
-  String currentDonations = "currentDonation Test";
-  String maxDonations = "max donation test";
+  double currentDonations = 10000.00;
+  double maxDonations = 10000.00;
   int currentVolunteers = 0;
   int numberVolunteers = 0;
 
@@ -48,7 +49,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   bool clicked = false;
   bool clickedRadius = false;
   final _initialCameraPosition =
-      CameraPosition(target: LatLng(14.5995, 120.9842));
+      CameraPosition(target: LatLng(14.5995, 120.9842), zoom: 5);
 
   late bool isPointValid;
   late AnimationController controller =
@@ -339,89 +340,105 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                   new CurvedAnimation(
                       parent: controller, curve: Curves.fastOutSlowIn),
                 ),
-                child: SliderWidget(
-                  done: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        context
-                            .read(authserviceProvider)
-                            .createCampaign(
-                                title,
-                                description,
-                                campaignID,
-                                dateCreated,
-                                dateStart,
-                                dateEnded,
-                                address,
-                                city,
-                                time,
-                                userUID,
-                                userName,
-                                latitude,
-                                longitude,
-                                numSeeds,
-                                currentDonations,
-                                maxDonations,
-                                currentVolunteers,
-                                numberVolunteers)
-                            .whenComplete(() => controller.reverse());
-                      });
-                    },
-                    child: Text("Done"),
-                  ),
-                  status: Row(
-                    children: [
-                      Text("Volunteers: " + finalVolunteers.toString()),
-                      SizedBox(
-                        width: 30,
-                      ),
-                      Text("Seeds: " + finalSeeds.toString()),
-                      SizedBox(
-                        width: 30,
-                      ),
-                      Expanded(
-                          child: Text("Fund Needed: " +
-                              finalFund.toString() +
-                              "pesos")),
-                    ],
-                  ),
-                  radius: radius,
-                  back: IconButton(
-                    icon: Icon(Icons.arrow_back_ios),
-                    onPressed: () {
-                      setState(() {
-                        controller.reverse();
-                      });
-                    },
-                  ),
-                  slide: Center(
-                    child: Column(
+                child: SingleChildScrollView(
+                  child: SliderWidget(
+                    done: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          dateCreated = formatDate(
+                              DateTime.now(), [yyyy, '-', mm, '-', dd]);
+
+                          dateStart = formatDate(
+                              DateTime(2021, 10, 27, 2, 30, 50),
+                              [yyyy, '-', mm, '-', dd]);
+
+                          dateEnded = formatDate(
+                              DateTime(2021, 10, 27, 2, 30, 50),
+                              [yyyy, '-', mm, '-', dd]);
+
+                          time = formatDate(DateTime(2021, 09, 27, 2, 30, 50),
+                              [HH, ':', nn, ':', ss]);
+
+                          context
+                              .read(authserviceProvider)
+                              .createCampaign(
+                                  title,
+                                  description,
+                                  campaignID,
+                                  dateCreated,
+                                  dateStart,
+                                  dateEnded,
+                                  address,
+                                  city,
+                                  time,
+                                  userUID,
+                                  userName,
+                                  latitude,
+                                  longitude,
+                                  numSeeds,
+                                  currentDonations,
+                                  maxDonations,
+                                  currentVolunteers,
+                                  numberVolunteers)
+                              .whenComplete(() => controller.reverse());
+                        });
+                      },
+                      child: Text("Done"),
+                    ),
+                    status: Row(
                       children: [
-                        Slider(
-                          activeColor: Colors.green,
-                          inactiveColor: Colors.red,
-                          value: radius,
-                          onChanged: (radius1) {
-                            setState(() {
-                              radius = radius1;
-                              context
-                                  .read(mapProvider)
-                                  .RadiusAssign(radius * 100);
-                              putCircle(testlatlng, finalRadius, circleID);
-                              print(circleID);
-                              context
-                                  .read(mapProvider)
-                                  .checkVolunteersNeeded(finalRadius);
-                              context
-                                  .read(mapProvider)
-                                  .checkseedsNeeded(finalRadius);
-                              context
-                                  .read(mapProvider)
-                                  .checkFundRequired(finalRadius);
-                            });
-                          },
-                        )
+                        Text("Volunteers: " + finalVolunteers.toString()),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        Text("Seeds: " + finalSeeds.toString()),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        Expanded(
+                            child: Text("Fund Needed: " +
+                                finalFund.toString() +
+                                "pesos")),
                       ],
+                    ),
+                    radius: radius,
+                    back: IconButton(
+                      icon: Icon(Icons.arrow_back_ios),
+                      onPressed: () {
+                        setState(() {
+                          controller.reverse();
+                        });
+                      },
+                    ),
+                    slide: Center(
+                      child: Column(
+                        children: [
+                          Slider(
+                            activeColor: Colors.green,
+                            inactiveColor: Colors.red,
+                            value: radius,
+                            onChanged: (radius1) {
+                              setState(() {
+                                radius = radius1;
+                                context
+                                    .read(mapProvider)
+                                    .RadiusAssign(radius * 100);
+                                putCircle(testlatlng, finalRadius, circleID);
+                                print(circleID);
+                                context
+                                    .read(mapProvider)
+                                    .checkVolunteersNeeded(finalRadius);
+                                context
+                                    .read(mapProvider)
+                                    .checkseedsNeeded(finalRadius);
+                                context
+                                    .read(mapProvider)
+                                    .checkFundRequired(finalRadius);
+                              });
+                            },
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 )),
