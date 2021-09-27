@@ -3,10 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 
 class SliderWidget extends StatefulWidget {
+  final Widget back;
+  final Widget done;
   final double radius;
   const SliderWidget({
     Key? key,
     required this.radius,
+    required this.back,
+    required this.done,
   }) : super(key: key);
 
   @override
@@ -14,43 +18,138 @@ class SliderWidget extends StatefulWidget {
 }
 
 class _SliderWidgetState extends State<SliderWidget> {
+  GlobalKey _toolTipKey = GlobalKey();
   late double radiuss = widget.radius;
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      child: Container(
-        height: 200,
-        width: 500,
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          color: Colors.white,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text('Radius'),
-            Slider(
-              value: radiuss,
-              onChanged: (radius1) {
-                setState(() {
-                  radiuss = radius1;
-                });
-              },
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  context
-                      .read(mapProvider)
-                      .RadiusAssign(radiuss.toDouble() * 100);
-                  print(context.read(mapProvider).valueRadius);
-                  Navigator.pop(context);
+    return Container(
+      padding: EdgeInsets.all(20),
+      height: 700,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 5,
+            blurRadius: 5,
+            offset: Offset(0, -1),
+          ),
+        ],
+        borderRadius: BorderRadius.all(Radius.circular(50)),
+        shape: BoxShape.rectangle,
+        color: Colors.white,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [widget.back],
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            'Create Campaign',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('Number of Seeds'),
+                    SizedBox(
+                      width: 2,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        final dynamic _toolTip = _toolTipKey.currentState;
+                        _toolTip.ensureTooltipVisible();
+                      },
+                      child: Tooltip(
+                        key: _toolTipKey,
+                        message:
+                            "Number of seeds will determine the radius of the Campaign.",
+                        child: Icon(
+                          Icons.help_rounded,
+                          color: Colors.black.withOpacity(0.7),
+                          size: 13,
+                        ),
+                      ),
+                    )
+                  ]),
+              Slider(
+                value: radiuss,
+                onChanged: (radius1) {
+                  setState(() {
+                    radiuss = radius1;
+                  });
                 },
-                child: Text("Done"))
-          ],
-        ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Campaign Name'),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.08),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                width: 200,
+                height: 50,
+                child: TextField(
+                  onChanged: (email) => {},
+                  decoration: InputDecoration(
+                      focusColor: Color(0xff65BFB8),
+                      contentPadding: EdgeInsets.all(15),
+                      border: InputBorder.none),
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Number of \nVolunteers'),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.08),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                width: 200,
+                height: 50,
+                child: TextField(
+                  onChanged: (email) => {},
+                  decoration: InputDecoration(
+                      focusColor: Color(0xff65BFB8),
+                      contentPadding: EdgeInsets.all(15),
+                      border: InputBorder.none),
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          widget.done
+        ],
       ),
     );
   }

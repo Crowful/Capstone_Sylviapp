@@ -16,16 +16,26 @@ class MapScreen extends StatefulWidget {
   _MapScreenState createState() => _MapScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
+class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   double radius = 0;
   int circleID = 1;
   Completer<GoogleMapController> mapController = Completer();
+  bool showCreate = false;
   bool clicked = false;
   bool clickedRadius = false;
   final _initialCameraPosition =
       CameraPosition(target: LatLng(14.5995, 120.9842));
 
   late bool isPointValid;
+  late AnimationController controller =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+  @override
+  void initState() {
+    super.initState();
+
+    controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+  }
 
   final pointFromGoogleMap1 = LatLng(14.718598, 121.071495);
   final pointFromGoogleMap2 = LatLng(14.729223, 121.071839);
@@ -126,6 +136,16 @@ class _MapScreenState extends State<MapScreen> {
 
             return GoogleMap(
                 onTap: (latlng) {
+                  Future<void> toCreate() async {
+                    final GoogleMapController controller =
+                        await mapController.future;
+                    controller.moveCamera(
+                        CameraUpdate.newCameraPosition(CameraPosition(
+                      target: latlng,
+                      zoom: 18,
+                    )));
+                  }
+
                   mtk.LatLng latlngtoMTK =
                       mtk.LatLng(latlng.latitude, latlng.longitude);
                   final mtk1 = mtk.LatLng(pointFromGoogleMap1.latitude,
@@ -144,12 +164,16 @@ class _MapScreenState extends State<MapScreen> {
                       latlngtoMTK, mtkPolygon, false);
 
                   if (isPointValid == true) {
-                    Navigator.of(context).push(
-                        HeroDialogRoute(builder: (context) {
-                      return SliderWidget(radius: radius);
-                    })).whenComplete(() => putCircle(
-                        latlng, radiusNotifier.valueRadius.toInt(), circleID));
+                    // Navigator.of(context).push(
+                    //     HeroDialogRoute(builder: (context) {
+                    //   return SliderWidget(radius: radius);
+                    // })).whenComplete(() => putCircle(
+                    //     latlng, radiusNotifier.valueRadius.toInt(), circleID));
+
                     setState(() {
+                      toCreate();
+                      controller.forward();
+                      showCreate = true;
                       circleID++;
                       circle.add(Circle(
                         onTap: () {
@@ -158,7 +182,7 @@ class _MapScreenState extends State<MapScreen> {
                             clickedRadius = true;
                           });
                         },
-                        circleId: CircleId(circleID.toString()),
+                        circleId: CircleId('hello'),
                         center: latlng,
                         strokeWidth: 0,
                         fillColor: Colors.pink,
@@ -288,31 +312,32 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                   ]),
             ),
-          )
+          ),
+          SlideTransition(
+              position:
+                  Tween<Offset>(begin: Offset(0, 1.2), end: Offset(0, 0.4))
+                      .animate(
+                new CurvedAnimation(
+                    parent: controller, curve: Curves.fastOutSlowIn),
+              ),
+              child: SliderWidget(
+                radius: radius,
+                back: IconButton(
+                  icon: Icon(Icons.arrow_back_ios),
+                  onPressed: () {
+                    setState(() {
+                      controller.reverse();
+                    });
+                  },
+                ),
+                done: ElevatedButton(
+                  onPressed: () {},
+                  child: Center(
+                    child: Text('Donw'),
+                  ),
+                ),
+              )),
         ]),
-      ),
-    );
-  }
-
-  Widget slideRadius() {
-    return Container(
-      height: 20,
-      width: 160,
-      decoration: BoxDecoration(color: Colors.black),
-      child: Row(
-        children: [
-          Text('Radius'),
-          Slider(
-            value: radius,
-            onChanged: (radiusSlider) {
-              setState(() {
-                radius = radiusSlider;
-              });
-            },
-            min: 0,
-            max: 100,
-          )
-        ],
       ),
     );
   }

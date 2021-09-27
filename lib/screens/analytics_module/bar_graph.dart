@@ -13,7 +13,7 @@ class _BarChart extends StatelessWidget {
         borderData: borderData,
         barGroups: barGroups,
         alignment: BarChartAlignment.spaceAround,
-        maxY: 20,
+        maxY: 40,
       ),
     );
   }
