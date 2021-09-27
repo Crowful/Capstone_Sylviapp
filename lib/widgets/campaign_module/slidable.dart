@@ -5,12 +5,16 @@ import 'package:sylviapp_project/providers/providers.dart';
 class SliderWidget extends StatefulWidget {
   final Widget back;
   final Widget done;
+  final Widget status;
+  final Widget slide;
   final double radius;
   const SliderWidget({
     Key? key,
     required this.radius,
-    required this.back,
     required this.done,
+    required this.status,
+    required this.back,
+    required this.slide,
   }) : super(key: key);
 
   @override
@@ -58,6 +62,7 @@ class _SliderWidgetState extends State<SliderWidget> {
           SizedBox(
             height: 20,
           ),
+          widget.status,
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,15 +92,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                       ),
                     )
                   ]),
-              Slider(
-                value: radiuss,
-                onChanged: (radius1) {
-                  setState(() {
-                    radiuss = radius1;
-                    context.read(mapProvider).RadiusAssign(radiuss * 100);
-                  });
-                },
-              ),
+              widget.slide
             ],
           ),
           SizedBox(
@@ -149,7 +146,7 @@ class _SliderWidgetState extends State<SliderWidget> {
           SizedBox(
             height: 5,
           ),
-          widget.done
+          widget.done,
         ],
       ),
     );

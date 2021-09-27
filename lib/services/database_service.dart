@@ -56,10 +56,44 @@ class DatabaseService {
   }
 
 //Campaign
-  Future addCampaign(String title, String description) async {
+  Future addCampaign(
+      String title,
+      String description,
+      String campaignID,
+      String dateCreated,
+      String dateStart,
+      String dateEnded,
+      String address,
+      String city,
+      String time,
+      String userUID,
+      String userName,
+      String latitude,
+      String longitude,
+      int numSeeds,
+      String currentDonations,
+      String maxDonations,
+      int currentVolunteers,
+      int numberVolunteers) async {
     return await campaignCollection.doc(uid).set({
-      'title': title,
+      'campaignID': campaignID,
+      'campaign_name': title,
       'description': description,
+      'date_created': dateCreated,
+      'date_start': dateStart,
+      'date_ended': dateEnded,
+      'address': address,
+      'city': city,
+      'time': time,
+      'uid': userUID,
+      'username': userName,
+      'latitude': latitude,
+      'longitude': longitude,
+      'number_of_seeds': numSeeds,
+      'current_donations': currentDonations,
+      'max_donation': maxDonations,
+      'current_volunteers': currentVolunteers,
+      'number_volunteers': numberVolunteers,
     });
   }
 }

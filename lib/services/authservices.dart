@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/register_basic_info.dart';
@@ -130,6 +131,53 @@ class AuthService extends ChangeNotifier {
           .updateUserData(newEmail, newFullName, newAddress);
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future createCampaign(
+      String title,
+      String description,
+      String campaignID,
+      String dateCreated,
+      String dateStart,
+      String dateEnded,
+      String address,
+      String city,
+      String time,
+      String userUID,
+      String userName,
+      String latitude,
+      String longitude,
+      int numSeeds,
+      String currentDonations,
+      String maxDonations,
+      int currentVolunteers,
+      int numberVolunteers) async {
+    try {
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .addCampaign(
+              title,
+              description,
+              campaignID,
+              dateCreated,
+              dateStart,
+              dateEnded,
+              address,
+              city,
+              time,
+              userUID,
+              userName,
+              latitude,
+              longitude,
+              numSeeds,
+              currentDonations,
+              maxDonations,
+              currentVolunteers,
+              numberVolunteers)
+          .whenComplete(() =>
+              Fluttertoast.showToast(msg: "Campaign Successfully Created"));
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     }
   }
 }

@@ -17,6 +17,28 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
+//campaign variables
+  String title = "title test";
+  String description = " description test";
+  String campaignID = " campaign id test";
+  String dateCreated = " date created test";
+  String dateStart = " date start test";
+  String dateEnded = " date end test";
+  String address = "address test";
+  String city = "city test";
+  String time = "time test";
+  String userUID = "userID test";
+  String userName = "username test";
+  String latitude = "latitude test";
+  String longitude = "longitudetest";
+  int numSeeds = 0;
+  String currentDonations = "currentDonation Test";
+  String maxDonations = "max donation test";
+  int currentVolunteers = 0;
+  int numberVolunteers = 0;
+
+//===============
+
   double radius = 0;
   int circleID = 1;
   double finalRadius = 0;
@@ -56,11 +78,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     circle.add(Circle(
       onTap: () {
         print('clicked');
-        setState(() {
-          showCreate = true;
-          clickedRadius = true;
-        });
       },
+      consumeTapEvents: true,
       circleId: CircleId(circleID.toString()),
       center: latlng,
       strokeWidth: 1,
@@ -134,72 +153,73 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     return SafeArea(
       child: Consumer(builder: (context, watch, child) {
         final radiusProvider = watch(mapProvider);
+        int finalVolunteers = radiusProvider.volunteersRequired;
+        int finalSeeds = radiusProvider.seedsRequired;
+        int finalFund = radiusProvider.fundRequired;
         finalRadius = radiusProvider.valueRadius;
         return Scaffold(
           body: Stack(children: [
-            Container(
-              margin: showCreate
-                  ? EdgeInsets.only(bottom: 0)
-                  : EdgeInsets.only(bottom: 20),
-              child: GoogleMap(
-                  onCameraIdle: () {},
-                  onTap: (latlng) {
-                    Future<void> toCreate() async {
-                      final GoogleMapController controller =
-                          await mapController.future;
-                      controller.moveCamera(
-                          CameraUpdate.newCameraPosition(CameraPosition(
-                        target:
-                            LatLng(latlng.latitude - .0050, latlng.longitude),
-                        zoom: 16,
-                      )));
-                    }
+            GoogleMap(
+                onTap: (latlng) {
+                  Fluttertoast.showToast(
+                      msg: "Long Press inside the polygon to create campaign");
+                },
+                onCameraIdle: () {},
+                onLongPress: (latlng) {
+                  Future<void> toCreate() async {
+                    final GoogleMapController controller =
+                        await mapController.future;
+                    controller.moveCamera(
+                        CameraUpdate.newCameraPosition(CameraPosition(
+                      target: LatLng(latlng.latitude - .0050, latlng.longitude),
+                      zoom: 16,
+                    )));
+                  }
 
-                    mtk.LatLng latlngtoMTK =
-                        mtk.LatLng(latlng.latitude, latlng.longitude);
-                    final mtk1 = mtk.LatLng(pointFromGoogleMap1.latitude,
-                        pointFromGoogleMap1.longitude);
-                    final mtk2 = mtk.LatLng(pointFromGoogleMap2.latitude,
-                        pointFromGoogleMap2.longitude);
-                    final mtk3 = mtk.LatLng(pointFromGoogleMap3.latitude,
-                        pointFromGoogleMap3.longitude);
+                  mtk.LatLng latlngtoMTK =
+                      mtk.LatLng(latlng.latitude, latlng.longitude);
+                  final mtk1 = mtk.LatLng(pointFromGoogleMap1.latitude,
+                      pointFromGoogleMap1.longitude);
+                  final mtk2 = mtk.LatLng(pointFromGoogleMap2.latitude,
+                      pointFromGoogleMap2.longitude);
+                  final mtk3 = mtk.LatLng(pointFromGoogleMap3.latitude,
+                      pointFromGoogleMap3.longitude);
 
-                    List<mtk.LatLng> mtkPolygon =
-                        new List.empty(growable: true);
-                    mtkPolygon.add(mtk1);
-                    mtkPolygon.add(mtk2);
-                    mtkPolygon.add(mtk3);
+                  List<mtk.LatLng> mtkPolygon = new List.empty(growable: true);
+                  mtkPolygon.add(mtk1);
+                  mtkPolygon.add(mtk2);
+                  mtkPolygon.add(mtk3);
 
-                    isPointValid = mtk.PolygonUtil.containsLocation(
-                        latlngtoMTK, mtkPolygon, false);
+                  isPointValid = mtk.PolygonUtil.containsLocation(
+                      latlngtoMTK, mtkPolygon, false);
 
-                    if (isPointValid == true) {
-                      // Navigator.of(context).push(
-                      //     HeroDialogRoute(builder: (context) {
-                      //   return SliderWidget(radius: radius);
-                      // })).whenComplete(() => putCircle(
-                      //     latlng, radiusNotifier.valueRadius.toInt(), circleID));
+                  if (isPointValid == true) {
+                    // Navigator.of(context).push(
+                    //     HeroDialogRoute(builder: (context) {
+                    //   return SliderWidget(radius: radius);
+                    // })).whenComplete(() => putCircle(
+                    //     latlng, radiusNotifier.valueRadius.toInt(), circleID));
 
-                      setState(() {
-                        circleID++;
-                        toCreate();
-                        testlatlng = latlng;
-                        putCircle(testlatlng, finalRadius, circleID);
-                      });
-                    } else if (isPointValid == false) {
-                      Fluttertoast.showToast(
-                          msg: "You cannot put campaign there");
-                    }
-                  },
-                  polygons: myPolygon(),
-                  circles: circle,
-                  mapType: MapType.normal,
-                  onMapCreated: (GoogleMapController controller) {
-                    mapController.complete(controller);
-                  },
-                  zoomControlsEnabled: false,
-                  initialCameraPosition: _initialCameraPosition),
-            ),
+                    setState(() {
+                      circleID++;
+                      toCreate();
+                      testlatlng = latlng;
+
+                      putCircle(testlatlng, finalRadius, circleID);
+                    });
+                  } else if (isPointValid == false) {
+                    Fluttertoast.showToast(
+                        msg: "You cannot put campaign there");
+                  }
+                },
+                polygons: myPolygon(),
+                circles: circle,
+                mapType: MapType.normal,
+                onMapCreated: (GoogleMapController controller) {
+                  mapController.complete(controller);
+                },
+                zoomControlsEnabled: false,
+                initialCameraPosition: _initialCameraPosition),
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
@@ -301,7 +321,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                           width: MediaQuery.of(context).size.width,
                           child: Center(
                             child: Text(
-                              'Create Campaign',
+                              'Choose Forest',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white),
@@ -320,6 +340,51 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                       parent: controller, curve: Curves.fastOutSlowIn),
                 ),
                 child: SliderWidget(
+                  done: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        context
+                            .read(authserviceProvider)
+                            .createCampaign(
+                                title,
+                                description,
+                                campaignID,
+                                dateCreated,
+                                dateStart,
+                                dateEnded,
+                                address,
+                                city,
+                                time,
+                                userUID,
+                                userName,
+                                latitude,
+                                longitude,
+                                numSeeds,
+                                currentDonations,
+                                maxDonations,
+                                currentVolunteers,
+                                numberVolunteers)
+                            .whenComplete(() => controller.reverse());
+                      });
+                    },
+                    child: Text("Done"),
+                  ),
+                  status: Row(
+                    children: [
+                      Text("Volunteers: " + finalVolunteers.toString()),
+                      SizedBox(
+                        width: 30,
+                      ),
+                      Text("Seeds: " + finalSeeds.toString()),
+                      SizedBox(
+                        width: 30,
+                      ),
+                      Expanded(
+                          child: Text("Fund Needed: " +
+                              finalFund.toString() +
+                              "pesos")),
+                    ],
+                  ),
                   radius: radius,
                   back: IconButton(
                     icon: Icon(Icons.arrow_back_ios),
@@ -329,30 +394,34 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                       });
                     },
                   ),
-                  done: ElevatedButton(
-                    onPressed: () {
-                      print(finalRadius);
-                    },
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Text('Slide na totoo'),
-                          Slider(
-                            activeColor: Colors.white,
-                            value: radius,
-                            onChanged: (radius1) {
-                              setState(() {
-                                radius = radius1;
-                                context
-                                    .read(mapProvider)
-                                    .RadiusAssign(radius * 100);
-                                putCircle(testlatlng, finalRadius, circleID);
-                                print(circleID);
-                              });
-                            },
-                          ),
-                        ],
-                      ),
+                  slide: Center(
+                    child: Column(
+                      children: [
+                        Slider(
+                          activeColor: Colors.green,
+                          inactiveColor: Colors.red,
+                          value: radius,
+                          onChanged: (radius1) {
+                            setState(() {
+                              radius = radius1;
+                              context
+                                  .read(mapProvider)
+                                  .RadiusAssign(radius * 100);
+                              putCircle(testlatlng, finalRadius, circleID);
+                              print(circleID);
+                              context
+                                  .read(mapProvider)
+                                  .checkVolunteersNeeded(finalRadius);
+                              context
+                                  .read(mapProvider)
+                                  .checkseedsNeeded(finalRadius);
+                              context
+                                  .read(mapProvider)
+                                  .checkFundRequired(finalRadius);
+                            });
+                          },
+                        )
+                      ],
                     ),
                   ),
                 )),
