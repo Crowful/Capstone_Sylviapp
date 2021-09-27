@@ -148,7 +148,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                               await mapController.future;
                           controller.moveCamera(
                               CameraUpdate.newCameraPosition(CameraPosition(
-                            target: latlng,
+                            target: LatLng(
+                                latlng.latitude - .0050, latlng.longitude),
                             zoom: 16,
                           )));
                         }
@@ -192,8 +193,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                               },
                               circleId: CircleId('hello'),
                               center: latlng,
-                              strokeWidth: 0,
-                              fillColor: Colors.pink,
+                              strokeWidth: 1,
+                              strokeColor: Colors.pink,
+                              fillColor: Colors.pink.withOpacity(0.5),
                               radius: finalRadius,
                             ));
                           });
