@@ -48,7 +48,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   bool clicked = false;
   bool clickedRadius = false;
   final _initialCameraPosition =
-      CameraPosition(target: LatLng(14.5995, 120.9842));
+      CameraPosition(target: LatLng(14.5995, 120.9842), zoom: 11);
 
   late bool isPointValid;
   late AnimationController controller =

@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               PageView(
                   scrollDirection: Axis.horizontal,
                   controller: homePageController,
-                  children: [firstHome(), secondHome(), fourthHome()]),
+                  children: [firstHome(), secondHome(), thirdHome()]),
               FadeAnimation(
                 1.6,
                 Padding(
@@ -114,198 +114,218 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     alignment: Alignment.bottomCenter,
                     child: SizeTransition(
                       sizeFactor: _hide,
-                      axisAlignment: -1.0,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        height: 70,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(1),
-                                spreadRadius: 0.5,
-                                blurRadius: 5,
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                          height: 70,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    currentPage = 0;
+                                  });
+                                  homePageController.jumpToPage(0);
+                                },
+                                child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      AnimatedContainer(
+                                        duration: Duration(milliseconds: 300),
+                                        width: currentPage != 0 ? 0 : 100,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            color: Color(0xff65BFB8),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            if (currentPage == 0) ...[
+                                              Flexible(
+                                                child: Wrap(
+                                                  alignment:
+                                                      WrapAlignment.center,
+                                                  crossAxisAlignment:
+                                                      WrapCrossAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.home,
+                                                      color: Colors.white,
+                                                      size: 30,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Text(
+                                                      'Home',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ]
+                                          ],
+                                        ),
+                                      ),
+                                      AnimatedOpacity(
+                                        duration: Duration(milliseconds: 150),
+                                        opacity: currentPage != 0 ? 1 : 0,
+                                        child: Icon(
+                                          Icons.home,
+                                          color: Color(0xff65BFB8),
+                                        ),
+                                      ),
+                                    ]),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    currentPage = 1;
+                                  });
+                                  homePageController.jumpToPage(1);
+                                },
+                                child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      AnimatedContainer(
+                                        duration: Duration(milliseconds: 300),
+                                        width: currentPage == 1 ? 120 : 0,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            color: Color(0xff65BFB8),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            if (currentPage == 1) ...[
+                                              Flexible(
+                                                child: Wrap(
+                                                  alignment:
+                                                      WrapAlignment.center,
+                                                  crossAxisAlignment:
+                                                      WrapCrossAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      Icons
+                                                          .attach_money_rounded,
+                                                      color: Colors.white,
+                                                      size: 30,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Text(
+                                                      'Donate',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ]
+                                          ],
+                                        ),
+                                      ),
+                                      AnimatedOpacity(
+                                        duration: Duration(milliseconds: 500),
+                                        opacity: currentPage != 1 ? 1 : 0,
+                                        child: Icon(
+                                          Icons.monetization_on,
+                                          color: Color(0xff65BFB8),
+                                        ),
+                                      ),
+                                    ]),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    currentPage = 1;
+                                  });
+                                  homePageController.jumpToPage(2);
+                                },
+                                child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      AnimatedContainer(
+                                        duration: Duration(milliseconds: 300),
+                                        width: currentPage == 2 ? 120 : 0,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            color: Color(0xff65BFB8),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            if (currentPage == 2) ...[
+                                              Flexible(
+                                                child: Wrap(
+                                                  alignment:
+                                                      WrapAlignment.center,
+                                                  crossAxisAlignment:
+                                                      WrapCrossAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.analytics,
+                                                      color: Colors.white,
+                                                      size: 30,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Text(
+                                                      'Analytics',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ]
+                                          ],
+                                        ),
+                                      ),
+                                      AnimatedOpacity(
+                                        duration: Duration(milliseconds: 500),
+                                        opacity: currentPage != 2 ? 1 : 0,
+                                        child: Icon(
+                                          Icons.analytics,
+                                          color: Color(0xff65BFB8),
+                                        ),
+                                      ),
+                                    ]),
                               ),
                             ],
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  currentPage = 0;
-                                });
-                                homePageController.jumpToPage(0);
-                              },
-                              child:
-                                  Stack(alignment: Alignment.center, children: [
-                                AnimatedContainer(
-                                  duration: Duration(milliseconds: 100),
-                                  width: currentPage != 0 ? 0 : 100,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: Color(0xff65BFB8),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      if (currentPage == 0) ...[
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons.home,
-                                              color: Colors.white,
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                            Text(
-                                              'Home',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15),
-                                            )
-                                          ],
-                                        ),
-                                      ]
-                                    ],
-                                  ),
-                                ),
-                                AnimatedOpacity(
-                                  duration: Duration(milliseconds: 500),
-                                  opacity: currentPage != 0 ? 1 : 0,
-                                  child: Icon(
-                                    Icons.home,
-                                    color: Color(0xff65BFB8),
-                                  ),
-                                ),
-                              ]),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  currentPage = 1;
-                                });
-                                homePageController.jumpToPage(1);
-                              },
-                              child:
-                                  Stack(alignment: Alignment.center, children: [
-                                AnimatedContainer(
-                                  duration: Duration(milliseconds: 500),
-                                  width: currentPage == 1 ? 120 : 0,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: Color(0xff65BFB8),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      if (currentPage == 1) ...[
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons.attach_money_rounded,
-                                              color: Colors.white,
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                            Text(
-                                              'Donate',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15),
-                                            )
-                                          ],
-                                        ),
-                                      ]
-                                    ],
-                                  ),
-                                ),
-                                AnimatedOpacity(
-                                  duration: Duration(milliseconds: 500),
-                                  opacity: currentPage != 1 ? 1 : 0,
-                                  child: Icon(
-                                    Icons.monetization_on,
-                                    color: Color(0xff65BFB8),
-                                  ),
-                                ),
-                              ]),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  currentPage = 3;
-                                });
-                                homePageController.jumpToPage(3);
-                              },
-                              child:
-                                  Stack(alignment: Alignment.center, children: [
-                                AnimatedContainer(
-                                  duration: Duration(milliseconds: 500),
-                                  width: currentPage == 3 ? 120 : 0,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: Color(0xff65BFB8),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      if (currentPage == 3) ...[
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons.analytics,
-                                              color: Colors.white,
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                            Text(
-                                              'Analytics',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15),
-                                            )
-                                          ],
-                                        ),
-                                      ]
-                                    ],
-                                  ),
-                                ),
-                                AnimatedOpacity(
-                                  duration: Duration(milliseconds: 500),
-                                  opacity: currentPage != 3 ? 1 : 0,
-                                  child: Icon(
-                                    Icons.analytics,
-                                    color: Color(0xff65BFB8),
-                                  ),
-                                ),
-                              ]),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
@@ -322,9 +342,52 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget secondHome() {
     return Container(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          SizedBox(height: 15),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            !menuOpen
+                ? IconButton(
+                    icon: Icon(
+                      Icons.menu,
+                      color: Color(0xff65BFB8),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        print(menuOpen);
+                        widget.controller.forward();
+                        menuOpen = true;
+                      });
+                    },
+                  )
+                : IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color: Color(0xff65BFB8),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        widget.controller.reverse();
+                        menuOpen = false;
+                      });
+                    },
+                    color: Color(0xff403d55),
+                  ),
+            Text(
+              'Sylviapp',
+              style: TextStyle(
+                  color: Color(0xff65BFB8),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold),
+            ),
+            IconButton(
+              icon: Icon(Icons.bookmark_outline),
+              onPressed: () {},
+              color: Color(0xff65BFB8),
+            ),
+          ]),
+          SizedBox(height: 15),
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: Text(
@@ -336,14 +399,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ),
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {},
-              child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (BuildContext context, int index) {
-                    return FadeAnimation(
-                        (1.0 + index) / 4, availableCampaign());
-                  }),
+            child: NotificationListener(
+              onNotification: _handleScrollNotification,
+              child: RefreshIndicator(
+                onRefresh: () async {},
+                child: ListView.builder(
+                    itemCount: 20,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {},
+                        child: FadeAnimation(
+                            (1.0 + index) / 4, availableCampaign()),
+                      );
+                    }),
+              ),
             ),
           )
         ],
@@ -351,12 +420,82 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget fourthHome() {
-    return Column(
-      children: [
-        Container(height: 250, width: 360, child: BarChartSample3()),
-      ],
+  Widget thirdHome() {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 15),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            !menuOpen
+                ? IconButton(
+                    icon: Icon(
+                      Icons.menu,
+                      color: Color(0xff65BFB8),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        print(menuOpen);
+                        widget.controller.forward();
+                        menuOpen = true;
+                      });
+                    },
+                  )
+                : IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color: Color(0xff65BFB8),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        widget.controller.reverse();
+                        menuOpen = false;
+                      });
+                    },
+                    color: Color(0xff403d55),
+                  ),
+            Text(
+              'Sylviapp',
+              style: TextStyle(
+                  color: Color(0xff65BFB8),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold),
+            ),
+            IconButton(
+              icon: Icon(Icons.bookmark_outline),
+              onPressed: () {},
+              color: Color(0xff65BFB8),
+            ),
+          ]),
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Text(
+              'Analytics in Overall Reforestation',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.black),
+            ),
+          ),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {},
+              child: Container(
+                  height: 250,
+                  width: double.infinity,
+                  child: FadeAnimation(1, BarChartSample3())),
+            ),
+          )
+        ],
+      ),
     );
+    // return Column(
+    //   children: [
+    //     Container(height: 250, width: 360, child: BarChartSample3()),
+    //   ],
+    // );
   }
 
   Widget firstHome() {
@@ -498,6 +637,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           )
         ],
+      ),
+    );
+  }
+
+  Widget campaignDialog() {
+    return Dialog(
+      child: Container(
+        height: 20,
+        width: 20,
+        child: Center(
+          child: Text('sds'),
+        ),
       ),
     );
   }

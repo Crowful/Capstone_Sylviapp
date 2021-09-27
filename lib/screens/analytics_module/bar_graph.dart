@@ -15,6 +15,8 @@ class _BarChart extends StatelessWidget {
         alignment: BarChartAlignment.spaceAround,
         maxY: 40,
       ),
+      swapAnimationDuration: Duration(milliseconds: 150), // Optional
+      swapAnimationCurve: Curves.linear, // Optional
     );
   }
 
