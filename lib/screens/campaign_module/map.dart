@@ -19,7 +19,9 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   double radius = 0;
   int circleID = 1;
+  double finalRadius = 0;
   Completer<GoogleMapController> mapController = Completer();
+  late LatLng testlatlng;
   bool showCreate = false;
   bool clicked = false;
   bool clickedRadius = false;
@@ -48,22 +50,24 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
   Set<Circle> circle = Set();
 
-  void putCircle(latlng, int radius1, circleID) {
-    Circle circle1 = Circle(
+  void putCircle(latlng, double radius1, circleID) {
+    controller.forward();
+
+    circle.add(Circle(
       onTap: () {
         print('clicked');
         setState(() {
+          showCreate = true;
           clickedRadius = true;
         });
       },
       circleId: CircleId(circleID.toString()),
       center: latlng,
-      strokeWidth: 0,
-      fillColor: Colors.pink,
-      radius: radius1.toDouble(),
-    );
-
-    circle.add(circle1);
+      strokeWidth: 1,
+      strokeColor: Colors.pink,
+      fillColor: Colors.pink.withOpacity(0.5),
+      radius: radius1,
+    ));
   }
 
   Set<Marker> markers = Set();
@@ -75,7 +79,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       infoWindow: InfoWindow(title: statusPoint, snippet: "test"),
       position: latlng,
     );
-// Add it to Set
     markers.add(resultMarker);
   }
 
@@ -129,229 +132,233 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: Stack(children: [
-          Consumer(builder: (context, watch, child) {
-            final radiusNotifier = watch(mapProvider);
-            var finalRadius = radiusNotifier.valueRadius;
+      child: Consumer(builder: (context, watch, child) {
+        final radiusProvider = watch(mapProvider);
+        finalRadius = radiusProvider.valueRadius;
+        return Scaffold(
+          body: Stack(children: [
+            Container(
+              margin: showCreate
+                  ? EdgeInsets.only(bottom: 0)
+                  : EdgeInsets.only(bottom: 20),
+              child: GoogleMap(
+                  onCameraIdle: () {},
+                  onTap: (latlng) {
+                    Future<void> toCreate() async {
+                      final GoogleMapController controller =
+                          await mapController.future;
+                      controller.moveCamera(
+                          CameraUpdate.newCameraPosition(CameraPosition(
+                        target:
+                            LatLng(latlng.latitude - .0050, latlng.longitude),
+                        zoom: 16,
+                      )));
+                    }
 
-            return Consumer(
-              builder: (context, watch, child) {
-                return Container(
-                  margin: showCreate
-                      ? EdgeInsets.only(bottom: 0)
-                      : EdgeInsets.only(bottom: 20),
-                  child: GoogleMap(
-                      onTap: (latlng) {
-                        Future<void> toCreate() async {
-                          final GoogleMapController controller =
-                              await mapController.future;
-                          controller.moveCamera(
-                              CameraUpdate.newCameraPosition(CameraPosition(
-                            target: LatLng(
-                                latlng.latitude - .0050, latlng.longitude),
-                            zoom: 16,
-                          )));
-                        }
+                    mtk.LatLng latlngtoMTK =
+                        mtk.LatLng(latlng.latitude, latlng.longitude);
+                    final mtk1 = mtk.LatLng(pointFromGoogleMap1.latitude,
+                        pointFromGoogleMap1.longitude);
+                    final mtk2 = mtk.LatLng(pointFromGoogleMap2.latitude,
+                        pointFromGoogleMap2.longitude);
+                    final mtk3 = mtk.LatLng(pointFromGoogleMap3.latitude,
+                        pointFromGoogleMap3.longitude);
 
-                        mtk.LatLng latlngtoMTK =
-                            mtk.LatLng(latlng.latitude, latlng.longitude);
-                        final mtk1 = mtk.LatLng(pointFromGoogleMap1.latitude,
-                            pointFromGoogleMap1.longitude);
-                        final mtk2 = mtk.LatLng(pointFromGoogleMap2.latitude,
-                            pointFromGoogleMap2.longitude);
-                        final mtk3 = mtk.LatLng(pointFromGoogleMap3.latitude,
-                            pointFromGoogleMap3.longitude);
+                    List<mtk.LatLng> mtkPolygon =
+                        new List.empty(growable: true);
+                    mtkPolygon.add(mtk1);
+                    mtkPolygon.add(mtk2);
+                    mtkPolygon.add(mtk3);
 
-                        List<mtk.LatLng> mtkPolygon =
-                            new List.empty(growable: true);
-                        mtkPolygon.add(mtk1);
-                        mtkPolygon.add(mtk2);
-                        mtkPolygon.add(mtk3);
+                    isPointValid = mtk.PolygonUtil.containsLocation(
+                        latlngtoMTK, mtkPolygon, false);
 
-                        isPointValid = mtk.PolygonUtil.containsLocation(
-                            latlngtoMTK, mtkPolygon, false);
+                    if (isPointValid == true) {
+                      // Navigator.of(context).push(
+                      //     HeroDialogRoute(builder: (context) {
+                      //   return SliderWidget(radius: radius);
+                      // })).whenComplete(() => putCircle(
+                      //     latlng, radiusNotifier.valueRadius.toInt(), circleID));
 
-                        if (isPointValid == true) {
-                          // Navigator.of(context).push(
-                          //     HeroDialogRoute(builder: (context) {
-                          //   return SliderWidget(radius: radius);
-                          // })).whenComplete(() => putCircle(
-                          //     latlng, radiusNotifier.valueRadius.toInt(), circleID));
-
-                          setState(() {
-                            toCreate();
-                            controller.forward();
-                            showCreate = true;
-                            circleID++;
-                            circle.add(Circle(
-                              onTap: () {
-                                print('clicked');
-                                setState(() {
-                                  clickedRadius = true;
-                                });
-                              },
-                              circleId: CircleId('hello'),
-                              center: latlng,
-                              strokeWidth: 1,
-                              strokeColor: Colors.pink,
-                              fillColor: Colors.pink.withOpacity(0.5),
-                              radius: finalRadius,
-                            ));
-                          });
-                        } else if (isPointValid == false) {
-                          Fluttertoast.showToast(
-                              msg: "You cannot put campaign there");
-                        }
-                      },
-                      polygons: myPolygon(),
-                      circles: circle,
-                      mapType: MapType.normal,
-                      onMapCreated: (GoogleMapController controller) {
-                        mapController.complete(controller);
-                      },
-                      zoomControlsEnabled: false,
-                      initialCameraPosition: _initialCameraPosition),
-                );
-              },
-            );
-          }),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    AnimatedOpacity(
-                      duration: Duration(milliseconds: 500),
-                      opacity: clicked ? 1 : 0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                            color: Colors.transparent),
-                        height: 50,
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    toAngat();
-                                    clicked = false;
-                                  });
-                                },
-                                child: Container(
-                                    height: 50,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5))),
-                                    child: Center(
-                                        child: Text('Angat\nWatershed')))),
-                            GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    print('angat');
-                                    toLamesa();
-                                    clicked = false;
-                                  });
-                                },
-                                child: Container(
-                                    height: 50,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5))),
-                                    child: Center(
-                                        child: Text('La Mesa \nWatershed')))),
-                            GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    toPantabangan();
-                                    clicked = false;
-                                  });
-                                },
-                                child: Container(
-                                    height: 50,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5))),
-                                    child: Center(
-                                        child:
-                                            Text('Pantabangan \nWatershed')))),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        setState(() {
-                          clicked = true;
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.5),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: Offset(0, 4),
-                              ),
+                      setState(() {
+                        circleID++;
+                        toCreate();
+                        testlatlng = latlng;
+                        putCircle(testlatlng, finalRadius, circleID);
+                      });
+                    } else if (isPointValid == false) {
+                      Fluttertoast.showToast(
+                          msg: "You cannot put campaign there");
+                    }
+                  },
+                  polygons: myPolygon(),
+                  circles: circle,
+                  mapType: MapType.normal,
+                  onMapCreated: (GoogleMapController controller) {
+                    mapController.complete(controller);
+                  },
+                  zoomControlsEnabled: false,
+                  initialCameraPosition: _initialCameraPosition),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      AnimatedOpacity(
+                        duration: Duration(milliseconds: 500),
+                        opacity: clicked ? 1 : 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                              color: Colors.transparent),
+                          height: 50,
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      toAngat();
+                                      clicked = false;
+                                    });
+                                  },
+                                  child: Container(
+                                      height: 50,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5))),
+                                      child: Center(
+                                          child: Text('Angat\nWatershed')))),
+                              GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      print('angat');
+                                      toLamesa();
+                                      clicked = false;
+                                    });
+                                  },
+                                  child: Container(
+                                      height: 50,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5))),
+                                      child: Center(
+                                          child: Text('La Mesa \nWatershed')))),
+                              GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      toPantabangan();
+                                      clicked = false;
+                                    });
+                                  },
+                                  child: Container(
+                                      height: 50,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5))),
+                                      child: Center(
+                                          child: Text(
+                                              'Pantabangan \nWatershed')))),
                             ],
-                            color: Color(0xff65BFB8)),
-                        height: 50,
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(
-                          child: Text(
-                            'Create Campaign',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
                           ),
                         ),
                       ),
-                    ),
-                  ]),
-            ),
-          ),
-          SlideTransition(
-              position:
-                  Tween<Offset>(begin: Offset(0, 1.2), end: Offset(0, 0.4))
-                      .animate(
-                new CurvedAnimation(
-                    parent: controller, curve: Curves.fastOutSlowIn),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          setState(() {
+                            clicked = true;
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                              color: Color(0xff65BFB8)),
+                          height: 50,
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                            child: Text(
+                              'Create Campaign',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ]),
               ),
-              child: SliderWidget(
-                radius: radius,
-                back: IconButton(
-                  icon: Icon(Icons.arrow_back_ios),
-                  onPressed: () {
-                    setState(() {
-                      controller.reverse();
-                    });
-                  },
+            ),
+            SlideTransition(
+                position:
+                    Tween<Offset>(begin: Offset(0, 1.2), end: Offset(0, 0.4))
+                        .animate(
+                  new CurvedAnimation(
+                      parent: controller, curve: Curves.fastOutSlowIn),
                 ),
-                done: ElevatedButton(
-                  onPressed: () {},
-                  child: Center(
-                    child: Text('Done'),
+                child: SliderWidget(
+                  radius: radius,
+                  back: IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    onPressed: () {
+                      setState(() {
+                        controller.reverse();
+                      });
+                    },
                   ),
-                ),
-              )),
-        ]),
-      ),
+                  done: ElevatedButton(
+                    onPressed: () {
+                      print(finalRadius);
+                    },
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Text('Slide na totoo'),
+                          Slider(
+                            activeColor: Colors.white,
+                            value: radius,
+                            onChanged: (radius1) {
+                              setState(() {
+                                radius = radius1;
+                                context
+                                    .read(mapProvider)
+                                    .RadiusAssign(radius * 100);
+                                putCircle(testlatlng, finalRadius, circleID);
+                                print(circleID);
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )),
+          ]),
+        );
+      }),
     );
   }
 
