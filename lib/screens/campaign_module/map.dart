@@ -133,75 +133,86 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
         body: Stack(children: [
           Consumer(builder: (context, watch, child) {
             final radiusNotifier = watch(mapProvider);
+            var finalRadius = radiusNotifier.valueRadius;
 
-            return GoogleMap(
-                onTap: (latlng) {
-                  Future<void> toCreate() async {
-                    final GoogleMapController controller =
-                        await mapController.future;
-                    controller.moveCamera(
-                        CameraUpdate.newCameraPosition(CameraPosition(
-                      target: latlng,
-                      zoom: 18,
-                    )));
-                  }
+            return Consumer(
+              builder: (context, watch, child) {
+                return Container(
+                  margin: showCreate
+                      ? EdgeInsets.only(bottom: 0)
+                      : EdgeInsets.only(bottom: 20),
+                  child: GoogleMap(
+                      onTap: (latlng) {
+                        Future<void> toCreate() async {
+                          final GoogleMapController controller =
+                              await mapController.future;
+                          controller.moveCamera(
+                              CameraUpdate.newCameraPosition(CameraPosition(
+                            target: latlng,
+                            zoom: 16,
+                          )));
+                        }
 
-                  mtk.LatLng latlngtoMTK =
-                      mtk.LatLng(latlng.latitude, latlng.longitude);
-                  final mtk1 = mtk.LatLng(pointFromGoogleMap1.latitude,
-                      pointFromGoogleMap1.longitude);
-                  final mtk2 = mtk.LatLng(pointFromGoogleMap2.latitude,
-                      pointFromGoogleMap2.longitude);
-                  final mtk3 = mtk.LatLng(pointFromGoogleMap3.latitude,
-                      pointFromGoogleMap3.longitude);
+                        mtk.LatLng latlngtoMTK =
+                            mtk.LatLng(latlng.latitude, latlng.longitude);
+                        final mtk1 = mtk.LatLng(pointFromGoogleMap1.latitude,
+                            pointFromGoogleMap1.longitude);
+                        final mtk2 = mtk.LatLng(pointFromGoogleMap2.latitude,
+                            pointFromGoogleMap2.longitude);
+                        final mtk3 = mtk.LatLng(pointFromGoogleMap3.latitude,
+                            pointFromGoogleMap3.longitude);
 
-                  List<mtk.LatLng> mtkPolygon = new List.empty(growable: true);
-                  mtkPolygon.add(mtk1);
-                  mtkPolygon.add(mtk2);
-                  mtkPolygon.add(mtk3);
+                        List<mtk.LatLng> mtkPolygon =
+                            new List.empty(growable: true);
+                        mtkPolygon.add(mtk1);
+                        mtkPolygon.add(mtk2);
+                        mtkPolygon.add(mtk3);
 
-                  isPointValid = mtk.PolygonUtil.containsLocation(
-                      latlngtoMTK, mtkPolygon, false);
+                        isPointValid = mtk.PolygonUtil.containsLocation(
+                            latlngtoMTK, mtkPolygon, false);
 
-                  if (isPointValid == true) {
-                    // Navigator.of(context).push(
-                    //     HeroDialogRoute(builder: (context) {
-                    //   return SliderWidget(radius: radius);
-                    // })).whenComplete(() => putCircle(
-                    //     latlng, radiusNotifier.valueRadius.toInt(), circleID));
+                        if (isPointValid == true) {
+                          // Navigator.of(context).push(
+                          //     HeroDialogRoute(builder: (context) {
+                          //   return SliderWidget(radius: radius);
+                          // })).whenComplete(() => putCircle(
+                          //     latlng, radiusNotifier.valueRadius.toInt(), circleID));
 
-                    setState(() {
-                      toCreate();
-                      controller.forward();
-                      showCreate = true;
-                      circleID++;
-                      circle.add(Circle(
-                        onTap: () {
-                          print('clicked');
                           setState(() {
-                            clickedRadius = true;
+                            toCreate();
+                            controller.forward();
+                            showCreate = true;
+                            circleID++;
+                            circle.add(Circle(
+                              onTap: () {
+                                print('clicked');
+                                setState(() {
+                                  clickedRadius = true;
+                                });
+                              },
+                              circleId: CircleId('hello'),
+                              center: latlng,
+                              strokeWidth: 0,
+                              fillColor: Colors.pink,
+                              radius: finalRadius,
+                            ));
                           });
-                        },
-                        circleId: CircleId('hello'),
-                        center: latlng,
-                        strokeWidth: 0,
-                        fillColor: Colors.pink,
-                        radius: radius,
-                      ));
-                    });
-                  } else if (isPointValid == false) {
-                    Fluttertoast.showToast(
-                        msg: "You cannot put campaign there");
-                  }
-                },
-                polygons: myPolygon(),
-                circles: circle,
-                mapType: MapType.normal,
-                onMapCreated: (GoogleMapController controller) {
-                  mapController.complete(controller);
-                },
-                zoomControlsEnabled: false,
-                initialCameraPosition: _initialCameraPosition);
+                        } else if (isPointValid == false) {
+                          Fluttertoast.showToast(
+                              msg: "You cannot put campaign there");
+                        }
+                      },
+                      polygons: myPolygon(),
+                      circles: circle,
+                      mapType: MapType.normal,
+                      onMapCreated: (GoogleMapController controller) {
+                        mapController.complete(controller);
+                      },
+                      zoomControlsEnabled: false,
+                      initialCameraPosition: _initialCameraPosition),
+                );
+              },
+            );
           }),
           Align(
             alignment: Alignment.bottomCenter,
@@ -333,7 +344,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                 done: ElevatedButton(
                   onPressed: () {},
                   child: Center(
-                    child: Text('Donw'),
+                    child: Text('Done'),
                   ),
                 ),
               )),

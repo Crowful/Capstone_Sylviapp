@@ -92,6 +92,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                 onChanged: (radius1) {
                   setState(() {
                     radiuss = radius1;
+                    context.read(mapProvider).RadiusAssign(radiuss * 100);
                   });
                 },
               ),

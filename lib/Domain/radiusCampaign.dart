@@ -12,6 +12,7 @@ class MapBackend extends ChangeNotifier {
 
   RadiusAssign(radius) {
     valueRadius = radius;
+    print(valueRadius);
     notifyListeners();
   }
 }
