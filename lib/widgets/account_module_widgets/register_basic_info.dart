@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -46,13 +47,21 @@ class _BasicInfoPageState extends State<BasicInfoPage>
         _overall = true;
       }
 
-      context.read(userAccountProvider).setFullname(_fullNameController.text);
+      context
+          .read(userAccountProvider)
+          .setFullname(AESCryptography().encryptAES(_fullNameController.text));
 
-      context.read(userAccountProvider).setGender(_gender);
+      context
+          .read(userAccountProvider)
+          .setGender(AESCryptography().encryptAES(_gender));
 
-      context.read(userAccountProvider).setAddress(_addressController.text);
+      context
+          .read(userAccountProvider)
+          .setAddress(AESCryptography().encryptAES(_addressController.text));
 
-      context.read(userAccountProvider).setContact(_contactController.text);
+      context
+          .read(userAccountProvider)
+          .setContact(AESCryptography().encryptAES(_contactController.text));
     });
   }
 
@@ -76,10 +85,10 @@ class _BasicInfoPageState extends State<BasicInfoPage>
     });
   }
 
-  onContactChanged(int? number) {
+  onContactChanged(String number) {
     setState(() {
       _contactNumberValidate = false;
-      if (number! == 11) {
+      if (number.length == 11) {
         _contactNumberValidate = true;
         onValidate();
       }
@@ -351,7 +360,7 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                               child: TextField(
                                 controller: _contactController,
                                 onChanged: (contact) =>
-                                    onContactChanged(int.parse(contact)),
+                                    onContactChanged(contact),
                                 decoration: InputDecoration(
                                     focusColor: Colors.white,
                                     labelText: "Contact Number",
@@ -366,7 +375,7 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                             Align(
                                 alignment: Alignment.bottomRight,
                                 child: AbsorbPointer(
-                                  absorbing: _overall ? true : false,
+                                  absorbing: _overall ? false : true,
                                   child: AnimatedContainer(
                                       curve: Curves.bounceInOut,
                                       duration:

@@ -1,16 +1,18 @@
-import 'package:encrypt/encrypt.dart' as crypto;
+import 'package:encrypt/encrypt.dart' as enc;
 
 class AESCryptography {
-  static final key = crypto.Key.fromLength(32);
-  static final iv = crypto.IV.fromLength(64);
-  static final encrypter = crypto.Encrypter(crypto.AES(key));
+  final iv = enc.IV.fromLength(16);
+  final encrypter = enc.Encrypter(enc.AES(enc.Key.fromLength(32)));
 
-  static encryptAES(text) {
+  encryptAES(text) {
     final encrypted = encrypter.encrypt(text, iv: iv);
-    return encrypted;
+    return encrypted.base64;
   }
 
-  static decryptAES(text) {
-    return encrypter.decrypt(text, iv: iv);
+  decryptAES(enc.Encrypted text) {
+    final decrypted = encrypter.decrypt(text, iv: iv).toString();
+    print(decrypted);
+
+    return decrypted;
   }
 }

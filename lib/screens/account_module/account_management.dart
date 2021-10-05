@@ -2,20 +2,21 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:encrypt/encrypt.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/Domain/wrapperAuth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:encrypt/encrypt.dart' as enc;
 
 class AccountManagementScreen extends StatefulWidget {
-  const AccountManagementScreen({Key? key}) : super(key: key);
-
   @override
   _AccountManagementScreenState createState() =>
       _AccountManagementScreenState();
@@ -124,14 +125,21 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                             width: 200,
                             child: CircularProgressIndicator());
                       } else {
-                        var fullname = snapshot.data!.get('fullname');
-                        var address = snapshot.data!.get('address');
-                        var gender = snapshot.data!.get('gender');
+                        var fullname = AESCryptography().decryptAES(
+                            enc.Encrypted.fromBase64(
+                                snapshot.data!.get('fullname')));
+                        var address = AESCryptography().decryptAES(
+                            enc.Encrypted.fromBase64(
+                                snapshot.data!.get('address')));
+                        var gender = AESCryptography().decryptAES(
+                            enc.Encrypted.fromBase64(
+                                snapshot.data!.get('gender')));
                         var email = snapshot.data!.get('email');
 
                         fullnameController.text = fullname;
                         addressController.text = address;
                         emailController.text = email;
+
                         return Container(
                           margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
                           child: Column(
