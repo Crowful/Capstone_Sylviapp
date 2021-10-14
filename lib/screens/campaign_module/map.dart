@@ -340,105 +340,103 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                   new CurvedAnimation(
                       parent: controller, curve: Curves.fastOutSlowIn),
                 ),
-                child: SingleChildScrollView(
-                  child: SliderWidget(
-                    done: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          dateCreated = formatDate(
-                              DateTime.now(), [yyyy, '-', mm, '-', dd]);
+                child: SliderWidget(
+                  done: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        dateCreated = formatDate(
+                            DateTime.now(), [yyyy, '-', mm, '-', dd]);
 
-                          dateStart = formatDate(
-                              DateTime(2021, 10, 27, 2, 30, 50),
-                              [yyyy, '-', mm, '-', dd]);
+                        dateStart = formatDate(
+                            DateTime(2021, 10, 27, 2, 30, 50),
+                            [yyyy, '-', mm, '-', dd]);
 
-                          dateEnded = formatDate(
-                              DateTime(2021, 10, 27, 2, 30, 50),
-                              [yyyy, '-', mm, '-', dd]);
+                        dateEnded = formatDate(
+                            DateTime(2021, 10, 27, 2, 30, 50),
+                            [yyyy, '-', mm, '-', dd]);
 
-                          time = formatDate(DateTime(2021, 09, 27, 2, 30, 50),
-                              [HH, ':', nn, ':', ss]);
+                        time = formatDate(DateTime(2021, 09, 27, 2, 30, 50),
+                            [HH, ':', nn, ':', ss]);
 
-                          context
-                              .read(authserviceProvider)
-                              .createCampaign(
-                                  title,
-                                  description,
-                                  campaignID,
-                                  dateCreated,
-                                  dateStart,
-                                  dateEnded,
-                                  address,
-                                  city,
-                                  time,
-                                  userUID,
-                                  userName,
-                                  latitude,
-                                  longitude,
-                                  numSeeds,
-                                  currentDonations,
-                                  maxDonations,
-                                  currentVolunteers,
-                                  numberVolunteers)
-                              .whenComplete(() => controller.reverse());
-                        });
-                      },
-                      child: Text("Done"),
-                    ),
-                    status: Row(
-                      children: [
-                        Text("Volunteers: " + finalVolunteers.toString()),
-                        SizedBox(
-                          width: 30,
-                        ),
-                        Text("Seeds: " + finalSeeds.toString()),
-                        SizedBox(
-                          width: 30,
-                        ),
-                        Expanded(
-                            child: Text("Fund Needed: " +
-                                finalFund.toString() +
-                                "pesos")),
-                      ],
-                    ),
-                    radius: radius,
-                    back: IconButton(
-                      icon: Icon(Icons.arrow_back_ios),
-                      onPressed: () {
-                        setState(() {
-                          controller.reverse();
-                        });
-                      },
-                    ),
-                    slide: Center(
-                      child: Column(
-                        children: [
-                          Slider(
-                            activeColor: Colors.green,
-                            inactiveColor: Colors.red,
-                            value: radius,
-                            onChanged: (radius1) {
-                              setState(() {
-                                radius = radius1;
-                                context
-                                    .read(mapProvider)
-                                    .RadiusAssign(radius * 100);
-                                putCircle(testlatlng, finalRadius, circleID);
-                                print(circleID);
-                                context
-                                    .read(mapProvider)
-                                    .checkVolunteersNeeded(finalRadius);
-                                context
-                                    .read(mapProvider)
-                                    .checkseedsNeeded(finalRadius);
-                                context
-                                    .read(mapProvider)
-                                    .checkFundRequired(finalRadius);
-                              });
-                            },
-                          )
-                        ],
+                        context
+                            .read(authserviceProvider)
+                            .createCampaign(
+                                title,
+                                description,
+                                campaignID,
+                                dateCreated,
+                                dateStart,
+                                dateEnded,
+                                address,
+                                city,
+                                time,
+                                userUID,
+                                userName,
+                                latitude,
+                                longitude,
+                                numSeeds,
+                                currentDonations,
+                                maxDonations,
+                                currentVolunteers,
+                                numberVolunteers)
+                            .whenComplete(() => controller.reverse());
+                      });
+                    },
+                    child: Text("Done"),
+                  ),
+                  status: Row(
+                    children: [
+                      Text("Volunteers: " + finalVolunteers.toString()),
+                      SizedBox(
+                        width: 30,
                       ),
+                      Text("Seeds: " + finalSeeds.toString()),
+                      SizedBox(
+                        width: 30,
+                      ),
+                      Expanded(
+                          child: Text("Fund Needed: " +
+                              finalFund.toString() +
+                              "pesos")),
+                    ],
+                  ),
+                  radius: radius,
+                  back: IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    onPressed: () {
+                      setState(() {
+                        controller.reverse();
+                      });
+                    },
+                  ),
+                  slide: Center(
+                    child: Column(
+                      children: [
+                        Slider(
+                          activeColor: Colors.green,
+                          inactiveColor: Colors.red,
+                          value: radius,
+                          onChanged: (radius1) {
+                            setState(() {
+                              radius = radius1;
+                              context
+                                  .read(mapProvider)
+                                  .RadiusAssign(radius * 100);
+                              putCircle(testlatlng, finalRadius, circleID);
+                              print(circleID);
+                              context
+                                  .read(mapProvider)
+                                  .checkVolunteersNeeded(finalRadius);
+                              context
+                                  .read(mapProvider)
+                                  .checkseedsNeeded(finalRadius);
+                              context
+                                  .read(mapProvider)
+                                  .checkFundRequired(finalRadius);
+                            });
+                          },
+                        )
+                      ],
                     ),
                   ),
                 )),
