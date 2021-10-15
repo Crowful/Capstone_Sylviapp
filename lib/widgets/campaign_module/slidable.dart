@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/models/campaign.dart';
 
 class SliderWidget extends StatefulWidget {
   final Widget back;
@@ -22,6 +23,11 @@ class SliderWidget extends StatefulWidget {
 }
 
 class _SliderWidgetState extends State<SliderWidget> {
+  TextEditingController campaignNameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+
   GlobalKey _toolTipKey = GlobalKey();
   late double radiuss = widget.radius;
   @override
@@ -113,7 +119,10 @@ class _SliderWidgetState extends State<SliderWidget> {
                     width: 200,
                     height: 50,
                     child: TextField(
-                      onChanged: (email) => {},
+                      controller: campaignNameController,
+                      onChanged: (value) => {
+                        context.read(campaignProvider).setCampaignName(value)
+                      },
                       decoration: InputDecoration(
                           focusColor: Color(0xff65BFB8),
                           contentPadding: EdgeInsets.all(15),
@@ -137,7 +146,10 @@ class _SliderWidgetState extends State<SliderWidget> {
                     width: 200,
                     height: 50,
                     child: TextField(
-                      onChanged: (email) => {},
+                      controller: descriptionController,
+                      onChanged: (value) => {
+                        context.read(campaignProvider).setDescription(value)
+                      },
                       decoration: InputDecoration(
                           focusColor: Color(0xff65BFB8),
                           contentPadding: EdgeInsets.all(15),
@@ -153,7 +165,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Description'),
+                  Text('City'),
                   Container(
                     decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.08),
@@ -161,7 +173,9 @@ class _SliderWidgetState extends State<SliderWidget> {
                     width: 200,
                     height: 50,
                     child: TextField(
-                      onChanged: (email) => {},
+                      controller: cityController,
+                      onChanged: (value) =>
+                          {context.read(campaignProvider).setCityName(value)},
                       decoration: InputDecoration(
                           focusColor: Color(0xff65BFB8),
                           contentPadding: EdgeInsets.all(15),
@@ -177,7 +191,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Description'),
+                  Text('Address'),
                   Container(
                     decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.08),
@@ -185,7 +199,9 @@ class _SliderWidgetState extends State<SliderWidget> {
                     width: 200,
                     height: 50,
                     child: TextField(
-                      onChanged: (email) => {},
+                      controller: addressController,
+                      onChanged: (value) =>
+                          {context.read(campaignProvider).setAddress(value)},
                       decoration: InputDecoration(
                           focusColor: Color(0xff65BFB8),
                           contentPadding: EdgeInsets.all(15),
@@ -201,7 +217,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Description'),
+                  Text('Date Start'),
                   Container(
                     decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.08),
@@ -209,7 +225,9 @@ class _SliderWidgetState extends State<SliderWidget> {
                     width: 200,
                     height: 50,
                     child: TextField(
-                      onChanged: (email) => {},
+                      onChanged: (value) => {
+                        context.read(campaignProvider).setStartingDate(value)
+                      },
                       decoration: InputDecoration(
                           focusColor: Color(0xff65BFB8),
                           contentPadding: EdgeInsets.all(15),

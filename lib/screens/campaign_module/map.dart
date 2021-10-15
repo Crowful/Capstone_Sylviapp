@@ -30,8 +30,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   late String time;
   String userUID = "userID test";
   String userName = "username test";
-  double latitude = 14.5995;
-  double longitude = 120.9842;
+  double latitude = 0;
+  double longitude = 0;
   int numSeeds = 0;
   double currentDonations = 10000.00;
   double maxDonations = 10000.00;
@@ -202,6 +202,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                     //     latlng, radiusNotifier.valueRadius.toInt(), circleID));
 
                     setState(() {
+                      latitude = latlng.latitude;
+                      longitude = latlng.longitude;
                       circleID++;
                       toCreate();
                       testlatlng = latlng;
@@ -361,24 +363,24 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                         context
                             .read(authserviceProvider)
                             .createCampaign(
-                                title,
-                                description,
+                                context.read(campaignProvider).getCampaignName,
+                                context.read(campaignProvider).getDescription,
                                 campaignID,
                                 dateCreated,
-                                dateStart,
+                                context.read(campaignProvider).getStartDate,
                                 dateEnded,
-                                address,
-                                city,
+                                context.read(campaignProvider).getAddress,
+                                context.read(campaignProvider).getCity,
                                 time,
                                 userUID,
                                 userName,
                                 latitude,
                                 longitude,
-                                numSeeds,
+                                finalSeeds,
                                 currentDonations,
                                 maxDonations,
                                 currentVolunteers,
-                                numberVolunteers)
+                                finalVolunteers)
                             .whenComplete(() => controller.reverse());
                       });
                     },
