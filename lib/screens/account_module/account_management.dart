@@ -273,36 +273,6 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       SizedBox(
                         height: 15,
                       ),
-<<<<<<< HEAD
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 25,
-                            backgroundColor: Color(0xffFF683A),
-                            child: IconButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(context, "/getverified");
-                                },
-                                icon: Icon(Icons.security,
-                                    size: 20, color: Colors.white)),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Align(
-                            alignment: Alignment.center,
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, "/getverified");
-                              },
-                              child: Text(
-                                'Get Verified',
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.w500),
-                              ),
-=======
                       GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(context, "/get_verify");
@@ -320,7 +290,6 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                   },
                                   icon: Icon(Icons.security,
                                       size: 20, color: Colors.white)),
->>>>>>> 8a55d00eb1447aad78948a8a58a39de679a8ba38
                             ),
                             SizedBox(
                               width: 15,
