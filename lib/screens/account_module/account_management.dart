@@ -113,7 +113,9 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                           Icons.arrow_back_ios,
                           color: Color(0xff65BFB8),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, "/home");
+                        },
                         color: Color(0xff403d55),
                       ),
                       Text(
@@ -136,7 +138,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                   children: [
                     Container(
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        child: urlTest == ""
+                        child: urlTest != ""
                             ? CircleAvatar(
                                 radius: 45,
                                 backgroundImage: FadeInImage.memoryNetwork(
@@ -271,6 +273,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       SizedBox(
                         height: 15,
                       ),
+<<<<<<< HEAD
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -299,9 +302,39 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                 style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.w500),
                               ),
+=======
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, "/get_verify");
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Color(0xffFF683A),
+                              child: IconButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, "/get_verify");
+                                  },
+                                  icon: Icon(Icons.security,
+                                      size: 20, color: Colors.white)),
+>>>>>>> 8a55d00eb1447aad78948a8a58a39de679a8ba38
                             ),
-                          )
-                        ],
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Get Verified',
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: 15,
@@ -342,11 +375,54 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       SizedBox(
                         height: 15,
                       ),
-                      Text('Reset Password',
-                          style: TextStyle(
-                              color: Color(0xff65BFB8),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15)),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, "/reset_password");
+                        },
+                        child: Text('Reset Password',
+                            style: TextStyle(
+                                color: Color(0xff65BFB8),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15)),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          showCupertinoDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CupertinoAlertDialog(
+                                  title: Text("Are You sure about that?"),
+                                  content:
+                                      Text("there's no turning back brother"),
+                                  actions: [
+                                    CupertinoDialogAction(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("no")),
+                                    CupertinoDialogAction(
+                                        onPressed: () {
+                                          context
+                                              .read(authserviceProvider)
+                                              .deleteAcc()
+                                              .whenComplete(() =>
+                                                  Navigator.pushNamed(
+                                                      context, "/wrapperAuth"));
+                                        },
+                                        child: Text("yes")),
+                                  ],
+                                );
+                              });
+                        },
+                        child: Text('Delete Account',
+                            style: TextStyle(
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15)),
+                      ),
                       SizedBox(
                         height: 15,
                       ),
