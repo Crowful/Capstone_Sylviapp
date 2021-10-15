@@ -279,7 +279,9 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                             radius: 25,
                             backgroundColor: Color(0xffFF683A),
                             child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(context, "/getverified");
+                                },
                                 icon: Icon(Icons.security,
                                     size: 20, color: Colors.white)),
                           ),
@@ -288,10 +290,15 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                           ),
                           Align(
                             alignment: Alignment.center,
-                            child: Text(
-                              'Get Verified',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w500),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(context, "/getverified");
+                              },
+                              child: Text(
+                                'Get Verified',
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
                             ),
                           )
                         ],

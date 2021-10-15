@@ -343,8 +343,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                       parent: controller, curve: Curves.fastOutSlowIn),
                 ),
                 child: SliderWidget(
-                  done: ElevatedButton(
-                    onPressed: () {
+                  done: GestureDetector(
+                    onTap: () {
                       setState(() {
                         dateCreated = formatDate(
                             DateTime.now(), [yyyy, '-', mm, '-', dd]);
@@ -384,7 +384,21 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                             .whenComplete(() => controller.reverse());
                       });
                     },
-                    child: Text("Done"),
+                    child: Container(
+                        height: 55,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: Color(0xff65BFB8),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Center(
+                          child: Text(
+                            'Done',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15),
+                          ),
+                        )),
                   ),
                   status: Row(
                     children: [
