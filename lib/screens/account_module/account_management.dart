@@ -136,7 +136,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                   children: [
                     Container(
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        child: urlTest == ""
+                        child: urlTest != ""
                             ? CircleAvatar(
                                 radius: 45,
                                 backgroundImage: FadeInImage.memoryNetwork(
@@ -340,6 +340,44 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                               color: Color(0xff65BFB8),
                               fontWeight: FontWeight.w500,
                               fontSize: 15)),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          showCupertinoDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CupertinoAlertDialog(
+                                  title: Text("Are You sure about that?"),
+                                  content:
+                                      Text("there's no turning back brother"),
+                                  actions: [
+                                    CupertinoDialogAction(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("no")),
+                                    CupertinoDialogAction(
+                                        onPressed: () {
+                                          context
+                                              .read(authserviceProvider)
+                                              .deleteAcc()
+                                              .whenComplete(() =>
+                                                  Navigator.pushNamed(
+                                                      context, "/wrapperAuth"));
+                                        },
+                                        child: Text("yes")),
+                                  ],
+                                );
+                              });
+                        },
+                        child: Text('Delete Account',
+                            style: TextStyle(
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15)),
+                      ),
                       SizedBox(
                         height: 15,
                       ),
