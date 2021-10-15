@@ -134,6 +134,15 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  Future updatePassword(String newpass) async {
+    try {
+      await _loggedInUser!.updatePassword(newpass).whenComplete(
+          () => Fluttertoast.showToast(msg: "Password Sucessfully Changed"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future createCampaign(
       String title,
       String description,

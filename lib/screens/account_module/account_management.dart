@@ -273,30 +273,37 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       SizedBox(
                         height: 15,
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 25,
-                            backgroundColor: Color(0xffFF683A),
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.security,
-                                    size: 20, color: Colors.white)),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              'Get Verified',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w500),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, "/get_verify");
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Color(0xffFF683A),
+                              child: IconButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, "/get_verify");
+                                  },
+                                  icon: Icon(Icons.security,
+                                      size: 20, color: Colors.white)),
                             ),
-                          )
-                        ],
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Get Verified',
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: 15,
@@ -337,11 +344,16 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       SizedBox(
                         height: 15,
                       ),
-                      Text('Reset Password',
-                          style: TextStyle(
-                              color: Color(0xff65BFB8),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15)),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, "/reset_password");
+                        },
+                        child: Text('Reset Password',
+                            style: TextStyle(
+                                color: Color(0xff65BFB8),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15)),
+                      ),
                       SizedBox(
                         height: 15,
                       ),
