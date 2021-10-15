@@ -45,7 +45,7 @@ class _SliderWidgetState extends State<SliderWidget> {
       ),
       child: SingleChildScrollView(
         child: Container(
-          height: 900,
+          height: 830,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
