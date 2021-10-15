@@ -82,7 +82,9 @@ class _EditProfileState extends State<EditProfile> {
                         Icons.arrow_back_ios,
                         color: Color(0xff65BFB8),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, "/account_management");
+                      },
                       color: Color(0xff403d55),
                     ),
                     Text(

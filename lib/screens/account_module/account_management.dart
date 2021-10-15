@@ -113,7 +113,9 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                           Icons.arrow_back_ios,
                           color: Color(0xff65BFB8),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, "/home");
+                        },
                         color: Color(0xff403d55),
                       ),
                       Text(
