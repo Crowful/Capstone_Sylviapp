@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         child: Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).backgroundColor,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.2),
@@ -115,13 +115,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     child: SizeTransition(
                       sizeFactor: _hide,
                       child: Card(
-                        elevation: 5,
+                        color: Colors.transparent,
+                        elevation: 3,
                         child: Container(
                           padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                           height: 70,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Theme.of(context).dialogBackgroundColor,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10))),
                           child: Row(
@@ -473,10 +474,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             padding: const EdgeInsets.all(15.0),
             child: Text(
               'Analytics in Overall Reforestation',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.black),
+              style: Theme.of(context).textTheme.headline1,
             ),
           ),
           Expanded(
@@ -557,10 +555,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   0.25,
                   Text(
                     'Overview',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xff2b2b2b)),
+                    style: Theme.of(context).textTheme.headline1,
                   ),
                 ),
                 SizedBox(
@@ -589,10 +584,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
                 Text(
                   'Your Campaigns',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff2b2b2b)),
+                  style: Theme.of(context).textTheme.headline1,
                 ),
                 SizedBox(
                   height: 10,
@@ -659,10 +651,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         margin: EdgeInsets.only(bottom: 15),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(7.5),
-            color: Colors.white,
+            color: Theme.of(context).dialogBackgroundColor,
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.35),
+                color: Colors.grey.withOpacity(0.7),
                 spreadRadius: 0,
                 blurRadius: 2,
                 offset: Offset(0, 5),

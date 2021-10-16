@@ -9,13 +9,12 @@ import 'package:sylviapp_project/screens/account_module/account_management.dart'
 import 'package:sylviapp_project/screens/account_module/before_login.dart';
 import 'package:sylviapp_project/screens/account_module/edit_account.dart';
 import 'package:sylviapp_project/screens/account_module/forgot_password.dart';
-import 'package:sylviapp_project/screens/account_module/get_verify.dart';
 import 'package:sylviapp_project/screens/account_module/onboarding.dart';
 import 'package:sylviapp_project/screens/account_module/reset_password.dart';
+import 'package:sylviapp_project/screens/account_module/verification.dart';
 import 'package:sylviapp_project/screens/account_module/verify_email.dart';
 import 'package:sylviapp_project/screens/campaign_module/ongoing_campaign.dart';
 import 'package:sylviapp_project/screens/campaign_module/recent_activity.dart';
-import 'package:sylviapp_project/screens/home.dart';
 import 'package:sylviapp_project/screens/account_module/login.dart';
 import 'package:sylviapp_project/screens/account_module/register.dart';
 import 'package:sylviapp_project/screens/layout_screen.dart';
@@ -63,7 +62,7 @@ class MyApp extends ConsumerWidget {
         "/recent_activity": (_) => RecentActivity(),
         "/ongoing_campaign": (_) => OngoingCampaign(),
         "/edit_profile": (_) => EditProfile(),
-        "/get_verify": (_) => GetVerify(),
+        "/getverified": (_) => VerificationPage(),
         "/reset_password": (_) => ResetPassword()
       },
     );

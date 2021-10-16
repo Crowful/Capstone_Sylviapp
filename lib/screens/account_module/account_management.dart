@@ -50,7 +50,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
 
   Future uploadPicture(String uid) async {
     String fileName = "pic";
-    final destination = 'files/users/$uid/ProfilePicture/$fileName';
+    final destination = 'files/users/$uid/verification/validid/$fileName';
 
     Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
     task = firebaseStorageRef.putFile(_image!);
@@ -109,7 +109,13 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                          onPressed: () {}, icon: Icon(Icons.arrow_back)),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: Color(0xff65BFB8),
+                          )),
                       Text(
                         'Sylviapp',
                         style: TextStyle(
@@ -258,7 +264,6 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       SizedBox(
                         height: 15,
                       ),
-<<<<<<< HEAD
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -267,7 +272,12 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                             radius: 25,
                             backgroundColor: Color(0xffFF683A),
                             child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  setState(() {
+                                    Navigator.pushNamed(
+                                        context, "/getverified");
+                                  });
+                                },
                                 icon: Icon(Icons.security,
                                     size: 20, color: Colors.white)),
                           ),
@@ -276,32 +286,17 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                           ),
                           Align(
                             alignment: Alignment.center,
-                            child: Text(
-                              'Get Verified',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w500),
-=======
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, "/get_verify");
-                        },
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              radius: 25,
-                              backgroundColor: Color(0xffFF683A),
-                              child: IconButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, "/get_verify");
-                                  },
-                                  icon: Icon(Icons.security,
-                                      size: 20, color: Colors.white)),
-                            ),
-                            SizedBox(
-                              width: 15,
->>>>>>> 036f1888453ce3ac2778efe2b7285d9fbcdb16b2
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  Navigator.pushNamed(context, "/getverified");
+                                });
+                              },
+                              child: Text(
+                                'Get Verified',
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
                             ),
                           )
                         ],
