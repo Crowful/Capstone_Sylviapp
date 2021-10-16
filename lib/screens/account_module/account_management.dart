@@ -258,7 +258,6 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       SizedBox(
                         height: 15,
                       ),
-<<<<<<< HEAD
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -280,28 +279,6 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                               'Get Verified',
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w500),
-=======
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, "/get_verify");
-                        },
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              radius: 25,
-                              backgroundColor: Color(0xffFF683A),
-                              child: IconButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, "/get_verify");
-                                  },
-                                  icon: Icon(Icons.security,
-                                      size: 20, color: Colors.white)),
-                            ),
-                            SizedBox(
-                              width: 15,
->>>>>>> 036f1888453ce3ac2778efe2b7285d9fbcdb16b2
                             ),
                           )
                         ],
