@@ -19,6 +19,9 @@ class DatabaseService {
   final CollectionReference feedbackCollection =
       FirebaseFirestore.instance.collection('feedbacks');
 
+  final CollectionReference verificationCollection =
+      FirebaseFirestore.instance.collection('verification');
+
 //methods
 
 //User
@@ -95,6 +98,22 @@ class DatabaseService {
       'max_donation': maxDonations,
       'current_volunteers': currentVolunteers,
       'number_volunteers': numberVolunteers,
+    });
+  }
+
+  Future saveVerification(
+    String validIDUrl,
+    String idNumber,
+    String pictureURL,
+    String reasonForApplication,
+    String doHaveExperience,
+  ) async {
+    return await verificationCollection.doc(uid).set({
+      'validIDUrl': validIDUrl,
+      'idNumber': idNumber,
+      'pictureURL': pictureURL,
+      'reasonForApplication': reasonForApplication,
+      'doHaveExperience': doHaveExperience,
     });
   }
 }

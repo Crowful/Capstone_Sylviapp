@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:sylviapp_project/providers/providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum Experience { yes, no }
 
@@ -16,7 +18,14 @@ class GetVerify extends StatefulWidget {
 }
 
 class _GetVerifyState extends State<GetVerify> {
-  TextEditingController whydidyou = TextEditingController();
+  TextEditingController whydidyouController = TextEditingController();
+  TextEditingController idNumberController = TextEditingController();
+
+  String urlForID = "";
+  String urlForPic = "";
+  String idNumber = "";
+  String reasonForAppli = "";
+  String doHaveExp = "";
 
   UploadTask? task;
   File? _imageFile;
@@ -44,14 +53,15 @@ class _GetVerifyState extends State<GetVerify> {
 
   Future uploadPicture(String uid) async {
     String fileName = "pic";
-    final destination = 'files/users/$uid/verification/$fileName';
+    final destination = 'files/users/$uid/verification/validID/$fileName';
 
     Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
-    task = firebaseStorageRef.putFile(_image!);
+    task = firebaseStorageRef.putFile(_imageFile!);
 
     final snapshot = await task!.whenComplete(() => {
           setState(() {
             uploadStatus = 'Sucessfully Uploaded (Wait for the Confirmation)';
+            urlForID = destination;
           })
         });
     String urlDownload = await snapshot.ref.getDownloadURL();
@@ -63,14 +73,15 @@ class _GetVerifyState extends State<GetVerify> {
 
   Future uploadCamera(String uid) async {
     String fileName = "pic";
-    final destination = 'files/users/$uid/verification/$fileName';
+    final destination = 'files/users/$uid/verification/facePic/$fileName';
 
     Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
-    task = firebaseStorageRef.putFile(_image!);
+    task = firebaseStorageRef.putFile(_cameraFile!);
 
     final snapshot = await task!.whenComplete(() => {
           setState(() {
             uploadStatus = 'Sucessfully Uploaded (Wait for the Confirmation)';
+            urlForPic = destination;
           })
         });
     String urlDownload = await snapshot.ref.getDownloadURL();
@@ -126,26 +137,33 @@ class _GetVerifyState extends State<GetVerify> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Upload Valid ID ',
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    Container(
-                        height: 35,
-                        width: 150,
-                        decoration: BoxDecoration(
-                          color: Color(0xff65BFB8),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [Icon(Icons.upload), Text('Upload ID')],
-                        ))
-                  ],
+                GestureDetector(
+                  onTap: () async {
+                    await pickImage();
+                    uploadPicture(
+                        context.read(authserviceProvider).getCurrentUserUID());
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Upload Valid ID ',
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      Container(
+                          height: 35,
+                          width: 150,
+                          decoration: BoxDecoration(
+                            color: Color(0xff65BFB8),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Icon(Icons.upload), Text('Upload ID')],
+                          ))
+                    ],
+                  ),
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,12 +174,16 @@ class _GetVerifyState extends State<GetVerify> {
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     Container(
-                        height: 35,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.23),
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ))
+                      height: 35,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.23),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                      child: TextField(
+                        controller: idNumberController,
+                      ),
+                    )
                   ],
                 ),
                 Row(
@@ -174,7 +196,10 @@ class _GetVerifyState extends State<GetVerify> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        takeImage();
+                        await takeImage();
+                        uploadCamera(context
+                            .read(authserviceProvider)
+                            .getCurrentUserUID());
                       },
                       child: Container(
                         height: 35,
@@ -215,7 +240,7 @@ class _GetVerifyState extends State<GetVerify> {
                           border: InputBorder.none,
                           isDense: true,
                         ),
-                        controller: whydidyou,
+                        controller: whydidyouController,
                       ),
                     )
                   ],
@@ -286,17 +311,27 @@ class _GetVerifyState extends State<GetVerify> {
               ],
             ),
           ),
-          Container(
-            height: 50,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                color: Color(0xff65BFB8),
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            child: Center(
-              child: Text(
-                'Submit Application',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+          GestureDetector(
+            onTap: () {
+              context.read(authserviceProvider).createApplication(
+                  urlForID,
+                  idNumberController.text,
+                  urlForPic,
+                  whydidyouController.text,
+                  _experience);
+            },
+            child: Container(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  color: Color(0xff65BFB8),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Center(
+                child: Text(
+                  'Submit Application',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w500),
+                ),
               ),
             ),
           )
