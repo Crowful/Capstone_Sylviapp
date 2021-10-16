@@ -136,7 +136,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                   children: [
                     Container(
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        child: urlTest == ""
+                        child: urlTest != ""
                             ? CircleAvatar(
                                 radius: 45,
                                 backgroundImage: FadeInImage.memoryNetwork(
@@ -241,7 +241,9 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                             radius: 25,
                             backgroundColor: Color(0xff65BFB8),
                             child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(context, "/edit_profile");
+                                },
                                 icon: Icon(
                                   Icons.edit,
                                   color: Colors.white,
@@ -340,11 +342,16 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       SizedBox(
                         height: 15,
                       ),
-                      Text('Reset Password',
-                          style: TextStyle(
-                              color: Color(0xff65BFB8),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15)),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, "/reset_password");
+                        },
+                        child: Text('Reset Password',
+                            style: TextStyle(
+                                color: Color(0xff65BFB8),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15)),
+                      ),
                       SizedBox(
                         height: 15,
                       ),
