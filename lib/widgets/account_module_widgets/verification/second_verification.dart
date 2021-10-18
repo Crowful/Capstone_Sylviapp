@@ -315,13 +315,15 @@ class _GetVerifyState extends State<GetVerify> {
           GestureDetector(
             onTap: () {
               isVerify = true;
+              bool isAppplying = true;
               context.read(authserviceProvider).createApplication(
                   urlForID,
                   idNumberController.text,
                   urlForPic,
                   whydidyouController.text,
                   _experience,
-                  isVerify);
+                  isVerify,
+                  isAppplying);
             },
             child: Container(
               height: 50,

@@ -40,6 +40,7 @@ class DatabaseService {
       'gender': gender,
       'phoneNumber': phoneNumber,
       'username': username,
+      'isApplying': false
     });
   }
 
@@ -107,6 +108,7 @@ class DatabaseService {
     String pictureURL,
     String reasonForApplication,
     String doHaveExperience,
+    bool verified,
   ) async {
     return await verificationCollection.doc(uid).set({
       'validIDUrl': validIDUrl,
@@ -114,6 +116,13 @@ class DatabaseService {
       'pictureURL': pictureURL,
       'reasonForApplication': reasonForApplication,
       'doHaveExperience': doHaveExperience,
+      'getVerified': verified
+    });
+  }
+
+  Future updateApplication() async {
+    return await userCollection.doc(uid).update({
+      'isApplying': true,
     });
   }
 }

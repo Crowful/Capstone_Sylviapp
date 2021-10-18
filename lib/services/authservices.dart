@@ -191,23 +191,21 @@ class AuthService extends ChangeNotifier {
   }
 
   Future createApplication(
-    String validIDUrl,
-    String idNumber,
-    String pictureURL,
-    String reasonForApplication,
-    String doHaveExperience,
-  ) async {
+      String validIDUrl,
+      String idNumber,
+      String pictureURL,
+      String reasonForApplication,
+      String doHaveExperience,
+      bool isVerify,
+      bool verified) async {
     try {
       await DatabaseService(uid: _loggedInUser!.uid)
-          .saveVerification(
-            validIDUrl,
-            idNumber,
-            pictureURL,
-            reasonForApplication,
-            doHaveExperience,
-          )
+          .saveVerification(validIDUrl, idNumber, pictureURL,
+              reasonForApplication, doHaveExperience, verified)
           .whenComplete(() => Fluttertoast.showToast(
               msg: "Application for Organizer is Successfully sent"));
+
+      await DatabaseService(uid: _loggedInUser!.uid).updateApplication();
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
