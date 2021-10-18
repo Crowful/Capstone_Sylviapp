@@ -26,6 +26,7 @@ class _GetVerifyState extends State<GetVerify> {
   String idNumber = "";
   String reasonForAppli = "";
   String doHaveExp = "";
+  bool isVerify = false;
 
   UploadTask? task;
   File? _imageFile;
@@ -313,12 +314,14 @@ class _GetVerifyState extends State<GetVerify> {
           ),
           GestureDetector(
             onTap: () {
+              isVerify = true;
               context.read(authserviceProvider).createApplication(
                   urlForID,
                   idNumberController.text,
                   urlForPic,
                   whydidyouController.text,
-                  _experience);
+                  _experience,
+                  isVerify);
             },
             child: Container(
               height: 50,
