@@ -277,7 +277,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                 onPressed: () {
                                   setState(() {
                                     Navigator.pushNamed(
-                                        context, "/getverified");
+                                        context, "/WrapperVerify");
                                   });
                                 },
                                 icon: Icon(Icons.security,
@@ -291,7 +291,8 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  Navigator.pushNamed(context, "/getverified");
+                                  Navigator.pushNamed(
+                                      context, "/WrapperVerify");
                                 });
                               },
                               child: Text(
