@@ -14,7 +14,7 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('users');
 
   final CollectionReference campaignCollection =
-      FirebaseFirestore.instance.collection('campaigns');
+      FirebaseFirestore.instance.collection('admin_campaign_requests');
 
   final CollectionReference feedbackCollection =
       FirebaseFirestore.instance.collection('feedbacks');
