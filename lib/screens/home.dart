@@ -563,7 +563,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/map');
+                    Navigator.pushNamed(context, '/wrapperMap');
                   },
                   child: Center(
                       child: FadeAnimation(

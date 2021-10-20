@@ -314,7 +314,7 @@ class _GetVerifyState extends State<GetVerify> {
           ),
           GestureDetector(
             onTap: () {
-              isVerify = true;
+              isVerify = false;
               bool isAppplying = true;
               context.read(authserviceProvider).createApplication(
                   urlForID,

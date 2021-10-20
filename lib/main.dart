@@ -3,6 +3,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sylviapp_project/Domain/wrapperAuth.dart';
+import 'package:sylviapp_project/Domain/wrapperMap.dart';
+import 'package:sylviapp_project/Domain/wrapperVerify.dart';
 import 'package:sylviapp_project/config/theme_config.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/account_module/account_management.dart';
@@ -63,7 +65,9 @@ class MyApp extends ConsumerWidget {
         "/ongoing_campaign": (_) => OngoingCampaign(),
         "/edit_profile": (_) => EditProfile(),
         "/getverified": (_) => VerificationPage(),
-        "/reset_password": (_) => ResetPassword()
+        "/reset_password": (_) => ResetPassword(),
+        "/wrapperMap": (_) => WrapperMap(),
+        "/WrapperVerify": (_) => WrapperVerify()
       },
     );
   }

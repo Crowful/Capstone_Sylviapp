@@ -28,7 +28,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
   String urlTest = "";
   Future showProfile(uid) async {
     String fileName = "pic";
-    String destination = 'files/users/$uid/verification/$fileName';
+    String destination = 'files/users/$uid/ProfilePicture/$fileName';
     Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
     try {
       taske = await firebaseStorageRef.getDownloadURL();

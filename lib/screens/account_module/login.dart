@@ -16,7 +16,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
   late FocusNode textNode;
-
+  static bool isVisible = true;
   late AnimationController _animateController =
       AnimationController(vsync: this, duration: Duration(seconds: 3))
         ..repeat(reverse: true);
@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen>
   void dispose() {
     textNode.dispose();
     _widgetController.dispose();
+    _animateController.dispose();
     super.dispose();
   }
 
@@ -195,6 +196,7 @@ class _LoginScreenState extends State<LoginScreen>
                                     bottomRight: Radius.circular(15))),
                             width: double.infinity,
                             child: TextField(
+                              obscureText: isVisible,
                               controller: _etPasswordController,
                               onChanged: (email) => {},
                               decoration: InputDecoration(
@@ -202,6 +204,15 @@ class _LoginScreenState extends State<LoginScreen>
                                   labelText: "Password",
                                   hintText: "Password",
                                   prefixIcon: Icon(Icons.vpn_key),
+                                  suffixIcon: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          isVisible = !isVisible;
+                                        });
+                                      },
+                                      icon: isVisible == true
+                                          ? Icon(Icons.visibility)
+                                          : Icon(Icons.visibility_off)),
                                   contentPadding: EdgeInsets.all(15),
                                   border: InputBorder.none),
                             ),
