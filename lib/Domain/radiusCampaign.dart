@@ -15,7 +15,7 @@ class MapBackend extends ChangeNotifier {
 
   // ignore: non_constant_identifier_names
   RadiusAssign(radius) {
-    valueRadius = radius;
+    valueRadius = radius * 100;
     notifyListeners();
   }
 

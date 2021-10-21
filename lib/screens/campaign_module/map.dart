@@ -481,7 +481,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                           inactiveColor: Colors.red,
                           value: radius,
                           min: 0,
-                          max: 100,
+                          max: 0.10,
                           onChanged: (radius1) {
                             setState(() {
                               radius = radius1;
