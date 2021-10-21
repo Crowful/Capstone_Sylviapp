@@ -163,7 +163,7 @@ class AuthService extends ChangeNotifier {
       int currentVolunteers,
       int numberVolunteers) async {
     try {
-      await DatabaseService(uid: _loggedInUser!.uid)
+      await DatabaseService(uid: userUID)
           .addCampaign(
               title,
               description,
@@ -174,7 +174,7 @@ class AuthService extends ChangeNotifier {
               address,
               city,
               time,
-              userUID,
+              _loggedInUser!.uid,
               userName,
               latitude,
               longitude,
