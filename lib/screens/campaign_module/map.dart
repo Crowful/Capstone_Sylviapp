@@ -1,19 +1,18 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:sylviapp_project/animation/pop_up.dart';
+import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/services/authservices.dart';
 import 'package:sylviapp_project/widgets/campaign_module/slidable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:date_format/date_format.dart';
+import 'package:encrypt/encrypt.dart' as enc;
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -43,6 +42,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   int currentVolunteers = 0;
   int numberVolunteers = 0;
 
+  var circleList = [];
+
 //===============
 
   double radius = 0;
@@ -63,6 +64,25 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    FirebaseFirestore.instance
+        .collection('admin_campaign_requests')
+        .get()
+        .then((QuerySnapshot snaps) {
+      print(snaps);
+      snaps.docs.forEach((circ) {
+        circle.add(Circle(
+          onTap: () {
+            print(circ.id);
+          },
+          circleId: CircleId(circ['campaignID']),
+          center: LatLng(circ['latitude'], circ['longitude']),
+          strokeWidth: 1,
+          strokeColor: Colors.pink,
+          fillColor: Colors.pink.withOpacity(0.5),
+          radius: circ['radius'],
+        ));
+      });
+    });
 
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
@@ -72,7 +92,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
         .doc(AuthService.userUid)
         .get()
         .then((data) async {
-      usernames = data['username'];
+      usernames = AESCryptography()
+          .decryptAES(enc.Encrypted.fromBase64(data['fullname']));
     });
   }
 
@@ -459,12 +480,12 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                           activeColor: Colors.green,
                           inactiveColor: Colors.red,
                           value: radius,
+                          min: 0,
+                          max: 100,
                           onChanged: (radius1) {
                             setState(() {
                               radius = radius1;
-                              context
-                                  .read(mapProvider)
-                                  .RadiusAssign(radius * 100);
+                              context.read(mapProvider).RadiusAssign(radius);
                               putCircle(testlatlng, finalRadius, circleID);
                               print(circleID);
                               context

@@ -13,6 +13,7 @@ class MapBackend extends ChangeNotifier {
     latlngs = latlng;
   }
 
+  // ignore: non_constant_identifier_names
   RadiusAssign(radius) {
     valueRadius = radius;
     notifyListeners();
