@@ -1,4 +1,6 @@
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutter/rendering.dart';
@@ -399,23 +401,33 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   color: Color(0xff65BFB8)),
             ),
           ),
-          Expanded(
-            child: NotificationListener(
-              onNotification: _handleScrollNotification,
-              child: RefreshIndicator(
-                onRefresh: () async {},
-                child: ListView.builder(
-                    itemCount: 20,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        onTap: () {},
-                        child: FadeAnimation(
-                            (1.0 + index) / 4, availableCampaign()),
-                      );
-                    }),
-              ),
-            ),
-          )
+          StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('campaigns')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Expanded(
+                    child: NotificationListener(
+                      onNotification: _handleScrollNotification,
+                      child: RefreshIndicator(
+                        onRefresh: () async {},
+                        child: ListView(
+                            children: snapshot.data!.docs.map((e) {
+                          return GestureDetector(
+                            onTap: () {},
+                            child: FadeAnimation(
+                                (1.0 + snapshot.data!.docs.length) / 4,
+                                availableCampaign(name: e['campaign_name'])),
+                          );
+                        }).toList()),
+                      ),
+                    ),
+                  );
+                } else {
+                  return CircularProgressIndicator();
+                }
+              })
         ],
       ),
     );
@@ -645,7 +657,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget availableCampaign() {
+  Widget availableCampaign({String? name}) {
     return Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(bottom: 15),
@@ -689,7 +701,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                  child: Text("Tree Planting Title",
+                  child: Text(name!,
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
