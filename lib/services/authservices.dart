@@ -161,7 +161,8 @@ class AuthService extends ChangeNotifier {
       double currentDonations,
       double maxDonations,
       int currentVolunteers,
-      int numberVolunteers) async {
+      int numberVolunteers,
+      double campaignRadius) async {
     try {
       await DatabaseService(uid: userUID)
           .addCampaign(
@@ -182,7 +183,8 @@ class AuthService extends ChangeNotifier {
               currentDonations,
               maxDonations,
               currentVolunteers,
-              numberVolunteers)
+              numberVolunteers,
+              campaignRadius)
           .whenComplete(() =>
               Fluttertoast.showToast(msg: "Campaign Successfully Created"));
     } catch (e) {

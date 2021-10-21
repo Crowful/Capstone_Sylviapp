@@ -392,7 +392,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                                 currentDonations,
                                 maxDonations,
                                 currentVolunteers,
-                                finalVolunteers)
+                                finalVolunteers,
+                                radius)
                             .whenComplete(() => controller.reverse());
                       });
                     },

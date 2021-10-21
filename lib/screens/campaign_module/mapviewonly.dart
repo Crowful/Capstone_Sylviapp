@@ -328,7 +328,8 @@ class _MapViewOnlyState extends State<MapViewOnly>
                                 currentDonations,
                                 maxDonations,
                                 currentVolunteers,
-                                finalVolunteers)
+                                finalVolunteers,
+                                radius)
                             .whenComplete(() => controller.reverse());
                       });
                     },
