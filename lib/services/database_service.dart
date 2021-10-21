@@ -40,7 +40,8 @@ class DatabaseService {
       'gender': gender,
       'phoneNumber': phoneNumber,
       'username': username,
-      'isApplying': false
+      'isApplying': false,
+      'isVerify': false,
     });
   }
 
