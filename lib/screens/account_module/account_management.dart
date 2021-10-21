@@ -110,7 +110,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            Navigator.pushNamed(context, '/home');
                           },
                           icon: Icon(
                             Icons.arrow_back,
@@ -207,10 +207,15 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                         style: TextStyle(
                                             color: Colors.grey,
                                             fontWeight: FontWeight.w600)),
-                                    Text("Not Verified",
-                                        style: TextStyle(
-                                            color: Color(0xff65BFB8),
-                                            fontWeight: FontWeight.bold)),
+                                    isVerify == true
+                                        ? Text(" Organizer",
+                                            style: TextStyle(
+                                                color: Color(0xff65BFB8),
+                                                fontWeight: FontWeight.bold))
+                                        : Text("Volunteer",
+                                            style: TextStyle(
+                                                color: Color(0xff65BFB8),
+                                                fontWeight: FontWeight.bold)),
                                   ],
                                 ),
                               );
