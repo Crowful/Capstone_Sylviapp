@@ -173,6 +173,8 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
 
                               var email = snapshot.data!.get('email');
 
+                              bool isVerify = snapshot.data!.get('isVerify');
+
                               fullnameController.text = fullname;
                               emailController.text = email;
 
@@ -192,11 +194,13 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                         SizedBox(
                                           width: 5,
                                         ),
-                                        Icon(
-                                          Icons.verified,
-                                          size: 15,
-                                          color: Color(0xff65BFB8),
-                                        )
+                                        isVerify == true
+                                            ? Icon(
+                                                Icons.verified,
+                                                size: 15,
+                                                color: Color(0xff65BFB8),
+                                              )
+                                            : SizedBox()
                                       ],
                                     ),
                                     Text(email,
