@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -6,6 +7,7 @@ import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sylviapp_project/animation/pop_up.dart';
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/services/authservices.dart';
 import 'package:sylviapp_project/widgets/campaign_module/slidable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:date_format/date_format.dart';
@@ -21,15 +23,14 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 //campaign variables
   String title = "title test";
   String description = " description test";
-  String campaignID = " campaign id test";
   late String dateCreated;
   late String dateStart;
   late String dateEnded;
   String address = "address test";
   String city = "city test";
   late String time;
-  String userUID = "userID test";
-  String userName = "username test";
+  String userUID = AuthService().getCurrentUserUID();
+  String userName = AuthService().getCurrentUserDisplayName();
   double latitude = 0;
   double longitude = 0;
   int numSeeds = 0;
@@ -54,6 +55,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   late bool isPointValid;
   late AnimationController controller =
       AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+
   @override
   void initState() {
     super.initState();
@@ -345,6 +347,16 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                 child: SliderWidget(
                   done: GestureDetector(
                     onTap: () {
+                      const _chars =
+                          'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+                      Random _rnd = Random();
+
+                      String getRandomString(int length) =>
+                          String.fromCharCodes(Iterable.generate(
+                              length,
+                              (_) => _chars
+                                  .codeUnitAt(_rnd.nextInt(_chars.length))));
+                      String uniqueID = getRandomString(15);
                       setState(() {
                         dateCreated = formatDate(
                             DateTime.now(), [yyyy, '-', mm, '-', dd]);
@@ -365,7 +377,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                             .createCampaign(
                                 context.read(campaignProvider).getCampaignName,
                                 context.read(campaignProvider).getDescription,
-                                campaignID,
+                                uniqueID,
                                 dateCreated,
                                 context.read(campaignProvider).getStartDate,
                                 dateEnded,
