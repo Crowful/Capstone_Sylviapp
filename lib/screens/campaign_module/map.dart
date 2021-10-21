@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,6 +23,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
+  var usernames;
 //campaign variables
   String title = "title test";
   String description = " description test";
@@ -62,6 +66,14 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(AuthService.userUid)
+        .get()
+        .then((data) async {
+      usernames = data['username'];
+    });
   }
 
   final pointFromGoogleMap1 = LatLng(14.718598, 121.071495);
@@ -346,7 +358,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                 ),
                 child: SliderWidget(
                   done: GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      //Get Username
+
                       const _chars =
                           'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
                       Random _rnd = Random();
@@ -385,7 +399,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                                 context.read(campaignProvider).getCity,
                                 time,
                                 userUID,
-                                userName,
+                                usernames,
                                 latitude,
                                 longitude,
                                 finalSeeds,
