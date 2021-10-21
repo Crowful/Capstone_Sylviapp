@@ -72,14 +72,14 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       snaps.docs.forEach((circ) {
         circle.add(Circle(
           onTap: () {
-            print(circ.id);
+            print("test");
           },
           circleId: CircleId(circ['campaignID']),
           center: LatLng(circ['latitude'], circ['longitude']),
           strokeWidth: 1,
           strokeColor: Colors.pink,
           fillColor: Colors.pink.withOpacity(0.5),
-          radius: circ['radius'],
+          radius: circ['radius'] * 100,
         ));
       });
     });
