@@ -19,6 +19,7 @@ import 'package:sylviapp_project/screens/campaign_module/ongoing_campaign.dart';
 import 'package:sylviapp_project/screens/campaign_module/recent_activity.dart';
 import 'package:sylviapp_project/screens/account_module/login.dart';
 import 'package:sylviapp_project/screens/account_module/register.dart';
+import 'package:sylviapp_project/screens/donation_module/donation_screen.dart';
 import 'package:sylviapp_project/screens/layout_screen.dart';
 import 'package:sylviapp_project/screens/campaign_module/map.dart';
 import 'package:sylviapp_project/screens/settings_module/settings.dart';
@@ -67,7 +68,8 @@ class MyApp extends ConsumerWidget {
         "/getverified": (_) => VerificationPage(),
         "/reset_password": (_) => ResetPassword(),
         "/wrapperMap": (_) => WrapperMap(),
-        "/WrapperVerify": (_) => WrapperVerify()
+        "/WrapperVerify": (_) => WrapperVerify(),
+        "/donation": (_) => DonationScreen()
       },
     );
   }

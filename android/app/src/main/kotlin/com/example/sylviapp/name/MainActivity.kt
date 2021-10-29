@@ -1,4 +1,4 @@
-package com.example.sylviapp_project
+package com.example.sylviapp.name
 
 import io.flutter.embedding.android.FlutterActivity
 

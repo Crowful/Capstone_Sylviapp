@@ -48,6 +48,8 @@ dependencies:
   maps_toolkit: ^2.0.0
   fl_chart: ^0.40.0
   date_format: ^2.0.4
+  flutter_braintree: ^2.1.0
+
 
 dev_dependencies:
   flutter_test:

@@ -36,7 +36,7 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         
-        applicationId "com.example.sylviapp_project"
+        applicationId "com.example.sylviapp.name"
         multiDexEnabled true
         minSdkVersion 21
         targetSdkVersion 30

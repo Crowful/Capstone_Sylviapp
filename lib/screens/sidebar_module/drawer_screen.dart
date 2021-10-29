@@ -116,10 +116,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 route: "/recent_activity",
                 title: 'Recent Activity',
                 icon: Icons.history),
-            MenuItem(
-                route: "/ongoing_campaign",
-                title: 'Ongoing Campaign',
-                icon: Icons.campaign),
+            MenuItem(route: "/donation", title: 'Donate', icon: Icons.campaign),
             MenuItem(
               route: "/settings",
               title: 'Settings',
