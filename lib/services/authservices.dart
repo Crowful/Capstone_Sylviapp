@@ -11,7 +11,6 @@ import 'package:sylviapp_project/widgets/account_module_widgets/register_basic_i
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 //Get Firestore Collection (USER)
-final CollectionReference _firestoreUser = _firestore.collection('users');
 
 class AuthService extends ChangeNotifier {
   //instance
@@ -21,7 +20,7 @@ class AuthService extends ChangeNotifier {
   static String? userUid = FirebaseAuth.instance.currentUser!.uid;
 
   //loggedInUser
-  late User? _loggedInUser;
+  User? _loggedInUser;
 
   //Get Reference
 
@@ -164,6 +163,9 @@ class AuthService extends ChangeNotifier {
       int numberVolunteers,
       double campaignRadius) async {
     try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
       await DatabaseService(uid: userUID)
           .addCampaign(
               title,

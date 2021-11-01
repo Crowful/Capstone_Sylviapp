@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +23,9 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
+  final DocumentReference documentReference =
+      FirebaseFirestore.instance.collection("polygon").doc("Angat_Forest");
+
 //FAB
   bool isOrganizer = false;
   bool createMode = false;
@@ -98,6 +102,14 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   late AnimationController controller =
       AnimationController(vsync: this, duration: Duration(milliseconds: 500));
 
+  Set<Polygon> polygon = Set();
+
+  late List<dynamic> pointlist = List.empty(growable: true);
+
+  List<LatLng> latlngpolygonlistLamesa = List.empty(growable: true);
+  List<LatLng> latlngpolygonlistAngat = List.empty(growable: true);
+  List<LatLng> latlngpolygonlistPantabangan = List.empty(growable: true);
+
   @override
   void initState() {
     super.initState();
@@ -164,6 +176,66 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       usernames = AESCryptography()
           .decryptAES(enc.Encrypted.fromBase64(data['fullname']));
     });
+
+    FirebaseFirestore.instance
+        .collection('polygon')
+        .doc('Lamesa_Forest')
+        .get()
+        .then((data) async {
+      pointlist = List<dynamic>.from(await data.get("points"));
+
+      pointlist.forEach((element) {
+        latlngpolygonlistLamesa
+            .add(LatLng(element["latitude"], element["longitude"]));
+      });
+
+      polygon.add(Polygon(
+          strokeWidth: 1,
+          strokeColor: Colors.red,
+          fillColor: Colors.green.withOpacity(0.4),
+          polygonId: PolygonId("Lamesa_Forest"),
+          points: latlngpolygonlistLamesa));
+    });
+
+    FirebaseFirestore.instance
+        .collection('polygon')
+        .doc('Angat_Forest')
+        .get()
+        .then((data) async {
+      pointlist = List<dynamic>.from(await data.get("points"));
+
+      pointlist.forEach((element) {
+        latlngpolygonlistAngat
+            .add(LatLng(element["latitude"], element["longitude"]));
+      });
+
+      polygon.add(Polygon(
+          strokeWidth: 1,
+          strokeColor: Colors.red,
+          fillColor: Colors.green.withOpacity(0.4),
+          polygonId: PolygonId("Angat_Forest"),
+          points: latlngpolygonlistAngat));
+    });
+
+    FirebaseFirestore.instance
+        .collection('polygon')
+        .doc('Pantabangan_Forest')
+        .get()
+        .then((data) async {
+      pointlist = List<dynamic>.from(await data.get("points"));
+
+      pointlist.forEach((element) {
+        latlngpolygonlistPantabangan
+            .add(LatLng(element["latitude"], element["longitude"]));
+      });
+
+      polygon.add(Polygon(
+          strokeWidth: 1,
+          strokeColor: Colors.red,
+          fillColor: Colors.green.withOpacity(0.4),
+          polygonId: PolygonId("PantabanganForest"),
+          points: latlngpolygonlistPantabangan));
+    });
   }
 
   @override
@@ -211,16 +283,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
   Set<Marker> markers = Set();
 
-  void putMarker(latlng) {
-    check();
-    Marker resultMarker = Marker(
-      markerId: MarkerId("test"),
-      infoWindow: InfoWindow(title: statusPoint, snippet: "test"),
-      position: latlng,
-    );
-    markers.add(resultMarker);
-  }
-
   Set<Polygon> myPolygon() {
     List<LatLng> polygonCoords = new List.empty(growable: true);
     polygonCoords.add(pointFromGoogleMap1);
@@ -239,35 +301,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     return polygonSet;
   }
 
-  void check() {
-    final mtk1 =
-        mtk.LatLng(pointFromGoogleMap1.latitude, pointFromGoogleMap1.longitude);
-    final mtk2 =
-        mtk.LatLng(pointFromGoogleMap2.latitude, pointFromGoogleMap2.longitude);
-    final mtk3 =
-        mtk.LatLng(pointFromGoogleMap3.latitude, pointFromGoogleMap3.longitude);
-
-    List<mtk.LatLng> mtkPolygon = new List.empty(growable: true);
-    mtkPolygon.add(mtk1);
-    mtkPolygon.add(mtk2);
-    mtkPolygon.add(mtk3);
-
-    isPointValid =
-        mtk.PolygonUtil.containsLocation(currentMark2, mtkPolygon, false);
-
-    if (isPointValid == false) {
-      print("nasa labas ng polyline");
-      setState(() {
-        statusPoint = "Nasa labas ng polyline";
-      });
-    } else if (isPointValid == true) {
-      print("nasa loob ng polyline");
-      setState(() {
-        statusPoint = "Nasa loob ng polyline";
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     dynamic userUID = context.read(authserviceProvider).getCurrentUserUID();
@@ -284,353 +317,386 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                 .doc(userUID)
                 .get(),
             builder: (BuildContext builder, snapshot) {
-              var data = snapshot.data!.data();
-              bool isVerified = data!['isVerify'];
-              Widget add() {
-                return SizedBox(
-                  child: AbsorbPointer(
-                    absorbing: isVerified ? false : true,
-                    child: FloatingActionButton(
-                      backgroundColor:
-                          isVerified ? Colors.grey : Color(0xff65BFB8),
-                      onPressed: () {
-                        setState(() {
-                          createMode = true;
-                        });
-                      },
-                      child: Icon(Icons.add),
-                    ),
-                  ),
+              if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(),
                 );
-              }
-
-              Widget image() {
-                return Container(
-                  child: FittedBox(
+              } else {
+                var data = snapshot.data!.data();
+                bool isVerified = data!['isVerify'];
+                Widget add() {
+                  return SizedBox(
                     child: AbsorbPointer(
                       absorbing: isVerified ? false : true,
                       child: FloatingActionButton(
-                        backgroundColor: Color(0xff65BFB8),
+                        heroTag: "herotag1",
+                        backgroundColor:
+                            isVerified ? Colors.grey : Color(0xff65BFB8),
                         onPressed: () {
-                          print(isVerified);
+                          setState(() {
+                            createMode = true;
+                          });
                         },
-                        tooltip: 'Image',
-                        child: Icon(Icons.image),
+                        child: Icon(Icons.add),
                       ),
                     ),
-                  ),
-                );
-              }
+                  );
+                }
 
-              Widget toggle() {
-                return Container(
-                  child: FittedBox(
-                    child: FloatingActionButton(
-                      backgroundColor: _buttonColor.value,
-                      onPressed: animate,
-                      tooltip: 'Toggle',
-                      child: AnimatedIcon(
-                        icon: AnimatedIcons.menu_close,
-                        progress: _animateIcon,
-                      ),
-                    ),
-                  ),
-                );
-              }
-
-              return Scaffold(
-                body: Stack(children: [
-                  GoogleMap(
-                      onTap: (latlng) {
-                        if (createMode = false) {
-                          Fluttertoast.showToast(
-                              msg: "Please enter in create mode first.");
-                        }
-                      },
-                      onCameraIdle: () {
-                        setState(() {
-                          createMode = false;
-                        });
-                      },
-                      onLongPress: (latlng) {
-                        if (createMode = true) {
-                          Future<void> toCreate() async {
-                            final GoogleMapController controller =
-                                await mapController.future;
-                            controller.moveCamera(
-                                CameraUpdate.newCameraPosition(CameraPosition(
-                              target: LatLng(
-                                  latlng.latitude - .0050, latlng.longitude),
-                              zoom: 16,
-                            )));
-                          }
-
-                          mtk.LatLng latlngtoMTK =
-                              mtk.LatLng(latlng.latitude, latlng.longitude);
-                          final mtk1 = mtk.LatLng(pointFromGoogleMap1.latitude,
-                              pointFromGoogleMap1.longitude);
-                          final mtk2 = mtk.LatLng(pointFromGoogleMap2.latitude,
-                              pointFromGoogleMap2.longitude);
-                          final mtk3 = mtk.LatLng(pointFromGoogleMap3.latitude,
-                              pointFromGoogleMap3.longitude);
-
-                          List<mtk.LatLng> mtkPolygon =
-                              new List.empty(growable: true);
-                          mtkPolygon.add(mtk1);
-                          mtkPolygon.add(mtk2);
-                          mtkPolygon.add(mtk3);
-
-                          isPointValid = mtk.PolygonUtil.containsLocation(
-                              latlngtoMTK, mtkPolygon, false);
-
-                          if (isPointValid == true) {
-                            // Navigator.of(context).push(
-                            //     HeroDialogRoute(builder: (context) {
-                            //   return SliderWidget(radius: radius);
-                            // })).whenComplete(() => putCircle(
-                            //     latlng, radiusNotifier.valueRadius.toInt(), circleID));
-
-                            setState(() {
-                              latitude = latlng.latitude;
-                              longitude = latlng.longitude;
-                              circleID++;
-                              toCreate();
-                              testlatlng = latlng;
-
-                              putCircle(testlatlng, finalRadius, circleID);
-                            });
-                          } else if (isPointValid == false) {
-                            Fluttertoast.showToast(
-                                msg: "You cannot put campaign there");
-                          }
-                        } else {
-                          Fluttertoast.showToast(
-                              msg:
-                                  "You are not verified yet, please submit application first.");
-                        }
-                      },
-                      polygons: myPolygon(),
-                      circles: circle,
-                      mapType: MapType.normal,
-                      onMapCreated: (GoogleMapController controller) {
-                        mapController.complete(controller);
-                      },
-                      zoomControlsEnabled: false,
-                      initialCameraPosition: _initialCameraPosition),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 60,
-                      decoration: BoxDecoration(boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.7),
-                          spreadRadius: 2,
-                          blurRadius: 1,
-                          offset: Offset(0, -.1),
-                        ),
-                      ], color: Colors.white),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 10,
-                            ),
-                            AnimatedDefaultTextStyle(
-                              duration: Duration(milliseconds: 500),
-                              child: Text('Welcome Organizer'),
-                              style: TextStyle(
-                                  shadows: <Shadow>[],
-                                  fontSize: 25,
-                                  color: Color(0xff65BFB8),
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ]),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                                width: 50,
-                                color: Colors.transparent,
-                                child: Column(
-                                  children: [
-                                    Transform(
-                                      transform: Matrix4.translationValues(
-                                        0.0,
-                                        _translateButton.value * 3.0,
-                                        0.0,
-                                      ),
-                                      child: add(),
-                                    ),
-                                    Transform(
-                                      transform: Matrix4.translationValues(
-                                        0.0,
-                                        _translateButton.value * 2.0,
-                                        0.0,
-                                      ),
-                                      child: image(),
-                                    ),
-                                    toggle(),
-                                  ],
-                                ))
-                          ]),
-                    ),
-                  ),
-                  SlideTransition(
-                      position: Tween<Offset>(
-                              begin: Offset(0, 1.2), end: Offset(0, 0.4))
-                          .animate(
-                        new CurvedAnimation(
-                            parent: controller, curve: Curves.fastOutSlowIn),
-                      ),
-                      child: SliderWidget(
-                        done: GestureDetector(
-                          onTap: () async {
-                            //Get Username
-
-                            const _chars =
-                                'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-                            Random _rnd = Random();
-
-                            String getRandomString(int length) =>
-                                String.fromCharCodes(Iterable.generate(
-                                    length,
-                                    (_) => _chars.codeUnitAt(
-                                        _rnd.nextInt(_chars.length))));
-                            String uniqueID = getRandomString(15);
-                            setState(() {
-                              dateCreated = formatDate(
-                                  DateTime.now(), [yyyy, '-', mm, '-', dd]);
-
-                              dateStart = formatDate(
-                                  DateTime(2021, 10, 27, 2, 30, 50),
-                                  [yyyy, '-', mm, '-', dd]);
-
-                              dateEnded = formatDate(
-                                  DateTime(2021, 10, 27, 2, 30, 50),
-                                  [yyyy, '-', mm, '-', dd]);
-
-                              time = formatDate(
-                                  DateTime(2021, 09, 27, 2, 30, 50),
-                                  [HH, ':', nn, ':', ss]);
-
-                              context
-                                  .read(authserviceProvider)
-                                  .createCampaign(
-                                      context
-                                          .read(campaignProvider)
-                                          .getCampaignName,
-                                      context
-                                          .read(campaignProvider)
-                                          .getDescription,
-                                      uniqueID,
-                                      dateCreated,
-                                      context
-                                          .read(campaignProvider)
-                                          .getStartDate,
-                                      dateEnded,
-                                      context.read(campaignProvider).getAddress,
-                                      context.read(campaignProvider).getCity,
-                                      time,
-                                      userUID,
-                                      usernames,
-                                      latitude,
-                                      longitude,
-                                      finalSeeds,
-                                      currentDonations,
-                                      maxDonations,
-                                      currentVolunteers,
-                                      finalVolunteers,
-                                      radius)
-                                  .whenComplete(() => controller.reverse());
-                            });
-                          },
-                          child: Container(
-                              height: 55,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  color: Color(0xff65BFB8),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                              child: Center(
-                                child: Text(
-                                  'Done',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 15),
-                                ),
-                              )),
-                        ),
-                        status: Row(
-                          children: [
-                            Text("Volunteers: " + finalVolunteers.toString()),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            Text("Seeds: " + finalSeeds.toString()),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            Expanded(
-                                child: Text("Fund Needed: " +
-                                    finalFund.toString() +
-                                    "pesos")),
-                          ],
-                        ),
-                        radius: radius,
-                        back: IconButton(
-                          icon: Icon(Icons.arrow_back_ios),
+                Widget image() {
+                  return Container(
+                    child: FittedBox(
+                      child: AbsorbPointer(
+                        absorbing: isVerified ? false : true,
+                        child: FloatingActionButton(
+                          heroTag: "herotag2",
+                          backgroundColor: Color(0xff65BFB8),
                           onPressed: () {
-                            setState(() {
-                              controller.reverse();
-                            });
+                            print(isVerified);
                           },
+                          tooltip: 'Image',
+                          child: Icon(Icons.image),
                         ),
-                        slide: Center(
-                          child: Column(
+                      ),
+                    ),
+                  );
+                }
+
+                Widget toggle() {
+                  return Container(
+                    child: FittedBox(
+                      child: FloatingActionButton(
+                        heroTag: "herotag3",
+                        backgroundColor: _buttonColor.value,
+                        onPressed: animate,
+                        tooltip: 'Toggle',
+                        child: AnimatedIcon(
+                          icon: AnimatedIcons.menu_close,
+                          progress: _animateIcon,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                return Scaffold(
+                  body: Stack(children: [
+                    GoogleMap(
+                        onTap: (latlng) async {
+                          if (createMode = false) {
+                            Fluttertoast.showToast(
+                                msg: "Please enter in create mode first.");
+                          }
+                        },
+                        onCameraIdle: () {
+                          setState(() {
+                            createMode = false;
+                          });
+                        },
+                        onLongPress: (latlng) {
+                          if (createMode = true) {
+                            Future<void> toCreate() async {
+                              final GoogleMapController controller =
+                                  await mapController.future;
+                              controller.moveCamera(
+                                  CameraUpdate.newCameraPosition(CameraPosition(
+                                target: LatLng(
+                                    latlng.latitude - .0050, latlng.longitude),
+                                zoom: 16,
+                              )));
+                            }
+
+                            mtk.LatLng latlngtoMTK =
+                                mtk.LatLng(latlng.latitude, latlng.longitude);
+                            final mtk1 = mtk.LatLng(
+                                pointFromGoogleMap1.latitude,
+                                pointFromGoogleMap1.longitude);
+                            final mtk2 = mtk.LatLng(
+                                pointFromGoogleMap2.latitude,
+                                pointFromGoogleMap2.longitude);
+                            final mtk3 = mtk.LatLng(
+                                pointFromGoogleMap3.latitude,
+                                pointFromGoogleMap3.longitude);
+
+                            List<mtk.LatLng> mtkPolygon =
+                                new List.empty(growable: true);
+                            mtkPolygon.add(mtk1);
+                            mtkPolygon.add(mtk2);
+                            mtkPolygon.add(mtk3);
+
+                            List<mtk.LatLng> mtkPolygonAngat =
+                                List.empty(growable: true);
+                            latlngpolygonlistAngat.forEach((element) {
+                              mtkPolygonAngat.add(mtk.LatLng(
+                                  element.latitude, element.longitude));
+                            });
+
+                            List<mtk.LatLng> mtkPolygonLamesa =
+                                List.empty(growable: true);
+                            latlngpolygonlistLamesa.forEach((element) {
+                              mtkPolygonLamesa.add(mtk.LatLng(
+                                  element.latitude, element.longitude));
+                            });
+
+                            List<mtk.LatLng> mtkPolygonPanbatanbangan =
+                                List.empty(growable: true);
+                            latlngpolygonlistPantabangan.forEach((element) {
+                              mtkPolygonPanbatanbangan.add(mtk.LatLng(
+                                  element.latitude, element.longitude));
+                            });
+
+                            isPointValid = mtk.PolygonUtil.containsLocation(
+                                    latlngtoMTK, mtkPolygonAngat, false) ||
+                                mtk.PolygonUtil.containsLocation(
+                                    latlngtoMTK, mtkPolygonLamesa, false) ||
+                                mtk.PolygonUtil.containsLocation(latlngtoMTK,
+                                    mtkPolygonPanbatanbangan, false);
+
+                            if (isPointValid == true) {
+                              setState(() {
+                                latitude = latlng.latitude;
+                                longitude = latlng.longitude;
+                                circleID++;
+                                toCreate();
+                                testlatlng = latlng;
+
+                                putCircle(testlatlng, finalRadius, circleID);
+                              });
+                            } else if (isPointValid == false) {
+                              Fluttertoast.showToast(
+                                  msg: "You cannot put campaign there");
+                            }
+                          } else {
+                            Fluttertoast.showToast(
+                                msg:
+                                    "You are not verified yet, please submit application first.");
+                          }
+                        },
+                        polygons: polygon,
+                        circles: circle,
+                        mapType: MapType.normal,
+                        onMapCreated: (GoogleMapController controller) {
+                          mapController.complete(controller);
+                        },
+                        zoomControlsEnabled: false,
+                        initialCameraPosition: _initialCameraPosition),
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 60,
+                        decoration: BoxDecoration(boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.7),
+                            spreadRadius: 2,
+                            blurRadius: 1,
+                            offset: Offset(0, -.1),
+                          ),
+                        ], color: Colors.white),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Slider(
-                                activeColor: Colors.green,
-                                inactiveColor: Colors.red,
-                                value: radius,
-                                min: 0,
-                                max: 0.10,
-                                onChanged: (radius1) {
-                                  setState(() {
-                                    radius = radius1;
-                                    context
-                                        .read(mapProvider)
-                                        .RadiusAssign(radius);
-                                    putCircle(
-                                        testlatlng, finalRadius, circleID);
-                                    print(circleID);
-                                    context
-                                        .read(mapProvider)
-                                        .checkVolunteersNeeded(finalRadius);
-                                    context
-                                        .read(mapProvider)
-                                        .checkseedsNeeded(finalRadius);
-                                    context
-                                        .read(mapProvider)
-                                        .checkFundRequired(finalRadius);
-                                  });
-                                },
-                              )
+                              SizedBox(
+                                width: 10,
+                              ),
+                              AnimatedDefaultTextStyle(
+                                duration: Duration(milliseconds: 500),
+                                child: Text('Welcome Organizer'),
+                                style: TextStyle(
+                                    shadows: <Shadow>[],
+                                    fontSize: 25,
+                                    color: Color(0xff65BFB8),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ]),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                  width: 50,
+                                  color: Colors.transparent,
+                                  child: Column(
+                                    children: [
+                                      Transform(
+                                        transform: Matrix4.translationValues(
+                                          0.0,
+                                          _translateButton.value * 3.0,
+                                          0.0,
+                                        ),
+                                        child: add(),
+                                      ),
+                                      Transform(
+                                        transform: Matrix4.translationValues(
+                                          0.0,
+                                          _translateButton.value * 2.0,
+                                          0.0,
+                                        ),
+                                        child: image(),
+                                      ),
+                                      toggle(),
+                                    ],
+                                  ))
+                            ]),
+                      ),
+                    ),
+                    SlideTransition(
+                        position: Tween<Offset>(
+                                begin: Offset(0, 1.2), end: Offset(0, 0.4))
+                            .animate(
+                          new CurvedAnimation(
+                              parent: controller, curve: Curves.fastOutSlowIn),
+                        ),
+                        child: SliderWidget(
+                          done: GestureDetector(
+                            onTap: () async {
+                              //Get Username
+
+                              const _chars =
+                                  'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+                              Random _rnd = Random();
+
+                              String getRandomString(int length) =>
+                                  String.fromCharCodes(Iterable.generate(
+                                      length,
+                                      (_) => _chars.codeUnitAt(
+                                          _rnd.nextInt(_chars.length))));
+                              String uniqueID = getRandomString(15);
+                              setState(() {
+                                dateCreated = formatDate(
+                                    DateTime.now(), [yyyy, '-', mm, '-', dd]);
+
+                                dateStart = formatDate(
+                                    DateTime(2021, 10, 27, 2, 30, 50),
+                                    [yyyy, '-', mm, '-', dd]);
+
+                                dateEnded = formatDate(
+                                    DateTime(2021, 10, 27, 2, 30, 50),
+                                    [yyyy, '-', mm, '-', dd]);
+
+                                time = formatDate(
+                                    DateTime(2021, 09, 27, 2, 30, 50),
+                                    [HH, ':', nn, ':', ss]);
+
+                                context
+                                    .read(authserviceProvider)
+                                    .createCampaign(
+                                        context
+                                            .read(campaignProvider)
+                                            .getCampaignName,
+                                        context
+                                            .read(campaignProvider)
+                                            .getDescription,
+                                        uniqueID,
+                                        dateCreated,
+                                        context
+                                            .read(campaignProvider)
+                                            .getStartDate,
+                                        dateEnded,
+                                        context
+                                            .read(campaignProvider)
+                                            .getAddress,
+                                        context.read(campaignProvider).getCity,
+                                        time,
+                                        userUID,
+                                        usernames,
+                                        latitude,
+                                        longitude,
+                                        finalSeeds,
+                                        currentDonations,
+                                        maxDonations,
+                                        currentVolunteers,
+                                        finalVolunteers,
+                                        radius)
+                                    .whenComplete(() => controller.reverse());
+                              });
+                            },
+                            child: Container(
+                                height: 55,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: Color(0xff65BFB8),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5))),
+                                child: Center(
+                                  child: Text(
+                                    'Done',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15),
+                                  ),
+                                )),
+                          ),
+                          status: Row(
+                            children: [
+                              Text("Volunteers: " + finalVolunteers.toString()),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              Text("Seeds: " + finalSeeds.toString()),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              Expanded(
+                                  child: Text("Fund Needed: " +
+                                      finalFund.toString() +
+                                      "pesos")),
                             ],
                           ),
-                        ),
-                      )),
-                ]),
-              );
+                          radius: radius,
+                          back: IconButton(
+                            icon: Icon(Icons.arrow_back_ios),
+                            onPressed: () {
+                              setState(() {
+                                controller.reverse();
+                              });
+                            },
+                          ),
+                          slide: Center(
+                            child: Column(
+                              children: [
+                                Slider(
+                                  activeColor: Colors.green,
+                                  inactiveColor: Colors.red,
+                                  value: radius,
+                                  min: 0,
+                                  max: 0.10,
+                                  onChanged: (radius1) {
+                                    setState(() {
+                                      radius = radius1;
+                                      context
+                                          .read(mapProvider)
+                                          .RadiusAssign(radius);
+                                      putCircle(
+                                          testlatlng, finalRadius, circleID);
+                                      print(circleID);
+                                      context
+                                          .read(mapProvider)
+                                          .checkVolunteersNeeded(finalRadius);
+                                      context
+                                          .read(mapProvider)
+                                          .checkseedsNeeded(finalRadius);
+                                      context
+                                          .read(mapProvider)
+                                          .checkFundRequired(finalRadius);
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        )),
+                  ]),
+                );
+              }
             });
       }),
     );
