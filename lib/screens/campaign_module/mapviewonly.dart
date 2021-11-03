@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -6,6 +7,7 @@ import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sylviapp_project/animation/pop_up.dart';
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/screens/campaign_module/join_donate.dart';
 import 'package:sylviapp_project/widgets/campaign_module/slidable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:date_format/date_format.dart';
@@ -55,14 +57,45 @@ class _MapViewOnlyState extends State<MapViewOnly>
   late bool isPointValid;
   late AnimationController controller =
       AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+
+  late List<dynamic> pointlist = List.empty(growable: true);
+
   @override
   void initState() {
     super.initState();
 
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+
+    FirebaseFirestore.instance
+        .collection('campaigns')
+        .get()
+        .then((QuerySnapshot snap) {
+      snap.docs.forEach((element) {
+        circles.add(Circle(
+            consumeTapEvents: true,
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => JoinDonateCampaign(
+                            uidOfCampaign: element.id,
+                          )));
+            },
+            strokeColor: Colors.black,
+            strokeWidth: 1,
+            visible: true,
+            fillColor: Colors.red,
+            circleId: CircleId(element.id),
+            radius: element.get("radius") * 100,
+            center: LatLng(element.get("latitude"), element.get("longitude"))));
+      });
+    });
+
+    print("TEEEEEEEEEEEST" + circles.toString());
   }
 
+  Set<Circle> circles = Set();
   final pointFromGoogleMap1 = LatLng(14.718598, 121.071495);
   final pointFromGoogleMap2 = LatLng(14.729223, 121.071839);
   final pointFromGoogleMap3 = LatLng(14.711292, 121.082653);
@@ -163,8 +196,7 @@ class _MapViewOnlyState extends State<MapViewOnly>
           body: Stack(children: [
             GoogleMap(
                 onCameraIdle: () {},
-                polygons: myPolygon(),
-                circles: circle,
+                circles: circles,
                 mapType: MapType.normal,
                 onMapCreated: (GoogleMapController controller) {
                   mapController.complete(controller);

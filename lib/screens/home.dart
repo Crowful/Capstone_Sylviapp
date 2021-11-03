@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'analytics_module/bar_graph.dart';
+import 'campaign_module/join_donate.dart';
 
 class HomePage extends StatefulWidget {
   final AnimationController controller;
@@ -415,7 +416,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         child: ListView(
                             children: snapshot.data!.docs.map((e) {
                           return GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => JoinDonateCampaign(
+                                            uidOfCampaign: e.id,
+                                          )));
+                            },
                             child: FadeAnimation(
                                 (1.0 + snapshot.data!.docs.length) / 4,
                                 availableCampaign(name: e['campaign_name'])),
