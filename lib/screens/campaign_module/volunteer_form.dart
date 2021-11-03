@@ -60,16 +60,20 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
             ),
           ),
           Container(
+            margin: EdgeInsets.fromLTRB(0, 20, 190, 0),
             width: 180,
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: Color(0xff65BFB8)),
               child: Row(
                   children: [Icon(Icons.attach_file), Text(" VACCINATION ID")]),
               onPressed: () {},
             ),
           ),
           Container(
+            margin: EdgeInsets.fromLTRB(0, 10, 160, 0),
             width: 210,
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: Color(0xff65BFB8)),
               child: Row(children: [
                 Icon(Icons.attach_file),
                 Text(" MEDICAL CERTIFICATE")
@@ -77,39 +81,81 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
               onPressed: () {},
             ),
           ),
-          Text("SAFETY CHECKLIST"),
+          Container(
+              margin: EdgeInsets.fromLTRB(0, 20, 130, 0),
+              child: Text("SAFETY CHECKLIST",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w900))),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
+            child: Text(
+              "The following are the checklist you need to have in order to join this campaign, if you don't have any of this you can't join this campaign unless you complete the safety checklist of this campaign.",
+              style: TextStyle(color: Colors.black54),
+            ),
+          ),
           Row(children: [
-            Checkbox(value: true, onChanged: (value) {}),
-            Text("HELMET")
+            Checkbox(
+              value: true,
+              onChanged: (value) {},
+              activeColor: Colors.greenAccent,
+            ),
+            Text("Bottled Water", style: TextStyle(color: Colors.black54))
           ]),
           Row(children: [
-            Checkbox(value: true, onChanged: (value) {}),
-            Text("GAMOT")
+            Checkbox(
+              value: true,
+              onChanged: (value) {},
+              activeColor: Colors.greenAccent,
+            ),
+            Text("Proper Clothes", style: TextStyle(color: Colors.black54))
           ]),
           Row(children: [
-            Checkbox(value: true, onChanged: (value) {}),
-            Text("PLASTIC")
+            Checkbox(
+              value: true,
+              onChanged: (value) {},
+              activeColor: Colors.greenAccent,
+            ),
+            Text("Mobile Phone", style: TextStyle(color: Colors.black54))
           ]),
           Row(children: [
-            Checkbox(value: true, onChanged: (value) {}),
-            Text("GAMOT")
+            Checkbox(
+              value: true,
+              onChanged: (value) {},
+              activeColor: Colors.greenAccent,
+            ),
+            Text("Gloves", style: TextStyle(color: Colors.black54))
           ]),
           Row(children: [
-            Checkbox(value: true, onChanged: (value) {}),
-            Text("GLOVES")
+            Checkbox(
+              value: true,
+              onChanged: (value) {},
+              activeColor: Colors.greenAccent,
+            ),
+            Text("Face Mask and Face Shield",
+                style: TextStyle(color: Colors.black54))
           ]),
           Container(
-            height: 200,
-            width: 300,
-            child: Row(children: [
-              Checkbox(value: true, onChanged: (value) {}),
-              Text(
-                "I hereby accept the terms and conditions in this campaign, I will plant keme and I will follow the rules on this campaign",
-                softWrap: true,
-              )
-            ]),
+            margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            width: 350,
+            child: Text(
+              "By Clicking the Submit Button you automatically accept the terms and conditions in this campaign, I will plant keme and I will follow the rules on this campaign.",
+            ),
           ),
-          ElevatedButton(onPressed: () {}, child: Text("JOIN"))
+          Container(
+              height: 50,
+              width: 300,
+              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Text("S U B M I T"),
+                style: ElevatedButton.styleFrom(
+                    shape: StadiumBorder(), primary: Color(0xff65BFB8)),
+              ))
         ],
       )),
     );
