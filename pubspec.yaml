@@ -49,6 +49,7 @@ dependencies:
   fl_chart: ^0.40.0
   date_format: ^2.0.4
   flutter_braintree: ^2.1.0
+  expansion_tile_card: ^2.0.0
 
 
 dev_dependencies:
