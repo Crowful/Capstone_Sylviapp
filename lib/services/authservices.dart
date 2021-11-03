@@ -63,11 +63,51 @@ class AuthService extends ChangeNotifier {
     try {
       final signedInUser = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      _loggedInUser = signedInUser.user!;
+      _loggedInUser = signedInUser.user;
     } on FirebaseAuthException catch (e) {
-      print(e.message);
+      print(e.code);
+      switch (e.code) {
+        case "wrong-password":
+          Fluttertoast.showToast(
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+          break;
+        case "invalid-email":
+          Fluttertoast.showToast(
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+          break;
+        case "user-not-found":
+          Fluttertoast.showToast(
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+          break;
+      }
     } on PlatformException catch (e) {
-      print(e.message);
+      print(e.code);
+      switch (e.code) {
+        case "wrong-password":
+          Fluttertoast.showToast(
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+          break;
+        case "invalid-email":
+          Fluttertoast.showToast(
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+          break;
+        case "user-not-found":
+          Fluttertoast.showToast(
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+          break;
+      }
     }
   }
 

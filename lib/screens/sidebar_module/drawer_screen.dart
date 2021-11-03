@@ -37,9 +37,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
         errorText = e.toString();
       });
     }
-    setState(() {
-      urlTest = taske.toString();
-    });
+    if (this.mounted) {
+      setState(() {
+        urlTest = taske.toString();
+      });
+    }
   }
 
   @override
