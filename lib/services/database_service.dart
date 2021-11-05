@@ -140,6 +140,18 @@ class DatabaseService {
         .set({"volunteerUID": registeredUID});
   }
 
+  Future addVolunteerNumber(String uidOfCampaign) async {
+    return await approvedCampaignCollection
+        .doc(uidOfCampaign)
+        .update({'current_volunteers': FieldValue.increment(1)});
+  }
+
+  Future removeVolunteerNumber(String uidOfCampaign) async {
+    return await approvedCampaignCollection
+        .doc(uidOfCampaign)
+        .update({'current_volunteers': FieldValue.increment(-1)});
+  }
+
   Future addCampaigntoUser(String uidOfCampaign, String registeredUID) async {
     return await userCollection
         .doc(registeredUID)

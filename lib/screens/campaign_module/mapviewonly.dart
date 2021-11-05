@@ -81,6 +81,14 @@ class _MapViewOnlyState extends State<MapViewOnly>
                       builder: (context) => JoinDonateCampaign(
                             uidOfCampaign: element.id,
                             uidOfOrganizer: element.get("uid"),
+                            nameOfCampaign: element.get("campaign_name"),
+                            city: element.get("city"),
+                            currentFund: element.get("current_donations"),
+                            currentVolunteer: element.get("current_volunteers"),
+                            maxFund: element.get("max_donations"),
+                            totalVolunteer: element.get("number_volunteers"),
+                            address: element.get("address"),
+                            description: element.get("description"),
                           )));
             },
             strokeColor: Colors.black,

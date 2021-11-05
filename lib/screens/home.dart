@@ -427,11 +427,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       builder: (context) => JoinDonateCampaign(
                                             uidOfCampaign: e.id,
                                             uidOfOrganizer: e.get("uid"),
+                                            nameOfCampaign:
+                                                e.get("campaign_name"),
+                                            city: e.get("city"),
+                                            currentFund:
+                                                e.get("current_donations"),
+                                            currentVolunteer:
+                                                e.get("current_volunteers"),
+                                            totalVolunteer:
+                                                e.get("number_volunteers"),
+                                            maxFund: e.get("max_donation"),
+                                            address: e.get("address"),
+                                            description: e.get("description"),
                                           )));
                             },
                             child: FadeAnimation(
                                 (1.0 + snapshot.data!.docs.length) / 4,
-                                availableCampaign(name: e['campaign_name'])),
+                                availableCampaign(
+                                    name: e['campaign_name'],
+                                    description: e['description'],
+                                    rfund: e['current_donations'],
+                                    tfund: e['max_donation'],
+                                    volunteerCurrent: e['current_volunteers'],
+                                    volunteerMax: e['number_volunteers'])),
                           );
                         }).toList()),
                       ),
@@ -672,41 +690,54 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         List<Widget> entries = [];
 
                                         return GestureDetector(
-                                          onTap: () {
-                                            if (context
-                                                    .read(authserviceProvider)
-                                                    .getCurrentUserUID() ==
-                                                snapshoteds.data!.get('uid')) {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CampaignMonitorOrganizer(
-                                                              uidOfCampaign:
-                                                                  snapshoteds
-                                                                      .data!
-                                                                      .id)));
-                                            } else {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CampaignMonitorVolunteer(
-                                                              uidOfCampaign:
-                                                                  snapshoteds
-                                                                      .data!
-                                                                      .id)));
-                                            }
-                                          },
-                                          child: FadeAnimation(
-                                              (1.0 +
-                                                      snapshot
-                                                          .data!.docs.length) /
-                                                  4,
-                                              availableCampaign(
-                                                  name: (snapshoteds.data!
-                                                      .get("campaign_name")))),
-                                        );
+                                            onTap: () {
+                                              if (context
+                                                      .read(authserviceProvider)
+                                                      .getCurrentUserUID() ==
+                                                  snapshoteds.data!
+                                                      .get('uid')) {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            CampaignMonitorOrganizer(
+                                                                uidOfCampaign:
+                                                                    snapshoteds
+                                                                        .data!
+                                                                        .id)));
+                                              } else {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            CampaignMonitorVolunteer(
+                                                                uidOfCampaign:
+                                                                    snapshoteds
+                                                                        .data!
+                                                                        .id)));
+                                              }
+                                            },
+                                            child: FadeAnimation(
+                                                (1.0 +
+                                                        snapshot.data!.docs
+                                                            .length) /
+                                                    4,
+                                                availableCampaign(
+                                                  name: snapshoteds.data!
+                                                      .get("campaign_name"),
+                                                  description: snapshoteds.data!
+                                                      .get("description"),
+                                                  rfund: snapshoteds.data!
+                                                      .get("current_donations"),
+                                                  tfund: snapshoteds.data!
+                                                      .get("max_donation"),
+                                                  volunteerCurrent:
+                                                      snapshoteds.data!.get(
+                                                          "current_volunteers"),
+                                                  volunteerMax: snapshoteds
+                                                      .data!
+                                                      .get("number_volunteers"),
+                                                )));
                                       }
                                     });
                               }).toList()),
@@ -733,7 +764,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget availableCampaign({String? name}) {
+  Widget availableCampaign({
+    String? name,
+    required String description,
+    required int rfund,
+    required int tfund,
+    required int volunteerCurrent,
+    required int volunteerMax,
+  }) {
+    double meterValue = rfund / tfund;
+
+    int raisedFund = rfund;
+    int totalFund = tfund;
     return Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(bottom: 15),
@@ -784,7 +826,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           color: Color(0xff65BFB8))),
                 ),
                 Container(
-                  child: Text("Description example lorem ipsum multiple jutsu",
+                  child: Text(description,
                       style: TextStyle(
                           fontSize: 14,
                           overflow: TextOverflow.clip,
@@ -796,7 +838,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                  child: Text('₱250 raised of ₱10,100'),
+                  child: Text('₱' +
+                      raisedFund.toString() +
+                      ' raised of ' +
+                      '₱' +
+                      totalFund.toString()),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
@@ -812,7 +858,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         backgroundColor: Colors.grey.withOpacity(0.3),
                         color: Color(0xff65BFB8),
                         minHeight: 10,
-                        value: 0.25,
+                        value: meterValue,
                       ),
                     ),
                   ),
@@ -833,7 +879,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           SizedBox(
                             width: 5,
                           ),
-                          Text('0/50')
+                          Text(volunteerCurrent.toString() +
+                              '/' +
+                              volunteerMax.toString())
                         ],
                       ),
                       SizedBox(
@@ -849,7 +897,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           SizedBox(
                             width: 5,
                           ),
-                          Text('₱250')
+                          Text('₱' + raisedFund.toString())
                         ],
                       ),
                     ],

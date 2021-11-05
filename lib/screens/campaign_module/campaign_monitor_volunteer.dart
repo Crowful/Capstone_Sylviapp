@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:encrypt/encrypt.dart' as enc;
+import 'package:sylviapp_project/screens/layout_screen.dart';
 
 class CampaignMonitorVolunteer extends StatefulWidget {
   String uidOfCampaign;
@@ -58,6 +59,12 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                                     ]);
                                   }
                                 }),
+                            ElevatedButton(
+                                onPressed: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LayoutScreen())),
+                                child: Text("Home"))
                           ]),
                         );
                       }).toList()),

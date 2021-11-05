@@ -9,15 +9,27 @@ import 'package:sylviapp_project/screens/campaign_module/volunteer_form.dart';
 class JoinDonateCampaign extends StatefulWidget {
   final String uidOfCampaign;
   final String? address;
-  final String? description;
+  final String? nameOfCampaign;
+  final String description;
   final String uidOfOrganizer;
-  const JoinDonateCampaign(
-      {Key? key,
-      required this.uidOfCampaign,
-      this.address,
-      this.description,
-      required this.uidOfOrganizer})
-      : super(key: key);
+  final String city;
+  final int currentVolunteer;
+  final int totalVolunteer;
+  final int currentFund;
+  final int maxFund;
+  const JoinDonateCampaign({
+    Key? key,
+    required this.uidOfCampaign,
+    required this.address,
+    required this.description,
+    required this.uidOfOrganizer,
+    required this.nameOfCampaign,
+    required this.city,
+    required this.currentVolunteer,
+    required this.totalVolunteer,
+    required this.currentFund,
+    required this.maxFund,
+  }) : super(key: key);
 
   @override
   _JoinDonateCampaignState createState() => _JoinDonateCampaignState();
@@ -67,7 +79,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign> {
                                       width: 300,
                                       margin: EdgeInsets.fromLTRB(20, 20, 0, 0),
                                       child: Text(
-                                        "Angat Campaign",
+                                        widget.nameOfCampaign.toString(),
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 25,
@@ -79,7 +91,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign> {
                                         margin:
                                             EdgeInsets.fromLTRB(20, 5, 0, 0),
                                         child: Text(
-                                          "Tagaytay City",
+                                          widget.city,
                                           style: TextStyle(
                                               color: Colors.black54,
                                               fontSize: 11),
@@ -89,8 +101,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign> {
                           ])),
                           Container(
                             margin: EdgeInsets.fromLTRB(20, 20, 20, 10),
-                            child: Text(
-                                "I'm Alfie Tribaco the organizer of this campaign and I would like to make this campaign success as possible, come and join to this campaign and make our nature be better again.",
+                            child: Text(widget.description.toString(),
                                 style: TextStyle(color: Colors.black54)),
                           ),
                           Container(
@@ -101,7 +112,9 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign> {
                                 children: [
                                   Column(children: [
                                     Text(
-                                      "23/50",
+                                      widget.currentVolunteer.toString() +
+                                          " / " +
+                                          widget.totalVolunteer.toString(),
                                       style: TextStyle(
                                           fontSize: 30,
                                           fontWeight: FontWeight.w900),
@@ -114,7 +127,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign> {
                                   ),
                                   Column(children: [
                                     Text(
-                                      " ₱1400",
+                                      " ₱" + widget.maxFund.toString(),
                                       style: TextStyle(
                                           fontSize: 30,
                                           fontWeight: FontWeight.w900),
