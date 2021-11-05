@@ -135,6 +135,8 @@ class DatabaseService {
   Future joinCampaign(String uidOfCampaign, registeredUID) async {
     return await approvedCampaignCollection
         .doc(uidOfCampaign)
-        .set({'volunteerUID': registeredUID}, SetOptions(merge: true));
+        .collection("volunteers")
+        .doc(registeredUID)
+        .set({"volunteerUID": registeredUID});
   }
 }

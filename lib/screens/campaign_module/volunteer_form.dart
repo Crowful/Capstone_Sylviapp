@@ -294,10 +294,8 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
                         context.read(authserviceProvider).getCurrentUserUID());
 
                     await context.read(authserviceProvider).joinCampaign(
-                        "3V2QklO5jZUhRDx", {
-                      "volunteerUID":
-                          context.read(authserviceProvider).getCurrentUserUID()
-                    });
+                        widget.campaignUID,
+                        context.read(authserviceProvider).getCurrentUserUID());
                   } else {
                     Fluttertoast.showToast(msg: "something went wrong");
                   }
