@@ -222,8 +222,14 @@ class _EditProfileState extends State<EditProfile> {
                                             await context
                                                 .read(authserviceProvider)
                                                 .updateAcc(
-                                                    fullnameController.text,
-                                                    addressController.text,
+                                                    AESCryptography()
+                                                        .encryptAES(
+                                                            fullnameController
+                                                                .text),
+                                                    AESCryptography()
+                                                        .encryptAES(
+                                                            addressController
+                                                                .text),
                                                     emailController.text)
                                                 .whenComplete(() =>
                                                     Fluttertoast.showToast(

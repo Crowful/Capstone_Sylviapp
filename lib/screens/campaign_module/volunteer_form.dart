@@ -299,7 +299,9 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => CampaignMonitorVolunteer()));
+                            builder: (context) => CampaignMonitorVolunteer(
+                                  uidOfCampaign: widget.campaignUID,
+                                )));
                   } else {
                     Fluttertoast.showToast(msg: "something went wrong");
                   }

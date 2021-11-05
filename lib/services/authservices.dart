@@ -3,7 +3,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'database_service.dart';
+import 'package:encrypt/encrypt.dart' as enc;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/register_basic_info.dart';
 
@@ -165,11 +167,14 @@ class AuthService extends ChangeNotifier {
   Future updateAcc(
       String newFullName, String newAddress, String newEmail) async {
     try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
       await _loggedInUser!.updateEmail(newEmail);
       await DatabaseService(uid: _loggedInUser!.uid)
           .updateUserData(newEmail, newFullName, newAddress);
     } catch (e) {
-      print(e);
+      print("EROOOOOOOOOOOOOOOOOOR" + e.toString());
     }
   }
 
