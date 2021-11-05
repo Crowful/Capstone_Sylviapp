@@ -22,6 +22,9 @@ class DatabaseService {
   final CollectionReference verificationCollection =
       FirebaseFirestore.instance.collection('verification');
 
+  final CollectionReference approvedCampaignCollection =
+      FirebaseFirestore.instance.collection('campaigns');
+
 //methods
 
 //User
@@ -127,5 +130,11 @@ class DatabaseService {
     return await userCollection.doc(uid).update({
       'isApplying': true,
     });
+  }
+
+  Future joinCampaign(String uidOfCampaign, registeredUID) async {
+    return await approvedCampaignCollection
+        .doc(uidOfCampaign)
+        .set({'volunteerUID': registeredUID});
   }
 }
