@@ -47,28 +47,20 @@ class _BasicInfoPageState extends State<BasicInfoPage>
         _overall = true;
       }
 
-      context
-          .read(userAccountProvider)
-          .setFullname(AESCryptography().encryptAES(_fullNameController.text));
+      context.read(userAccountProvider).setFullname(_fullNameController.text);
 
-      context
-          .read(userAccountProvider)
-          .setGender(AESCryptography().encryptAES(_gender));
+      context.read(userAccountProvider).setGender(_gender);
 
-      context
-          .read(userAccountProvider)
-          .setAddress(AESCryptography().encryptAES(_addressController.text));
+      context.read(userAccountProvider).setAddress(_addressController.text);
 
-      context
-          .read(userAccountProvider)
-          .setContact(AESCryptography().encryptAES(_contactController.text));
+      context.read(userAccountProvider).setContact(_contactController.text);
     });
   }
 
   onFullNameChanged(String name) {
     setState(() {
       _fullNameValidate = false;
-      if (name.length >= 4) {
+      if (name.length >= 6) {
         _fullNameValidate = true;
         onValidate();
       }

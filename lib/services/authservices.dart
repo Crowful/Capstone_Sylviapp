@@ -257,6 +257,9 @@ class AuthService extends ChangeNotifier {
 
   joinCampaign(String campaignUID, volunteerUID) async {
     try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
       await DatabaseService(uid: _loggedInUser!.uid)
           .joinCampaign(campaignUID, volunteerUID)
           .whenComplete(() => Fluttertoast.showToast(msg: "SUCCESS"));

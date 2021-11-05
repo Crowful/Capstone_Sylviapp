@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/register_basic_info.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/register_password.dart';
@@ -121,11 +122,16 @@ class _RegisterPageState extends State<RegisterPage> {
                     .signUp(
                       context.read(userAccountProvider).getEmail,
                       context.read(userAccountProvider).getPassword,
-                      context.read(userAccountProvider).getFullname,
-                      context.read(userAccountProvider).getAddress,
-                      context.read(userAccountProvider).getGender,
-                      context.read(userAccountProvider).getContact,
-                      context.read(userAccountProvider).getUserName,
+                      AESCryptography().encryptAES(
+                          context.read(userAccountProvider).getFullname),
+                      AESCryptography().encryptAES(
+                          context.read(userAccountProvider).getAddress),
+                      AESCryptography().encryptAES(
+                          context.read(userAccountProvider).getGender),
+                      AESCryptography().encryptAES(
+                          context.read(userAccountProvider).getContact),
+                      AESCryptography().encryptAES(
+                          context.read(userAccountProvider).getUserName),
                     )
                     .whenComplete(
                         () => Navigator.pushNamed(context, "/onboarding"));

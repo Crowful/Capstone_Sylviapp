@@ -422,6 +422,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   MaterialPageRoute(
                                       builder: (context) => JoinDonateCampaign(
                                             uidOfCampaign: e.id,
+                                            uidOfOrganizer: e.get("uid"),
                                           )));
                             },
                             child: FadeAnimation(

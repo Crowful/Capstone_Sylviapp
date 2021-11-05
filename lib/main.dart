@@ -71,7 +71,6 @@ class MyApp extends ConsumerWidget {
         "/wrapperMap": (_) => WrapperMap(),
         "/WrapperVerify": (_) => WrapperVerify(),
         "/donation": (_) => DonationScreen(),
-        "/join_donate": (_) => JoinDonateCampaign()
       },
     );
   }

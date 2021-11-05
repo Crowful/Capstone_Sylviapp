@@ -80,6 +80,7 @@ class _MapViewOnlyState extends State<MapViewOnly>
                   MaterialPageRoute(
                       builder: (context) => JoinDonateCampaign(
                             uidOfCampaign: element.id,
+                            uidOfOrganizer: element.get("uid"),
                           )));
             },
             strokeColor: Colors.black,

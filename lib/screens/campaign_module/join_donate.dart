@@ -7,16 +7,16 @@ import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:sylviapp_project/screens/campaign_module/volunteer_form.dart';
 
 class JoinDonateCampaign extends StatefulWidget {
-  final String? uidOfCampaign;
+  final String uidOfCampaign;
   final String? address;
   final String? description;
-  final String? uidOfOrganizer;
+  final String uidOfOrganizer;
   const JoinDonateCampaign(
       {Key? key,
-      this.uidOfCampaign,
+      required this.uidOfCampaign,
       this.address,
       this.description,
-      this.uidOfOrganizer})
+      required this.uidOfOrganizer})
       : super(key: key);
 
   @override
@@ -183,7 +183,12 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    VolunteerFormScreen()));
+                                                    VolunteerFormScreen(
+                                                      campaignUID:
+                                                          widget.uidOfCampaign,
+                                                      organizerUID:
+                                                          widget.uidOfOrganizer,
+                                                    )));
                                       },
                                       child: Text("J O I N ")),
                                 ),
