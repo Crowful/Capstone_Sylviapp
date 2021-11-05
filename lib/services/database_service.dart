@@ -132,7 +132,7 @@ class DatabaseService {
     });
   }
 
-  Future joinCampaign(String uidOfCampaign, registeredUID) async {
+  Future joinCampaign(String uidOfCampaign, String registeredUID) async {
     return await approvedCampaignCollection
         .doc(uidOfCampaign)
         .collection("volunteers")

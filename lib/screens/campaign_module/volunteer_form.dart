@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_volunteer.dart';
 
 class VolunteerFormScreen extends StatefulWidget {
   String campaignUID;
@@ -286,16 +287,19 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
                       isHaveGloves == true &&
                       isHaveMobilePhone == true &&
                       isHaveProperClothes == true) {
-                    await uploadMedicPicture(
-                        widget.campaignUID,
-                        widget.organizerUID,
+                    uploadMedicPicture(widget.campaignUID, widget.organizerUID,
                         context.read(authserviceProvider).getCurrentUserUID());
-                    await uploadVaccID(widget.campaignUID, widget.organizerUID,
+                    uploadVaccID(widget.campaignUID, widget.organizerUID,
                         context.read(authserviceProvider).getCurrentUserUID());
 
                     await context.read(authserviceProvider).joinCampaign(
                         widget.campaignUID,
                         context.read(authserviceProvider).getCurrentUserUID());
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CampaignMonitorVolunteer()));
                   } else {
                     Fluttertoast.showToast(msg: "something went wrong");
                   }
