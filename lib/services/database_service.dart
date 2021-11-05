@@ -139,4 +139,12 @@ class DatabaseService {
         .doc(registeredUID)
         .set({"volunteerUID": registeredUID});
   }
+
+  Future addCampaigntoUser(String uidOfCampaign, String registeredUID) async {
+    return await userCollection
+        .doc(registeredUID)
+        .collection("campaigns")
+        .doc(uidOfCampaign)
+        .set({"campaign": uidOfCampaign});
+  }
 }

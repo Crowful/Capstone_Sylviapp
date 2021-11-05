@@ -268,6 +268,8 @@ class AuthService extends ChangeNotifier {
       await DatabaseService(uid: _loggedInUser!.uid)
           .joinCampaign(campaignUID, volunteerUID)
           .whenComplete(() => Fluttertoast.showToast(msg: "J O I N E D"));
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .addCampaigntoUser(campaignUID, volunteerUID);
     } catch (e) {
       print(e);
     }

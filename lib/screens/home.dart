@@ -6,8 +6,11 @@ import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
+import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_volunteer.dart';
 import 'analytics_module/bar_graph.dart';
 import 'campaign_module/join_donate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePage extends StatefulWidget {
   final AnimationController controller;
@@ -613,42 +616,90 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ],
             ),
           ),
-          Expanded(
-            child: NotificationListener(
-              child: noCampaign == false
-                  ? FadeAnimation(
-                      1,
-                      Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.sentiment_dissatisfied,
-                              size: 30, color: Colors.grey.withOpacity(0.7)),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('No Active Campaign',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.withOpacity(0.7),
-                                  fontSize: 25)),
-                        ],
-                      )),
-                    )
-                  : RefreshIndicator(
-                      onRefresh: () async {},
-                      child: ListView.builder(
-                          itemCount: 5,
-                          itemBuilder: (BuildContext context, int index) {
-                            return FadeAnimation(
-                              (1.0 + index) / 4,
-                              availableCampaign(),
-                            );
-                          }),
+          StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(context.read(authserviceProvider).getCurrentUserUID())
+                  .collection("campaigns")
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator();
+                } else {
+                  return Expanded(
+                    child: NotificationListener(
+                      child: noCampaign == true
+                          ? FadeAnimation(
+                              1,
+                              Center(
+                                  child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.sentiment_dissatisfied,
+                                      size: 30,
+                                      color: Colors.grey.withOpacity(0.7)),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text('No Active Campaign',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey.withOpacity(0.7),
+                                          fontSize: 25)),
+                                ],
+                              )),
+                            )
+                          : RefreshIndicator(
+                              onRefresh: () async {},
+                              child: ListView(
+                                  children: snapshot.data!.docs.map((e) {
+                                return StreamBuilder<DocumentSnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection("campaigns")
+                                        .doc(e.id)
+                                        .collection("volunteers")
+                                        .doc(context
+                                            .read(authserviceProvider)
+                                            .getCurrentUserUID())
+                                        .parent
+                                        .parent!
+                                        .snapshots(),
+                                    builder: (context, snapshoteds) {
+                                      if (!snapshoteds.hasData) {
+                                        return CircularProgressIndicator();
+                                      } else {
+                                        List<Widget> entries = [];
+
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CampaignMonitorVolunteer(
+                                                            uidOfCampaign:
+                                                                snapshoteds
+                                                                    .data!
+                                                                    .id)));
+                                          },
+                                          child: FadeAnimation(
+                                              (1.0 +
+                                                      snapshot
+                                                          .data!.docs.length) /
+                                                  4,
+                                              availableCampaign(
+                                                  name: (snapshoteds.data!
+                                                      .get("campaign_name")))),
+                                        );
+                                      }
+                                    });
+                              }).toList()),
+                            ),
+                      onNotification: _handleScrollNotification,
                     ),
-              onNotification: _handleScrollNotification,
-            ),
-          )
+                  );
+                }
+              })
         ],
       ),
     );
