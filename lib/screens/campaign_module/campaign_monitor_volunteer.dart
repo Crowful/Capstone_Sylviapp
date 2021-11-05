@@ -27,31 +27,42 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
             if (!snapshot.hasData) {
               return CircularProgressIndicator();
             } else {
-              return ListView(
-                  children: snapshot.data!.docs.map((e) {
-                return GestureDetector(
-                  onTap: () {},
-                  child: Column(children: [
-                    Text("VOLUNTEERS JOINED"),
-                    StreamBuilder<DocumentSnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(e["volunteerUID"])
-                            .snapshots(),
-                        builder: (context, snapshoted) {
-                          if (!snapshoted.hasData) {
-                            return CircularProgressIndicator();
-                          } else {
-                            return Column(children: [
-                              Text(AESCryptography().decryptAES(
-                                  enc.Encrypted.fromBase64(
-                                      snapshoted.data!.get("fullname")))),
-                            ]);
-                          }
-                        }),
-                  ]),
-                );
-              }).toList());
+              return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("VOLUNTEERS JOINED: "),
+                    Container(
+                      color: Colors.green,
+                      height: 200,
+                      width: 200,
+                      child: ListView(
+                          children: snapshot.data!.docs.map((e) {
+                        return GestureDetector(
+                          onTap: () {},
+                          child: Column(children: [
+                            StreamBuilder<DocumentSnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(e["volunteerUID"])
+                                    .snapshots(),
+                                builder: (context, snapshoted) {
+                                  if (!snapshoted.hasData) {
+                                    return CircularProgressIndicator();
+                                  } else {
+                                    return Column(children: [
+                                      Text(AESCryptography().decryptAES(
+                                          enc.Encrypted.fromBase64(snapshoted
+                                              .data!
+                                              .get("fullname")))),
+                                    ]);
+                                  }
+                                }),
+                          ]),
+                        );
+                      }).toList()),
+                    ),
+                  ]);
             }
           }),
     );

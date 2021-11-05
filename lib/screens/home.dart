@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_organizer.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_volunteer.dart';
 import 'analytics_module/bar_graph.dart';
 import 'campaign_module/join_donate.dart';
@@ -672,15 +673,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
                                         return GestureDetector(
                                           onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        CampaignMonitorVolunteer(
-                                                            uidOfCampaign:
-                                                                snapshoteds
-                                                                    .data!
-                                                                    .id)));
+                                            if (context
+                                                    .read(authserviceProvider)
+                                                    .getCurrentUserUID() ==
+                                                snapshoteds.data!.get('uid')) {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CampaignMonitorOrganizer(
+                                                              uidOfCampaign:
+                                                                  snapshoteds
+                                                                      .data!
+                                                                      .id)));
+                                            } else {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CampaignMonitorVolunteer(
+                                                              uidOfCampaign:
+                                                                  snapshoteds
+                                                                      .data!
+                                                                      .id)));
+                                            }
                                           },
                                           child: FadeAnimation(
                                               (1.0 +
