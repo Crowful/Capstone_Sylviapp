@@ -132,6 +132,7 @@ class DatabaseService {
     });
   }
 
+//Join Campaign
   Future joinCampaign(String uidOfCampaign, String registeredUID) async {
     return await approvedCampaignCollection
         .doc(uidOfCampaign)
@@ -146,17 +147,35 @@ class DatabaseService {
         .update({'current_volunteers': FieldValue.increment(1)});
   }
 
-  Future removeVolunteerNumber(String uidOfCampaign) async {
-    return await approvedCampaignCollection
-        .doc(uidOfCampaign)
-        .update({'current_volunteers': FieldValue.increment(-1)});
-  }
-
   Future addCampaigntoUser(String uidOfCampaign, String registeredUID) async {
     return await userCollection
         .doc(registeredUID)
         .collection("campaigns")
         .doc(uidOfCampaign)
         .set({"campaign": uidOfCampaign});
+  }
+
+//LEAVE CAMPAIGN
+  Future removeCampaigntoUser(
+      String uidOfCampaign, String registeredUID) async {
+    return await userCollection
+        .doc(registeredUID)
+        .collection("campaigns")
+        .doc(uidOfCampaign)
+        .delete();
+  }
+
+  Future removeVolunteerNumber(String uidOfCampaign) async {
+    return await approvedCampaignCollection
+        .doc(uidOfCampaign)
+        .update({'current_volunteers': FieldValue.increment(-1)});
+  }
+
+  Future leaveCampaign(String uidOfCampaign, String registeredUID) async {
+    return await approvedCampaignCollection
+        .doc(uidOfCampaign)
+        .collection("volunteers")
+        .doc(registeredUID)
+        .delete();
   }
 }

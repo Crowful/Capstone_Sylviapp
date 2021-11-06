@@ -10,6 +10,7 @@ import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_organizer.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_volunteer.dart';
+import 'package:sylviapp_project/screens/campaign_module/organizer_dashboard.dart';
 import 'analytics_module/bar_graph.dart';
 import 'campaign_module/join_donate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,6 +27,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool isJoin = false;
+  bool isOrganizer = false;
 
 //Animation
   bool hold = false;
@@ -429,82 +431,147 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         .collection('volunteers')
                                         .snapshots(),
                                     builder: (context, snapshotedsd) {
-                                      return GestureDetector(
-                                        onTap: () async {
-                                          if (snapshotedsd.data!.docs.isEmpty) {
-                                            setState(() {
-                                              isJoin = false;
+                                      if (!snapshotedsd.hasData) {
+                                        return CircularProgressIndicator();
+                                      } else {
+                                        return StreamBuilder<DocumentSnapshot>(
+                                            stream: FirebaseFirestore.instance
+                                                .collection('campaigns')
+                                                .doc(e.id)
+                                                .snapshots(),
+                                            builder: (context, snapshotyarn) {
+                                              return GestureDetector(
+                                                onTap: () async {
+                                                  try {
+                                                    if (snapshotyarn.data!
+                                                            .get('uid') ==
+                                                        context
+                                                            .read(
+                                                                authserviceProvider)
+                                                            .getCurrentUserUID()) {
+                                                      setState(() {
+                                                        isOrganizer = true;
+                                                      });
+                                                    } else {
+                                                      setState(() {
+                                                        isOrganizer = false;
+                                                      });
+
+                                                      if (snapshotedsd
+                                                          .data!.docs.isEmpty) {
+                                                        setState(() {
+                                                          isJoin = false;
+                                                        });
+                                                      } else {
+                                                        snapshotedsd.data!.docs
+                                                            .forEach((element) {
+                                                          if (context
+                                                                  .read(
+                                                                      authserviceProvider)
+                                                                  .getCurrentUserUID() ==
+                                                              element.get(
+                                                                  "volunteerUID")) {
+                                                            setState(() {
+                                                              isJoin = true;
+                                                            });
+                                                          } else if (context
+                                                                  .read(
+                                                                      authserviceProvider)
+                                                                  .getCurrentUserUID() !=
+                                                              element.get(
+                                                                  "volunteerUID")) {
+                                                            setState(() {
+                                                              isJoin = false;
+                                                            });
+                                                          } else {
+                                                            setState(() {
+                                                              isJoin = false;
+                                                            });
+                                                          }
+                                                        });
+                                                      }
+                                                    }
+
+                                                    if (isJoin == true &&
+                                                        isOrganizer == false) {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  CampaignMonitorVolunteer(
+                                                                      uidOfCampaign:
+                                                                          e.id)));
+                                                    } else if (isJoin ==
+                                                            false &&
+                                                        isOrganizer == false) {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  JoinDonateCampaign(
+                                                                    uidOfCampaign:
+                                                                        e.id,
+                                                                    uidOfOrganizer:
+                                                                        e.get(
+                                                                            "uid"),
+                                                                    nameOfCampaign:
+                                                                        e.get(
+                                                                            "campaign_name"),
+                                                                    city: e.get(
+                                                                        "city"),
+                                                                    currentFund:
+                                                                        e.get(
+                                                                            "current_donations"),
+                                                                    currentVolunteer:
+                                                                        e.get(
+                                                                            "current_volunteers"),
+                                                                    totalVolunteer:
+                                                                        e.get(
+                                                                            "number_volunteers"),
+                                                                    maxFund: e.get(
+                                                                        "max_donation"),
+                                                                    address: e.get(
+                                                                        "address"),
+                                                                    description:
+                                                                        e.get(
+                                                                            "description"),
+                                                                  )));
+                                                    } else if (isOrganizer ==
+                                                        true) {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  CampaignMonitorOrganizer(
+                                                                    uidOfCampaign:
+                                                                        e.id,
+                                                                  )));
+                                                    }
+                                                  } catch (e) {
+                                                    print(e);
+                                                  }
+                                                },
+                                                child: FadeAnimation(
+                                                    (1.0 +
+                                                            snapshot.data!.docs
+                                                                .length) /
+                                                        4,
+                                                    availableCampaign(
+                                                        name:
+                                                            e['campaign_name'],
+                                                        description:
+                                                            e['description'],
+                                                        rfund: e[
+                                                            'current_donations'],
+                                                        tfund:
+                                                            e['max_donation'],
+                                                        volunteerCurrent: e[
+                                                            'current_volunteers'],
+                                                        volunteerMax: e[
+                                                            'number_volunteers'])),
+                                              );
                                             });
-                                          } else {
-                                            snapshotedsd.data!.docs
-                                                .forEach((element) {
-                                              if (context
-                                                      .read(authserviceProvider)
-                                                      .getCurrentUserUID() ==
-                                                  element.get("volunteerUID")) {
-                                                setState(() {
-                                                  isJoin = true;
-                                                });
-                                              } else if (context
-                                                      .read(authserviceProvider)
-                                                      .getCurrentUserUID() !=
-                                                  element.get("volunteerUID")) {
-                                                setState(() {
-                                                  isJoin = false;
-                                                });
-                                              } else {
-                                                isJoin = false;
-                                              }
-                                            });
-                                          }
-                                          if (isJoin == true) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        CampaignMonitorVolunteer(
-                                                            uidOfCampaign:
-                                                                e.id)));
-                                          } else if (isJoin == false) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        JoinDonateCampaign(
-                                                          uidOfCampaign: e.id,
-                                                          uidOfOrganizer:
-                                                              e.get("uid"),
-                                                          nameOfCampaign: e.get(
-                                                              "campaign_name"),
-                                                          city: e.get("city"),
-                                                          currentFund: e.get(
-                                                              "current_donations"),
-                                                          currentVolunteer: e.get(
-                                                              "current_volunteers"),
-                                                          totalVolunteer: e.get(
-                                                              "number_volunteers"),
-                                                          maxFund: e.get(
-                                                              "max_donation"),
-                                                          address:
-                                                              e.get("address"),
-                                                          description: e.get(
-                                                              "description"),
-                                                        )));
-                                          }
-                                        },
-                                        child: FadeAnimation(
-                                            (1.0 + snapshot.data!.docs.length) /
-                                                4,
-                                            availableCampaign(
-                                                name: e['campaign_name'],
-                                                description: e['description'],
-                                                rfund: e['current_donations'],
-                                                tfund: e['max_donation'],
-                                                volunteerCurrent:
-                                                    e['current_volunteers'],
-                                                volunteerMax:
-                                                    e['number_volunteers'])),
-                                      );
+                                      }
                                     });
                               }).toList()))));
                 } else {
