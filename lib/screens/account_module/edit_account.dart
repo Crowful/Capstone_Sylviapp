@@ -28,6 +28,7 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController addressController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
 
   Future getImage() async {
     var image =
@@ -66,6 +67,7 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Container(
           margin: EdgeInsets.all(10),
           child: Column(
@@ -88,7 +90,7 @@ class _EditProfileState extends State<EditProfile> {
                       color: Color(0xff403d55),
                     ),
                     Text(
-                      'Sylviapp',
+                      'Edit Profile',
                       style: TextStyle(
                           color: Color(0xff65BFB8),
                           fontSize: 22,
@@ -116,6 +118,7 @@ class _EditProfileState extends State<EditProfile> {
                           width: 200,
                           child: CircularProgressIndicator());
                     } else {
+                      bool verify = snapshot.data!.get("isVerify");
                       var fullname = AESCryptography().decryptAES(
                           enc.Encrypted.fromBase64(
                               snapshot.data!.get('fullname')));
@@ -126,141 +129,196 @@ class _EditProfileState extends State<EditProfile> {
                           enc.Encrypted.fromBase64(
                               snapshot.data!.get('gender')));
                       var email = snapshot.data!.get('email');
-
+                      var phoneNum = AESCryptography().decryptAES(
+                          enc.Encrypted.fromBase64(
+                              snapshot.data!.get('phoneNumber')));
                       fullnameController.text = fullname;
                       addressController.text = address;
                       emailController.text = email;
-
-                      return Container(
-                        margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-                        child: Column(
-                          children: [
-                            Text(fullname),
-                            Text(address),
-                            Text(gender),
-                            Text(email),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    child: TextField(
-                                      controller: fullnameController,
-                                      decoration: InputDecoration(
-                                        prefixIcon: IconButton(
-                                          icon: Icon(Icons.person),
-                                          onPressed: null,
-                                        ),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            borderSide: BorderSide(
-                                                color: Colors.black)),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            borderSide: BorderSide(
-                                                color: Colors.black)),
-                                        hintText: "Full Name",
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 20),
+                      phoneNumberController.text = phoneNum;
+                      return Expanded(
+                        child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Stack(children: [
+                                  CircleAvatar(
+                                    radius: 50,
+                                    backgroundColor: Colors.black,
+                                  ),
+                                  Positioned(
+                                    top: 73,
+                                    right: 5,
+                                    child: CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: Colors.blue,
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 15,
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    child: TextField(
-                                      controller: addressController,
-                                      decoration: InputDecoration(
-                                        prefixIcon: IconButton(
-                                          icon: Icon(Icons.person),
-                                          onPressed: null,
-                                        ),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            borderSide: BorderSide(
-                                                color: Colors.black)),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            borderSide: BorderSide(
-                                                color: Colors.black)),
-                                        hintText: "Address",
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 20),
+                                ]),
+                                SizedBox(
+                                  height: 13,
+                                ),
+                                Text(
+                                  fullname,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  verify ? "Organizer" : "Volunteer",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey,
+                                      fontSize: 15),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.all(40),
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Column(
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Full Name",
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container(
+                                            height: 10,
+                                            child: TextField(
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                              controller: fullnameController,
+                                              decoration: InputDecoration(
+                                                hintText: "Full Name",
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ),
-                                  Container(
-                                    child: TextField(
-                                      controller: emailController,
-                                      decoration: InputDecoration(
-                                        prefixIcon: IconButton(
-                                          icon: Icon(Icons.person),
-                                          onPressed: null,
-                                        ),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            borderSide: BorderSide(
-                                                color: Colors.black)),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            borderSide: BorderSide(
-                                                color: Colors.black)),
-                                        hintText: "Email",
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 20),
+                                      SizedBox(
+                                        height: 20,
                                       ),
-                                    ),
-                                  ),
-                                  Container(
-                                      margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                                      child: ElevatedButton(
-                                          onPressed: () async {
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Address",
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Container(
+                                            height: 20,
+                                            child: TextField(
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                              controller: addressController,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Contact Number",
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Container(
+                                            height: 20,
+                                            child: TextField(
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                              controller: phoneNumberController,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: GestureDetector(
+                                          onTap: () async {
                                             await context
                                                 .read(authserviceProvider)
                                                 .updateAcc(
-                                                    AESCryptography()
-                                                        .encryptAES(
-                                                            fullnameController
-                                                                .text),
-                                                    AESCryptography()
-                                                        .encryptAES(
-                                                            addressController
-                                                                .text),
+                                                    fullnameController.text,
+                                                    addressController.text,
                                                     emailController.text)
                                                 .whenComplete(() =>
                                                     Fluttertoast.showToast(
                                                         msg: "updated"));
                                           },
-                                          child: Text("Update Account"))),
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        print(fullnameController.text);
-                                      },
-                                      child: Text("Update Password")),
-                                  ElevatedButton(
-                                      onPressed: () async {
-                                        var currentUser = context
-                                            .read(authserviceProvider)
-                                            .getCurrentUserUID();
-                                        await getImage();
-                                        uploadPicture(currentUser).whenComplete(
-                                            () => Fluttertoast.showToast(
-                                                textColor: Color(0xff3F5856),
-                                                msg:
-                                                    "Picture Uploaded Sucessfully",
-                                                backgroundColor:
-                                                    Color(0xffF5C69D)));
-                                      },
-                                      child: Text("Upload Picture")),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                                          child: Container(
+                                            height: 50,
+                                            width: 100,
+                                            decoration: BoxDecoration(
+                                                color: Color(0xff65BFB8),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(5))),
+                                            child: Center(
+                                              child: Text(
+                                                "Update",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ))
+                              ],
+                            )),
                       );
                     }
                   }),
