@@ -276,4 +276,21 @@ class AuthService extends ChangeNotifier {
       print(e);
     }
   }
+
+  leaveCampaign(String campaignUID, volunteerUID) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .leaveCampaign(campaignUID, volunteerUID);
+
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .removeVolunteerNumber(campaignUID);
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .removeCampaigntoUser(campaignUID, volunteerUID);
+    } catch (e) {
+      print(e);
+    }
+  }
 }
