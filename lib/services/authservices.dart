@@ -164,15 +164,14 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  Future updateAcc(
-      String newFullName, String newAddress, String newEmail) async {
+  Future updateAcc(String newFullName, int phoneNumber, String newEmail) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await _loggedInUser!.updateEmail(newEmail);
       await DatabaseService(uid: _loggedInUser!.uid)
-          .updateUserData(newEmail, newFullName, newAddress);
+          .updateUserData(newEmail, newFullName, phoneNumber);
     } catch (e) {
       print("EROOOOOOOOOOOOOOOOOOR" + e.toString());
     }

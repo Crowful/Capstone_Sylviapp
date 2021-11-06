@@ -290,7 +290,7 @@ class _EditProfileState extends State<EditProfile> {
                                                 .read(authserviceProvider)
                                                 .updateAcc(
                                                     fullnameController.text,
-                                                    addressController.text,
+                                                    phoneNum,
                                                     emailController.text)
                                                 .whenComplete(() =>
                                                     Fluttertoast.showToast(

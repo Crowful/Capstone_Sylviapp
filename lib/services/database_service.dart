@@ -55,12 +55,12 @@ class DatabaseService {
   Future updateUserData(
     String email,
     String fullname,
-    String address,
+    int phoneNumber,
   ) async {
     return await userCollection.doc(uid).update({
       'email': email,
       'fullname': fullname,
-      'address': address,
+      'phoneNumber': phoneNumber,
     });
   }
 
