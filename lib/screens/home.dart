@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/providers/providers.dart';
@@ -24,6 +25,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  bool isJoin = false;
+
 //Animation
   bool hold = false;
   bool menuOpen = false;
@@ -413,48 +416,97 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Expanded(
-                    child: NotificationListener(
-                      onNotification: _handleScrollNotification,
-                      child: RefreshIndicator(
-                        onRefresh: () async {},
-                        child: ListView(
-                            children: snapshot.data!.docs.map((e) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => JoinDonateCampaign(
-                                            uidOfCampaign: e.id,
-                                            uidOfOrganizer: e.get("uid"),
-                                            nameOfCampaign:
-                                                e.get("campaign_name"),
-                                            city: e.get("city"),
-                                            currentFund:
-                                                e.get("current_donations"),
-                                            currentVolunteer:
-                                                e.get("current_volunteers"),
-                                            totalVolunteer:
-                                                e.get("number_volunteers"),
-                                            maxFund: e.get("max_donation"),
-                                            address: e.get("address"),
-                                            description: e.get("description"),
-                                          )));
-                            },
-                            child: FadeAnimation(
-                                (1.0 + snapshot.data!.docs.length) / 4,
-                                availableCampaign(
-                                    name: e['campaign_name'],
-                                    description: e['description'],
-                                    rfund: e['current_donations'],
-                                    tfund: e['max_donation'],
-                                    volunteerCurrent: e['current_volunteers'],
-                                    volunteerMax: e['number_volunteers'])),
-                          );
-                        }).toList()),
-                      ),
-                    ),
-                  );
+                      child: NotificationListener(
+                          onNotification: _handleScrollNotification,
+                          child: RefreshIndicator(
+                              onRefresh: () async {},
+                              child: ListView(
+                                  children: snapshot.data!.docs.map((e) {
+                                return StreamBuilder<QuerySnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('campaigns')
+                                        .doc(e.id)
+                                        .collection('volunteers')
+                                        .snapshots(),
+                                    builder: (context, snapshotedsd) {
+                                      return GestureDetector(
+                                        onTap: () async {
+                                          if (snapshotedsd.data!.docs.isEmpty) {
+                                            setState(() {
+                                              isJoin = false;
+                                            });
+                                          } else {
+                                            snapshotedsd.data!.docs
+                                                .forEach((element) {
+                                              if (context
+                                                      .read(authserviceProvider)
+                                                      .getCurrentUserUID() ==
+                                                  element.get("volunteerUID")) {
+                                                setState(() {
+                                                  isJoin = true;
+                                                });
+                                              } else if (context
+                                                      .read(authserviceProvider)
+                                                      .getCurrentUserUID() !=
+                                                  element.get("volunteerUID")) {
+                                                setState(() {
+                                                  isJoin = false;
+                                                });
+                                              } else {
+                                                isJoin = false;
+                                              }
+                                            });
+                                          }
+                                          if (isJoin == true) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CampaignMonitorVolunteer(
+                                                            uidOfCampaign:
+                                                                e.id)));
+                                          } else if (isJoin == false) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        JoinDonateCampaign(
+                                                          uidOfCampaign: e.id,
+                                                          uidOfOrganizer:
+                                                              e.get("uid"),
+                                                          nameOfCampaign: e.get(
+                                                              "campaign_name"),
+                                                          city: e.get("city"),
+                                                          currentFund: e.get(
+                                                              "current_donations"),
+                                                          currentVolunteer: e.get(
+                                                              "current_volunteers"),
+                                                          totalVolunteer: e.get(
+                                                              "number_volunteers"),
+                                                          maxFund: e.get(
+                                                              "max_donation"),
+                                                          address:
+                                                              e.get("address"),
+                                                          description: e.get(
+                                                              "description"),
+                                                        )));
+                                          }
+                                        },
+                                        child: FadeAnimation(
+                                            (1.0 + snapshot.data!.docs.length) /
+                                                4,
+                                            availableCampaign(
+                                                name: e['campaign_name'],
+                                                description: e['description'],
+                                                rfund: e['current_donations'],
+                                                tfund: e['max_donation'],
+                                                volunteerCurrent:
+                                                    e['current_volunteers'],
+                                                volunteerMax:
+                                                    e['number_volunteers'])),
+                                      );
+                                    });
+                              }).toList()))));
                 } else {
                   return CircularProgressIndicator();
                 }
@@ -644,6 +696,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return CircularProgressIndicator();
+                } else if (snapshot.data!.docs.isEmpty) {
+                  return FadeAnimation(
+                    1,
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 100, 0, 0),
+                      child: Center(
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.sentiment_dissatisfied,
+                              size: 30, color: Colors.grey.withOpacity(0.7)),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text('No Active Campaign',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey.withOpacity(0.7),
+                                  fontSize: 25)),
+                        ],
+                      )),
+                    ),
+                  );
                 } else {
                   return Expanded(
                     child: NotificationListener(
