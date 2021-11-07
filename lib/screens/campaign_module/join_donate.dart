@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
+import 'package:http/http.dart' as http;
 import 'package:sylviapp_project/screens/campaign_module/volunteer_form.dart';
 
 class JoinDonateCampaign extends StatefulWidget {
@@ -44,6 +47,9 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
     with TickerProviderStateMixin {
   late AnimationController _hide =
       AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+
+  var url =
+      'https://us-central1-sylviapp-77c5e.cloudfunctions.net/paypalPayment';
 
   @override
   void initState() {
@@ -349,6 +355,12 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                             print(result
                                                                 .paymentMethodNonce
                                                                 .nonce);
+
+                                                            final http.Response
+                                                                response =
+                                                                await http.post(
+                                                                    Uri.tryParse(
+                                                                        '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}')!);
                                                           } else {
                                                             print(
                                                                 "FAILED PAYMENT PROCESS");
@@ -364,7 +376,64 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                   child:
                                                                       IconButton(
                                                                 onPressed:
-                                                                    () {},
+                                                                    () async {
+                                                                  var request =
+                                                                      BraintreeDropInRequest(
+                                                                          tokenizationKey:
+                                                                              'sandbox_mf5kvmgw_mhmfxcfrgwwftpcq',
+                                                                          collectDeviceData:
+                                                                              true,
+                                                                          paypalRequest:
+                                                                              BraintreePayPalRequest(
+                                                                            amount:
+                                                                                '10.00',
+                                                                            displayName:
+                                                                                'SylviaApp',
+                                                                          ),
+                                                                          cardEnabled:
+                                                                              true);
+
+                                                                  BraintreeDropInResult?
+                                                                      result =
+                                                                      await BraintreeDropIn
+                                                                          .start(
+                                                                    request,
+                                                                  );
+
+                                                                  if (result !=
+                                                                      null) {
+                                                                    print(result
+                                                                        .paymentMethodNonce
+                                                                        .description);
+                                                                    print(result
+                                                                        .paymentMethodNonce
+                                                                        .nonce);
+                                                                    print(result
+                                                                        .deviceData);
+
+                                                                    final http
+                                                                            .Response
+                                                                        response =
+                                                                        await http
+                                                                            .post(Uri.tryParse('$url?payment_method_nonce=${result.paymentMethodNonce.nonce}')!);
+
+                                                                    final payResult =
+                                                                        jsonDecode(
+                                                                            response.body);
+
+                                                                    if (payResult[
+                                                                            "result"] ==
+                                                                        "success") {
+                                                                      Fluttertoast
+                                                                          .showToast(
+                                                                              msg: "SUCCESSFULLY DONATED");
+                                                                    }
+                                                                  } else if (result ==
+                                                                      null) {
+                                                                    print(
+                                                                        "Braintree Result is null");
+                                                                  }
+                                                                },
                                                                 icon: Icon(Icons
                                                                     .monetization_on_outlined),
                                                                 color: Colors
