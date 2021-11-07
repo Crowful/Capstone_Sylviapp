@@ -507,8 +507,8 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                         stream: FirebaseFirestore
                                                             .instance
                                                             .collection('users')
-                                                            .doc(
-                                                                "Rat6RS0t3Scj76VRXFMzrwzuhMr1")
+                                                            .doc(widget
+                                                                .uidOfOrganizer)
                                                             .snapshots(),
                                                         builder: (context,
                                                             snapshot) {
@@ -542,61 +542,70 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                       .data!
                                                                       .get(
                                                                           'phoneNumber')));
-                                                          return Container(
-                                                            width:
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
-                                                            child: Row(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceEvenly,
-                                                              children: [
-                                                                CircleAvatar(
-                                                                  radius: 30,
-                                                                  backgroundColor:
-                                                                      Color(
-                                                                          0xff65BFB8),
-                                                                  child:
-                                                                      CircleAvatar(
-                                                                    radius: 27,
-                                                                    child: Icon(
-                                                                        Icons
-                                                                            .person),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 10,
-                                                                ),
-                                                                Expanded(
-                                                                  child:
-                                                                      Container(
-                                                                    padding:
-                                                                        EdgeInsets.all(
-                                                                            10),
-                                                                    decoration: BoxDecoration(
-                                                                        color: Colors
-                                                                            .grey
-                                                                            .withOpacity(
-                                                                                0.35),
-                                                                        borderRadius:
-                                                                            BorderRadius.all(Radius.circular(5))),
-                                                                    child: Text(
-                                                                      "The campaign is all about this and that and there you go.",
-                                                                      style: TextStyle(
-                                                                          color: Colors
-                                                                              .black
-                                                                              .withOpacity(0.7)),
+
+                                                          if (snapshot
+                                                              .hasError) {
+                                                            return Center(
+                                                              child:
+                                                                  CircularProgressIndicator(),
+                                                            );
+                                                          } else {
+                                                            return Container(
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              child: Row(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceEvenly,
+                                                                children: [
+                                                                  CircleAvatar(
+                                                                    radius: 30,
+                                                                    backgroundColor:
+                                                                        Color(
+                                                                            0xff65BFB8),
+                                                                    child:
+                                                                        CircleAvatar(
+                                                                      radius:
+                                                                          27,
+                                                                      child: Icon(
+                                                                          Icons
+                                                                              .person),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          );
+                                                                  SizedBox(
+                                                                    width: 10,
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                        Container(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              10),
+                                                                      decoration: BoxDecoration(
+                                                                          color: Colors.grey.withOpacity(
+                                                                              0.35),
+                                                                          borderRadius:
+                                                                              BorderRadius.all(Radius.circular(5))),
+                                                                      child:
+                                                                          Text(
+                                                                        fullname,
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black.withOpacity(1),
+                                                                            fontWeight: FontWeight.bold),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            );
+                                                          }
                                                         }),
                                                   ],
                                                 ),
