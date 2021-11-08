@@ -51,6 +51,7 @@ dependencies:
   flutter_braintree: ^2.1.0
   expansion_tile_card: ^2.0.0
   http: ^0.13.4
+  recase: ^4.0.0
 
 
 dev_dependencies:

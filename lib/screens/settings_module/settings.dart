@@ -213,6 +213,18 @@ class SettingsPage extends ConsumerWidget {
                 child: Text('try welcome')),
             ElevatedButton(
                 onPressed: () {
+                  Navigator.pushReplacementNamed(
+                      context, "/try_organizer_monitor");
+                },
+                child: Text('try_organizer_monitor')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                      context, "/try_volunteer_monitor");
+                },
+                child: Text('try_volunteer_monitor')),
+            ElevatedButton(
+                onPressed: () {
                   Navigator.pushReplacementNamed(context, "/onboarding");
                 },
                 child: Text('try onboarding')),
