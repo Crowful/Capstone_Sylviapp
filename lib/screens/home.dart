@@ -643,9 +643,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: RefreshIndicator(
               onRefresh: () async {},
               child: Container(
-                  height: 250,
-                  width: double.infinity,
-                  child: FadeAnimation(1, BarChartSample3())),
+                  width: double.infinity, child: FadeAnimation(1, Chart())),
             ),
           )
         ],
