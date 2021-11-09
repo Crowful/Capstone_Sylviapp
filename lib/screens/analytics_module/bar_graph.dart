@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Chart extends StatefulWidget {
-  const Chart({Key? key}) : super(key: key);
+  int activeCampaign;
+  int doneCampaign;
+  int campaignInProgress;
+  Chart(
+      {Key? key,
+      required this.activeCampaign,
+      required this.doneCampaign,
+      required this.campaignInProgress})
+      : super(key: key);
 
   @override
   _ChartState createState() => _ChartState();
@@ -43,9 +51,9 @@ class _ChartState extends State<Chart> {
 
   List<CampaignData> getCampaignData() {
     final List<CampaignData> chartData = [
-      CampaignData('Active Campaign', 25),
-      CampaignData('Inactive Campaign', 10),
-      CampaignData('Campaign Done', 30),
+      CampaignData('Active Campaign', widget.activeCampaign),
+      CampaignData('Done Campaign', widget.doneCampaign),
+      CampaignData('Campaign in Progress', widget.campaignInProgress),
     ];
 
     return chartData;

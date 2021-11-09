@@ -666,13 +666,60 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               style: Theme.of(context).textTheme.headline1,
             ),
           ),
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {},
-              child: Container(
-                  width: double.infinity, child: FadeAnimation(1, Chart())),
-            ),
-          )
+          StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("campaigns")
+                  .where('isActive', isEqualTo: true)
+                  .snapshots(),
+              builder: (context, snapshotAnalyticsActive) {
+                if (!snapshotAnalyticsActive.hasData) {
+                  return CircularProgressIndicator();
+                } else {
+                  return StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection("campaigns")
+                          .where('inProgress', isEqualTo: true)
+                          .snapshots(),
+                      builder: (context, snapshotAnalyticsProgress) {
+                        if (!snapshotAnalyticsProgress.hasData) {
+                          return CircularProgressIndicator();
+                        } else {
+                          return Expanded(
+                            child: StreamBuilder<QuerySnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection("campaigns")
+                                    .where('isDone', isEqualTo: true)
+                                    .snapshots(),
+                                builder: (context, snapshotAnalyticsDone) {
+                                  if (!snapshotAnalyticsDone.hasData) {
+                                    return CircularProgressIndicator();
+                                  } else {
+                                    int campaignDone =
+                                        snapshotAnalyticsDone.data!.size;
+                                    int campaignInProgress =
+                                        snapshotAnalyticsProgress.data!.size;
+                                    int campaignActive =
+                                        snapshotAnalyticsActive.data!.size;
+                                    return RefreshIndicator(
+                                      onRefresh: () async {},
+                                      child: Container(
+                                          width: double.infinity,
+                                          child: FadeAnimation(
+                                              1,
+                                              Chart(
+                                                campaignInProgress:
+                                                    campaignInProgress,
+                                                doneCampaign: campaignDone,
+                                                activeCampaign: campaignActive,
+                                              ))),
+                                    );
+                                  }
+                                }),
+                          );
+                        }
+                      });
+                }
+              })
         ],
       ),
     );
