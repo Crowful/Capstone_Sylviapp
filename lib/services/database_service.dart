@@ -105,6 +105,9 @@ class DatabaseService {
       'current_volunteers': currentVolunteers,
       'number_volunteers': numberVolunteers,
       'radius': campaignRadius,
+      'isActive': false,
+      'isDone': false,
+      'inProgress': false,
     });
   }
 
@@ -130,6 +133,14 @@ class DatabaseService {
     return await userCollection.doc(uid).update({
       'isApplying': true,
     });
+  }
+
+  Future addAnnouncement(String uidOfCampaign, String announcement) async {
+    return await approvedCampaignCollection
+        .doc(uidOfCampaign)
+        .collection("announcement")
+        .doc('announcement')
+        .set({"currentAnnouncement": announcement});
   }
 
 //Join Campaign

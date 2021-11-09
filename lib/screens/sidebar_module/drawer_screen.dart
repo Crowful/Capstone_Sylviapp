@@ -1,7 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/sidebar_module/menu_item.dart';
@@ -29,14 +32,16 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   String? taske;
   String? errorText;
-  String urlTest = "";
+  String? urlTest = "";
   Future showProfile(uid) async {
     String fileName = "pic";
     String destination = 'files/users/$uid/ProfilePicture/$fileName';
     Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
+
     try {
       taske = await firebaseStorageRef.getDownloadURL();
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      print(e.code);
       setState(() {
         errorText = e.toString();
       });
@@ -78,13 +83,15 @@ class _DrawerScreenState extends State<DrawerScreen> {
             Row(children: [
               urlTest != ""
                   ? CircleAvatar(
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.green,
+                        size: 40,
+                      ),
+                      backgroundColor: Colors.white,
                       radius: 30,
-                      backgroundImage: FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: urlTest,
-                        imageErrorBuilder: (context, error, stackTrace) {
-                          return CircularProgressIndicator();
-                        },
+                      foregroundImage: Image.network(
+                        urlTest.toString(),
                       ).image,
                     )
                   : CircularProgressIndicator(),

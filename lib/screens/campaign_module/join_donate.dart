@@ -112,10 +112,8 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
 
   @override
   Widget build(BuildContext context) {
-    double meterValue =
-        widget.maxFund.toDouble() / widget.currentFund.toDouble();
-    double currentDonation =
-        widget.maxFund.toDouble() / widget.currentFund.toDouble() * .100;
+    double meterValue = widget.currentFund / widget.maxFund;
+
     _hide.forward();
     return SafeArea(
       child: Scaffold(
@@ -447,7 +445,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                             .Response
                                                                         response =
                                                                         await http
-                                                                            .post(Uri.tryParse('$url?payment_method_nonce=${result.paymentMethodNonce.nonce}')!);
+                                                                            .post(Uri.tryParse('$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}')!);
 
                                                                     final payResult =
                                                                         jsonDecode(
@@ -612,47 +610,45 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                 .uidOfOrganizer)
                                                             .snapshots(),
                                                         builder: (context,
-                                                            snapshot) {
-                                                          var fullname = AESCryptography()
-                                                              .decryptAES(enc
-                                                                      .Encrypted
-                                                                  .fromBase64(
-                                                                      snapshot
-                                                                          .data!
-                                                                          .get(
-                                                                              'fullname')));
-
-                                                          var address = AESCryptography()
-                                                              .decryptAES(enc
-                                                                      .Encrypted
-                                                                  .from64(snapshot
-                                                                      .data!
-                                                                      .get(
-                                                                          'address')));
-                                                          String? gender = toBeginningOfSentenceCase(
-                                                              AESCryptography()
-                                                                  .decryptAES(enc
-                                                                          .Encrypted
-                                                                      .from64(snapshot
-                                                                          .data!
-                                                                          .get(
-                                                                              ("gender")))));
-
-                                                          var phoneNumber = AESCryptography()
-                                                              .decryptAES(enc
-                                                                      .Encrypted
-                                                                  .from64(snapshot
-                                                                      .data!
-                                                                      .get(
-                                                                          'phoneNumber')));
-
-                                                          if (snapshot
-                                                              .hasError) {
+                                                            snapshotOfUser) {
+                                                          if (!snapshotOfUser
+                                                              .hasData) {
                                                             return Center(
                                                               child:
                                                                   CircularProgressIndicator(),
                                                             );
                                                           } else {
+                                                            var fullname = AESCryptography()
+                                                                .decryptAES(enc
+                                                                        .Encrypted
+                                                                    .fromBase64(
+                                                                        snapshotOfUser
+                                                                            .data!
+                                                                            .get('fullname')));
+
+                                                            var address = AESCryptography()
+                                                                .decryptAES(enc
+                                                                        .Encrypted
+                                                                    .fromBase64(
+                                                                        snapshotOfUser
+                                                                            .data!
+                                                                            .get('address')));
+
+                                                            String? gender = toBeginningOfSentenceCase(
+                                                                AESCryptography().decryptAES(enc
+                                                                        .Encrypted
+                                                                    .fromBase64(
+                                                                        snapshotOfUser
+                                                                            .data!
+                                                                            .get(("gender")))));
+
+                                                            var phoneNumber = AESCryptography()
+                                                                .decryptAES(enc
+                                                                        .Encrypted
+                                                                    .fromBase64(
+                                                                        snapshotOfUser
+                                                                            .data!
+                                                                            .get('phoneNumber')));
                                                             return Container(
                                                               width:
                                                                   MediaQuery.of(
@@ -762,93 +758,102 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                         .snapshots(),
                                                     builder: (context,
                                                         snapshotCampaign) {
-                                                      var lat = snapshotCampaign
-                                                          .data!
-                                                          .get('latitude');
-                                                      var lng = snapshotCampaign
-                                                          .data!
-                                                          .get('longitude');
-                                                      var date_created =
-                                                          snapshotCampaign.data!
-                                                              .get(
-                                                                  'date_created');
+                                                      if (!snapshotCampaign
+                                                          .hasData) {
+                                                        return CircularProgressIndicator();
+                                                      } else {
+                                                        var lat =
+                                                            snapshotCampaign
+                                                                .data!
+                                                                .get(
+                                                                    'latitude');
+                                                        var lng =
+                                                            snapshotCampaign
+                                                                .data!
+                                                                .get(
+                                                                    'longitude');
+                                                        var date_created =
+                                                            snapshotCampaign
+                                                                .data!
+                                                                .get(
+                                                                    'date_created');
 
-                                                      var city =
-                                                          snapshotCampaign.data!
-                                                              .get("city");
-                                                      return Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            "More information",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 16.5),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Container(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    10),
-                                                            decoration: BoxDecoration(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .withOpacity(
-                                                                        0.35),
-                                                                borderRadius: BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            5))),
-                                                            width:
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Text(
-                                                                  "Latitude & Longitude: \n" +
-                                                                      lat.toString() +
-                                                                      " " +
-                                                                      lng.toString(),
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black
-                                                                          .withOpacity(
-                                                                              0.7)),
-                                                                ),
-                                                                Text(
-                                                                  "City: " +
-                                                                      city,
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black
-                                                                          .withOpacity(
-                                                                              0.7)),
-                                                                ),
-                                                                Text(
-                                                                  "Date Created: " +
-                                                                      date_created,
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black
-                                                                          .withOpacity(
-                                                                              0.7)),
-                                                                ),
-                                                              ],
+                                                        var city =
+                                                            snapshotCampaign
+                                                                .data!
+                                                                .get("city");
+                                                        return Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              "More information",
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize:
+                                                                      16.5),
                                                             ),
-                                                          ),
-                                                        ],
-                                                      );
+                                                            SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            Container(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(10),
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .withOpacity(
+                                                                          0.35),
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              5))),
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    "Latitude & Longitude: \n" +
+                                                                        lat.toString() +
+                                                                        " " +
+                                                                        lng.toString(),
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black
+                                                                            .withOpacity(0.7)),
+                                                                  ),
+                                                                  Text(
+                                                                    "City: " +
+                                                                        city,
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black
+                                                                            .withOpacity(0.7)),
+                                                                  ),
+                                                                  Text(
+                                                                    "Date Created: " +
+                                                                        date_created,
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black
+                                                                            .withOpacity(0.7)),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      }
                                                     }),
                                               ),
                                               Center(

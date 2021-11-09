@@ -140,18 +140,15 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                         child: urlTest != ""
                             ? CircleAvatar(
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.green,
+                                  size: 40,
+                                ),
                                 radius: 45,
-                                backgroundImage: FadeInImage.memoryNetwork(
-                                  placeholder: kTransparentImage,
-                                  image: urlTest,
-                                  imageErrorBuilder:
-                                      (context, error, stackTrace) {
-                                    return CircleAvatar(
-                                      radius: 100,
-                                      child: Icon(Icons.account_circle),
-                                      backgroundColor: Colors.red,
-                                    );
-                                  },
+                                backgroundColor: Colors.white,
+                                foregroundImage: Image.network(
+                                  urlTest,
                                 ).image,
                               )
                             : CircularProgressIndicator()),

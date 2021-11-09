@@ -125,171 +125,179 @@ class _ShowVolunteerState extends State<ShowVolunteer> {
               .doc(widget.userID)
               .snapshots(),
           builder: (context, snapshot) {
-            var name = AESCryptography().decryptAES(
-                enc.Encrypted.from64(snapshot.data!.get(("fullname"))));
-            String? sentence = toBeginningOfSentenceCase(AESCryptography()
-                .decryptAES(
-                    enc.Encrypted.from64(snapshot.data!.get(("gender")))));
-            return Stack(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(20),
-                  height: 405,
-                  width: 400,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Application Form",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 17),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 30,
-                            backgroundColor: Color(0xff65BFB8),
-                            backgroundImage: FadeInImage.memoryNetwork(
-                              placeholder: kTransparentImage,
-                              image: urlTest2,
-                              imageErrorBuilder: (context, error, stackTrace) {
-                                return CircularProgressIndicator();
-                              },
-                            ).image,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                name,
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.w600),
-                              ),
-                              Text(
-                                sentence!,
-                                style: TextStyle(
-                                    fontSize: 13, fontWeight: FontWeight.w400),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                'Medical Certificate',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context)
-                                      .push(HeroDialogRoute(builder: (context) {
-                                    return showFullImage(imgLink: urlTest);
-                                  }));
+            if (!snapshot.hasData) {
+              return CircularProgressIndicator();
+            } else {
+              var name = AESCryptography().decryptAES(
+                  enc.Encrypted.from64(snapshot.data!.get(("fullname"))));
+              String? sentence = toBeginningOfSentenceCase(AESCryptography()
+                  .decryptAES(
+                      enc.Encrypted.from64(snapshot.data!.get(("gender")))));
+              return Stack(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    height: 405,
+                    width: 400,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Application Form",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 17),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: 30,
+                              backgroundColor: Color(0xff65BFB8),
+                              backgroundImage: FadeInImage.memoryNetwork(
+                                placeholder: kTransparentImage,
+                                image: urlTest2,
+                                imageErrorBuilder:
+                                    (context, error, stackTrace) {
+                                  return CircularProgressIndicator();
                                 },
-                                child: Container(
-                                  height: 100,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: NetworkImage(urlTest))),
+                              ).image,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  name,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  sentence!,
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  'Medical Certificate',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        HeroDialogRoute(builder: (context) {
+                                      return showFullImage(imgLink: urlTest);
+                                    }));
+                                  },
+                                  child: Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: NetworkImage(urlTest))),
+                                  ),
+                                ),
+                                Column(
+                                  children: [
+                                    Text(
+                                      "Vaccination Card",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            HeroDialogRoute(builder: (context) {
+                                          return showFullImage(
+                                              imgLink: urlTest1);
+                                        }));
+                                      },
+                                      child: Container(
+                                        height: 100,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: NetworkImage(urlTest1))),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
+                                height: 230,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    color: Colors.grey.withOpacity(0.3)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Checklists",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
                                 ),
                               ),
-                              Column(
-                                children: [
-                                  Text(
-                                    "Vaccination Card",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          HeroDialogRoute(builder: (context) {
-                                        return showFullImage(imgLink: urlTest1);
-                                      }));
-                                    },
-                                    child: Container(
-                                      height: 100,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              image: NetworkImage(urlTest))),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(10),
-                              height: 230,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  color: Colors.grey.withOpacity(0.3)),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Checklists",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      )
-                    ],
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Align(
-                    heightFactor: 8.5,
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 50,
-                      child: Row(
-                        children: [
-                          Container(
-                            color: Color(0xff65BFB8),
-                            width: 160,
-                            child: Center(child: Text("Approve")),
-                          ),
-                          Expanded(
-                            child: Container(
-                              color: Color(0xffFF683A),
-                              child: Center(child: Text("Decline")),
+                  Align(
+                      heightFactor: 8.5,
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: 50,
+                        child: Row(
+                          children: [
+                            Container(
+                              color: Color(0xff65BFB8),
+                              width: 160,
+                              child: Center(child: Text("Approve")),
                             ),
-                          )
-                        ],
-                      ),
-                    ))
-              ],
-            );
+                            Expanded(
+                              child: Container(
+                                color: Color(0xffFF683A),
+                                child: Center(child: Text("Decline")),
+                              ),
+                            )
+                          ],
+                        ),
+                      ))
+                ],
+              );
+            }
           }),
     );
   }

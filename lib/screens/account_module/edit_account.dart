@@ -60,6 +60,26 @@ class _EditProfileState extends State<EditProfile> {
     });
   }
 
+  Future showProfile(uid) async {
+    String fileName = "pic";
+    String destination = 'files/users/$uid/ProfilePicture/$fileName';
+    Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
+
+    try {
+      taske = await firebaseStorageRef.getDownloadURL();
+    } on FirebaseException catch (e) {
+      print(e.code);
+      setState(() {
+        errorText = e.toString();
+      });
+    }
+    if (this.mounted) {
+      setState(() {
+        urlTest = taske.toString();
+      });
+    }
+  }
+
   String? taske;
   String? errorText;
 
@@ -148,18 +168,32 @@ class _EditProfileState extends State<EditProfile> {
                                 ),
                                 Stack(children: [
                                   CircleAvatar(
+                                    backgroundImage:
+                                        Image.network(urlTest).image,
                                     radius: 50,
                                     backgroundColor: Colors.black,
                                   ),
                                   Positioned(
                                     top: 73,
                                     right: 5,
-                                    child: CircleAvatar(
-                                      radius: 12,
-                                      backgroundColor: Colors.blue,
-                                      child: Icon(
-                                        Icons.edit,
-                                        size: 15,
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        await getImage();
+                                        await uploadPicture(context
+                                                .read(authserviceProvider)
+                                                .getCurrentUserUID())
+                                            .whenComplete(() => showProfile(
+                                                (context
+                                                    .read(authserviceProvider)
+                                                    .getCurrentUserUID())));
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 12,
+                                        backgroundColor: Colors.blue,
+                                        child: Icon(
+                                          Icons.edit,
+                                          size: 15,
+                                        ),
                                       ),
                                     ),
                                   ),

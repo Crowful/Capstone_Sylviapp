@@ -292,4 +292,18 @@ class AuthService extends ChangeNotifier {
       print(e);
     }
   }
+
+  addAnnouncement(String campaignUID, String announcement) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .addAnnouncement(campaignUID, announcement)
+          .whenComplete(() => Fluttertoast.showToast(msg: "POSTED"));
+    } catch (e) {
+      print(e);
+    }
+  }
 }
