@@ -2,15 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/sidebar_module/menu_item.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart' as enc;
 
 class DrawerScreen extends StatefulWidget {
+  final String uid;
   final AnimationController controller;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  DrawerScreen({Key? key, required this.controller}) : super(key: key);
+  DrawerScreen({required this.controller, required this.uid});
 
   @override
   _DrawerScreenState createState() => _DrawerScreenState();
@@ -48,6 +52,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
   void initState() {
     showProfile(context.read(authserviceProvider).getCurrentUserUID());
     super.initState();
+    print(widget.uid);
   }
 
   @override
@@ -99,7 +104,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                             width: 50,
                             child: CircularProgressIndicator());
                       } else {
-                        var name = snapshot.data!.get('username');
+                        var name = AESCryptography().decryptAES(
+                            enc.Encrypted.fromBase64(
+                                snapshot.data!.get("fullname")));
                         return Text(name,
                             style: TextStyle(
                                 color: Colors.black,

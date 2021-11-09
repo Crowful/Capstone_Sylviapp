@@ -106,12 +106,21 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
         children: [
           Container(
             margin: EdgeInsets.fromLTRB(0, 20, 150, 0),
-            child: Text(
-              "FILL UP FORM",
-              style: TextStyle(
-                  color: Color(0xff65BFB8),
-                  fontSize: 30,
-                  fontWeight: FontWeight.w900),
+            child: Row(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(Icons.arrow_back)),
+                Text(
+                  "FILL UP FORM",
+                  style: TextStyle(
+                      color: Color(0xff65BFB8),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900),
+                ),
+              ],
             ),
           ),
           Container(

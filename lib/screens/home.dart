@@ -397,7 +397,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             IconButton(
               icon: Icon(Icons.bookmark_outline),
               onPressed: () {},
-              color: Color(0xff65BFB8),
+              color: Colors.transparent,
             ),
           ]),
           SizedBox(height: 15),
@@ -440,136 +440,163 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                 .doc(e.id)
                                                 .snapshots(),
                                             builder: (context, snapshotyarn) {
-                                              return GestureDetector(
-                                                onTap: () async {
-                                                  try {
-                                                    if (snapshotyarn.data!
-                                                            .get('uid') ==
-                                                        context
-                                                            .read(
-                                                                authserviceProvider)
-                                                            .getCurrentUserUID()) {
-                                                      setState(() {
-                                                        isOrganizer = true;
-                                                      });
-                                                    } else {
-                                                      setState(() {
-                                                        isOrganizer = false;
-                                                      });
-
-                                                      if (snapshotedsd
-                                                          .data!.docs.isEmpty) {
+                                              if (snapshotyarn.hasError &&
+                                                  snapshot.connectionState ==
+                                                      ConnectionState.waiting) {
+                                                return Center(
+                                                    child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    CircularProgressIndicator(),
+                                                    Text(
+                                                        'Please Check your Internet',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.grey
+                                                                .withOpacity(
+                                                                    0.7),
+                                                            fontSize: 25))
+                                                  ],
+                                                ));
+                                                // ignore: unrelated_type_equality_checks
+                                              } else {
+                                                return GestureDetector(
+                                                  onTap: () async {
+                                                    try {
+                                                      if (snapshotyarn.data!
+                                                              .get('uid') ==
+                                                          context
+                                                              .read(
+                                                                  authserviceProvider)
+                                                              .getCurrentUserUID()) {
                                                         setState(() {
-                                                          isJoin = false;
+                                                          isOrganizer = true;
                                                         });
                                                       } else {
-                                                        snapshotedsd.data!.docs
-                                                            .forEach((element) {
-                                                          if (context
-                                                                  .read(
-                                                                      authserviceProvider)
-                                                                  .getCurrentUserUID() ==
-                                                              element.get(
-                                                                  "volunteerUID")) {
-                                                            setState(() {
-                                                              isJoin = true;
-                                                            });
-                                                          } else if (context
-                                                                  .read(
-                                                                      authserviceProvider)
-                                                                  .getCurrentUserUID() !=
-                                                              element.get(
-                                                                  "volunteerUID")) {
-                                                            setState(() {
-                                                              isJoin = false;
-                                                            });
-                                                          } else {
-                                                            setState(() {
-                                                              isJoin = false;
-                                                            });
-                                                          }
+                                                        setState(() {
+                                                          isOrganizer = false;
                                                         });
-                                                      }
-                                                    }
 
-                                                    if (isJoin == true &&
-                                                        isOrganizer == false) {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  CampaignMonitorVolunteer(
-                                                                      uidOfCampaign:
-                                                                          e.id)));
-                                                    } else if (isJoin ==
-                                                            false &&
-                                                        isOrganizer == false) {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  JoinDonateCampaign(
-                                                                    uidOfCampaign:
-                                                                        e.id,
-                                                                    uidOfOrganizer:
-                                                                        e.get(
-                                                                            "uid"),
-                                                                    nameOfCampaign:
-                                                                        e.get(
-                                                                            "campaign_name"),
-                                                                    city: e.get(
-                                                                        "city"),
-                                                                    currentFund:
-                                                                        e.get(
-                                                                            "current_donations"),
-                                                                    currentVolunteer:
-                                                                        e.get(
-                                                                            "current_volunteers"),
-                                                                    totalVolunteer:
-                                                                        e.get(
-                                                                            "number_volunteers"),
-                                                                    maxFund: e.get(
-                                                                        "max_donation"),
-                                                                    address: e.get(
-                                                                        "address"),
-                                                                    description:
-                                                                        e.get(
-                                                                            "description"),
-                                                                  )));
-                                                    } else if (isOrganizer ==
-                                                        true) {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  CampaignMonitorOrganizer(
-                                                                    uidOfCampaign:
-                                                                        e.id,
-                                                                  )));
+                                                        if (snapshotedsd.data!
+                                                            .docs.isEmpty) {
+                                                          setState(() {
+                                                            isJoin = false;
+                                                          });
+                                                        } else {
+                                                          snapshotedsd
+                                                              .data!.docs
+                                                              .forEach(
+                                                                  (element) {
+                                                            if (context
+                                                                    .read(
+                                                                        authserviceProvider)
+                                                                    .getCurrentUserUID() ==
+                                                                element.get(
+                                                                    "volunteerUID")) {
+                                                              setState(() {
+                                                                isJoin = true;
+                                                              });
+                                                            } else if (context
+                                                                    .read(
+                                                                        authserviceProvider)
+                                                                    .getCurrentUserUID() !=
+                                                                element.get(
+                                                                    "volunteerUID")) {
+                                                              setState(() {
+                                                                isJoin = false;
+                                                              });
+                                                            } else {
+                                                              setState(() {
+                                                                isJoin = false;
+                                                              });
+                                                            }
+                                                          });
+                                                        }
+                                                      }
+
+                                                      if (isJoin == true &&
+                                                          isOrganizer ==
+                                                              false) {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    CampaignMonitorVolunteer(
+                                                                        uidOfCampaign:
+                                                                            e.id)));
+                                                      } else if (isJoin ==
+                                                              false &&
+                                                          isOrganizer ==
+                                                              false) {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        JoinDonateCampaign(
+                                                                          uidOfCampaign:
+                                                                              e.id,
+                                                                          uidOfOrganizer:
+                                                                              e.get("uid"),
+                                                                          nameOfCampaign:
+                                                                              e.get("campaign_name"),
+                                                                          city:
+                                                                              e.get("city"),
+                                                                          currentFund:
+                                                                              e.get("current_donations"),
+                                                                          currentVolunteer:
+                                                                              e.get("current_volunteers"),
+                                                                          totalVolunteer:
+                                                                              e.get("number_volunteers"),
+                                                                          maxFund:
+                                                                              e.get("max_donation"),
+                                                                          address:
+                                                                              e.get("address"),
+                                                                          description:
+                                                                              e.get("description"),
+                                                                        )));
+                                                      } else if (isOrganizer ==
+                                                          true) {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        CampaignMonitorOrganizer(
+                                                                          uidOfCampaign:
+                                                                              e.id,
+                                                                        )));
+                                                      }
+                                                    } catch (e) {
+                                                      print(e);
                                                     }
-                                                  } catch (e) {
-                                                    print(e);
-                                                  }
-                                                },
-                                                child: FadeAnimation(
-                                                    (1.0 +
-                                                            snapshot.data!.docs
-                                                                .length) /
-                                                        4,
-                                                    availableCampaign(
-                                                        name:
-                                                            e['campaign_name'],
-                                                        description:
-                                                            e['description'],
-                                                        rfund: e[
-                                                            'current_donations'],
-                                                        tfund:
-                                                            e['max_donation'],
-                                                        volunteerCurrent: e[
-                                                            'current_volunteers'],
-                                                        volunteerMax: e[
-                                                            'number_volunteers'])),
-                                              );
+                                                  },
+                                                  child: FadeAnimation(
+                                                      (1.0 +
+                                                              snapshot
+                                                                  .data!
+                                                                  .docs
+                                                                  .length) /
+                                                          4,
+                                                      availableCampaign(
+                                                          name: e[
+                                                              'campaign_name'],
+                                                          description:
+                                                              e['description'],
+                                                          rfund: e[
+                                                              'current_donations'],
+                                                          tfund:
+                                                              e['max_donation'],
+                                                          volunteerCurrent: e[
+                                                              'current_volunteers'],
+                                                          volunteerMax: e[
+                                                              'number_volunteers'])),
+                                                );
+                                              }
                                             });
                                       }
                                     });
@@ -628,7 +655,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             IconButton(
               icon: Icon(Icons.bookmark_outline),
               onPressed: () {},
-              color: Color(0xff65BFB8),
+              color: Colors.transparent,
             ),
           ]),
           SizedBox(height: 15),
@@ -701,7 +728,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             IconButton(
               icon: Icon(Icons.bookmark_outline),
               onPressed: () {},
-              color: Color(0xff65BFB8),
+              color: Colors.transparent,
             ),
           ]),
           SizedBox(height: 15),
@@ -824,11 +851,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         .parent!
                                         .snapshots(),
                                     builder: (context, snapshoteds) {
-                                      if (!snapshoteds.hasData) {
+                                      if (!snapshoteds.hasData &&
+                                          snapshoteds.connectionState ==
+                                              ConnectionState.waiting) {
                                         return CircularProgressIndicator();
                                       } else {
-                                        List<Widget> entries = [];
-
                                         return GestureDetector(
                                             onTap: () {
                                               if (context
@@ -968,21 +995,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 Container(
                   child: Text(description,
                       style: TextStyle(
-                          fontSize: 14,
-                          overflow: TextOverflow.clip,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black.withOpacity(0.75))),
+                        fontSize: 14,
+                        overflow: TextOverflow.clip,
+                        fontWeight: FontWeight.normal,
+                      )),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                  child: Text('₱' +
-                      raisedFund.toString() +
-                      ' raised of ' +
-                      '₱' +
-                      totalFund.toString()),
+                  child: Text(
+                    '₱' +
+                        raisedFund.toString() +
+                        ' raised of ' +
+                        '₱' +
+                        totalFund.toString(),
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),

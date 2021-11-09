@@ -62,7 +62,9 @@ class MyApp extends ConsumerWidget {
         "/verify_email": (_) => VerifyEmail(),
         "/login": (_) => LoginScreen(),
         "/wrapperAuth": (_) => WrapperAuth(),
-        "/account_management": (_) => AccountManagementScreen(),
+        "/account_management": (_) => AccountManagementScreen(
+              uid: context.read(authserviceProvider).getCurrentUserUID(),
+            ),
         "/welcome": (_) => WelcomeScreen(),
         "/map": (_) => MapScreen(),
         "/recent_activity": (_) => RecentActivity(),

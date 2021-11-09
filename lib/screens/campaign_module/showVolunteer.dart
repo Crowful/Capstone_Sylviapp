@@ -110,7 +110,7 @@ class _ShowVolunteerState extends State<ShowVolunteer> {
         orgID: widget.organizerID,
         campaignID: widget.campaignID,
         userID: widget.userID);
-
+    showProfile(widget.userID);
     print(urlTest);
   }
 

@@ -1,12 +1,17 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:intl/intl.dart';
+import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/animation/pop_up.dart';
 import 'package:sylviapp_project/screens/campaign_module/showVolunteer.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class CampaignMonitorOrganizer extends StatefulWidget {
   String uidOfCampaign;
@@ -20,6 +25,29 @@ class CampaignMonitorOrganizer extends StatefulWidget {
 
 class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
     with TickerProviderStateMixin {
+  String? taske2;
+  String? errorText2;
+  String urlTest2 = "";
+  var imgLink;
+
+  Future showProfile(uid) async {
+    String fileName = "pic";
+    String destination = 'files/users/$uid/ProfilePicture/$fileName';
+    Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
+    try {
+      taske2 = await firebaseStorageRef.getDownloadURL();
+    } catch (e) {
+      setState(() {
+        errorText2 = e.toString();
+      });
+    }
+    if (this.mounted) {
+      setState(() {
+        urlTest2 = taske2.toString();
+      });
+    }
+  }
+
   bool isOpened = false;
   late AnimationController _animationController = AnimationController(
     vsync: this,
@@ -39,6 +67,7 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
   void dispose() {
     _animationController.dispose();
     super.dispose();
+    showNow();
   }
 
   _handleIcon() {
@@ -49,11 +78,17 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
     }
   }
 
+  late List<String?> imgLinks = [''];
+  showNow() {
+    for (var i in imgLinks) {
+      showProfile(i.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white.withOpacity(0.97),
         body: Stack(
           children: [
             StreamBuilder<QuerySnapshot>(
@@ -73,8 +108,8 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                             .snapshots(),
                         builder: (context, snapshotCampaign) {
                           var campaignName =
-                              snapshotCampaign.data!.get("campaign_name");
-                          var orgName = snapshotCampaign.data!.get("uid");
+                              snapshotCampaign.data?.get("campaign_name");
+                          var orgName = snapshotCampaign.data?.get("uid");
                           return Container(
                             height: MediaQuery.of(context).size.height,
                             width: MediaQuery.of(context).size.width,
@@ -100,177 +135,189 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                                                       "assets/images/userpass.png"))),
                                         ),
                                       ),
-                                      Container(
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                IconButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    icon:
-                                                        Icon(Icons.arrow_back)),
-                                                Text(
-                                                  campaignName,
-                                                  style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )
-                                              ],
-                                            ),
-                                            StreamBuilder<DocumentSnapshot>(
-                                                stream: FirebaseFirestore
-                                                    .instance
-                                                    .collection("campaigns")
-                                                    .doc(widget.uidOfCampaign)
-                                                    .snapshots(),
-                                                builder: (context, snapshot) {
-                                                  if (!snapshot.hasData) {
-                                                    return CircularProgressIndicator();
-                                                  } else {
-                                                    return StreamBuilder<
-                                                            DocumentSnapshot>(
-                                                        stream:
-                                                            FirebaseFirestore
-                                                                .instance
-                                                                .collection(
-                                                                    'users')
-                                                                .doc(snapshot
-                                                                    .data!
-                                                                    .get('uid'))
-                                                                .snapshots(),
-                                                        builder: (context,
-                                                            snapshoteds) {
-                                                          if (!snapshoteds
-                                                              .hasData) {
-                                                            return CircularProgressIndicator();
-                                                          } else {
-                                                            return Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(20),
-                                                              child: Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Text(
-                                                                    "Hello, Organizer",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        fontSize:
-                                                                            17),
+                                      FadeAnimation(
+                                        0.1,
+                                        Container(
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  IconButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      icon: Icon(
+                                                          Icons.arrow_back)),
+                                                  Text(
+                                                    campaignName,
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  )
+                                                ],
+                                              ),
+                                              StreamBuilder<DocumentSnapshot>(
+                                                  stream: FirebaseFirestore
+                                                      .instance
+                                                      .collection("campaigns")
+                                                      .doc(widget.uidOfCampaign)
+                                                      .snapshots(),
+                                                  builder: (context, snapshot) {
+                                                    if (!snapshot.hasData) {
+                                                      return CircularProgressIndicator();
+                                                    } else {
+                                                      return StreamBuilder<
+                                                              DocumentSnapshot>(
+                                                          stream:
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      'users')
+                                                                  .doc(snapshot
+                                                                      .data!
+                                                                      .get(
+                                                                          'uid'))
+                                                                  .snapshots(),
+                                                          builder: (context,
+                                                              snapshoteds) {
+                                                            if (!snapshoteds
+                                                                .hasData) {
+                                                              return CircularProgressIndicator();
+                                                            } else {
+                                                              return FadeAnimation(
+                                                                0.3,
+                                                                Container(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              15),
+                                                                  child: Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                        "Hello, Organizer",
+                                                                        style: Theme.of(context)
+                                                                            .textTheme
+                                                                            .headline1,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            5,
+                                                                      ),
+                                                                      Text(
+                                                                        "Manage the volunteers for your upcoming campaign, organizer.",
+                                                                        style: Theme.of(context)
+                                                                            .textTheme
+                                                                            .headline2,
+                                                                      ),
+                                                                    ],
                                                                   ),
-                                                                  SizedBox(
-                                                                    height: 5,
-                                                                  ),
-                                                                  Text(
-                                                                    "Manage the volunteers for your upcoming campaign, organizer.",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w400,
-                                                                        fontSize:
-                                                                            13),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            );
-                                                          }
-                                                        });
-                                                  }
-                                                }),
-                                          ],
+                                                                ),
+                                                              );
+                                                            }
+                                                          });
+                                                    }
+                                                  }),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
                                 Expanded(
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.all(20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Manage Volunteers",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            padding: const EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5))),
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: ListView(
-                                                children: snapshotVolunteers
-                                                    .data!.docs
-                                                    .map((e) {
-                                              return StreamBuilder<
-                                                      DocumentSnapshot>(
-                                                  stream: FirebaseFirestore
-                                                      .instance
-                                                      .collection('users')
-                                                      .doc(e["volunteerUID"])
-                                                      .snapshots(),
-                                                  builder:
-                                                      (context, snapshotList) {
-                                                    String? sentence =
-                                                        toBeginningOfSentenceCase(
-                                                            AESCryptography()
+                                  child: FadeAnimation(
+                                    0.5,
+                                    Container(
+                                      width: double.infinity,
+                                      padding: EdgeInsets.all(20),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Manage Volunteers",
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              padding: const EdgeInsets.all(10),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(5))),
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: ListView(
+                                                  children: snapshotVolunteers
+                                                      .data!.docs
+                                                      .map((e) {
+                                                return StreamBuilder<
+                                                        DocumentSnapshot>(
+                                                    stream: FirebaseFirestore
+                                                        .instance
+                                                        .collection('users')
+                                                        .doc(e["volunteerUID"])
+                                                        .snapshots(),
+                                                    builder: (context,
+                                                        snapshotList) {
+                                                      imgLinks.add(snapshotList
+                                                          .data?.id);
+                                                      String? sentence =
+                                                          toBeginningOfSentenceCase(
+                                                              AESCryptography()
+                                                                  .decryptAES(enc
+                                                                          .Encrypted
+                                                                      .from64(snapshotList
+                                                                          .data!
+                                                                          .get(
+                                                                              ("gender")))));
+                                                      if (!snapshotList
+                                                          .hasData) {
+                                                        return CircularProgressIndicator();
+                                                      }
+                                                      return FadeAnimation(
+                                                        0.7,
+                                                        volunteerWidget(
+                                                            imgLink:
+                                                                snapshotList
+                                                                    .data!.id,
+                                                            orgID: orgName,
+                                                            uid: snapshotList
+                                                                .data!.id,
+                                                            name: AESCryptography()
                                                                 .decryptAES(enc
                                                                         .Encrypted
                                                                     .from64(snapshotList
                                                                         .data!
                                                                         .get(
-                                                                            ("gender")))));
-                                                    if (!snapshotList.hasData) {
-                                                      return CircularProgressIndicator();
-                                                    }
-                                                    return volunteerWidget(
-                                                        orgID: orgName,
-                                                        uid: snapshotList
-                                                            .data!.id,
-                                                        name: AESCryptography()
-                                                            .decryptAES(enc
-                                                                    .Encrypted
-                                                                .from64(snapshotList
-                                                                    .data!
-                                                                    .get(
-                                                                        "fullname"))),
-                                                        gender: sentence!);
-                                                  });
-                                            }).toList()),
-                                          ),
-                                        )
-                                      ],
+                                                                            "fullname"))),
+                                                            gender: sentence!),
+                                                      );
+                                                    });
+                                              }).toList()),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -283,92 +330,91 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
             AnimatedPositioned(
               top: isOpened ? 730 : 520,
               duration: Duration(milliseconds: 500),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10))),
-                    padding: const EdgeInsets.all(20),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isOpened = !isOpened;
-                          _handleIcon();
-                        });
-                      },
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: AnimatedIcon(
-                          progress: _animationController,
-                          icon: AnimatedIcons.menu_close,
-                          size: 25,
+              child: FadeAnimation(
+                0.9,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10))),
+                      padding: const EdgeInsets.all(20),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isOpened = !isOpened;
+                            _handleIcon();
+                          });
+                        },
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: AnimatedIcon(
+                            progress: _animationController,
+                            icon: AnimatedIcons.menu_close,
+                            size: 25,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    height: 220,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 10, spreadRadius: 5,
-                            offset: Offset(0, -5), // Shadow position
-                          ),
-                        ]),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Campaign Settings",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Center(
-                            child: Text(
-                              "Set Start Date",
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      height: 220,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 10, spreadRadius: 5,
+                              offset: Offset(0, -5), // Shadow position
                             ),
+                          ]),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Campaign Settings",
+                            style: Theme.of(context).textTheme.headline1,
                           ),
-                        ),
-                        ElevatedButton(
+                          SizedBox(
+                            height: 10,
+                          ),
+                          ElevatedButton(
                             onPressed: () {},
                             child: Center(
-                              child: Text("Announce"),
-                            )),
-                        ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .push(HeroDialogRoute(builder: (context) {
-                                return cancelCampaign();
-                              }));
-                            },
-                            child: Center(
-                              child: Text("Cancel Campaign"),
-                            ))
-                      ],
+                              child: Text(
+                                "Set Start Date",
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                              onPressed: () {},
+                              child: Center(
+                                child: Text("Announce"),
+                              )),
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .push(HeroDialogRoute(builder: (context) {
+                                  return cancelCampaign();
+                                }));
+                              },
+                              child: Center(
+                                child: Text("Cancel Campaign"),
+                              ))
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -440,6 +486,7 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
       {required String name,
       required String gender,
       required String uid,
+      required String imgLink,
       required String orgID}) {
     return Column(
       children: [
@@ -462,6 +509,13 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                       CircleAvatar(
                         radius: 25,
                         backgroundColor: Color(0xff65BFB8),
+                        backgroundImage: FadeInImage.memoryNetwork(
+                          placeholder: kTransparentImage,
+                          image: urlTest2,
+                          imageErrorBuilder: (context, error, stackTrace) {
+                            return CircularProgressIndicator();
+                          },
+                        ).image,
                       ),
                       SizedBox(
                         width: 10,
@@ -477,9 +531,7 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                           ),
                           Text(
                             gender,
-                            style: TextStyle(
-                                color: Colors.black.withOpacity(0.5),
-                                fontSize: 13),
+                            style: Theme.of(context).textTheme.headline2,
                           ),
                         ],
                       ),

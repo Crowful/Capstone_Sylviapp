@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:encrypt/encrypt.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +20,9 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 
 class AccountManagementScreen extends StatefulWidget {
+  final String uid;
+  const AccountManagementScreen({Key? key, required this.uid})
+      : super(key: key);
   @override
   _AccountManagementScreenState createState() =>
       _AccountManagementScreenState();
@@ -147,6 +149,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                     return CircleAvatar(
                                       radius: 100,
                                       child: Icon(Icons.account_circle),
+                                      backgroundColor: Colors.red,
                                     );
                                   },
                                 ).image,

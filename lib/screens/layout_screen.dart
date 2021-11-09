@@ -32,6 +32,7 @@ class _LayoutScreenState extends State<LayoutScreen>
         body: Stack(
           children: [
             DrawerScreen(
+              uid: context.read(authserviceProvider).getCurrentUserUID(),
               controller: _controller,
             ),
             HomePage(

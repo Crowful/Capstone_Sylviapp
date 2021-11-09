@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:encrypt/encrypt.dart' as enc;
@@ -13,6 +14,7 @@ import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:http/http.dart' as http;
 import 'package:sylviapp_project/screens/campaign_module/volunteer_form.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class JoinDonateCampaign extends StatefulWidget {
   final String uidOfCampaign;
@@ -45,6 +47,27 @@ class JoinDonateCampaign extends StatefulWidget {
 
 class _JoinDonateCampaignState extends State<JoinDonateCampaign>
     with TickerProviderStateMixin {
+  String? taske2;
+  String? errorText2;
+  String urlTest2 = "";
+  Future showProfile(uid) async {
+    String fileName = "pic";
+    String destination = 'files/users/$uid/ProfilePicture/$fileName';
+    Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
+    try {
+      taske2 = await firebaseStorageRef.getDownloadURL();
+    } catch (e) {
+      setState(() {
+        errorText2 = e.toString();
+      });
+    }
+    if (this.mounted) {
+      setState(() {
+        urlTest2 = taske2.toString();
+      });
+    }
+  }
+
   late AnimationController _hide =
       AnimationController(vsync: this, duration: Duration(milliseconds: 500));
 
@@ -58,6 +81,8 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
     _hide =
         AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     _hide.forward();
+    showProfile(widget.uidOfOrganizer);
+    print(urlTest2);
   }
 
   @override
@@ -87,6 +112,10 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
 
   @override
   Widget build(BuildContext context) {
+    double meterValue =
+        widget.maxFund.toDouble() / widget.currentFund.toDouble();
+    double currentDonation =
+        widget.maxFund.toDouble() / widget.currentFund.toDouble() * .100;
     _hide.forward();
     return SafeArea(
       child: Scaffold(
@@ -131,19 +160,15 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                       padding: const EdgeInsets.all(10.0),
                                       child: Align(
                                         alignment: Alignment.topLeft,
-                                        child: CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: Colors.white,
-                                          child: FittedBox(
-                                            child: IconButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                icon: Icon(
-                                                  Icons.arrow_back,
-                                                  color: Colors.black,
-                                                  size: 30,
-                                                )),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: CircleAvatar(
+                                            radius: 15,
+                                            child: FittedBox(
+                                              child: Icon(Icons.arrow_back),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -181,15 +206,21 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                         Color(0xff65BFB8),
                                                     child: CircleAvatar(
                                                       radius: 32,
+                                                      backgroundImage:
+                                                          FadeInImage
+                                                              .memoryNetwork(
+                                                        placeholder:
+                                                            kTransparentImage,
+                                                        image: urlTest2,
+                                                        imageErrorBuilder:
+                                                            (context, error,
+                                                                stackTrace) {
+                                                          return CircularProgressIndicator();
+                                                        },
+                                                      ).image,
                                                       backgroundColor: Colors
                                                           .white
                                                           .withOpacity(0.5),
-                                                      child: Icon(
-                                                        Icons.person,
-                                                        color:
-                                                            Color(0xff65BFB8),
-                                                        size: 50,
-                                                      ),
                                                     ),
                                                   ),
                                                 ]),
@@ -234,7 +265,8 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                 children: [
                                                   Text(
                                                     "₱" +
-                                                        "0" +
+                                                        widget.currentFund
+                                                            .toString() +
                                                         " of " +
                                                         "₱" +
                                                         widget.maxFund
@@ -283,7 +315,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                         .withOpacity(0.3),
                                                     color: Color(0xff65BFB8),
                                                     minHeight: 10,
-                                                    value: 0.2,
+                                                    value: meterValue,
                                                   ),
                                                 ),
                                               ),
@@ -597,13 +629,15 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                       .data!
                                                                       .get(
                                                                           'address')));
-                                                          var gender = AESCryptography()
-                                                              .decryptAES(enc
-                                                                      .Encrypted
-                                                                  .from64(snapshot
-                                                                      .data!
-                                                                      .get(
-                                                                          'gender')));
+                                                          String? gender = toBeginningOfSentenceCase(
+                                                              AESCryptography()
+                                                                  .decryptAES(enc
+                                                                          .Encrypted
+                                                                      .from64(snapshot
+                                                                          .data!
+                                                                          .get(
+                                                                              ("gender")))));
+
                                                           var phoneNumber = AESCryptography()
                                                               .decryptAES(enc
                                                                       .Encrypted
@@ -640,6 +674,19 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                             0xff65BFB8),
                                                                     child:
                                                                         CircleAvatar(
+                                                                      backgroundImage:
+                                                                          FadeInImage
+                                                                              .memoryNetwork(
+                                                                        placeholder:
+                                                                            kTransparentImage,
+                                                                        image:
+                                                                            urlTest2,
+                                                                        imageErrorBuilder: (context,
+                                                                            error,
+                                                                            stackTrace) {
+                                                                          return CircularProgressIndicator();
+                                                                        },
+                                                                      ).image,
                                                                       radius:
                                                                           27,
                                                                       child: Icon(
@@ -662,12 +709,28 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                           borderRadius:
                                                                               BorderRadius.all(Radius.circular(5))),
                                                                       child:
+                                                                          Column(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.start,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
                                                                           Text(
-                                                                        fullname,
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Colors.black.withOpacity(1),
-                                                                            fontWeight: FontWeight.bold),
+                                                                            fullname,
+                                                                            style:
+                                                                                TextStyle(fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                          Text(
+                                                                            gender!,
+                                                                            style:
+                                                                                TextStyle(fontWeight: FontWeight.w400),
+                                                                          ),
+                                                                          Text(
+                                                                            phoneNumber,
+                                                                            style:
+                                                                                TextStyle(fontWeight: FontWeight.w400),
+                                                                          ),
+                                                                        ],
                                                                       ),
                                                                     ),
                                                                   ),
@@ -690,46 +753,103 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                               ),
                                               FadeAnimation(
                                                 0.9,
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "More information",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 16.5),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 5,
-                                                    ),
-                                                    Container(
-                                                      padding:
-                                                          EdgeInsets.all(10),
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.grey
-                                                              .withOpacity(
-                                                                  0.35),
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          5))),
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
-                                                      child: Text(
-                                                        "The campaign is all about this and that and there you go.",
-                                                        style: TextStyle(
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.7)),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
+                                                StreamBuilder<DocumentSnapshot>(
+                                                    stream: FirebaseFirestore
+                                                        .instance
+                                                        .collection('campaigns')
+                                                        .doc(widget
+                                                            .uidOfCampaign)
+                                                        .snapshots(),
+                                                    builder: (context,
+                                                        snapshotCampaign) {
+                                                      var lat = snapshotCampaign
+                                                          .data!
+                                                          .get('latitude');
+                                                      var lng = snapshotCampaign
+                                                          .data!
+                                                          .get('longitude');
+                                                      var date_created =
+                                                          snapshotCampaign.data!
+                                                              .get(
+                                                                  'date_created');
+
+                                                      var city =
+                                                          snapshotCampaign.data!
+                                                              .get("city");
+                                                      return Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            "More information",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 16.5),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    10),
+                                                            decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.35),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            5))),
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  "Latitude & Longitude: \n" +
+                                                                      lat.toString() +
+                                                                      " " +
+                                                                      lng.toString(),
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black
+                                                                          .withOpacity(
+                                                                              0.7)),
+                                                                ),
+                                                                Text(
+                                                                  "City: " +
+                                                                      city,
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black
+                                                                          .withOpacity(
+                                                                              0.7)),
+                                                                ),
+                                                                Text(
+                                                                  "Date Created: " +
+                                                                      date_created,
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black
+                                                                          .withOpacity(
+                                                                              0.7)),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    }),
                                               ),
                                               Center(
                                                 child: Container(

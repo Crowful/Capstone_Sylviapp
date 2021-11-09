@@ -10,6 +10,8 @@ ThemeData light = ThemeData(
     hintColor: AppColor.textColor,
     primaryColorLight: AppColor.buttonBackgroundColor,
     textTheme: TextTheme(
+        headline2: TextStyle(
+            color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400),
         headline1: TextStyle(
             color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
     buttonTheme: ButtonThemeData(
@@ -23,7 +25,10 @@ ThemeData dark = ThemeData(
     hintColor: AppColor.textColor,
     primaryColorLight: AppColor.buttonBackgroundColorDark,
     textTheme: TextTheme(
-        headline1: TextStyle(
-            color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+      headline1: TextStyle(
+          color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+      headline2: TextStyle(
+          color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400),
+    ),
     buttonTheme: ButtonThemeData(
         textTheme: ButtonTextTheme.primary, buttonColor: Colors.white));
