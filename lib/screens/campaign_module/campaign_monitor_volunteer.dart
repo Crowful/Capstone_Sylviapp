@@ -8,6 +8,7 @@ import 'package:encrypt/encrypt.dart' as enc;
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/animation/pop_up.dart';
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/screens/campaign_module/campaign_in_progress.dart';
 import 'package:sylviapp_project/screens/layout_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -42,341 +43,369 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                   return Container(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Color(0xff65BFB8),
-                            ),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  top: 40,
-                                  right: 10,
-                                  child: Container(
-                                    height: 150,
-                                    width: 150,
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: AssetImage(
-                                                "assets/images/userpass.png"))),
+                    child: SingleChildScrollView(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xff65BFB8),
+                              ),
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    top: 40,
+                                    right: 10,
+                                    child: Container(
+                                      height: 150,
+                                      width: 150,
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: AssetImage(
+                                                  "assets/images/userpass.png"))),
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          IconButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              icon: Icon(Icons.arrow_back)),
-                                          Text(
-                                            campaignName,
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      ),
-                                      StreamBuilder<DocumentSnapshot>(
-                                          stream: FirebaseFirestore.instance
-                                              .collection("campaigns")
-                                              .doc(widget.uidOfCampaign)
-                                              .snapshots(),
-                                          builder: (context, snapshot) {
-                                            if (!snapshot.hasData) {
-                                              return CircularProgressIndicator();
-                                            } else {
-                                              return StreamBuilder<
-                                                      DocumentSnapshot>(
-                                                  stream: FirebaseFirestore
-                                                      .instance
-                                                      .collection('users')
-                                                      .doc(snapshot.data!
-                                                          .get('uid'))
-                                                      .snapshots(),
-                                                  builder:
-                                                      (context, snapshoteds) {
-                                                    if (!snapshoteds.hasData) {
-                                                      return CircularProgressIndicator();
-                                                    } else {
-                                                      return Container(
-                                                        padding:
-                                                            EdgeInsets.all(20),
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            FadeAnimation(
-                                                              0.1,
-                                                              Text(
-                                                                "Hello, " +
-                                                                    AESCryptography().decryptAES(enc
-                                                                            .Encrypted
-                                                                        .fromBase64(snapshoteds
-                                                                            .data!
-                                                                            .get('fullname'))),
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontSize:
-                                                                        18),
+                                  Container(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            IconButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                icon: Icon(Icons.arrow_back)),
+                                            Text(
+                                              campaignName,
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          ],
+                                        ),
+                                        StreamBuilder<DocumentSnapshot>(
+                                            stream: FirebaseFirestore.instance
+                                                .collection("campaigns")
+                                                .doc(widget.uidOfCampaign)
+                                                .snapshots(),
+                                            builder: (context, snapshot) {
+                                              if (!snapshot.hasData) {
+                                                return CircularProgressIndicator();
+                                              } else {
+                                                return StreamBuilder<
+                                                        DocumentSnapshot>(
+                                                    stream: FirebaseFirestore
+                                                        .instance
+                                                        .collection('users')
+                                                        .doc(snapshot.data!
+                                                            .get('uid'))
+                                                        .snapshots(),
+                                                    builder:
+                                                        (context, snapshoteds) {
+                                                      if (!snapshoteds
+                                                          .hasData) {
+                                                        return CircularProgressIndicator();
+                                                      } else {
+                                                        return Container(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  20),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              FadeAnimation(
+                                                                0.1,
+                                                                Text(
+                                                                  "Hello, " +
+                                                                      AESCryptography().decryptAES(enc.Encrypted.fromBase64(snapshoteds
+                                                                          .data!
+                                                                          .get(
+                                                                              'fullname'))),
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          18),
+                                                                ),
                                                               ),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 5,
-                                                            ),
-                                                            FadeAnimation(
-                                                              0.3,
-                                                              Text(
-                                                                "Below is information or announcement for the upcoming campaign.",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
-                                                                    fontSize:
-                                                                        13),
+                                                              SizedBox(
+                                                                height: 5,
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    }
-                                                  });
-                                            }
-                                          }),
-                                    ],
+                                                              FadeAnimation(
+                                                                0.3,
+                                                                Text(
+                                                                  "Below is information or announcement for the upcoming campaign.",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      fontSize:
+                                                                          13),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      }
+                                                    });
+                                              }
+                                            }),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(20),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                StreamBuilder<QuerySnapshot>(
-                                    stream: FirebaseFirestore.instance
-                                        .collection("campaigns")
-                                        .doc(widget.uidOfCampaign)
-                                        .collection("volunteers")
-                                        .snapshots(),
-                                    builder: (context, snapshot) {
-                                      if (!snapshot.hasData) {
-                                        return CircularProgressIndicator();
-                                      } else {
-                                        return Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              FadeAnimation(
-                                                0.5,
-                                                Text(
-                                                  "Announcement",
-                                                  style: TextStyle(
-                                                      color: Color(0xff65BFB8),
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              FadeAnimation(
-                                                0.7,
-                                                Container(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height -
-                                                      670,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  5)),
-                                                      color: Colors.grey
-                                                          .withOpacity(0.35)),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      StreamBuilder<
-                                                              DocumentSnapshot>(
-                                                          stream: FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  "campaigns")
-                                                              .doc(widget
-                                                                  .uidOfCampaign)
-                                                              .collection(
-                                                                  "announcement")
-                                                              .doc(
-                                                                  'announcement')
-                                                              .snapshots(),
-                                                          builder: (context,
-                                                              snapshotAnnouncement) {
-                                                            if (!snapshotAnnouncement
-                                                                .hasData) {
-                                                              return Text(
-                                                                  "No Announcement at the moment");
-                                                            } else if (snapshotAnnouncement
-                                                                    .hasData &&
-                                                                snapshotAnnouncement
-                                                                    .data!
-                                                                    .exists) {
-                                                              return Text(
-                                                                  snapshotAnnouncement
-                                                                      .data!
-                                                                      .get(
-                                                                          'currentAnnouncement'));
-                                                            } else {
-                                                              return Text(
-                                                                  "No Announcement at the moment");
-                                                            }
-                                                          })
-                                                    ],
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection("campaigns")
+                                          .doc(widget.uidOfCampaign)
+                                          .collection("volunteers")
+                                          .snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return CircularProgressIndicator();
+                                        } else {
+                                          return Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                FadeAnimation(
+                                                  0.5,
+                                                  Text(
+                                                    "Announcement",
+                                                    style: TextStyle(
+                                                        color:
+                                                            Color(0xff65BFB8),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20),
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                height: 20,
-                                              ),
-                                              FadeAnimation(
-                                                0.9,
-                                                Text(
-                                                  "Volunteers: ",
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 17),
+                                                SizedBox(
+                                                  height: 5,
                                                 ),
-                                              ),
-                                              FadeAnimation(
-                                                0.11,
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(10),
-                                                  height: 360,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.25)),
-                                                  child: ListView(
-                                                      children: snapshot
-                                                          .data!.docs
-                                                          .map((e) {
-                                                    return GestureDetector(
-                                                      onTap: () {},
-                                                      child: Column(children: [
+                                                FadeAnimation(
+                                                  0.7,
+                                                  Container(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height -
+                                                            670,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    5)),
+                                                        color: Colors.grey
+                                                            .withOpacity(0.35)),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
                                                         StreamBuilder<
                                                                 DocumentSnapshot>(
                                                             stream: FirebaseFirestore
                                                                 .instance
                                                                 .collection(
-                                                                    "users")
-                                                                .doc(e[
-                                                                    "volunteerUID"])
+                                                                    "campaigns")
+                                                                .doc(widget
+                                                                    .uidOfCampaign)
+                                                                .collection(
+                                                                    "announcement")
+                                                                .doc(
+                                                                    'announcement')
                                                                 .snapshots(),
                                                             builder: (context,
-                                                                snapshoted) {
-                                                              if (!snapshoted
-                                                                      .hasData ||
-                                                                  !snapshoted
+                                                                snapshotAnnouncement) {
+                                                              if (!snapshotAnnouncement
+                                                                  .hasData) {
+                                                                return Text(
+                                                                    "No Announcement at the moment");
+                                                              } else if (snapshotAnnouncement
+                                                                      .hasData &&
+                                                                  snapshotAnnouncement
                                                                       .data!
                                                                       .exists) {
-                                                                return CircularProgressIndicator();
-                                                              } else {
-                                                                String? sentence = toBeginningOfSentenceCase(AESCryptography().decryptAES(enc
-                                                                        .Encrypted
-                                                                    .from64(snapshoted
+                                                                return Text(
+                                                                    snapshotAnnouncement
                                                                         .data!
                                                                         .get(
-                                                                            ("gender")))));
-                                                                return FadeAnimation(
-                                                                  0.13,
-                                                                  volunteersName(
-                                                                      name: AESCryptography().decryptAES(enc.Encrypted.fromBase64(snapshoted
-                                                                          .data!
-                                                                          .get(
-                                                                              "fullname"))),
-                                                                      gender:
-                                                                          sentence!),
-                                                                );
+                                                                            'currentAnnouncement'));
+                                                              } else {
+                                                                return Text(
+                                                                    "No Announcement at the moment");
                                                               }
-                                                            }),
-                                                      ]),
-                                                    );
-                                                  }).toList()),
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Navigator.of(context).push(
-                                                      HeroDialogRoute(
-                                                          builder: (context) {
-                                                    return leaveCampaign();
-                                                  }));
-                                                },
-                                                child: FadeAnimation(
-                                                  0.15,
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.exit_to_app,
-                                                        color: Colors.red,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Text(
-                                                        "Leave campaign",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontSize: 15,
-                                                            color: Colors.red),
-                                                      ),
-                                                    ],
+                                                            })
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ]);
-                                      }
-                                    }),
-                              ],
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                FadeAnimation(
+                                                  0.9,
+                                                  Text(
+                                                    "Volunteers: ",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 17),
+                                                  ),
+                                                ),
+                                                FadeAnimation(
+                                                  0.11,
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    height: 360,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.grey
+                                                            .withOpacity(0.25)),
+                                                    child: ListView(
+                                                        children: snapshot
+                                                            .data!.docs
+                                                            .map((e) {
+                                                      return GestureDetector(
+                                                        onTap: () {},
+                                                        child: Column(
+                                                            children: [
+                                                              StreamBuilder<
+                                                                      DocumentSnapshot>(
+                                                                  stream: FirebaseFirestore
+                                                                      .instance
+                                                                      .collection(
+                                                                          "users")
+                                                                      .doc(e[
+                                                                          "volunteerUID"])
+                                                                      .snapshots(),
+                                                                  builder: (context,
+                                                                      snapshoted) {
+                                                                    if (!snapshoted
+                                                                            .hasData ||
+                                                                        !snapshoted
+                                                                            .data!
+                                                                            .exists) {
+                                                                      return CircularProgressIndicator();
+                                                                    } else {
+                                                                      String?
+                                                                          sentence =
+                                                                          toBeginningOfSentenceCase(AESCryptography().decryptAES(enc.Encrypted.from64(snapshoted
+                                                                              .data!
+                                                                              .get(("gender")))));
+                                                                      return FadeAnimation(
+                                                                        0.13,
+                                                                        volunteersName(
+                                                                            name:
+                                                                                AESCryptography().decryptAES(enc.Encrypted.fromBase64(snapshoted.data!.get("fullname"))),
+                                                                            gender: sentence!),
+                                                                      );
+                                                                    }
+                                                                  }),
+                                                            ]),
+                                                      );
+                                                    }).toList()),
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.of(context).push(
+                                                        HeroDialogRoute(
+                                                            builder: (context) {
+                                                      return leaveCampaign();
+                                                    }));
+                                                  },
+                                                  child: FadeAnimation(
+                                                    0.15,
+                                                    Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.exit_to_app,
+                                                          color: Colors.red,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text(
+                                                          "Leave campaign",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontSize: 15,
+                                                              color:
+                                                                  Colors.red),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ]);
+                                        }
+                                      }),
+                                  snapshotCampaignName.data!
+                                              .get('inProgress') ==
+                                          false
+                                      ? ElevatedButton(
+                                          onPressed: () {},
+                                          child: Text(
+                                              "Campaign Is not yet started"))
+                                      : ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CampaignInProgress()));
+                                          },
+                                          child: Text(
+                                              "Campaign in progress Click here")),
+                                  Row(children: [
+                                    Text("CAMPAIGN WILL START IN "),
+                                    Text(snapshotCampaignName.data!
+                                        .get('date_start')),
+                                  ]),
+                                ],
+                              ),
                             ),
-                          ),
-                        ]),
+                          ]),
+                    ),
                   );
                 }
               }),
@@ -404,10 +433,6 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircleAvatar(
-                        radius: 25,
-                        backgroundColor: Color(0xff65BFB8),
-                      ),
                       SizedBox(
                         width: 10,
                       ),

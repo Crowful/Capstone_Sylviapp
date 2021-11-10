@@ -80,6 +80,12 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
+  @override
+  void initState() {
+    showProfile(context.read(authserviceProvider).getCurrentUserUID());
+    super.initState();
+  }
+
   String? taske;
   String? errorText;
 
@@ -167,12 +173,17 @@ class _EditProfileState extends State<EditProfile> {
                                   height: 15,
                                 ),
                                 Stack(children: [
-                                  CircleAvatar(
-                                    backgroundImage:
-                                        Image.network(urlTest).image,
-                                    radius: 50,
-                                    backgroundColor: Colors.black,
-                                  ),
+                                  urlTest != ""
+                                      ? CircleAvatar(
+                                          backgroundImage: Image.network(
+                                            urlTest,
+                                          ).image,
+                                          radius: 50,
+                                          backgroundColor: Colors.black,
+                                        )
+                                      : CircularProgressIndicator(
+                                          color: Colors.greenAccent,
+                                        ),
                                   Positioned(
                                     top: 73,
                                     right: 5,

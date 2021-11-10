@@ -306,4 +306,32 @@ class AuthService extends ChangeNotifier {
       print(e);
     }
   }
+
+  setStartingDate(String campaignUID, String date) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .setStartDateCampaign(campaignUID, date)
+          .whenComplete(() => Fluttertoast.showToast(msg: "DATE POSTED"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  startTheCampaign(String campaignUID) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .starTheCampaign(campaignUID)
+          .whenComplete(() => Fluttertoast.showToast(msg: "CAMPAIGN STARTED"));
+    } catch (e) {
+      print(e);
+    }
+  }
 }

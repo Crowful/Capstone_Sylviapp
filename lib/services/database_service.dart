@@ -149,7 +149,7 @@ class DatabaseService {
         .doc(uidOfCampaign)
         .collection("volunteers")
         .doc(registeredUID)
-        .set({"volunteerUID": registeredUID});
+        .set({"volunteerUID": registeredUID, "isApprove": false});
   }
 
   Future addVolunteerNumber(String uidOfCampaign) async {
@@ -188,5 +188,17 @@ class DatabaseService {
         .collection("volunteers")
         .doc(registeredUID)
         .delete();
+  }
+
+  Future setStartDateCampaign(String uidOfCampaign, String dateCampaign) async {
+    return await approvedCampaignCollection.doc(uidOfCampaign).update({
+      'date_start': dateCampaign,
+    });
+  }
+
+  Future starTheCampaign(String uidOfCampaign) async {
+    return await approvedCampaignCollection.doc(uidOfCampaign).update({
+      'inProgress': true,
+    });
   }
 }

@@ -91,6 +91,19 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
     }
   }
 
+  DateTime selectedDate = DateTime.now();
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now().add(Duration(days: 15)));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -308,22 +321,24 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                                                           return FadeAnimation(
                                                             0.7,
                                                             volunteerWidget(
-                                                                imgLink:
+                                                                number: AESCryptography().decryptAES(enc.Encrypted.from64(
                                                                     snapshotList
-                                                                        .data!.id,
-                                                                orgID: orgName,
-                                                                uid:
+                                                                        .data!
+                                                                        .get(
+                                                                            "phoneNumber"))),
+                                                                imgLink:
                                                                     snapshotList
                                                                         .data!
                                                                         .id,
-                                                                name: AESCryptography().decryptAES(enc
-                                                                        .Encrypted
-                                                                    .from64(snapshotList
-                                                                        .data!
-                                                                        .get(
-                                                                            "fullname"))),
-                                                                gender:
-                                                                    sentence!),
+                                                                orgID: orgName,
+                                                                uid: snapshotList
+                                                                    .data!.id,
+                                                                name: AESCryptography()
+                                                                    .decryptAES(enc.Encrypted.from64(
+                                                                        snapshotList
+                                                                            .data!
+                                                                            .get("fullname"))),
+                                                                gender: sentence!),
                                                           );
                                                         }
                                                       });
@@ -345,7 +360,7 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
             AnimatedPositioned(
               top: isOpened
                   ? MediaQuery.of(context).size.height - 80
-                  : MediaQuery.of(context).size.height - 300,
+                  : MediaQuery.of(context).size.height - 350,
               duration: Duration(milliseconds: 500),
               child: FadeAnimation(
                 0.9,
@@ -403,19 +418,25 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                             height: 10,
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return DatePickerDialog(
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime.now(),
-                                        lastDate: DateTime.now());
-                                  });
-                            },
+                            onPressed: () =>
+                                _selectDate(context).whenComplete(() {
+                              context.read(authserviceProvider).setStartingDate(
+                                  widget.uidOfCampaign,
+                                  selectedDate.toString());
+                            }),
                             child: Center(
                               child: Text(
                                 "Set Start Date",
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => context
+                                .read(authserviceProvider)
+                                .startTheCampaign(widget.uidOfCampaign),
+                            child: Center(
+                              child: Text(
+                                "Start The Campaign now",
                               ),
                             ),
                           ),
@@ -547,6 +568,7 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
       {required String name,
       required String gender,
       required String uid,
+      required String number,
       required String imgLink,
       required String orgID}) {
     return Column(
@@ -576,10 +598,19 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 16),
                           ),
-                          Text(
-                            gender,
-                            style: Theme.of(context).textTheme.headline2,
-                          ),
+                          Row(children: [
+                            Text(
+                              gender,
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              number,
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                          ]),
                         ],
                       ),
                     ],
