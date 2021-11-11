@@ -55,8 +55,6 @@ dependencies:
   percent_indicator: ^3.4.0
   recase: ^4.0.0
   firebase_messaging: ^11.1.0
-  location: ^4.3.0
-  geolocator: ^7.7.1
 
 
 dev_dependencies:

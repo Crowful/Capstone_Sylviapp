@@ -344,8 +344,7 @@ class AuthService extends ChangeNotifier {
       await DatabaseService(uid: _loggedInUser!.uid)
           .donatedToCampaign(
               uidOfCampaign, amount, dateDonated, uidUser, device, description)
-          .whenComplete(() => DatabaseService(uid: _loggedInUser!.uid)
-              .incrementDonation(uidOfCampaign, amount));
+          .whenComplete(() => Fluttertoast.showToast(msg: "Donated"));
     } catch (e) {
       print(e);
     }
@@ -361,20 +360,6 @@ class AuthService extends ChangeNotifier {
           .donatedToCampaignUser(
               uidOfCampaign, amount, dateDonated, uidUser, device, description)
           .whenComplete(() => Fluttertoast.showToast(msg: "Donated"));
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  addReport(
-      String uidOfCampaign, String uidOfVolunteer, String typeOfReport) async {
-    try {
-      if (_loggedInUser == null) {
-        _loggedInUser = FirebaseAuth.instance.currentUser;
-      }
-      await DatabaseService(uid: _loggedInUser!.uid)
-          .addReports(uidOfCampaign, uidOfVolunteer, typeOfReport)
-          .whenComplete(() => Fluttertoast.showToast(msg: "Reported"));
     } catch (e) {
       print(e);
     }

@@ -583,7 +583,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                   .length) /
                                                           4,
                                                       availableCampaign(
-                                                          uid: e['uid'],
                                                           name: e[
                                                               'campaign_name'],
                                                           description:
@@ -938,8 +937,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                             .length) /
                                                     4,
                                                 availableCampaign(
-                                                  uid: snapshoteds.data!
-                                                      .get("uid"),
                                                   name: snapshoteds.data!
                                                       .get("campaign_name"),
                                                   description: snapshoteds.data!
@@ -984,7 +981,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget availableCampaign({
     String? name,
     required String description,
-    required String uid,
     required int rfund,
     required int tfund,
     required int volunteerCurrent,
@@ -1022,16 +1018,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         image: AssetImage("assets/images/placeholder.jpg"),
                         fit: BoxFit.cover)),
               ),
-              uid ==
-                      context
-                          .read(authserviceProvider)
-                          .getCurrentUserUID
-                          .toString()
-                  ? Padding(
-                      padding: EdgeInsets.all(5),
-                      child: Text('You are the Organizer here',
-                          style: TextStyle(color: Colors.white)))
-                  : Padding(padding: EdgeInsets.all(5), child: Text('test'))
+              Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Icon(
+                    Icons.bookmark_add_outlined,
+                    size: 28,
+                    color: Colors.white,
+                  ))
             ]),
             SizedBox(width: 10),
             Column(

@@ -112,9 +112,10 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
     return false;
   }
 
-  double meterValue = 0;
   @override
   Widget build(BuildContext context) {
+    double meterValue = widget.currentFund / widget.maxFund;
+
     _hide.forward();
     return SafeArea(
       child: Scaffold(
@@ -264,14 +265,11 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                 children: [
                                                   Text(
                                                     "₱" +
-                                                        snapshot.data!
-                                                            .get(
-                                                                'current_donations')
+                                                        widget.currentFund
                                                             .toString() +
                                                         " of " +
                                                         "₱" +
-                                                        snapshot.data!
-                                                            .get('max_donation')
+                                                        widget.maxFund
                                                             .toString() +
                                                         " raised",
                                                     style: TextStyle(
@@ -317,11 +315,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                         .withOpacity(0.3),
                                                     color: Color(0xff65BFB8),
                                                     minHeight: 10,
-                                                    value: meterValue =
-                                                        snapshot.data!.get(
-                                                                'current_donations') /
-                                                            snapshot.data!.get(
-                                                                'max_donation'),
+                                                    value: meterValue,
                                                   ),
                                                 ),
                                               ),
@@ -500,7 +494,10 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                           now.hour,
                                                                           now.minute);
 
-                                                                      await context.read(authserviceProvider).donateCampaign(
+                                                                      Fluttertoast
+                                                                          .showToast(
+                                                                              msg: "SUCCESSFULLY DONATED");
+                                                                      context.read(authserviceProvider).donateCampaign(
                                                                           widget
                                                                               .uidOfCampaign,
                                                                           10,
@@ -516,14 +513,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                           result
                                                                               .deviceData
                                                                               .toString());
-                                                                      setState(
-                                                                          () {
-                                                                        meterValue =
-                                                                            snapshot.data!.get('current_donations') /
-                                                                                snapshot.data!.get('max_donation');
-                                                                      });
-
-                                                                      await context.read(authserviceProvider).donateCampaignUser(
+                                                                      context.read(authserviceProvider).donateCampaignUser(
                                                                           widget
                                                                               .uidOfCampaign,
                                                                           10,
@@ -580,48 +570,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                             child: FittedBox(
                                                                 child:
                                                                     IconButton(
-                                                              onPressed:
-                                                                  () async {
-                                                                showDialog(
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (context) {
-                                                                      return Container(
-                                                                        margin: EdgeInsets.fromLTRB(
-                                                                            20,
-                                                                            30,
-                                                                            30,
-                                                                            40),
-                                                                        child:
-                                                                            Card(
-                                                                          child:
-                                                                              Column(
-                                                                            children: [
-                                                                              ElevatedButton(
-                                                                                  onPressed: () async {
-                                                                                    await context.read(authserviceProvider).addReport(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Scam");
-                                                                                    Navigator.pop(context);
-                                                                                  },
-                                                                                  child: Text("Scam")),
-                                                                              ElevatedButton(
-                                                                                  onPressed: () async {
-                                                                                    await context.read(authserviceProvider).addReport(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Abuse");
-                                                                                    Navigator.pop(context);
-                                                                                  },
-                                                                                  child: Text("Abuse")),
-                                                                              ElevatedButton(
-                                                                                  onPressed: () async {
-                                                                                    await context.read(authserviceProvider).addReport(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Inappropriate words");
-                                                                                    Navigator.pop(context);
-                                                                                  },
-                                                                                  child: Text("Used of Inappropriate words")),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    });
-                                                              },
+                                                              onPressed: () {},
                                                               icon: Icon(
                                                                   Icons.report),
                                                               color:

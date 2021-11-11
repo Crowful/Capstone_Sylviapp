@@ -207,7 +207,7 @@ class DatabaseService {
         .doc(uidOfCampaign)
         .collection('donations')
         .doc(uidUser)
-        .set({
+        .update({
       'uid': uidUser,
       'amount': amount,
       'dateDonated': dateDonated,
@@ -228,7 +228,7 @@ class DatabaseService {
         .doc(uid)
         .collection('recent_activities')
         .doc(dateDonated)
-        .set({
+        .update({
       'uid': uidUser,
       'amount': amount,
       'dateDonated': dateDonated,
@@ -236,23 +236,5 @@ class DatabaseService {
       'device': device,
       'campaignUID': uidOfCampaign
     });
-  }
-
-  Future incrementDonation(
-    String uidOfCampaign,
-    int amount,
-  ) async {
-    return await approvedCampaignCollection.doc(uidOfCampaign).update({
-      'current_donations': FieldValue.increment(amount),
-    });
-  }
-
-  Future addReports(
-      String uidOfCampaign, String registeredUID, String typeOfReport) async {
-    return await approvedCampaignCollection
-        .doc(uidOfCampaign)
-        .collection("reports")
-        .doc(registeredUID)
-        .set({"report": typeOfReport});
   }
 }
