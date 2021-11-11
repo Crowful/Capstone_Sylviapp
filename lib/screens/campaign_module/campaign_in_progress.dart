@@ -17,7 +17,36 @@ class _CampaignInProgressState extends State<CampaignInProgress> {
           width: MediaQuery.of(context).size.width,
           child: Column(
             children: [
-              Text("INSTRUCTIONS"),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Color(0xff65BFB8),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      Navigator.pop(context);
+                    });
+                  },
+                  color: Color(0xff403d55),
+                ),
+                Text(
+                  'Sylviapp',
+                  style: TextStyle(
+                      color: Color(0xff65BFB8),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  icon: Icon(Icons.bookmark_outline),
+                  onPressed: () {},
+                  color: Colors.transparent,
+                ),
+              ]),
+              SizedBox(
+                height: 20,
+              ),
+              Text("data")
             ],
           ),
         ),

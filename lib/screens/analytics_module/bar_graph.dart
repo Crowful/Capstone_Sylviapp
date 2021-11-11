@@ -46,6 +46,22 @@ class _ChartState extends State<Chart> {
       SizedBox(
         height: 20,
       ),
+      Row(children: [
+        Text("RISK METER"),
+        SizedBox(
+          width: 10,
+        ),
+        Container(
+          width: 200,
+          child: LinearProgressIndicator(
+              semanticsLabel: "Donated",
+              semanticsValue: "Donating",
+              backgroundColor: Colors.grey.withOpacity(0.3),
+              color: Colors.amber,
+              minHeight: 15,
+              value: 0.5),
+        ),
+      ]),
     ]);
   }
 
