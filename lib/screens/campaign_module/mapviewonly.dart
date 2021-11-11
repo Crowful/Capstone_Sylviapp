@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +61,7 @@ class _MapViewOnlyState extends State<MapViewOnly>
       AnimationController(vsync: this, duration: Duration(milliseconds: 500));
 
   late List<dynamic> pointlist = List.empty(growable: true);
-
+  Set<Marker> markers = Set();
   @override
   void initState() {
     super.initState();
@@ -72,6 +74,7 @@ class _MapViewOnlyState extends State<MapViewOnly>
         .get()
         .then((QuerySnapshot snap) {
       snap.docs.forEach((element) {
+        bool isInProgress = element.get('inProgress');
         circles.add(Circle(
             consumeTapEvents: true,
             onTap: () {
@@ -85,7 +88,7 @@ class _MapViewOnlyState extends State<MapViewOnly>
                             city: element.get("city"),
                             currentFund: element.get("current_donations"),
                             currentVolunteer: element.get("current_volunteers"),
-                            maxFund: element.get("max_donations"),
+                            maxFund: element.get("max_donation"),
                             totalVolunteer: element.get("number_volunteers"),
                             address: element.get("address"),
                             description: element.get("description"),
@@ -94,10 +97,18 @@ class _MapViewOnlyState extends State<MapViewOnly>
             strokeColor: Colors.black,
             strokeWidth: 1,
             visible: true,
-            fillColor: Colors.red,
+            fillColor: isInProgress ? Colors.green : Colors.blue,
             circleId: CircleId(element.id),
             radius: element.get("radius") * 100,
             center: LatLng(element.get("latitude"), element.get("longitude"))));
+
+        markers.add(Marker(
+            position: LatLng(element.get("latitude"), element.get("longitude")),
+            visible: true,
+            markerId: MarkerId(element.id),
+            icon: BitmapDescriptor.defaultMarker,
+            infoWindow: InfoWindow(
+                title: isInProgress ? "In Progress" : "Not Yet Started")));
       });
     });
 
@@ -132,8 +143,6 @@ class _MapViewOnlyState extends State<MapViewOnly>
       radius: radius1,
     ));
   }
-
-  Set<Marker> markers = Set();
 
   void putMarker(latlng) {
     check();
@@ -204,6 +213,7 @@ class _MapViewOnlyState extends State<MapViewOnly>
         return Scaffold(
           body: Stack(children: [
             GoogleMap(
+                markers: markers,
                 onCameraIdle: () {},
                 circles: circles,
                 mapType: MapType.normal,
@@ -254,6 +264,7 @@ class _MapViewOnlyState extends State<MapViewOnly>
                                     setState(() {
                                       print('angat');
                                       toLamesa();
+
                                       clicked = false;
                                     });
                                   },
@@ -474,5 +485,10 @@ class _MapViewOnlyState extends State<MapViewOnly>
       target: LatLng(15.780574, 121.121838),
       zoom: 13,
     )));
+  }
+
+  Future<void> openInfoWindow(MarkerId markerID) async {
+    final GoogleMapController controller = await mapController.future;
+    controller.showMarkerInfoWindow(markerID);
   }
 }
