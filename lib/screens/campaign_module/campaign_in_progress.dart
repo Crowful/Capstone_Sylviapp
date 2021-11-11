@@ -10,10 +10,16 @@ class CampaignInProgress extends StatefulWidget {
 class _CampaignInProgressState extends State<CampaignInProgress> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          child: Text("INSTRUCTIONS"),
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              Text("INSTRUCTIONS"),
+            ],
+          ),
         ),
       ),
     );

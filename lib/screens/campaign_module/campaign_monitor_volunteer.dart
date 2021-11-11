@@ -49,6 +49,7 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
+                              height: MediaQuery.of(context).size.height - 670,
                               decoration: BoxDecoration(
                                 color: Color(0xff65BFB8),
                               ),
