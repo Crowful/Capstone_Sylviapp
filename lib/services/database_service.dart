@@ -9,7 +9,6 @@ class DatabaseService {
   DatabaseService({required this.uid});
 
 // Collections Reference
-
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
 
@@ -199,6 +198,43 @@ class DatabaseService {
   Future starTheCampaign(String uidOfCampaign) async {
     return await approvedCampaignCollection.doc(uidOfCampaign).update({
       'inProgress': true,
+    });
+  }
+
+  Future donatedToCampaign(String uidOfCampaign, int amount, String dateDonated,
+      String uidUser, String device, String description) async {
+    return await approvedCampaignCollection
+        .doc(uidOfCampaign)
+        .collection('donations')
+        .doc(uidUser)
+        .update({
+      'uid': uidUser,
+      'amount': amount,
+      'dateDonated': dateDonated,
+      'description': description,
+      'device': device,
+      'campaignUID': uidOfCampaign
+    });
+  }
+
+  Future donatedToCampaignUser(
+      String uidOfCampaign,
+      int amount,
+      String dateDonated,
+      String uidUser,
+      String device,
+      String description) async {
+    return await userCollection
+        .doc(uid)
+        .collection('recent_activities')
+        .doc(dateDonated)
+        .update({
+      'uid': uidUser,
+      'amount': amount,
+      'dateDonated': dateDonated,
+      'description': description,
+      'device': device,
+      'campaignUID': uidOfCampaign
     });
   }
 }

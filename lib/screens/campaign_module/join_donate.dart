@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
+import 'package:flutter_riverpod/src/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:http/http.dart' as http;
+import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/campaign_module/volunteer_form.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -379,6 +381,16 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                       request);
 
                                                           if (result != null) {
+                                                            DateTime now =
+                                                                DateTime.now();
+                                                            DateTime
+                                                                currentTime =
+                                                                new DateTime(
+                                                                    now.year,
+                                                                    now.month,
+                                                                    now.day,
+                                                                    now.hour,
+                                                                    now.minute);
                                                             print(result
                                                                 .paymentMethodNonce
                                                                 .description);
@@ -391,6 +403,23 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                 await http.post(
                                                                     Uri.tryParse(
                                                                         '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}')!);
+
+                                                            context.read(authserviceProvider).donateCampaign(
+                                                                widget
+                                                                    .uidOfCampaign,
+                                                                10,
+                                                                currentTime
+                                                                    .toString(),
+                                                                context
+                                                                    .read(
+                                                                        authserviceProvider)
+                                                                    .getCurrentUserUID(),
+                                                                result
+                                                                    .paymentMethodNonce
+                                                                    .nonce,
+                                                                result
+                                                                    .deviceData
+                                                                    .toString());
                                                           } else {
                                                             print(
                                                                 "FAILED PAYMENT PROCESS");
@@ -454,9 +483,52 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                     if (payResult[
                                                                             "result"] ==
                                                                         "success") {
+                                                                      DateTime
+                                                                          now =
+                                                                          DateTime
+                                                                              .now();
+                                                                      DateTime currentTime = new DateTime(
+                                                                          now.year,
+                                                                          now.month,
+                                                                          now.day,
+                                                                          now.hour,
+                                                                          now.minute);
+
                                                                       Fluttertoast
                                                                           .showToast(
                                                                               msg: "SUCCESSFULLY DONATED");
+                                                                      context.read(authserviceProvider).donateCampaign(
+                                                                          widget
+                                                                              .uidOfCampaign,
+                                                                          10,
+                                                                          currentTime
+                                                                              .toString(),
+                                                                          context
+                                                                              .read(
+                                                                                  authserviceProvider)
+                                                                              .getCurrentUserUID(),
+                                                                          result
+                                                                              .paymentMethodNonce
+                                                                              .nonce,
+                                                                          result
+                                                                              .deviceData
+                                                                              .toString());
+                                                                      context.read(authserviceProvider).donateCampaignUser(
+                                                                          widget
+                                                                              .uidOfCampaign,
+                                                                          10,
+                                                                          currentTime
+                                                                              .toString(),
+                                                                          context
+                                                                              .read(
+                                                                                  authserviceProvider)
+                                                                              .getCurrentUserUID(),
+                                                                          result
+                                                                              .paymentMethodNonce
+                                                                              .nonce,
+                                                                          result
+                                                                              .deviceData
+                                                                              .toString());
                                                                     }
                                                                   } else if (result ==
                                                                       null) {
