@@ -99,7 +99,7 @@ class _ShowVolunteerState extends State<ShowVolunteer> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    //
     super.initState();
 
     showMedPic(

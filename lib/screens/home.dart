@@ -1,16 +1,11 @@
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutter/rendering.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_organizer.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_volunteer.dart';
-import 'package:sylviapp_project/screens/campaign_module/organizer_dashboard.dart';
 import 'analytics_module/bar_graph.dart';
 import 'campaign_module/join_donate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,7 +36,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final PageController homePageController = PageController(initialPage: 0);
   @override
   void initState() {
-    // TODO: implement initState
+    //
     super.initState();
     _hide =
         AnimationController(vsync: this, duration: Duration(milliseconds: 100));
@@ -83,6 +78,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     _hide.forward();
+    // ignore: unnecessary_null_comparison
     if (_scaleAnimation == null) {
       _scaleAnimation =
           Tween<double>(begin: 1, end: 0.6).animate(widget.controller);

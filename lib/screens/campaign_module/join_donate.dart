@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:flutter_riverpod/src/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:http/http.dart' as http;
@@ -749,14 +747,6 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                             .data!
                                                                             .get('fullname')));
 
-                                                            var address = AESCryptography()
-                                                                .decryptAES(enc
-                                                                        .Encrypted
-                                                                    .fromBase64(
-                                                                        snapshotOfUser
-                                                                            .data!
-                                                                            .get('address')));
-
                                                             String? gender = toBeginningOfSentenceCase(
                                                                 AESCryptography().decryptAES(enc
                                                                         .Encrypted
@@ -895,7 +885,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                 .data!
                                                                 .get(
                                                                     'longitude');
-                                                        var date_created =
+                                                        var dateCreated =
                                                             snapshotCampaign
                                                                 .data!
                                                                 .get(
@@ -965,7 +955,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                   ),
                                                                   Text(
                                                                     "Date Created: " +
-                                                                        date_created,
+                                                                        dateCreated,
                                                                     style: TextStyle(
                                                                         color: Colors
                                                                             .black

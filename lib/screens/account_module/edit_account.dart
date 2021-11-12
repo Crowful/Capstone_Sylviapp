@@ -32,6 +32,7 @@ class _EditProfileState extends State<EditProfile> {
 
   Future getImage() async {
     var image =
+        // ignore: invalid_use_of_visible_for_testing_member
         await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
     setState(() {
@@ -151,9 +152,7 @@ class _EditProfileState extends State<EditProfile> {
                       var address = AESCryptography().decryptAES(
                           enc.Encrypted.fromBase64(
                               snapshot.data!.get('address')));
-                      var gender = AESCryptography().decryptAES(
-                          enc.Encrypted.fromBase64(
-                              snapshot.data!.get('gender')));
+
                       var email = snapshot.data!.get('email');
                       var phoneNum = AESCryptography().decryptAES(
                           enc.Encrypted.fromBase64(

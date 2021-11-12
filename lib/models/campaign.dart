@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 class CampaignModel {
   String campaignName = "";
   String campaignDescription = "";

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_format/date_format.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +11,9 @@ import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/animation/pop_up.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/campaign_module/showVolunteer.dart';
-import 'package:transparent_image/transparent_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// ignore: must_be_immutable
 class CampaignMonitorOrganizer extends StatefulWidget {
   String uidOfCampaign;
   CampaignMonitorOrganizer({Key? key, required this.uidOfCampaign})

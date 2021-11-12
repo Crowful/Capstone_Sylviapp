@@ -27,18 +27,23 @@ class _PasswordRegPageState extends State<PasswordRegPage>
   late AnimationController _widgetController =
       AnimationController(vsync: this, duration: Duration(seconds: 1));
 
-  late Animation<Offset> _widgetTransition =
-      Tween<Offset>(begin: Offset(0, -0.5), end: Offset.zero)
-          .animate(_widgetController);
   //TextControllers and Validation
   final TextEditingController _primaryPaswword = TextEditingController();
+
   final TextEditingController _confirmPassword = TextEditingController();
+
   final userName = "";
+
   bool _isVisible = false;
+
   bool _isPasswordEightCharacters = false;
+
   bool _hasPasswordOneNumber = false;
+
   bool _isMatch = false;
+
   bool _isVisibleCP = false;
+
   bool _overall = false;
 
   //INIT STATE and DISPOSE

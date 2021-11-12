@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/register_basic_info.dart';

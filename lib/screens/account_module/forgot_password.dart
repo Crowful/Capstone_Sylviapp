@@ -10,8 +10,11 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController _emailController = TextEditingController();
+  // ignore: unused_field
   bool _hasPasswordOneNumber = false;
+  // ignore: unused_field
   bool _isValidEmail = false;
+  // ignore: unused_field
   bool _isVisible = false;
 
   onEmailChanged(String email) {

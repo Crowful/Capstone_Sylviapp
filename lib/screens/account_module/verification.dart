@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/verification/first_verification.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/verification/second_verification.dart';
@@ -17,7 +16,10 @@ class VerificationPage extends StatefulWidget {
 class _VerificationPageState extends State<VerificationPage> {
   PageController controller = PageController();
   UploadTask? task;
+  // ignore: unused_field
   File? _imageFile;
+
+  // ignore: unused_field
   File? _cameraFile;
   String uploadStatus = "";
   String urlTest = "";

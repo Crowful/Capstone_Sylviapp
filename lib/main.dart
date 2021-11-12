@@ -17,7 +17,6 @@ import 'package:sylviapp_project/screens/account_module/verification.dart';
 import 'package:sylviapp_project/screens/account_module/verify_email.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_organizer.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_volunteer.dart';
-import 'package:sylviapp_project/screens/campaign_module/join_donate.dart';
 import 'package:sylviapp_project/screens/campaign_module/ongoing_campaign.dart';
 import 'package:sylviapp_project/screens/campaign_module/recent_activity.dart';
 import 'package:sylviapp_project/screens/account_module/login.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sylviapp_project/providers/providers.dart';
-import 'package:sylviapp_project/models/campaign.dart';
 
 class SliderWidget extends StatefulWidget {
   final Widget back;

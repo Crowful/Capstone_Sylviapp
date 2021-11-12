@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,6 +31,7 @@ class _GetVerifyState extends State<GetVerify> {
   File? _cameraFile;
   String uploadStatus = "";
   String urlTest = "";
+  // ignore: unused_field
   File? _image;
   final picker = ImagePicker();
   //Gallery
