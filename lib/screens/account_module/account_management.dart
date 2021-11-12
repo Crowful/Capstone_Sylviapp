@@ -26,7 +26,7 @@ class AccountManagementScreen extends StatefulWidget {
 class _AccountManagementScreenState extends State<AccountManagementScreen> {
   UploadTask? task;
   String uploadStatus = "";
-  String urlTest = "";
+  String? urlTest = "";
   File? _image;
 
   TextEditingController fullnameController = TextEditingController();
@@ -76,6 +76,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
       taske = await firebaseStorageRef.getDownloadURL();
     } catch (e) {
       setState(() {
+        urlTest = null;
         errorText = e.toString();
       });
     }
@@ -134,7 +135,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                   children: [
                     Container(
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        child: urlTest != ""
+                        child: urlTest != null
                             ? CircleAvatar(
                                 child: Icon(
                                   Icons.person,
@@ -144,10 +145,18 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                 radius: 45,
                                 backgroundColor: Colors.white,
                                 foregroundImage: Image.network(
-                                  urlTest,
+                                  urlTest.toString(),
                                 ).image,
                               )
-                            : CircularProgressIndicator()),
+                            : CircleAvatar(
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.green,
+                                  size: 40,
+                                ),
+                                radius: 45,
+                                backgroundColor: Colors.white,
+                              )),
                     Wrap(children: [
                       StreamBuilder<DocumentSnapshot>(
                           stream: FirebaseFirestore.instance

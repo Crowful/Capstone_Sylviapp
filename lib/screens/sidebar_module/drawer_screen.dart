@@ -31,17 +31,19 @@ class _DrawerScreenState extends State<DrawerScreen> {
   String? errorText;
   String? urlTest = "";
   Future showProfile(uid) async {
-    String fileName = "pic";
-    String destination = 'files/users/$uid/ProfilePicture/$fileName';
-    Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
-
     try {
+      String fileName = "pic";
+      String destination = 'files/users/$uid/ProfilePicture/$fileName';
+      Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
+
       taske = await firebaseStorageRef.getDownloadURL();
     } on FirebaseException catch (e) {
       print(e.code);
-      setState(() {
-        errorText = e.toString();
-      });
+      if (e.code == 'object-not-found') {
+        setState(() {
+          urlTest = "";
+        });
+      }
     }
     if (this.mounted) {
       setState(() {
@@ -54,7 +56,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
   void initState() {
     showProfile(context.read(authserviceProvider).getCurrentUserUID());
     super.initState();
-    print(widget.uid);
+    print("URLLLLLLLLL" + urlTest.toString());
   }
 
   @override
@@ -78,8 +80,37 @@ class _DrawerScreenState extends State<DrawerScreen> {
           child: Column(children: [
             SizedBox(height: 50),
             Row(children: [
-              urlTest != ""
+              urlTest != "null"
                   ? CircleAvatar(
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.red,
+                        size: 40,
+                      ),
+                      backgroundColor: Colors.white,
+                      radius: 30,
+                      foregroundImage: Image.network(
+                        urlTest.toString(),
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
+                          );
+                        },
+                        errorBuilder: (BuildContext context, Object object,
+                            StackTrace? stacktrace) {
+                          return Text("handle");
+                        },
+                      ).image)
+                  : CircleAvatar(
                       child: Icon(
                         Icons.person,
                         color: Colors.green,
@@ -87,37 +118,38 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       ),
                       backgroundColor: Colors.white,
                       radius: 30,
-                      foregroundImage: Image.network(
-                        urlTest.toString(),
-                      ).image,
-                    )
-                  : CircularProgressIndicator(),
+                    ),
               SizedBox(width: 16),
-              Expanded(
-                child: StreamBuilder<DocumentSnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(context
-                            .read(authserviceProvider)
-                            .getCurrentUserUID())
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Container(
-                            height: 50,
-                            width: 50,
-                            child: CircularProgressIndicator());
-                      } else {
-                        var name = AESCryptography().decryptAES(
-                            enc.Encrypted.fromBase64(
-                                snapshot.data!.get("fullname")));
-                        return Text(name,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold));
-                      }
-                    }),
+              GestureDetector(
+                onTap: () {
+                  print(urlTest);
+                },
+                child: Expanded(
+                  child: StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(context
+                              .read(authserviceProvider)
+                              .getCurrentUserUID())
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Container(
+                              height: 50,
+                              width: 50,
+                              child: CircularProgressIndicator());
+                        } else {
+                          var name = AESCryptography().decryptAES(
+                              enc.Encrypted.fromBase64(
+                                  snapshot.data!.get("fullname")));
+                          return Text(name,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold));
+                        }
+                      }),
+                ),
               )
             ]),
             SizedBox(height: 30),

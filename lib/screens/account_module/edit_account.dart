@@ -21,7 +21,7 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> {
   UploadTask? task;
   String uploadStatus = "";
-  String urlTest = "";
+  String? urlTest = "";
   File? _image;
 
   TextEditingController fullnameController = TextEditingController();
@@ -71,6 +71,7 @@ class _EditProfileState extends State<EditProfile> {
     } on FirebaseException catch (e) {
       print(e.code);
       setState(() {
+        urlTest = null;
         errorText = e.toString();
       });
     }
@@ -85,6 +86,7 @@ class _EditProfileState extends State<EditProfile> {
   void initState() {
     showProfile(context.read(authserviceProvider).getCurrentUserUID());
     super.initState();
+    showProfile(context.read(authserviceProvider).getCurrentUserUID());
   }
 
   String? taske;
@@ -172,16 +174,22 @@ class _EditProfileState extends State<EditProfile> {
                                   height: 15,
                                 ),
                                 Stack(children: [
-                                  urlTest != ""
+                                  urlTest != null
                                       ? CircleAvatar(
                                           backgroundImage: Image.network(
-                                            urlTest,
+                                            urlTest.toString(),
                                           ).image,
                                           radius: 50,
                                           backgroundColor: Colors.black,
                                         )
-                                      : CircularProgressIndicator(
-                                          color: Colors.greenAccent,
+                                      : CircleAvatar(
+                                          child: Icon(
+                                            Icons.person,
+                                            color: Colors.green,
+                                            size: 40,
+                                          ),
+                                          radius: 50,
+                                          backgroundColor: Colors.white,
                                         ),
                                   Positioned(
                                     top: 73,
