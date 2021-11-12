@@ -174,11 +174,13 @@ class _EditProfileState extends State<EditProfile> {
                                   height: 15,
                                 ),
                                 Stack(children: [
-                                  urlTest != null
+                                  urlTest != "null"
                                       ? CircleAvatar(
-                                          backgroundImage: Image.network(
-                                            urlTest.toString(),
-                                          ).image,
+                                          backgroundImage: urlTest != "null"
+                                              ? Image.network(
+                                                  urlTest.toString(),
+                                                ).image
+                                              : null,
                                           radius: 50,
                                           backgroundColor: Colors.black,
                                         )

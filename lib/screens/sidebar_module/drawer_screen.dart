@@ -80,7 +80,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
           child: Column(children: [
             SizedBox(height: 50),
             Row(children: [
-              urlTest != "null"
+              urlTest != ""
                   ? CircleAvatar(
                       child: Icon(
                         Icons.person,
@@ -89,67 +89,62 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       ),
                       backgroundColor: Colors.white,
                       radius: 30,
-                      foregroundImage: Image.network(
-                        urlTest.toString(),
-                        loadingBuilder: (BuildContext context, Widget child,
-                            ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          }
-                          return Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                      loadingProgress.expectedTotalBytes!
-                                  : null,
-                            ),
-                          );
-                        },
-                        errorBuilder: (BuildContext context, Object object,
-                            StackTrace? stacktrace) {
-                          return Text("handle");
-                        },
-                      ).image)
-                  : CircleAvatar(
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.green,
-                        size: 40,
-                      ),
-                      backgroundColor: Colors.white,
-                      radius: 30,
-                    ),
+                      foregroundImage: urlTest != "null"
+                          ? Image.network(
+                              urlTest.toString(),
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ),
+                                );
+                              },
+                              errorBuilder: (BuildContext context,
+                                  Object object, StackTrace? stacktrace) {
+                                return Text("handle");
+                              },
+                            ).image
+                          : null)
+                  : CircularProgressIndicator(),
               SizedBox(width: 16),
               GestureDetector(
                 onTap: () {
                   print(urlTest);
                 },
-                child: Expanded(
-                  child: StreamBuilder<DocumentSnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(context
-                              .read(authserviceProvider)
-                              .getCurrentUserUID())
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Container(
-                              height: 50,
-                              width: 50,
-                              child: CircularProgressIndicator());
-                        } else {
-                          var name = AESCryptography().decryptAES(
-                              enc.Encrypted.fromBase64(
-                                  snapshot.data!.get("fullname")));
-                          return Text(name,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold));
-                        }
-                      }),
-                ),
+                child: StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(context
+                            .read(authserviceProvider)
+                            .getCurrentUserUID())
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Container(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator());
+                      } else {
+                        var name = AESCryptography().decryptAES(
+                            enc.Encrypted.fromBase64(
+                                snapshot.data!.get("fullname")));
+                        return Text(name,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold));
+                      }
+                    }),
               )
             ]),
             SizedBox(height: 30),

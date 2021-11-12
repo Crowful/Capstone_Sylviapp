@@ -134,29 +134,47 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        child: urlTest != null
-                            ? CircleAvatar(
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.green,
-                                  size: 40,
-                                ),
-                                radius: 45,
-                                backgroundColor: Colors.white,
-                                foregroundImage: Image.network(
-                                  urlTest.toString(),
-                                ).image,
-                              )
-                            : CircleAvatar(
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.green,
-                                  size: 40,
-                                ),
-                                radius: 45,
-                                backgroundColor: Colors.white,
-                              )),
+                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: urlTest != ""
+                          ? CircleAvatar(
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.red,
+                                size: 40,
+                              ),
+                              backgroundColor: Colors.white,
+                              radius: 30,
+                              foregroundImage: urlTest != "null"
+                                  ? Image.network(
+                                      urlTest.toString(),
+                                      loadingBuilder: (BuildContext context,
+                                          Widget child,
+                                          ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        );
+                                      },
+                                      errorBuilder: (BuildContext context,
+                                          Object object,
+                                          StackTrace? stacktrace) {
+                                        return Text("handle");
+                                      },
+                                    ).image
+                                  : null)
+                          : CircularProgressIndicator(),
+                    ),
                     Wrap(children: [
                       StreamBuilder<DocumentSnapshot>(
                           stream: FirebaseFirestore.instance
