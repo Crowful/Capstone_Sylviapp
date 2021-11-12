@@ -1,9 +1,5 @@
-//TODO Finalize the validation of basic info
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,7 +29,6 @@ class _BasicInfoPageState extends State<BasicInfoPage>
   final _addressController = TextEditingController();
   final _contactController = TextEditingController();
   bool _fullNameValidate = false;
-  bool _genderValidate = false;
   bool _addressValidate = false;
   bool _contactNumberValidate = false;
   bool _overall = false;
@@ -96,10 +91,6 @@ class _BasicInfoPageState extends State<BasicInfoPage>
 
   late AnimationController _widgetController =
       AnimationController(vsync: this, duration: Duration(seconds: 1));
-
-  late Animation<Offset> _widgetTransition =
-      Tween<Offset>(begin: Offset(0, -0.5), end: Offset.zero)
-          .animate(_widgetController);
 
   //INIT STATE and DISPOSE
   void initState() {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MapBackend extends ChangeNotifier {
   double valueRadius = 0;
@@ -9,6 +8,7 @@ class MapBackend extends ChangeNotifier {
   int seedsRequired = 0;
   int fundRequired = 0;
 
+  // ignore: non_constant_identifier_names
   CampaignProcess(latlng) {
     latlngs = latlng;
   }

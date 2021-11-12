@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sylviapp_project/Domain/radiusCampaign.dart';
 import 'package:sylviapp_project/Domain/theme&language_notifier.dart';

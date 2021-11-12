@@ -1,21 +1,18 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/sidebar_module/menu_item.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:transparent_image/transparent_image.dart';
-import 'package:encrypt/encrypt.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 
+// ignore: must_be_immutable
 class DrawerScreen extends StatefulWidget {
   final String uid;
   final AnimationController controller;
+  // ignore: unused_field
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   DrawerScreen({required this.controller, required this.uid});
 

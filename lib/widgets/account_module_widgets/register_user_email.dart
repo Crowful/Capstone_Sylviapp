@@ -34,10 +34,6 @@ class _UserRegPageState extends State<UserRegPage>
   late AnimationController _widgetController =
       AnimationController(vsync: this, duration: Duration(seconds: 1));
 
-  late Animation<Offset> _widgetTransition =
-      Tween<Offset>(begin: Offset(0, -0.5), end: Offset.zero)
-          .animate(_widgetController);
-
   //Text controllers and onchange
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -64,7 +60,6 @@ class _UserRegPageState extends State<UserRegPage>
       if (user.length >= 4) {
         _isUserFourCharacters = true;
         onValidate();
-        final helloWorldProvider = Provider((_) => _usernameController.text);
       }
     });
   }

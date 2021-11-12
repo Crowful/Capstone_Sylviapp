@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_volunteer.dart';
 
+// ignore: must_be_immutable
 class VolunteerFormScreen extends StatefulWidget {
   String campaignUID;
   String organizerUID;
@@ -57,6 +58,7 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
 
   Future getImageVac() async {
     var image =
+        // ignore: invalid_use_of_visible_for_testing_member
         await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
     setState(() {
@@ -68,6 +70,7 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
 
   Future getImageMed() async {
     var image =
+        // ignore: invalid_use_of_visible_for_testing_member
         await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
     setState(() {

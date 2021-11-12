@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,14 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
-import 'package:sylviapp_project/Domain/wrapperAuth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:transparent_image/transparent_image.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 
 class AccountManagementScreen extends StatefulWidget {
@@ -41,6 +36,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
 
   Future getImage() async {
     var image =
+        // ignore: invalid_use_of_visible_for_testing_member
         await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
     setState(() {

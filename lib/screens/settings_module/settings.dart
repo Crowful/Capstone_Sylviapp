@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:sylviapp_project/providers/providers.dart';
-import 'package:sylviapp_project/screens/campaign_module/campaign_in_progress.dart';
 import 'package:sylviapp_project/translations/locale_keys.g.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -219,14 +218,6 @@ class SettingsPage extends ConsumerWidget {
               ElevatedButton(
                   onPressed: () {
                     Navigator.pushReplacementNamed(context, "/onboarding");
-                  },
-                  child: Text('try onboarding')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CampaignInProgress()));
                   },
                   child: Text('try onboarding')),
             ],

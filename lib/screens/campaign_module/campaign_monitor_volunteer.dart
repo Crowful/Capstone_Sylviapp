@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
@@ -8,10 +7,10 @@ import 'package:encrypt/encrypt.dart' as enc;
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/animation/pop_up.dart';
 import 'package:sylviapp_project/providers/providers.dart';
-import 'package:sylviapp_project/screens/campaign_module/campaign_in_progress.dart';
 import 'package:sylviapp_project/screens/layout_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// ignore: must_be_immutable
 class CampaignMonitorVolunteer extends StatefulWidget {
   String uidOfCampaign;
   CampaignMonitorVolunteer({Key? key, required this.uidOfCampaign})
@@ -380,28 +379,6 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                                               ]);
                                         }
                                       }),
-                                  snapshotCampaignName.data!
-                                              .get('inProgress') ==
-                                          false
-                                      ? ElevatedButton(
-                                          onPressed: () {},
-                                          child: Text(
-                                              "Campaign Is not yet started"))
-                                      : ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        CampaignInProgress()));
-                                          },
-                                          child: Text(
-                                              "Campaign in progress Click here")),
-                                  Row(children: [
-                                    Text("CAMPAIGN WILL START IN "),
-                                    Text(snapshotCampaignName.data!
-                                        .get('date_start')),
-                                  ]),
                                 ],
                               ),
                             ),
