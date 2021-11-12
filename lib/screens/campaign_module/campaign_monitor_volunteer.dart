@@ -289,7 +289,6 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                                                         fontSize: 17),
                                                   ),
                                                 ),
-                                                
                                                 FadeAnimation(
                                                   0.11,
                                                   Container(

@@ -85,7 +85,7 @@ class _MapViewOnlyState extends State<MapViewOnly>
                             city: element.get("city"),
                             currentFund: element.get("current_donations"),
                             currentVolunteer: element.get("current_volunteers"),
-                            maxFund: element.get("max_donations"),
+                            maxFund: element.get("max_donation"),
                             totalVolunteer: element.get("number_volunteers"),
                             address: element.get("address"),
                             description: element.get("description"),
