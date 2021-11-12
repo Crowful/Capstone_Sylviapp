@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -47,22 +48,113 @@ class _ChartState extends State<Chart> {
       SizedBox(
         height: 20,
       ),
-      Row(children: [
-        Text("RISK METER"),
-        SizedBox(
-          width: 10,
-        ),
-        Container(
-          width: 200,
-          child: LinearProgressIndicator(
-              semanticsLabel: "Donated",
-              semanticsValue: "Donating",
-              backgroundColor: Colors.grey.withOpacity(0.3),
-              color: Colors.amber,
-              minHeight: 15,
-              value: 0.5),
-        ),
-      ]),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .where('isVerify', isEqualTo: false)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator();
+                } else {
+                  var numOfVolunteer = snapshot.data!.size;
+                  return Container(
+                      height: 100,
+                      width: 170,
+                      child: Card(
+                        elevation: 5,
+                        color: Colors.teal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.group,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              '$numOfVolunteer Volunteers',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 16,
+                                  color: Colors.white),
+                            )
+                          ],
+                        ),
+                      ));
+                }
+              }),
+          SizedBox(
+            width: 20,
+          ),
+          StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .where('isVerify', isEqualTo: true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator();
+                } else {
+                  var numOfOrganizer = snapshot.data!.size;
+                  return Container(
+                      height: 100,
+                      width: 170,
+                      child: Card(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.leaderboard,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              '$numOfOrganizer Organizers',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 16,
+                                  color: Colors.white),
+                            )
+                          ],
+                        ),
+                        elevation: 5,
+                        color: Colors.blueGrey,
+                      ));
+                }
+              }),
+        ],
+      ),
+      SizedBox(height: 30),
+      Center(
+          child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('campaigns')
+                  .where('campaignID', isNull: false)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator();
+                } else {
+                  var numOfCampaigns = snapshot.data!.size;
+                  return Container(
+                      child: Text(
+                    "$numOfCampaigns",
+                    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 35),
+                  ));
+                }
+              })),
+      Text(
+        'overall campaign',
+        style: TextStyle(color: Colors.black54),
+      )
     ]);
   }
 

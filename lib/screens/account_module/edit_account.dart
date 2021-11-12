@@ -182,7 +182,7 @@ class _EditProfileState extends State<EditProfile> {
                                                 ).image
                                               : null,
                                           radius: 50,
-                                          backgroundColor: Colors.black,
+                                          backgroundColor: Colors.white12,
                                         )
                                       : CircleAvatar(
                                           child: Icon(
