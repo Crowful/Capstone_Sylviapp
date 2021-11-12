@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sylviapp_project/widgets/account_module_widgets/address_search.dart';
 
 enum Gender { male, female }
 
@@ -104,6 +105,9 @@ class _BasicInfoPageState extends State<BasicInfoPage>
   @override
   void dispose() {
     _animationController.dispose();
+    _fullNameController.dispose();
+    _addressController.dispose();
+    _contactController.dispose();
     super.dispose();
   }
 
@@ -310,6 +314,14 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                               width: double.infinity,
                               child: TextField(
                                 controller: _addressController,
+                                onTap: () async {
+                                  showSearch(
+                                    context: context,
+                                    // we haven't created AddressSearch class
+                                    // this should be extending SearchDelegate
+                                    delegate: AddressSearch(),
+                                  );
+                                },
                                 onChanged: (address) =>
                                     onAddressChanged(address),
                                 decoration: InputDecoration(

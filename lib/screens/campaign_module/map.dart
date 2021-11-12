@@ -8,6 +8,7 @@ import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/screens/campaign_module/join_donate.dart';
 import 'package:sylviapp_project/services/authservices.dart';
 import 'package:sylviapp_project/widgets/campaign_module/slidable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -145,21 +146,38 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
     //CIRCLES
     FirebaseFirestore.instance
-        .collection('admin_campaign_requests')
+        .collection('campaigns')
         .get()
         .then((QuerySnapshot snaps) {
       print(snaps);
-      snaps.docs.forEach((circ) {
+      snaps.docs.forEach((element) {
         circle.add(Circle(
+          consumeTapEvents: true,
+          zIndex: 0,
           onTap: () {
-            print("test");
+            print('its working');
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => JoinDonateCampaign(
+                          uidOfCampaign: element.id,
+                          uidOfOrganizer: element.get("uid"),
+                          nameOfCampaign: element.get("campaign_name"),
+                          city: element.get("city"),
+                          currentFund: element.get("current_donations"),
+                          currentVolunteer: element.get("current_volunteers"),
+                          maxFund: element.get("max_donation"),
+                          totalVolunteer: element.get("number_volunteers"),
+                          address: element.get("address"),
+                          description: element.get("description"),
+                        )));
           },
-          circleId: CircleId(circ['campaignID']),
-          center: LatLng(circ['latitude'], circ['longitude']),
+          circleId: CircleId(element['campaignID']),
+          center: LatLng(element['latitude'], element['longitude']),
           strokeWidth: 1,
           strokeColor: Colors.pink,
           fillColor: Colors.pink.withOpacity(0.5),
-          radius: circ['radius'] * 100,
+          radius: element['radius'] * 100,
         ));
       });
     });
@@ -354,7 +372,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                             print(isVerified);
                           },
                           tooltip: 'Image',
-                          child: Icon(Icons.image),
+                          child: Icon(Icons.location_searching),
                         ),
                       ),
                     ),

@@ -76,6 +76,7 @@ class _MapViewOnlyState extends State<MapViewOnly>
         circles.add(Circle(
             consumeTapEvents: true,
             onTap: () {
+              print('gumagana naman');
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -92,10 +93,12 @@ class _MapViewOnlyState extends State<MapViewOnly>
                             description: element.get("description"),
                           )));
             },
-            strokeColor: Colors.black,
+            strokeColor: isInProgress ? Colors.green : Colors.blue,
             strokeWidth: 1,
             visible: true,
-            fillColor: isInProgress ? Colors.green : Colors.blue,
+            fillColor: isInProgress
+                ? Colors.green.withOpacity(0.5)
+                : Colors.blue.withOpacity(0.5),
             circleId: CircleId(element.id),
             radius: element.get("radius") * 100,
             center: LatLng(element.get("latitude"), element.get("longitude"))));

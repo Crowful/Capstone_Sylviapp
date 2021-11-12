@@ -57,6 +57,8 @@ dependencies:
   firebase_messaging: ^11.1.0
   location: ^4.3.0
   geolocator: ^7.7.1
+  flutter_google_places: ^0.3.0
+  geocoding: ^2.0.1
 
 
 dev_dependencies:
