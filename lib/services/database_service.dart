@@ -21,17 +21,20 @@ class DatabaseService {
   final CollectionReference approvedCampaignCollection =
       FirebaseFirestore.instance.collection('campaigns');
 
+  final CollectionReference messageCollection =
+      FirebaseFirestore.instance.collection('message');
+
 //methods
 
 //User
   Future addUserData(
-    String email,
-    String fullname,
-    String address,
-    String gender,
-    String phoneNumber,
-    String username,
-  ) async {
+      String email,
+      String fullname,
+      String address,
+      String gender,
+      String phoneNumber,
+      String username,
+      String deviceToken) async {
     return await userCollection.doc(uid).set({
       'email': email,
       'fullname': fullname,
@@ -41,6 +44,7 @@ class DatabaseService {
       'username': username,
       'isApplying': false,
       'isVerify': false,
+      'deviceToken': deviceToken,
     });
   }
 
@@ -251,5 +255,19 @@ class DatabaseService {
         .collection("reports")
         .doc(registeredUID)
         .set({"report": typeOfReport});
+  }
+
+  Future addMessage(String uidOfCampaign, String uidOfOrganizer,
+      String uidOfVolunteer, String devicetokenOfOrg) async {
+    return await approvedCampaignCollection
+        .doc(uidOfCampaign)
+        .collection('distress')
+        .doc(uidOfVolunteer)
+        .set({
+      "timeStamp": FieldValue.serverTimestamp(),
+      'volunteerUID': uidOfVolunteer,
+      'organizerUID': uidOfOrganizer,
+      'deviceToken': devicetokenOfOrg,
+    });
   }
 }

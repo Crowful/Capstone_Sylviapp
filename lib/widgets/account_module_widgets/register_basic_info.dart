@@ -310,6 +310,10 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                               width: double.infinity,
                               child: TextField(
                                 controller: _addressController,
+<<<<<<< HEAD
+=======
+                                onTap: () async {},
+>>>>>>> 667f2faa70f045257cfe336799e228aa239a2df1
                                 onChanged: (address) =>
                                     onAddressChanged(address),
                                 decoration: InputDecoration(
