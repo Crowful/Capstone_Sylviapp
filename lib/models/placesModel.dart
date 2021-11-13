@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:http/http.dart';
 
 class Place {
-  String streetNumber;
-  String street;
-  String city;
-  String zipCode;
+  String? streetNumber;
+  String? street;
+  String? city;
+  String? zipCode;
 
   Place({
     this.streetNumber,
@@ -41,7 +41,7 @@ class PlaceApiProvider {
 
   final sessionToken;
 
-  static final String androidKey = 'YOUR_API_KEY_HERE';
+  static final String androidKey = 'AIzaSyA61r_ECKYZrqGcV7PaSVp06VyHPg1tJEc';
   static final String iosKey = 'YOUR_API_KEY_HERE';
   final apiKey = Platform.isAndroid ? androidKey : iosKey;
 
