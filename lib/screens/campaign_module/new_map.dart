@@ -95,6 +95,8 @@ class _MapCampaignState extends State<MapCampaign>
 
   List<Map<String, dynamic>> existingCampaign = List.empty(growable: true);
 
+  List<Map<String, dynamic>> getVolunteers = List.empty(growable: true);
+
   lt.LatLng? _initialCameraPosition = lt.LatLng(14.7452, 121.0984);
   double finalRadius = 0;
 
@@ -480,13 +482,14 @@ class _MapCampaignState extends State<MapCampaign>
                                                                         ]),
                                                                   if (showLatLng) ...[
                                                                     for (var info
-                                                                        in existingCampaign)
+                                                                        in getVolunteers)
                                                                       fmap.MarkerLayerOptions(
                                                                           markers: [
                                                                             fmap.Marker(
+                                                                                width: 120,
                                                                                 point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
                                                                                 builder: (context) {
-                                                                                  return Text(info.values.elementAt(0).toString());
+                                                                                  return Text(info.values.elementAt(2).toString() + " Volunteers");
                                                                                 })
                                                                           ]),
                                                                   ],
@@ -532,6 +535,26 @@ class _MapCampaignState extends State<MapCampaign>
                                             IconButton(
                                                 onPressed: () {
                                                   setState(() {
+                                                    FirebaseFirestore.instance
+                                                        .collection('campaigns')
+                                                        .get()
+                                                        .then((element) {
+                                                      element.docs
+                                                          .forEach((elements) {
+                                                        getVolunteers.add({
+                                                          "latitude": elements[
+                                                              'latitude'],
+                                                          "longitude": elements[
+                                                              'longitude'],
+                                                          "volunteer": elements[
+                                                                  'number_volunteers']
+                                                              as int,
+                                                          "campaignID":
+                                                              elements[
+                                                                  'campaignID']
+                                                        });
+                                                      });
+                                                    });
                                                     showLatLng = !showLatLng;
                                                   });
                                                 },
