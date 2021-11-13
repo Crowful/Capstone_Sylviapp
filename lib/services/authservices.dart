@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'database_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 //Get Firestore instance
@@ -127,9 +128,10 @@ class AuthService extends ChangeNotifier {
           email: email, password: password);
       _loggedInUser = newUser.user!;
       _loggedInUser!.sendEmailVerification();
-
-      await DatabaseService(uid: _loggedInUser!.uid)
-          .addUserData(email, fullname, address, gender, phoneNumber, username);
+      await FirebaseMessaging.instance.getToken().then((value) {
+        DatabaseService(uid: _loggedInUser!.uid).addUserData(
+            email, fullname, address, gender, phoneNumber, username, value!);
+      });
     } on FirebaseAuthException catch (e) {
       print(e.message);
     } on PlatformException catch (e) {
@@ -372,6 +374,21 @@ class AuthService extends ChangeNotifier {
       await DatabaseService(uid: _loggedInUser!.uid)
           .addReports(uidOfCampaign, uidOfVolunteer, typeOfReport)
           .whenComplete(() => Fluttertoast.showToast(msg: "Reported"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  addMessage(String uidOfCampaign, String uidOfOrganizer, String uidOfVolunteer,
+      String devicetokenOfOrg) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .addMessage(
+              uidOfCampaign, uidOfOrganizer, uidOfVolunteer, devicetokenOfOrg)
+          .whenComplete(() => Fluttertoast.showToast(msg: "GUMANA DATABASE"));
     } catch (e) {
       print(e);
     }

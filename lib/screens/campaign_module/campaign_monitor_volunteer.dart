@@ -11,6 +11,7 @@ import 'package:sylviapp_project/animation/pop_up.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/layout_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 // ignore: must_be_immutable
 class CampaignMonitorVolunteer extends StatefulWidget {
@@ -26,6 +27,8 @@ class CampaignMonitorVolunteer extends StatefulWidget {
 class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
   late LatLng currentPostion = LatLng(14.5995, 120.9842);
 
+  var _fm = FirebaseMessaging.instance;
+  var deviceTokenOfOrg;
   void _getUserLocation() async {
     var position = await GeolocatorPlatform.instance
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
@@ -37,7 +40,32 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    _fm.getToken().then((value) {
+      setState(() {
+        deviceTokenOfOrg = value;
+      });
+    });
+    FirebaseMessaging.onMessage.listen((event) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Notification"),
+              content: Text(event.notification!.body!),
+              actions: [
+                TextButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+    });
+
+    _fm.setForegroundNotificationPresentationOptions(
+        alert: true, badge: true, sound: true);
     super.initState();
     _getUserLocation();
   }
@@ -261,52 +289,58 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                                       .doc(orgID)
                                       .snapshots(),
                                   builder: (context, snapshotOrg) {
-                                    var orgName = AESCryptography().decryptAES(
-                                        enc.Encrypted.fromBase64(
-                                            snapshotOrg.data!.get('fullname')));
-                                    var orgContact = AESCryptography()
-                                        .decryptAES(enc.Encrypted.fromBase64(
-                                            snapshotOrg.data!
-                                                .get('phoneNumber')));
-                                    String? orgGender =
-                                        toBeginningOfSentenceCase(
-                                            AESCryptography().decryptAES(
-                                                enc.Encrypted.fromBase64(
-                                                    snapshotOrg.data!
-                                                        .get(("gender")))));
-                                    return Container(
-                                      padding: EdgeInsets.all(10),
-                                      height: 100,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                          color: Colors.grey.withOpacity(0.25),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5))),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            orgName,
-                                            style: TextStyle(
-                                              fontSize: Theme.of(context)
-                                                      .textTheme
-                                                      .headline1!
-                                                      .fontSize! -
-                                                  2,
-                                              fontWeight: Theme.of(context)
-                                                  .textTheme
-                                                  .headline1!
-                                                  .fontWeight,
+                                    if (!snapshotOrg.hasData) {
+                                      return CircularProgressIndicator();
+                                    } else {
+                                      var orgName = AESCryptography()
+                                          .decryptAES(enc.Encrypted.fromBase64(
+                                              snapshotOrg.data!
+                                                  .get('fullname')));
+                                      var orgContact = AESCryptography()
+                                          .decryptAES(enc.Encrypted.fromBase64(
+                                              snapshotOrg.data!
+                                                  .get('phoneNumber')));
+                                      String? orgGender =
+                                          toBeginningOfSentenceCase(
+                                              AESCryptography().decryptAES(
+                                                  enc.Encrypted.fromBase64(
+                                                      snapshotOrg.data!
+                                                          .get(("gender")))));
+                                      return Container(
+                                        padding: EdgeInsets.all(10),
+                                        height: 100,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                            color:
+                                                Colors.grey.withOpacity(0.25),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5))),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              orgName,
+                                              style: TextStyle(
+                                                fontSize: Theme.of(context)
+                                                        .textTheme
+                                                        .headline1!
+                                                        .fontSize! -
+                                                    2,
+                                                fontWeight: Theme.of(context)
+                                                    .textTheme
+                                                    .headline1!
+                                                    .fontWeight,
+                                              ),
                                             ),
-                                          ),
-                                          Text(orgGender!),
-                                          Text(orgContact)
-                                        ],
-                                      ),
-                                    );
+                                            Text(orgGender!),
+                                            Text(orgContact)
+                                          ],
+                                        ),
+                                      );
+                                    }
                                   }))
                         ],
                       )),
@@ -318,22 +352,27 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
             0.9,
             Align(
               alignment: Alignment.bottomCenter,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 60,
-                decoration: BoxDecoration(
-                    color: Color(0xff65BFB8),
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10))),
-                child: Center(
-                  child: Text(
-                    "Send Distress Call",
-                    style: TextStyle(
-                        fontWeight:
-                            Theme.of(context).textTheme.headline1!.fontWeight,
-                        color: Theme.of(context).textTheme.headline1!.color,
-                        fontSize: 17),
+              child: GestureDetector(
+                onTap: () {
+                  print(LatLng);
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 60,
+                  decoration: BoxDecoration(
+                      color: Color(0xff65BFB8),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10))),
+                  child: Center(
+                    child: Text(
+                      "Send Distress Call",
+                      style: TextStyle(
+                          fontWeight:
+                              Theme.of(context).textTheme.headline1!.fontWeight,
+                          color: Theme.of(context).textTheme.headline1!.color,
+                          fontSize: 17),
+                    ),
                   ),
                 ),
               ),
