@@ -12,7 +12,6 @@ import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/layout_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class CampaignMonitorVolunteer extends StatefulWidget {

@@ -5,10 +5,10 @@ class FirstOnboarding extends StatefulWidget {
   const FirstOnboarding({Key? key}) : super(key: key);
 
   @override
-  First_OnboardingState createState() => First_OnboardingState();
+  FirstonboardingState createState() => FirstonboardingState();
 }
 
-class First_OnboardingState extends State<FirstOnboarding> {
+class FirstonboardingState extends State<FirstOnboarding> {
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
-import 'package:flutter_riverpod/src/provider.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:http/http.dart' as http;
@@ -76,7 +76,6 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _hide =
         AnimationController(vsync: this, duration: Duration(milliseconds: 100));
@@ -407,6 +406,9 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                 await http.post(
                                                                     Uri.tryParse(
                                                                         '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}')!);
+
+                                                            print(
+                                                                response.body);
 
                                                             context.read(authserviceProvider).donateCampaign(
                                                                 widget

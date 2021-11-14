@@ -1,11 +1,10 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as fmap;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sylviapp_project/providers/providers.dart';
@@ -651,40 +650,45 @@ class _MapCampaignState extends State<MapCampaign>
                                             DateTime(2021, 09, 27, 2, 30, 50),
                                             [HH, ':', nn, ':', ss]);
 
-                                        context
-                                            .read(authserviceProvider)
-                                            .createCampaign(
-                                                context
-                                                    .read(campaignProvider)
-                                                    .getCampaignName,
-                                                context
-                                                    .read(campaignProvider)
-                                                    .getDescription,
-                                                uniqueID,
-                                                dateCreated,
-                                                context
-                                                    .read(campaignProvider)
-                                                    .getStartDate,
-                                                dateEnded,
-                                                context
-                                                    .read(campaignProvider)
-                                                    .getAddress,
-                                                context
-                                                    .read(campaignProvider)
-                                                    .getCity,
-                                                time,
-                                                userUID,
-                                                usernames,
-                                                latitude,
-                                                longitude,
-                                                finalSeeds,
-                                                currentDonations,
-                                                maxDonations,
-                                                currentVolunteers,
-                                                finalVolunteers,
-                                                radius)
-                                            .whenComplete(
-                                                () => controller.reverse());
+                                        FirebaseMessaging.instance
+                                            .getToken()
+                                            .then((value) {
+                                          context
+                                              .read(authserviceProvider)
+                                              .createCampaign(
+                                                  context
+                                                      .read(campaignProvider)
+                                                      .getCampaignName,
+                                                  context
+                                                      .read(campaignProvider)
+                                                      .getDescription,
+                                                  uniqueID,
+                                                  dateCreated,
+                                                  context
+                                                      .read(campaignProvider)
+                                                      .getStartDate,
+                                                  dateEnded,
+                                                  context
+                                                      .read(campaignProvider)
+                                                      .getAddress,
+                                                  context
+                                                      .read(campaignProvider)
+                                                      .getCity,
+                                                  time,
+                                                  userUID,
+                                                  usernames,
+                                                  latitude,
+                                                  longitude,
+                                                  finalSeeds,
+                                                  currentDonations,
+                                                  maxDonations,
+                                                  currentVolunteers,
+                                                  finalVolunteers,
+                                                  value!,
+                                                  radius)
+                                              .whenComplete(
+                                                  () => controller.reverse());
+                                        });
                                       });
                                     },
                                     child: Container(

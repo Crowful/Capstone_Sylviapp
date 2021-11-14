@@ -61,15 +61,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_scaleAnimation == null) {
-      _scaleAnimation =
-          Tween<double>(begin: 0.6, end: 1).animate(widget.controller);
-    }
-    if (_slideAnimation == null) {
-      _slideAnimation = Tween<Offset>(begin: Offset(-1, 0), end: Offset(0, 0))
-          .animate(widget.controller);
-    }
-
     return SlideTransition(
       position: _slideAnimation,
       child: ScaleTransition(
