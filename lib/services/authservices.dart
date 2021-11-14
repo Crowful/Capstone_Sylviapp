@@ -204,6 +204,7 @@ class AuthService extends ChangeNotifier {
       double maxDonations,
       int currentVolunteers,
       int numberVolunteers,
+      String deviceTokenOfOrganizer,
       double campaignRadius) async {
     try {
       if (_loggedInUser == null) {
@@ -229,6 +230,7 @@ class AuthService extends ChangeNotifier {
               maxDonations,
               currentVolunteers,
               numberVolunteers,
+              deviceTokenOfOrganizer,
               campaignRadius)
           .whenComplete(() =>
               Fluttertoast.showToast(msg: "Campaign Successfully Created"));

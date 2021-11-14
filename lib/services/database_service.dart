@@ -84,6 +84,7 @@ class DatabaseService {
       double maxDonations,
       int currentVolunteers,
       int numberVolunteers,
+      String deviceTokenOfOrganizer,
       double campaignRadius) async {
     return await campaignCollection.doc(campaignID).set({
       'campaignID': campaignID,
@@ -104,6 +105,7 @@ class DatabaseService {
       'max_donation': maxDonations,
       'current_volunteers': currentVolunteers,
       'number_volunteers': numberVolunteers,
+      'deviceTokenofOrganizer': deviceTokenOfOrganizer,
       'radius': campaignRadius,
       'isActive': false,
       'isDone': false,
@@ -268,6 +270,8 @@ class DatabaseService {
       'volunteerUID': uidOfVolunteer,
       'organizerUID': uidOfOrganizer,
       'deviceToken': devicetokenOfOrg,
+      'title': 'DISTRESS HELP HELP',
+      'body': 'BODY DISTRESS HELP HELP'
     });
   }
 }

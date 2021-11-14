@@ -12,6 +12,7 @@ import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/layout_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class CampaignMonitorVolunteer extends StatefulWidget {
@@ -27,8 +28,6 @@ class CampaignMonitorVolunteer extends StatefulWidget {
 class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
   late LatLng currentPostion = LatLng(14.5995, 120.9842);
 
-  var _fm = FirebaseMessaging.instance;
-  var deviceTokenOfOrg;
   void _getUserLocation() async {
     var position = await GeolocatorPlatform.instance
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
@@ -40,11 +39,6 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
 
   @override
   void initState() {
-    _fm.getToken().then((value) {
-      setState(() {
-        deviceTokenOfOrg = value;
-      });
-    });
     FirebaseMessaging.onMessage.listen((event) {
       showDialog(
           context: context,
@@ -64,7 +58,7 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
           });
     });
 
-    _fm.setForegroundNotificationPresentationOptions(
+    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
         alert: true, badge: true, sound: true);
     super.initState();
     _getUserLocation();
@@ -91,6 +85,9 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                   var campaignName =
                       snapshotCampaignName.data!.get("campaign_name");
 
+                  var deviceTokenOrganizer =
+                      snapshotCampaignName.data!.get("deviceTokenOfOrganizer");
+
                   var date = snapshotCampaignName.data!.get("date_start");
 
                   var inProgress = snapshotCampaignName.data!.get("inProgress");
@@ -101,9 +98,11 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                     children: [
                       if (inProgress == true) ...[
                         secondPage(
-                            orgID: orgID,
-                            campaignName: campaignName,
-                            initialCameraPosition: _initialCameraPosition),
+                          orgID: orgID,
+                          campaignName: campaignName,
+                          initialCameraPosition: _initialCameraPosition,
+                          deviceToken: deviceTokenOrganizer,
+                        ),
                       ],
                       firstPage(
                           campaignName: campaignName,
@@ -121,7 +120,8 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
   Widget secondPage(
       {required String campaignName,
       required CameraPosition initialCameraPosition,
-      required String orgID}) {
+      required String orgID,
+      required String deviceToken}) {
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -353,8 +353,14 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
             Align(
               alignment: Alignment.bottomCenter,
               child: GestureDetector(
-                onTap: () {
-                  print(LatLng);
+                onTap: () async {
+                  print(deviceToken);
+                  context.read(authserviceProvider).addMessage(
+                        widget.uidOfCampaign,
+                        orgID,
+                        context.read(authserviceProvider).getCurrentUserUID(),
+                        deviceToken,
+                      );
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width,

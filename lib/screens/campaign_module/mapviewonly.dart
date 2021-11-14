@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
@@ -361,29 +362,34 @@ class _MapViewOnlyState extends State<MapViewOnly>
                         time = formatDate(DateTime(2021, 09, 27, 2, 30, 50),
                             [HH, ':', nn, ':', ss]);
 
-                        context
-                            .read(authserviceProvider)
-                            .createCampaign(
-                                context.read(campaignProvider).getCampaignName,
-                                context.read(campaignProvider).getDescription,
-                                campaignID,
-                                dateCreated,
-                                context.read(campaignProvider).getStartDate,
-                                dateEnded,
-                                context.read(campaignProvider).getAddress,
-                                context.read(campaignProvider).getCity,
-                                time,
-                                userUID,
-                                userName,
-                                latitude,
-                                longitude,
-                                finalSeeds,
-                                currentDonations,
-                                maxDonations,
-                                currentVolunteers,
-                                finalVolunteers,
-                                radius)
-                            .whenComplete(() => controller.reverse());
+                        FirebaseMessaging.instance.getToken().then((value) {
+                          context
+                              .read(authserviceProvider)
+                              .createCampaign(
+                                  context
+                                      .read(campaignProvider)
+                                      .getCampaignName,
+                                  context.read(campaignProvider).getDescription,
+                                  campaignID,
+                                  dateCreated,
+                                  context.read(campaignProvider).getStartDate,
+                                  dateEnded,
+                                  context.read(campaignProvider).getAddress,
+                                  context.read(campaignProvider).getCity,
+                                  time,
+                                  userUID,
+                                  userName,
+                                  latitude,
+                                  longitude,
+                                  finalSeeds,
+                                  currentDonations,
+                                  maxDonations,
+                                  currentVolunteers,
+                                  finalVolunteers,
+                                  value!,
+                                  radius)
+                              .whenComplete(() => controller.reverse());
+                        });
                       });
                     },
                     child: Container(
