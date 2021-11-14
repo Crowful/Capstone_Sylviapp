@@ -75,7 +75,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   ? CircleAvatar(
                       child: Icon(
                         Icons.person,
-                        color: Colors.red,
+                        color: Colors.green,
                         size: 40,
                       ),
                       backgroundColor: Colors.white,

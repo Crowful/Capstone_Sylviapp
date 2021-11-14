@@ -106,7 +106,7 @@ class _AddmoneyScreenState extends State<AddmoneyScreen> {
                                             double amountTobeAdded =
                                                 double.parse(
                                                     amountController.text);
-                                            context
+                                            await context
                                                 .read(authserviceProvider)
                                                 .addBalance(
                                                     context
@@ -114,6 +114,17 @@ class _AddmoneyScreenState extends State<AddmoneyScreen> {
                                                             authserviceProvider)
                                                         .getCurrentUserUID(),
                                                     amountTobeAdded);
+
+                                            await context
+                                                .read(authserviceProvider)
+                                                .addBalanceToUserRecent(
+                                                  'ownAccount',
+                                                  amountTobeAdded.toInt(),
+                                                  currentTime.toString(),
+                                                  context
+                                                      .read(authserviceProvider)
+                                                      .getCurrentUserUID(),
+                                                );
                                           }
                                         } else if (result == null) {
                                           print("Braintree Result is null");

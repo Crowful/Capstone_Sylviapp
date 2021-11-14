@@ -374,6 +374,29 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  addBalanceToUserRecent(
+    String uidOfCampaign,
+    int amount,
+    String dateDonated,
+    String uidUser,
+  ) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .addBalanceToUser(
+            uidOfCampaign,
+            amount,
+            dateDonated,
+            uidUser,
+          )
+          .whenComplete(() => Fluttertoast.showToast(msg: "Recorded"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
   addReport(
       String uidOfCampaign, String uidOfVolunteer, String typeOfReport) async {
     try {

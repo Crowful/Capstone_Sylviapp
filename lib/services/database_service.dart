@@ -232,12 +232,33 @@ class DatabaseService {
     return await userCollection
         .doc(uid)
         .collection('recent_activities')
-        .doc(dateDonated)
+        .doc()
         .set({
       'uid': uidUser,
       'amount': amount,
-      'dateDonated': dateDonated,
-      'campaignUID': uidOfCampaign
+      'dateDonated': FieldValue.serverTimestamp(),
+      'campaignUID': uidOfCampaign,
+      'type': 'donated'
+    });
+  }
+
+  Future addBalanceToUser(
+    String uidOfCampaign,
+    int amount,
+    String dateDonated,
+    String uidUser,
+  ) async {
+    return await userCollection
+        .doc(uid)
+        .collection('recent_activities')
+        .doc()
+        .set({
+      'uid': uidUser,
+      'amount': amount,
+      'dateDonated': FieldValue.serverTimestamp(),
+      'campaignUID': uidOfCampaign,
+      'addedBalance': amount,
+      'type': 'addBalance'
     });
   }
 

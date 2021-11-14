@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:sylviapp_project/providers/providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RecentActivity extends StatefulWidget {
   const RecentActivity({Key? key}) : super(key: key);
@@ -24,50 +28,66 @@ class _RecentActivityState extends State<RecentActivity> {
               ),
               alignment: Alignment.topLeft,
             ),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      margin: EdgeInsets.fromLTRB(10, 0, 10, 15),
-                      child: Row(
-                        children: [
-                          Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  color: Color(0xff65BFB8),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(100))),
-                              child: Icon(Icons.access_alarm)),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Column(
-                            children: [
-                              Text("04 March, 2021 | 2:03 pm",
-                                  style: TextStyle(
-                                    color: Colors.black54,
-                                  )),
-                              Container(
-                                  margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                  child: Text("Joined Campaign"))
-                            ],
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          ElevatedButton(
-                            onPressed: () {},
-                            child: Text("Delete"),
-                            style:
-                                ElevatedButton.styleFrom(primary: Colors.red),
-                          )
-                        ],
-                      ),
+            StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(context.read(authserviceProvider).getCurrentUserUID())
+                    .collection('recent_activities')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                  } else {
+                    return Expanded(
+                      child: ListView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            DocumentSnapshot user = snapshot.data!.docs[index];
+
+                            Timestamp date = user.get('dateDonated');
+                            String amount = user.get('amount');
+                            String type = user.get('type');
+
+                            return Container(
+                              margin: EdgeInsets.fromLTRB(10, 0, 10, 15),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                          DateTime.parse(
+                                                  date.toDate().toString())
+                                              .toString(),
+                                          style: TextStyle(
+                                            color: Colors.black54,
+                                          )),
+                                      Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                          child: type == 'donated'
+                                              ? Text("Donated To Campaign")
+                                              : Text("Added Balance"))
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {},
+                                    child: Text("Delete"),
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.red),
+                                  )
+                                ],
+                              ),
+                            );
+                          }),
                     );
-                  }),
-            )
+                  }
+                })
           ],
         ),
       )),

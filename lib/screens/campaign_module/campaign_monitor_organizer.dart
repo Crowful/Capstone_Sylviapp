@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,32 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
   @override
   void initState() {
     super.initState();
+
+    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+        badge: true, sound: true, alert: true);
+
+    FirebaseMessaging.onMessage.listen((event) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Notification"),
+              content: Text(event.notification!.body!),
+              actions: [
+                TextButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+    });
+    FirebaseMessaging.instance.getToken().then((value) {
+      print(value);
+    });
+
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 400),
