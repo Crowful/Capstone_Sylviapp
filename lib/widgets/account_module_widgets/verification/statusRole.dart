@@ -14,8 +14,9 @@ class _StatusRoleScreenState extends State<StatusRoleScreen> {
         child: Scaffold(
       body: Center(
         child: Container(
-          child:
-              Text("CONGRATS YOU'RE ALREADY AN ORGANIZER! CREATE A CAMPAIGN"),
+          color: Color(0xff65BFB8),
+          child: Text(
+              "You are already verified, please enjoy the features of being an Organizer!"),
         ),
       ),
     ));

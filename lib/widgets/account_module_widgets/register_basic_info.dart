@@ -104,9 +104,6 @@ class _BasicInfoPageState extends State<BasicInfoPage>
   @override
   void dispose() {
     _animationController.dispose();
-    _fullNameController.dispose();
-    _addressController.dispose();
-    _contactController.dispose();
     super.dispose();
   }
 
@@ -313,7 +310,6 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                               width: double.infinity,
                               child: TextField(
                                 controller: _addressController,
-                                onTap: () async {},
                                 onChanged: (address) =>
                                     onAddressChanged(address),
                                 decoration: InputDecoration(
