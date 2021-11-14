@@ -45,6 +45,7 @@ class DatabaseService {
       'isApplying': false,
       'isVerify': false,
       'deviceToken': deviceToken,
+      'balance': 00.00,
     });
   }
 
@@ -204,8 +205,12 @@ class DatabaseService {
     });
   }
 
-  Future donatedToCampaign(String uidOfCampaign, int amount, String dateDonated,
-      String uidUser, String device, String description) async {
+  Future donatedToCampaign(
+    String uidOfCampaign,
+    int amount,
+    String dateDonated,
+    String uidUser,
+  ) async {
     return await approvedCampaignCollection
         .doc(uidOfCampaign)
         .collection('donations')
@@ -214,19 +219,16 @@ class DatabaseService {
       'uid': uidUser,
       'amount': amount,
       'dateDonated': dateDonated,
-      'description': description,
-      'device': device,
       'campaignUID': uidOfCampaign
     });
   }
 
   Future donatedToCampaignUser(
-      String uidOfCampaign,
-      int amount,
-      String dateDonated,
-      String uidUser,
-      String device,
-      String description) async {
+    String uidOfCampaign,
+    int amount,
+    String dateDonated,
+    String uidUser,
+  ) async {
     return await userCollection
         .doc(uid)
         .collection('recent_activities')
@@ -235,8 +237,6 @@ class DatabaseService {
       'uid': uidUser,
       'amount': amount,
       'dateDonated': dateDonated,
-      'description': description,
-      'device': device,
       'campaignUID': uidOfCampaign
     });
   }
@@ -273,5 +273,17 @@ class DatabaseService {
       'title': 'DISTRESS HELP HELP',
       'body': 'BODY DISTRESS HELP HELP'
     });
+  }
+
+  Future addBalance(String volunteerUID, double newBalance) async {
+    return await userCollection
+        .doc(volunteerUID)
+        .update({"balance": FieldValue.increment(newBalance)});
+  }
+
+  Future deductBalance(String volunteerUID, double newBalance) async {
+    return await userCollection
+        .doc(volunteerUID)
+        .update({"balance": FieldValue.increment(-newBalance)});
   }
 }

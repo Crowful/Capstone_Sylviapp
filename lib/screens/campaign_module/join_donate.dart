@@ -8,7 +8,7 @@ import 'package:encrypt/encrypt.dart' as enc;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:http/http.dart' as http;
@@ -47,6 +47,7 @@ class JoinDonateCampaign extends StatefulWidget {
 
 class _JoinDonateCampaignState extends State<JoinDonateCampaign>
     with TickerProviderStateMixin {
+  TextEditingController amounToDonate = TextEditingController();
   String? taske2;
   String? errorText2;
   String urlTest2 = "";
@@ -410,22 +411,20 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                             print(
                                                                 response.body);
 
-                                                            context.read(authserviceProvider).donateCampaign(
-                                                                widget
-                                                                    .uidOfCampaign,
-                                                                10,
-                                                                currentTime
-                                                                    .toString(),
-                                                                context
-                                                                    .read(
-                                                                        authserviceProvider)
-                                                                    .getCurrentUserUID(),
-                                                                result
-                                                                    .paymentMethodNonce
-                                                                    .nonce,
-                                                                result
-                                                                    .deviceData
-                                                                    .toString());
+                                                            context
+                                                                .read(
+                                                                    authserviceProvider)
+                                                                .donateCampaign(
+                                                                  widget
+                                                                      .uidOfCampaign,
+                                                                  10,
+                                                                  currentTime
+                                                                      .toString(),
+                                                                  context
+                                                                      .read(
+                                                                          authserviceProvider)
+                                                                      .getCurrentUserUID(),
+                                                                );
                                                           } else {
                                                             print(
                                                                 "FAILED PAYMENT PROCESS");
@@ -442,109 +441,181 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                       IconButton(
                                                                 onPressed:
                                                                     () async {
-                                                                  var request =
-                                                                      BraintreeDropInRequest(
-                                                                          tokenizationKey:
-                                                                              'sandbox_mf5kvmgw_mhmfxcfrgwwftpcq',
-                                                                          collectDeviceData:
-                                                                              true,
-                                                                          paypalRequest:
-                                                                              BraintreePayPalRequest(
-                                                                            amount:
-                                                                                '10.00',
-                                                                            displayName:
-                                                                                'SylviaApp',
+                                                                  showDialog(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (context) {
+                                                                        return Container(
+                                                                          margin: EdgeInsets.fromLTRB(
+                                                                              70,
+                                                                              100,
+                                                                              70,
+                                                                              300),
+                                                                          child:
+                                                                              Card(
+                                                                            child: StreamBuilder<DocumentSnapshot>(
+                                                                                stream: FirebaseFirestore.instance.collection('users').doc(context.read(authserviceProvider).getCurrentUserUID()).snapshots(),
+                                                                                builder: (context, balanceSnapshot) {
+                                                                                  if (!balanceSnapshot.hasData) {
+                                                                                    return CircularProgressIndicator();
+                                                                                  } else {
+                                                                                    return Column(
+                                                                                      children: [
+                                                                                        Text("Your Available Balance:"),
+                                                                                        Text(balanceSnapshot.data!.get('balance').toString()),
+                                                                                        SizedBox(
+                                                                                          height: 20,
+                                                                                        ),
+                                                                                        Container(
+                                                                                            width: 80,
+                                                                                            height: 50,
+                                                                                            child: TextField(
+                                                                                              controller: amounToDonate,
+                                                                                            )),
+                                                                                        SizedBox(
+                                                                                          height: 20,
+                                                                                        ),
+                                                                                        ElevatedButton(
+                                                                                            onPressed: () async {
+                                                                                              if (balanceSnapshot.data!.get('balance') < double.parse(amounToDonate.text)) {
+                                                                                                Fluttertoast.showToast(msg: 'You dont have enough balance');
+                                                                                              } else {
+                                                                                                DateTime now = DateTime.now();
+                                                                                                DateTime currentTime = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
+
+                                                                                                await context.read(authserviceProvider).donateCampaign(
+                                                                                                      widget.uidOfCampaign,
+                                                                                                      int.parse(amounToDonate.text),
+                                                                                                      currentTime.toString(),
+                                                                                                      context.read(authserviceProvider).getCurrentUserUID(),
+                                                                                                    );
+                                                                                                setState(() {
+                                                                                                  meterValue = snapshot.data!.get('current_donations') / snapshot.data!.get('max_donation');
+                                                                                                });
+
+                                                                                                await context.read(authserviceProvider).donateCampaignUser(
+                                                                                                      widget.uidOfCampaign,
+                                                                                                      int.parse(amounToDonate.text),
+                                                                                                      currentTime.toString(),
+                                                                                                      context.read(authserviceProvider).getCurrentUserUID(),
+                                                                                                    );
+
+                                                                                                await context.read(authserviceProvider).deductBalance(context.read(authserviceProvider).getCurrentUserUID(), double.parse(amounToDonate.text));
+                                                                                              }
+                                                                                            },
+                                                                                            child: Text("DONATE"))
+                                                                                      ],
+                                                                                    );
+                                                                                  }
+                                                                                }),
                                                                           ),
-                                                                          cardEnabled:
-                                                                              true);
-
-                                                                  BraintreeDropInResult?
-                                                                      result =
-                                                                      await BraintreeDropIn
-                                                                          .start(
-                                                                    request,
-                                                                  );
-
-                                                                  if (result !=
-                                                                      null) {
-                                                                    print(result
-                                                                        .paymentMethodNonce
-                                                                        .description);
-                                                                    print(result
-                                                                        .paymentMethodNonce
-                                                                        .nonce);
-                                                                    print(result
-                                                                        .deviceData);
-
-                                                                    final http
-                                                                            .Response
-                                                                        response =
-                                                                        await http
-                                                                            .post(Uri.tryParse('$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}')!);
-
-                                                                    final payResult =
-                                                                        jsonDecode(
-                                                                            response.body);
-
-                                                                    if (payResult[
-                                                                            "result"] ==
-                                                                        "success") {
-                                                                      DateTime
-                                                                          now =
-                                                                          DateTime
-                                                                              .now();
-                                                                      DateTime currentTime = new DateTime(
-                                                                          now.year,
-                                                                          now.month,
-                                                                          now.day,
-                                                                          now.hour,
-                                                                          now.minute);
-
-                                                                      await context.read(authserviceProvider).donateCampaign(
-                                                                          widget
-                                                                              .uidOfCampaign,
-                                                                          10,
-                                                                          currentTime
-                                                                              .toString(),
-                                                                          context
-                                                                              .read(
-                                                                                  authserviceProvider)
-                                                                              .getCurrentUserUID(),
-                                                                          result
-                                                                              .paymentMethodNonce
-                                                                              .nonce,
-                                                                          result
-                                                                              .deviceData
-                                                                              .toString());
-                                                                      setState(
-                                                                          () {
-                                                                        meterValue =
-                                                                            snapshot.data!.get('current_donations') /
-                                                                                snapshot.data!.get('max_donation');
+                                                                        );
                                                                       });
 
-                                                                      await context.read(authserviceProvider).donateCampaignUser(
-                                                                          widget
-                                                                              .uidOfCampaign,
-                                                                          10,
-                                                                          currentTime
-                                                                              .toString(),
-                                                                          context
-                                                                              .read(
-                                                                                  authserviceProvider)
-                                                                              .getCurrentUserUID(),
-                                                                          result
-                                                                              .paymentMethodNonce
-                                                                              .nonce,
-                                                                          result
-                                                                              .deviceData
-                                                                              .toString());
-                                                                    }
-                                                                  } else if (result ==
-                                                                      null) {
-                                                                    print(
-                                                                        "Braintree Result is null");
-                                                                  }
+                                                                  // var request =
+                                                                  //     BraintreeDropInRequest(
+                                                                  //         tokenizationKey:
+                                                                  //             'sandbox_mf5kvmgw_mhmfxcfrgwwftpcq',
+                                                                  //         collectDeviceData:
+                                                                  //             true,
+                                                                  //         paypalRequest:
+                                                                  //             BraintreePayPalRequest(
+                                                                  //           amount:
+                                                                  //               '10.00',
+                                                                  //           displayName:
+                                                                  //               'SylviaApp',
+                                                                  //         ),
+                                                                  //         cardEnabled:
+                                                                  //             true);
+
+                                                                  // BraintreeDropInResult?
+                                                                  //     result =
+                                                                  //     await BraintreeDropIn
+                                                                  //         .start(
+                                                                  //   request,
+                                                                  // );
+
+                                                                  // if (result !=
+                                                                  //     null) {
+                                                                  //   print(result
+                                                                  //       .paymentMethodNonce
+                                                                  //       .description);
+                                                                  //   print(result
+                                                                  //       .paymentMethodNonce
+                                                                  //       .nonce);
+                                                                  //   print(result
+                                                                  //       .deviceData);
+
+                                                                  //   final http
+                                                                  //           .Response
+                                                                  //       response =
+                                                                  //       await http
+                                                                  //           .post(Uri.tryParse('$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}')!);
+
+                                                                  //   final payResult =
+                                                                  //       jsonDecode(
+                                                                  //           response.body);
+
+                                                                  //   if (payResult[
+                                                                  //           "result"] ==
+                                                                  //       "success") {
+                                                                  // DateTime
+                                                                  //     now =
+                                                                  //     DateTime
+                                                                  //         .now();
+                                                                  // DateTime currentTime = new DateTime(
+                                                                  //     now.year,
+                                                                  //     now.month,
+                                                                  //     now.day,
+                                                                  //     now.hour,
+                                                                  //     now.minute);
+
+                                                                  // await context.read(authserviceProvider).donateCampaign(
+                                                                  //     widget
+                                                                  //         .uidOfCampaign,
+                                                                  //     10,
+                                                                  //     currentTime
+                                                                  //         .toString(),
+                                                                  //     context
+                                                                  //         .read(
+                                                                  //             authserviceProvider)
+                                                                  //         .getCurrentUserUID(),
+                                                                  //     result
+                                                                  //         .paymentMethodNonce
+                                                                  //         .nonce,
+                                                                  //     result
+                                                                  //         .deviceData
+                                                                  //         .toString());
+                                                                  // setState(
+                                                                  //     () {
+                                                                  //   meterValue =
+                                                                  //       snapshot.data!.get('current_donations') /
+                                                                  //           snapshot.data!.get('max_donation');
+                                                                  // });
+
+                                                                  // await context.read(authserviceProvider).donateCampaignUser(
+                                                                  //     widget
+                                                                  //         .uidOfCampaign,
+                                                                  //     10,
+                                                                  //     currentTime
+                                                                  //         .toString(),
+                                                                  //     context
+                                                                  //         .read(
+                                                                  //             authserviceProvider)
+                                                                  //         .getCurrentUserUID(),
+                                                                  //     result
+                                                                  //         .paymentMethodNonce
+                                                                  //         .nonce,
+                                                                  //     result
+                                                                  //         .deviceData
+                                                                  //         .toString());
+                                                                  //   }
+                                                                  // } else if (result ==
+                                                                  //     null) {
+                                                                  //   print(
+                                                                  //       "Braintree Result is null");
+                                                                  // }
                                                                 },
                                                                 icon: Icon(Icons
                                                                     .monetization_on_outlined),

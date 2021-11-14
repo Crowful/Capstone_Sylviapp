@@ -13,6 +13,7 @@ import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:encrypt/encrypt.dart' as enc;
+import 'package:sylviapp_project/screens/account_module/add_money.dart';
 
 class AccountManagementScreen extends StatefulWidget {
   final String uid;
@@ -357,6 +358,40 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                             alignment: Alignment.center,
                             child: Text(
                               'Recent Activities',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 25,
+                            backgroundColor: Colors.green,
+                            child: IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              AddmoneyScreen()));
+                                },
+                                icon: Icon(Icons.attach_money,
+                                    color: Colors.white)),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Add Money',
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w500),
                             ),

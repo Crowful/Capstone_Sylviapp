@@ -337,14 +337,13 @@ class AuthService extends ChangeNotifier {
   }
 
   donateCampaign(String uidOfCampaign, int amount, String dateDonated,
-      String uidUser, String device, String description) async {
+      String uidUser) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
-          .donatedToCampaign(
-              uidOfCampaign, amount, dateDonated, uidUser, device, description)
+          .donatedToCampaign(uidOfCampaign, amount, dateDonated, uidUser)
           .whenComplete(() => DatabaseService(uid: _loggedInUser!.uid)
               .incrementDonation(uidOfCampaign, amount));
     } catch (e) {
@@ -352,15 +351,23 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  donateCampaignUser(String uidOfCampaign, int amount, String dateDonated,
-      String uidUser, String device, String description) async {
+  donateCampaignUser(
+    String uidOfCampaign,
+    int amount,
+    String dateDonated,
+    String uidUser,
+  ) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .donatedToCampaignUser(
-              uidOfCampaign, amount, dateDonated, uidUser, device, description)
+            uidOfCampaign,
+            amount,
+            dateDonated,
+            uidUser,
+          )
           .whenComplete(() => Fluttertoast.showToast(msg: "Donated"));
     } catch (e) {
       print(e);
@@ -390,7 +397,34 @@ class AuthService extends ChangeNotifier {
       await DatabaseService(uid: _loggedInUser!.uid)
           .addMessage(
               uidOfCampaign, uidOfOrganizer, uidOfVolunteer, devicetokenOfOrg)
-          .whenComplete(() => Fluttertoast.showToast(msg: "GUMANA DATABASE"));
+          .whenComplete(() =>
+              Fluttertoast.showToast(msg: "DISTRESS SUBMITTED TO ORGANIZER"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  addBalance(String volunteerUID, double newBalance) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .addBalance(volunteerUID, newBalance)
+          .whenComplete(() => Fluttertoast.showToast(msg: "Balance Updated"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  deductBalance(String volunteerUID, double newBalance) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .deductBalance(volunteerUID, newBalance)
+          .whenComplete(() => Fluttertoast.showToast(msg: "Balance Updated"));
     } catch (e) {
       print(e);
     }
