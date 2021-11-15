@@ -10,6 +10,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:sylviapp_project/translations/locale_keys.g.dart';
 
 class AddmoneyScreen extends StatefulWidget {
   const AddmoneyScreen({Key? key}) : super(key: key);
@@ -43,8 +45,7 @@ class _AddmoneyScreenState extends State<AddmoneyScreen> {
             ),
             Container(
               margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
-              child: Text(
-                  "Add money to donate to campaign, you can be able to help active campaigns to execute their plan in their specific forest. show love and support by donating",
+              child: Text(LocaleKeys.addmoneymainsentence.tr(),
                   style: TextStyle(color: Colors.black54, fontSize: 12)),
             ),
             StreamBuilder<DocumentSnapshot>(
@@ -189,7 +190,7 @@ class _AddmoneyScreenState extends State<AddmoneyScreen> {
                               ));
                         });
                   },
-                  child: Text("ADD MONEY")),
+                  child: Text(LocaleKeys.addmoney.tr())),
             )
           ],
         ),

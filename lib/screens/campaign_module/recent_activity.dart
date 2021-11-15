@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:sylviapp_project/translations/locale_keys.g.dart';
 
 class RecentActivity extends StatefulWidget {
   const RecentActivity({Key? key}) : super(key: key);
@@ -23,7 +25,7 @@ class _RecentActivityState extends State<RecentActivity> {
             Container(
               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
               child: Text(
-                " Recent Activities ",
+                LocaleKeys.recentactivity.tr(),
                 style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -34,7 +36,7 @@ class _RecentActivityState extends State<RecentActivity> {
             Container(
               margin: EdgeInsets.fromLTRB(15, 10, 15, 0),
               child: Text(
-                " Recent Activities would be display here, it includes the adding balance of your account and deduction of your balance if you donate a campaign ",
+                LocaleKeys.recentActivitymainSentence.tr(),
                 style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.normal,

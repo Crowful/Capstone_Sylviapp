@@ -6,10 +6,11 @@ import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_organizer.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_volunteer.dart';
-import 'package:sylviapp_project/translations/locale_keys.g.dart';
+
 import 'analytics_module/bar_graph.dart';
 import 'campaign_module/join_donate.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:sylviapp_project/translations/locale_keys.g.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePage extends StatefulWidget {

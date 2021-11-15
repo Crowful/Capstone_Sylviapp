@@ -14,6 +14,8 @@ import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:sylviapp_project/screens/account_module/add_money.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:sylviapp_project/translations/locale_keys.g.dart';
 
 class AccountManagementScreen extends StatefulWidget {
   final String uid;
@@ -289,7 +291,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                           Align(
                             alignment: Alignment.center,
                             child: Text(
-                              'Edit Profile',
+                              LocaleKeys.editprofile.tr(),
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w500),
                             ),
@@ -329,7 +331,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                 });
                               },
                               child: Text(
-                                'Get Verified',
+                                LocaleKeys.getverified.tr(),
                                 style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.w500),
                               ),
@@ -357,7 +359,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                           Align(
                             alignment: Alignment.center,
                             child: Text(
-                              'Recent Activities',
+                              LocaleKeys.recentactivity.tr(),
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w500),
                             ),
@@ -391,7 +393,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                           Align(
                             alignment: Alignment.center,
                             child: Text(
-                              'Add Money',
+                              LocaleKeys.addmoney.tr(),
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w500),
                             ),
@@ -402,7 +404,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                         height: 25,
                       ),
                       Text(
-                        'My Account',
+                        LocaleKeys.myaccount.tr(),
                         style: TextStyle(
                             color: Colors.grey[500],
                             fontWeight: FontWeight.w400),
@@ -414,7 +416,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                         onTap: () {
                           Navigator.pushNamed(context, "/reset_password");
                         },
-                        child: Text('Reset Password',
+                        child: Text(LocaleKeys.resetpassword.tr(),
                             style: TextStyle(
                                 color: Color(0xff65BFB8),
                                 fontWeight: FontWeight.w500,
@@ -423,7 +425,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       SizedBox(
                         height: 15,
                       ),
-                      Text('Log Out',
+                      Text(LocaleKeys.logout.tr(),
                           style: TextStyle(
                               color: Colors.red,
                               fontWeight: FontWeight.w500,

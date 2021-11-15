@@ -25,4 +25,10 @@ abstract class LocaleKeys {
   static const volunteers = 'volunteers';
   static const organizers = 'organizers';
   static const overallcampaign = 'overallcampaign';
+  static const recentActivitymainSentence = 'recentActivitymainSentence';
+  static const editprofile = 'editprofile';
+  static const getverified = 'getverified';
+  static const addmoney = 'addmoney';
+  static const resetpassword = 'resetpassword';
+  static const addmoneymainsentence = 'addmoneymainsentence';
 }

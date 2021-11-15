@@ -38,6 +38,14 @@ class CodegenLoader extends AssetLoader {
     'volunteers': 'Volunteers',
     'organizers': 'Organizers',
     'overallcampaign': 'Overall Campaign',
+    'recentActivitymainSentence':
+        'Recent Activities would be display here, it includes the adding balance of your account and deduction of your balance if you donate a campaign ',
+    'editprofile': 'Edit Profile',
+    'getverified': 'Get Verified',
+    'addmoney': 'Add Money',
+    'resetpassword': 'Reset Password',
+    'addmoneymainsentence':
+        'Add money to donate to campaign, you can be able to help active campaigns to execute their plan in their specific forest. show love and support by donating',
   };
 
   static const Map<String, dynamic> fil = {
@@ -64,6 +72,14 @@ class CodegenLoader extends AssetLoader {
     'volunteers': 'Boluntaryo',
     'organizers': 'Taga-ayos',
     'overallcampaign': 'Pangkalahatang Kampanya',
+    'recentActivitymainSentence':
+        'Ipapakita dito ang Mga Kamakailang Aktibidad, kasama dito ang pagdaragdag ng balanse ng iyong account at pagbabawas ng iyong balanse kung mag-donate ka ng campaign',
+    'editprofile': 'Ibahin ang profile',
+    'getverified': 'Ma-verify',
+    'addmoney': 'Magdagdag ng Pera',
+    'resetpassword': 'i-reset ang Password',
+    'addmoneymainsentence':
+        'Magdagdag ng pera na ibibigay sa kampanya, maaari kang makatulong sa mga aktibong kampanya upang maisagawa ang kanilang plano sa kanilang partikular na kagubatan. ipakita ang pagmamahal at suporta sa pamamagitan ng pagbibigay ng donasyon',
   };
   static const Map<String, Map<String, dynamic>> mapLocales = {
     "en": en,
