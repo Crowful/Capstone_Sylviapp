@@ -1,14 +1,19 @@
 import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as fmap;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:encrypt/encrypt.dart' as enc;
+import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:latlong2/latlong.dart' as lt;
+import 'package:sylviapp_project/screens/campaign_module/join_donate.dart';
 import 'package:sylviapp_project/widgets/campaign_module/slidable.dart';
 
 class MapCampaign extends StatefulWidget {
@@ -22,6 +27,8 @@ class _MapCampaignState extends State<MapCampaign>
     with TickerProviderStateMixin {
   late AnimationController controller =
       AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+
+  String uid = "";
   double radius = 0;
   bool isVerified = false;
   late String userHolder;
@@ -54,7 +61,7 @@ class _MapCampaignState extends State<MapCampaign>
       curve: _curve,
     ),
   ));
-
+  bool showForest = false;
   bool showLatLng = false;
   bool showLayers = false;
   int numSeeds = 0;
@@ -153,15 +160,20 @@ class _MapCampaignState extends State<MapCampaign>
               Widget add() {
                 return SizedBox(
                   child: AbsorbPointer(
-                    absorbing: false,
+                    absorbing: isVerified ? true : false,
                     child: FloatingActionButton(
                       heroTag: "herotag1",
                       backgroundColor:
-                          createMode ? Color(0xff65BFB8) : Colors.grey,
+                          isVerified ? Color(0xff65BFB8) : Colors.grey,
                       onPressed: () {
                         print(createMode);
                         setState(() {
-                          createMode = !createMode;
+                          if (isVerified == true) {
+                            createMode = !createMode;
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: "Please verify your account first");
+                          }
                         });
                       },
                       child: Icon(Icons.add),
@@ -179,7 +191,9 @@ class _MapCampaignState extends State<MapCampaign>
                         heroTag: "herotag2",
                         backgroundColor: Color(0xff65BFB8),
                         onPressed: () {
-                          print(isVerified);
+                          setState(() {
+                            showForest = !showForest;
+                          });
                         },
                         tooltip: 'Image',
                         child: Icon(Icons.location_searching),
@@ -337,8 +351,33 @@ class _MapCampaignState extends State<MapCampaign>
                                                                 "radius": element[
                                                                         'radius'] *
                                                                     10,
+                                                                "campaignUid":
+                                                                    element[
+                                                                        'campaignID'],
                                                                 "uid": element[
-                                                                    'campaignID']
+                                                                    'uid'],
+                                                                "address": element[
+                                                                    'address'],
+                                                                "nameOfCampaign":
+                                                                    element[
+                                                                        'campaign_name'],
+                                                                "city": element[
+                                                                    'city'],
+                                                                "current_donations":
+                                                                    element[
+                                                                        'current_donations'],
+                                                                "current_volunteers":
+                                                                    element[
+                                                                        'current_volunteers'],
+                                                                "max_donation":
+                                                                    element[
+                                                                        'max_donation'],
+                                                                "number_volunteers":
+                                                                    element[
+                                                                        'number_volunteers'],
+                                                                "description":
+                                                                    element[
+                                                                        'description']
                                                               });
                                                             });
 
@@ -468,17 +507,37 @@ class _MapCampaignState extends State<MapCampaign>
                                                                             borderColor: Colors.green,
                                                                             borderStrokeWidth: 1),
                                                                       ]),
-                                                                  for (var info
-                                                                      in existingCampaign)
-                                                                    fmap.CircleLayerOptions(
-                                                                        circles: [
-                                                                          fmap.CircleMarker(
-                                                                              point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
-                                                                              radius: info.values.elementAt(2),
-                                                                              borderColor: Colors.red,
-                                                                              borderStrokeWidth: 1,
-                                                                              color: Colors.red.withOpacity(0.2))
-                                                                        ]),
+                                                                  if (showLayers) ...[
+                                                                    for (var info
+                                                                        in existingCampaign)
+                                                                      fmap.CircleLayerOptions(
+                                                                          circles: [
+                                                                            fmap.CircleMarker(
+                                                                                point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
+                                                                                radius: info.values.elementAt(2),
+                                                                                borderColor: Colors.red,
+                                                                                borderStrokeWidth: 1,
+                                                                                color: Colors.red.withOpacity(0.2)),
+                                                                          ]),
+                                                                    for (var info
+                                                                        in existingCampaign)
+                                                                      fmap.MarkerLayerOptions(
+                                                                          markers: [
+                                                                            fmap.Marker(
+                                                                                width: 120,
+                                                                                point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
+                                                                                builder: (context) {
+                                                                                  return GestureDetector(
+                                                                                      onTap: () {
+                                                                                        Navigator.push(context, MaterialPageRoute(builder: (context) => JoinDonateCampaign(uidOfCampaign: info.values.elementAt(3), uidOfOrganizer: info.values.elementAt(4), nameOfCampaign: info.values.elementAt(6), city: info.values.elementAt(7), currentFund: info.values.elementAt(8), currentVolunteer: info.values.elementAt(9), maxFund: info.values.elementAt(10), totalVolunteer: info.values.elementAt(11), address: info.values.elementAt(5), description: info.values.elementAt(12))));
+                                                                                      },
+                                                                                      child: Icon(
+                                                                                        Icons.ac_unit,
+                                                                                        color: Colors.transparent,
+                                                                                      ));
+                                                                                })
+                                                                          ]),
+                                                                  ],
                                                                   if (showLatLng) ...[
                                                                     for (var info
                                                                         in getVolunteers)
@@ -571,6 +630,109 @@ class _MapCampaignState extends State<MapCampaign>
                                         ))
                                   ],
                                 ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: AnimatedOpacity(
+                                    opacity: showForest ? 1 : 0,
+                                    duration: Duration(milliseconds: 300),
+                                    child: AbsorbPointer(
+                                      absorbing: showForest ? false : true,
+                                      child: Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                showForest = !showForest;
+                                                cntrler.move(
+                                                    lt.LatLng(
+                                                        14.918990, 121.165563),
+                                                    13);
+                                              });
+                                            },
+                                            child: Card(
+                                              elevation: 5,
+                                              child: Container(
+                                                height: 50,
+                                                width: 100,
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xff65BFB8)),
+                                                child: Center(
+                                                    child: Text(
+                                                  "Angat Forest",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                )),
+                                              ),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                showForest = !showForest;
+                                                cntrler.move(
+                                                    lt.LatLng(
+                                                        14.7452, 121.0984),
+                                                    13);
+                                              });
+                                            },
+                                            child: Card(
+                                              elevation: 5,
+                                              child: Container(
+                                                height: 50,
+                                                width: 100,
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xff65BFB8)),
+                                                child: Center(
+                                                    child: Text(
+                                                  "Lamesa Forest",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                )),
+                                              ),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                showForest = !showForest;
+                                                cntrler.move(
+                                                    lt.LatLng(
+                                                        15.780574, 121.121838),
+                                                    13);
+                                              });
+                                            },
+                                            child: Card(
+                                              elevation: 5,
+                                              child: Container(
+                                                padding: EdgeInsets.all(5),
+                                                height: 50,
+                                                width: 100,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(2)),
+                                                    color: Color(0xff65BFB8)),
+                                                child: Center(
+                                                    child: Text(
+                                                        "Pantabangan Forest",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                        overflow: TextOverflow
+                                                            .visible)),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
                               ),
                             ),
                             Align(
