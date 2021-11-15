@@ -242,6 +242,14 @@ class DatabaseService {
     });
   }
 
+  Future deleteRecentActivity(String uidOfActivity) async {
+    return await userCollection
+        .doc(uid)
+        .collection('recent_activities')
+        .doc(uidOfActivity)
+        .delete();
+  }
+
   Future addBalanceToUser(
     String uidOfCampaign,
     int amount,
@@ -291,8 +299,8 @@ class DatabaseService {
       'volunteerUID': uidOfVolunteer,
       'organizerUID': uidOfOrganizer,
       'deviceToken': devicetokenOfOrg,
-      'title': 'DISTRESS HELP HELP',
-      'body': 'BODY DISTRESS HELP HELP'
+      'title': 'A SPECIFIC VOLUNTEER NEEDS HELP !!!',
+      'body': 'TAKE ACTION NOW'
     });
   }
 

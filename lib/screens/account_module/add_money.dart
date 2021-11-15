@@ -26,10 +26,27 @@ class _AddmoneyScreenState extends State<AddmoneyScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 30),
+              child: Text(
+                "Sylviapp Wallet",
+                style: TextStyle(
+                    color: Color(0xff65BFB8),
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
+              child: Text(
+                  "Add money to donate to campaign, you can be able to help active campaigns to execute their plan in their specific forest. show love and support by donating",
+                  style: TextStyle(color: Colors.black54, fontSize: 12)),
+            ),
             StreamBuilder<DocumentSnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('users')
@@ -39,107 +56,141 @@ class _AddmoneyScreenState extends State<AddmoneyScreen> {
                   if (!snapshot.hasData) {
                     return Text("No data");
                   } else {
-                    return Text(
-                        snapshot.data!.get('balance').toString() + " Pesos");
+                    return Container(
+                      margin: EdgeInsets.fromLTRB(0, 70, 0, 0),
+                      child: Text(
+                        snapshot.data!.get('balance').toString() + " Pesos",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    );
                   }
                 }),
-            ElevatedButton(
-                onPressed: () async {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return Container(
-                            margin: EdgeInsets.fromLTRB(70, 100, 70, 300),
-                            child: Card(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                      width: 50,
-                                      height: 20,
-                                      child: TextField(
-                                        controller: amountController,
-                                      )),
-                                  ElevatedButton(
-                                      onPressed: () async {
-                                        var request = BraintreeDropInRequest(
-                                            tokenizationKey:
-                                                'sandbox_mf5kvmgw_mhmfxcfrgwwftpcq',
-                                            collectDeviceData: true,
-                                            paypalRequest:
-                                                BraintreePayPalRequest(
-                                              amount: amountController.text,
-                                              displayName: 'SylviaApp',
-                                            ),
-                                            cardEnabled: true);
+            Container(
+              width: 200,
+              height: 50,
+              margin: EdgeInsets.fromLTRB(0, 30, 0, 400),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shape: StadiumBorder(), primary: Color(0xff65BFB8)),
+                  onPressed: () async {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          amountController.text = '00.00';
+                          return Container(
+                              margin: EdgeInsets.fromLTRB(60, 150, 60, 400),
+                              child: Card(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      margin:
+                                          EdgeInsets.fromLTRB(10, 0, 10, 10),
+                                      child: Text(
+                                          'Enter Amount you would like to cash in'),
+                                    ),
+                                    Container(
+                                        color: Colors.black12,
+                                        width: 80,
+                                        height: 30,
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          keyboardType:
+                                              TextInputType.numberWithOptions(),
+                                          controller: amountController,
+                                        )),
+                                    Container(
+                                      margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                                      width: 150,
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              primary: Color(0xff65BFB8)),
+                                          onPressed: () async {
+                                            var request =
+                                                BraintreeDropInRequest(
+                                                    tokenizationKey:
+                                                        'sandbox_mf5kvmgw_mhmfxcfrgwwftpcq',
+                                                    collectDeviceData: true,
+                                                    paypalRequest:
+                                                        BraintreePayPalRequest(
+                                                      amount:
+                                                          amountController.text,
+                                                      displayName: 'SylviaApp',
+                                                    ),
+                                                    cardEnabled: true);
 
-                                        BraintreeDropInResult? result =
-                                            await BraintreeDropIn.start(
-                                          request,
-                                        );
+                                            BraintreeDropInResult? result =
+                                                await BraintreeDropIn.start(
+                                              request,
+                                            );
 
-                                        if (result != null) {
-                                          print(result
-                                              .paymentMethodNonce.description);
-                                          print(
-                                              result.paymentMethodNonce.nonce);
-                                          print(result.deviceData);
+                                            if (result != null) {
+                                              print(result.paymentMethodNonce
+                                                  .description);
+                                              print(result
+                                                  .paymentMethodNonce.nonce);
+                                              print(result.deviceData);
 
-                                          final http.Response response =
-                                              await http.post(Uri.tryParse(
-                                                  '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}')!);
+                                              final http.Response response =
+                                                  await http.post(Uri.tryParse(
+                                                      '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}')!);
 
-                                          final payResult =
-                                              jsonDecode(response.body);
+                                              final payResult =
+                                                  jsonDecode(response.body);
 
-                                          if (payResult["result"] ==
-                                              "success") {
-                                            DateTime now = DateTime.now();
-                                            DateTime currentTime = new DateTime(
-                                                now.year,
-                                                now.month,
-                                                now.day,
-                                                now.hour,
-                                                now.minute);
+                                              if (payResult["result"] ==
+                                                  "success") {
+                                                DateTime now = DateTime.now();
+                                                DateTime currentTime =
+                                                    new DateTime(
+                                                        now.year,
+                                                        now.month,
+                                                        now.day,
+                                                        now.hour,
+                                                        now.minute);
 
-                                            double amountTobeAdded =
-                                                double.parse(
-                                                    amountController.text);
-                                            await context
-                                                .read(authserviceProvider)
-                                                .addBalance(
-                                                    context
-                                                        .read(
-                                                            authserviceProvider)
-                                                        .getCurrentUserUID(),
-                                                    amountTobeAdded);
+                                                double amountTobeAdded =
+                                                    double.parse(
+                                                        amountController.text);
+                                                await context
+                                                    .read(authserviceProvider)
+                                                    .addBalance(
+                                                        context
+                                                            .read(
+                                                                authserviceProvider)
+                                                            .getCurrentUserUID(),
+                                                        amountTobeAdded);
 
-                                            await context
-                                                .read(authserviceProvider)
-                                                .addBalanceToUserRecent(
-                                                  'ownAccount',
-                                                  amountTobeAdded.toInt(),
-                                                  currentTime.toString(),
-                                                  context
-                                                      .read(authserviceProvider)
-                                                      .getCurrentUserUID(),
-                                                );
-                                          }
-                                        } else if (result == null) {
-                                          print("Braintree Result is null");
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "Something Went Wrong, Please Try Again later");
-                                        }
-                                      },
-                                      child: Text("Confirm"))
-                                ],
-                              ),
-                            ));
-                      });
-                },
-                child: Text("ADD MONEY"))
+                                                await context
+                                                    .read(authserviceProvider)
+                                                    .addBalanceToUserRecent(
+                                                      'ownAccount',
+                                                      amountTobeAdded.toInt(),
+                                                      currentTime.toString(),
+                                                      context
+                                                          .read(
+                                                              authserviceProvider)
+                                                          .getCurrentUserUID(),
+                                                    );
+                                              }
+                                            } else if (result == null) {
+                                              print("Braintree Result is null");
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      "Something Went Wrong, Please Try Again later");
+                                            }
+                                          },
+                                          child: Text("Confirm")),
+                                    )
+                                  ],
+                                ),
+                              ));
+                        });
+                  },
+                  child: Text("ADD MONEY")),
+            )
           ],
         ),
       ),

@@ -452,4 +452,17 @@ class AuthService extends ChangeNotifier {
       print(e);
     }
   }
+
+  deleteActivity(String uidActivity) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .deleteRecentActivity(uidActivity)
+          .whenComplete(() => Fluttertoast.showToast(msg: "Activity Deleted"));
+    } catch (e) {
+      print(e);
+    }
+  }
 }

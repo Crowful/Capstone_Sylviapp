@@ -24,7 +24,21 @@ class _RecentActivityState extends State<RecentActivity> {
               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
               child: Text(
                 " Recent Activities ",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff65BFB8)),
+              ),
+              alignment: Alignment.topLeft,
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(15, 10, 15, 0),
+              child: Text(
+                " Recent Activities would be display here, it includes the adding balance of your account and deduction of your balance if you donate a campaign ",
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black54),
               ),
               alignment: Alignment.topLeft,
             ),
@@ -45,13 +59,26 @@ class _RecentActivityState extends State<RecentActivity> {
                             DocumentSnapshot user = snapshot.data!.docs[index];
 
                             Timestamp date = user.get('dateDonated');
-                            String amount = user.get('amount');
+                            String amount = user.get('amount').toString();
                             String type = user.get('type');
 
                             return Container(
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 15),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
+                                  type == 'donated'
+                                      ? Icon(
+                                          Icons.campaign_rounded,
+                                          size: 40,
+                                          color: Colors.grey,
+                                        )
+                                      : Icon(
+                                          Icons.monetization_on,
+                                          size: 40,
+                                          color: Colors.green,
+                                        ),
                                   SizedBox(
                                     width: 20,
                                   ),
@@ -68,15 +95,21 @@ class _RecentActivityState extends State<RecentActivity> {
                                           margin:
                                               EdgeInsets.fromLTRB(0, 5, 0, 0),
                                           child: type == 'donated'
-                                              ? Text("Donated To Campaign")
-                                              : Text("Added Balance"))
+                                              ? Text(
+                                                  "Donated $amount to Campaign ")
+                                              : Text(
+                                                  "Added Balance of $amount"))
                                     ],
                                   ),
                                   SizedBox(
                                     width: 20,
                                   ),
                                   ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      await context
+                                          .read(authserviceProvider)
+                                          .deleteActivity(user.id);
+                                    },
                                     child: Text("Delete"),
                                     style: ElevatedButton.styleFrom(
                                         primary: Colors.red),

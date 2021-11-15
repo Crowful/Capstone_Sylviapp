@@ -154,6 +154,7 @@ class _EditProfileState extends State<EditProfile> {
                       var address = AESCryptography().decryptAES(
                           enc.Encrypted.fromBase64(
                               snapshot.data!.get('address')));
+                      print(address);
 
                       var email = snapshot.data!.get('email');
                       var phoneNum = AESCryptography().decryptAES(
@@ -273,46 +274,30 @@ class _EditProfileState extends State<EditProfile> {
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
+                                          SizedBox(
+                                            height: 15,
+                                          ),
                                           Text(
-                                            "Address",
+                                            "Email",
                                             style: TextStyle(
                                                 color: Colors.grey,
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w500),
                                           ),
                                           SizedBox(
-                                            height: 5,
+                                            height: 15,
                                           ),
                                           Container(
                                             height: 20,
                                             child: TextField(
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
-                                              controller: addressController,
+                                              controller: emailController,
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
+                                          SizedBox(
+                                            height: 20,
+                                          ),
                                           Text(
                                             "Contact Number",
                                             style: TextStyle(

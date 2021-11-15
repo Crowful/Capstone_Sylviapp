@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:flutter/rendering.dart';
@@ -441,6 +442,9 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                       IconButton(
                                                                 onPressed:
                                                                     () async {
+                                                                  amounToDonate
+                                                                          .text =
+                                                                      '0';
                                                                   showDialog(
                                                                       context:
                                                                           context,
@@ -448,10 +452,10 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                           (context) {
                                                                         return Container(
                                                                           margin: EdgeInsets.fromLTRB(
-                                                                              70,
-                                                                              100,
-                                                                              70,
-                                                                              300),
+                                                                              60,
+                                                                              200,
+                                                                              60,
+                                                                              320),
                                                                           child:
                                                                               Card(
                                                                             child: StreamBuilder<DocumentSnapshot>(
@@ -462,8 +466,16 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                                   } else {
                                                                                     return Column(
                                                                                       children: [
-                                                                                        Text("Your Available Balance:"),
-                                                                                        Text(balanceSnapshot.data!.get('balance').toString()),
+                                                                                        Container(
+                                                                                            margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                                                                            child: Text(
+                                                                                              "Your Available Balance:",
+                                                                                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                                                                            )),
+                                                                                        SizedBox(
+                                                                                          height: 10,
+                                                                                        ),
+                                                                                        Container(child: Text(balanceSnapshot.data!.get('balance').toString() + ' pesos')),
                                                                                         SizedBox(
                                                                                           height: 20,
                                                                                         ),
@@ -471,15 +483,19 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                                             width: 80,
                                                                                             height: 50,
                                                                                             child: TextField(
+                                                                                              textAlign: TextAlign.center,
                                                                                               controller: amounToDonate,
                                                                                             )),
                                                                                         SizedBox(
                                                                                           height: 20,
                                                                                         ),
                                                                                         ElevatedButton(
+                                                                                            style: ElevatedButton.styleFrom(primary: Color(0xff65BFB8), shape: StadiumBorder()),
                                                                                             onPressed: () async {
                                                                                               if (balanceSnapshot.data!.get('balance') < double.parse(amounToDonate.text)) {
                                                                                                 Fluttertoast.showToast(msg: 'You dont have enough balance');
+                                                                                              } else if (int.parse(amounToDonate.text) == 0) {
+                                                                                                Fluttertoast.showToast(msg: 'Please Enter Valid Amount');
                                                                                               } else {
                                                                                                 DateTime now = DateTime.now();
                                                                                                 DateTime currentTime = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
@@ -502,6 +518,8 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                                                     );
 
                                                                                                 await context.read(authserviceProvider).deductBalance(context.read(authserviceProvider).getCurrentUserUID(), double.parse(amounToDonate.text));
+                                                                                                amounToDonate.clear();
+                                                                                                Navigator.pop(context);
                                                                                               }
                                                                                             },
                                                                                             child: Text("DONATE"))

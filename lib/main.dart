@@ -8,6 +8,7 @@ import 'package:sylviapp_project/Domain/wrapperVerify.dart';
 import 'package:sylviapp_project/config/theme_config.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/account_module/account_management.dart';
+import 'package:sylviapp_project/screens/account_module/add_money.dart';
 import 'package:sylviapp_project/screens/account_module/before_login.dart';
 import 'package:sylviapp_project/screens/account_module/edit_account.dart';
 import 'package:sylviapp_project/screens/account_module/forgot_password.dart';
@@ -80,6 +81,7 @@ class MyApp extends ConsumerWidget {
         "/try_volunteer_monitor": (_) => CampaignMonitorVolunteer(
               uidOfCampaign: "xiS4w1zhscqZQNi",
             ),
+        '/add_money': (_) => AddmoneyScreen(),
       },
     );
   }
