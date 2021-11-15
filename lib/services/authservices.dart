@@ -133,9 +133,26 @@ class AuthService extends ChangeNotifier {
             email, fullname, address, gender, phoneNumber, username, value!);
       });
     } on FirebaseAuthException catch (e) {
-      print(e.message);
+      switch (e.code) {
+        case "email-already-in-use":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+          break;
+      }
     } on PlatformException catch (e) {
-      print(e.message);
+      switch (e.code) {
+        case "email-already-in-use":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 
@@ -327,6 +328,9 @@ class _UserRegPageState extends State<UserRegPage>
                                     topRight: Radius.circular(15))),
                             width: double.infinity,
                             child: TextField(
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(15)
+                              ],
                               controller: _usernameController,
                               onChanged: (user) => {onUserChanged(user)},
                               decoration: InputDecoration(
@@ -359,6 +363,9 @@ class _UserRegPageState extends State<UserRegPage>
                                     topRight: Radius.circular(15))),
                             width: double.infinity,
                             child: TextField(
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(30)
+                              ],
                               controller: _emailController,
                               onChanged: (email) => onEmailChanged(email),
                               decoration: InputDecoration(

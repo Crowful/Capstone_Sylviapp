@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 
@@ -53,6 +54,12 @@ class _PasswordRegPageState extends State<PasswordRegPage>
         AnimationController(vsync: this, duration: Duration(seconds: 3))
           ..repeat(reverse: true);
     _widgetController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   onValidate() {
@@ -131,12 +138,7 @@ class _PasswordRegPageState extends State<PasswordRegPage>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, "/login");
-                            },
-                            child: Icon(Icons.arrow_back_ios,
-                                color: Colors.white)),
+                        widget.previousButton,
                         Align(
                           alignment: Alignment.center,
                           child: Text(
@@ -331,7 +333,7 @@ class _PasswordRegPageState extends State<PasswordRegPage>
                                     child: Center(
                                       child: Icon(
                                         Icons.check,
-                                        color: _overall
+                                        color: _isMatch
                                             ? Colors.white
                                             : Color(0xff2b2b2b),
                                         size: 15,
@@ -371,10 +373,15 @@ class _PasswordRegPageState extends State<PasswordRegPage>
                                     topRight: Radius.circular(15))),
                             width: double.infinity,
                             child: TextField(
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(30)
+                              ],
                               obscureText: !_isVisible,
                               controller: _primaryPaswword,
-                              onChanged: (password) =>
-                                  {onPasswordChanged(password)},
+                              onChanged: (password) => {
+                                onPasswordChanged(password),
+                                onConfirmPasswordChange(password)
+                              },
                               decoration: InputDecoration(
                                   suffixIcon: IconButton(
                                     onPressed: () {
@@ -420,6 +427,9 @@ class _PasswordRegPageState extends State<PasswordRegPage>
                                     topRight: Radius.circular(15))),
                             width: double.infinity,
                             child: TextField(
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(30)
+                              ],
                               obscureText: !_isVisibleCP,
                               controller: _confirmPassword,
                               onChanged: (password) =>
@@ -454,15 +464,15 @@ class _PasswordRegPageState extends State<PasswordRegPage>
                           Align(
                               alignment: Alignment.bottomRight,
                               child: AbsorbPointer(
-                                absorbing: _overall ? false : true,
+                                absorbing: _overall && _isMatch ? false : true,
                                 child: AnimatedContainer(
                                     curve: Curves.fastOutSlowIn,
                                     duration:
                                         const Duration(milliseconds: 1000),
                                     height: 40,
-                                    width: _overall ? 500 : 90,
+                                    width: _overall && _isMatch ? 500 : 90,
                                     decoration: BoxDecoration(
-                                        color: _overall
+                                        color: _overall && _isMatch
                                             ? Color(0xff3b3b3b)
                                             : Color(0xff3b3b3b)
                                                 .withOpacity(0.5),

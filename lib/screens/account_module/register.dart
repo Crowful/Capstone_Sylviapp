@@ -27,6 +27,12 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   @override
+  void dispose() {
+    registerPageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -40,14 +46,14 @@ class _RegisterPageState extends State<RegisterPage> {
         UserRegPage(
           height: height,
           width: width,
-          previousButton: InkWell(
+          previousButton: GestureDetector(
               onTap: () {
                 registerPageController.animateToPage(
                     registerPageController.page!.toInt() - 1,
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.fastOutSlowIn);
               },
-              child: Text('Back')),
+              child: Icon(Icons.arrow_back_ios, color: Colors.white)),
           nextButton: InkWell(
               onTap: () {
                 registerPageController.animateToPage(
@@ -71,15 +77,14 @@ class _RegisterPageState extends State<RegisterPage> {
               ? SizedBox(
                   width: 0,
                 )
-              : InkWell(
+              : GestureDetector(
                   onTap: () {
-                    print(currentPage);
                     registerPageController.animateToPage(
-                        registerPageController.page!.toInt() + 1,
+                        registerPageController.page!.toInt() - 1,
                         duration: Duration(milliseconds: 1000),
                         curve: Curves.fastOutSlowIn);
                   },
-                  child: Center(child: Text('Go Back'))),
+                  child: Icon(Icons.arrow_back_ios, color: Colors.white)),
           nextButton: InkWell(
               onTap: () {
                 registerPageController.animateToPage(
@@ -106,15 +111,14 @@ class _RegisterPageState extends State<RegisterPage> {
               ? SizedBox(
                   width: 0,
                 )
-              : InkWell(
+              : GestureDetector(
                   onTap: () {
-                    print(currentPage);
                     registerPageController.animateToPage(
                         registerPageController.page!.toInt() - 1,
                         duration: Duration(milliseconds: 1000),
                         curve: Curves.fastOutSlowIn);
                   },
-                  child: Center(child: Text('Go Back'))),
+                  child: Icon(Icons.arrow_back_ios, color: Colors.white)),
           nextButton: InkWell(
               onTap: () {
                 context
@@ -133,8 +137,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       AESCryptography().encryptAES(
                           context.read(userAccountProvider).getUserName),
                     )
-                    .whenComplete(
-                        () => Navigator.pushNamed(context, "/onboarding"));
+                    .whenComplete(() =>
+                        Navigator.pushNamed(context, "/wrapperCatchSignup"));
               },
               child: Center(
                   child: Text(

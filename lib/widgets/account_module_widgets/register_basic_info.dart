@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -142,12 +143,7 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, "/login");
-                            },
-                            child: Icon(Icons.arrow_back_ios,
-                                color: Colors.white)),
+                        widget.previousButton,
                         Align(
                           alignment: Alignment.center,
                           child: Text(
@@ -179,7 +175,7 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                                       curve: Interval(0.2, 1.0,
                                           curve: Curves.easeIn))),
                               child: Text(
-                                'Set your password!',
+                                'Set your Information!',
                                 style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
@@ -200,7 +196,7 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                                         parent: _widgetController,
                                         curve: Curves.easeIn)),
                                 child: Text(
-                                    'Enter your desired password, it must have enough complexity to protect your own information.',
+                                    'Enter your fullname, gender, address and your contact information. This information will be used inside the application for better experience',
                                     style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w400,
@@ -237,6 +233,9 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                                       topRight: Radius.circular(15))),
                               width: double.infinity,
                               child: TextField(
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(30)
+                                ],
                                 controller: _fullNameController,
                                 onChanged: (name) => {onFullNameChanged(name)},
                                 decoration: InputDecoration(
@@ -309,6 +308,9 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                                       topRight: Radius.circular(15))),
                               width: double.infinity,
                               child: TextField(
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(60)
+                                ],
                                 controller: _addressController,
                                 onChanged: (address) =>
                                     onAddressChanged(address),
@@ -341,6 +343,10 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                                       topRight: Radius.circular(15))),
                               width: double.infinity,
                               child: TextField(
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(11)
+                                ],
                                 controller: _contactController,
                                 onChanged: (contact) =>
                                     onContactChanged(contact),

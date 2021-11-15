@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sylviapp_project/Domain/wrapperAuth.dart';
+import 'package:sylviapp_project/Domain/wrapperCatchSignup.dart';
 import 'package:sylviapp_project/Domain/wrapperMap.dart';
 import 'package:sylviapp_project/Domain/wrapperVerify.dart';
 import 'package:sylviapp_project/config/theme_config.dart';
@@ -30,13 +31,14 @@ import 'package:sylviapp_project/translations/codegen_loader.g.dart';
 import 'package:flutter/services.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await EasyLocalization.ensureInitialized();
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await EasyLocalization.ensureInitialized();
   runApp(ProviderScope(
       child: EasyLocalization(
           supportedLocales: [Locale('en'), Locale('fil')],
@@ -87,6 +89,7 @@ class MyApp extends ConsumerWidget {
               uidOfCampaign: "xiS4w1zhscqZQNi",
             ),
         '/add_money': (_) => AddmoneyScreen(),
+        '/wrapperCatchSignup': (_) => SignupDomain(),
       },
     );
   }

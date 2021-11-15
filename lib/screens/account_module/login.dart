@@ -2,6 +2,7 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/src/provider.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sylviapp_project/providers/providers.dart';
@@ -156,6 +157,9 @@ class _LoginScreenState extends State<LoginScreen>
                                   topRight: Radius.circular(15))),
                           width: double.infinity,
                           child: TextField(
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(30)
+                            ],
                             focusNode: textNode,
                             controller: _etEmailController,
                             onChanged: (email) => {},
@@ -188,6 +192,9 @@ class _LoginScreenState extends State<LoginScreen>
                                   bottomRight: Radius.circular(15))),
                           width: double.infinity,
                           child: TextField(
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(30)
+                            ],
                             obscureText: isVisible,
                             controller: _etPasswordController,
                             onChanged: (email) => {},
