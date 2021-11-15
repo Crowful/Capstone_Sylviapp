@@ -7,6 +7,8 @@ import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/sidebar_module/menu_item.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:encrypt/encrypt.dart' as enc;
+import 'package:sylviapp_project/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 // ignore: must_be_immutable
 class DrawerScreen extends StatefulWidget {
@@ -141,16 +143,19 @@ class _DrawerScreenState extends State<DrawerScreen> {
             SizedBox(height: 30),
             MenuItem(
                 route: "/account_management",
-                title: 'My Account',
+                title: LocaleKeys.myaccount.tr(),
                 icon: Icons.person),
             MenuItem(
                 route: "/recent_activity",
-                title: 'Recent Activity',
+                title: LocaleKeys.recentactivity.tr(),
                 icon: Icons.history),
-            MenuItem(route: "/add_money", title: 'Balance', icon: Icons.money),
+            MenuItem(
+                route: "/add_money",
+                title: LocaleKeys.balance.tr(),
+                icon: Icons.money),
             MenuItem(
               route: "/settings",
-              title: 'Settings',
+              title: LocaleKeys.settings.tr(),
               icon: Icons.settings,
             ),
             SizedBox(height: 15),
@@ -189,7 +194,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   SizedBox(width: 16),
                   Expanded(
                       child: Text(
-                    'Logout',
+                    LocaleKeys.logout.tr(),
                     style: TextStyle(
                         fontSize: 13,
                         color: Colors.red,

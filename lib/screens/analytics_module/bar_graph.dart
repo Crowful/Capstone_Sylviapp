@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:sylviapp_project/translations/locale_keys.g.dart';
 
 // ignore: must_be_immutable
 class Chart extends StatefulWidget {
@@ -78,7 +80,7 @@ class _ChartState extends State<Chart> {
                               width: 10,
                             ),
                             Text(
-                              '$numOfVolunteer Volunteers',
+                              '$numOfVolunteer ' + LocaleKeys.volunteers.tr(),
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 16,
@@ -117,7 +119,7 @@ class _ChartState extends State<Chart> {
                               width: 10,
                             ),
                             Text(
-                              '$numOfOrganizer Organizers',
+                              '$numOfOrganizer ' + LocaleKeys.organizers.tr(),
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 16,
@@ -152,7 +154,7 @@ class _ChartState extends State<Chart> {
                 }
               })),
       Text(
-        'overall campaign',
+        LocaleKeys.overallcampaign.tr(),
         style: TextStyle(color: Colors.black54),
       )
     ]);
@@ -160,9 +162,10 @@ class _ChartState extends State<Chart> {
 
   List<CampaignData> getCampaignData() {
     final List<CampaignData> chartData = [
-      CampaignData('Active Campaign', widget.activeCampaign),
-      CampaignData('Done Campaign', widget.doneCampaign),
-      CampaignData('Campaign in Progress', widget.campaignInProgress),
+      CampaignData(LocaleKeys.activeCampaign.tr(), widget.activeCampaign),
+      CampaignData(LocaleKeys.doneCampaign.tr(), widget.doneCampaign),
+      CampaignData(
+          LocaleKeys.campaignInProgress.tr(), widget.campaignInProgress),
     ];
 
     return chartData;

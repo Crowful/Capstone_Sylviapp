@@ -31,7 +31,8 @@ class SettingsPage extends ConsumerWidget {
                         size: 18,
                       )),
                       TextSpan(
-                          text: '    Dark Mode', style: GoogleFonts.openSans())
+                          text: "    " + LocaleKeys.DarkMode.tr(),
+                          style: GoogleFonts.openSans())
                     ])),
                     Switch(
                         value: isDark.darkTheme,
@@ -58,14 +59,24 @@ class SettingsPage extends ConsumerWidget {
                         size: 17,
                       )),
                       TextSpan(
-                          text: '    Change Language',
+                          text: '    ' + LocaleKeys.changeLanguage.tr(),
                           style: GoogleFonts.openSans())
                     ])),
-                    ElevatedButton(
-                        onPressed: () async {
-                          await context.setLocale(Locale('fil'));
-                        },
-                        child: Text(LocaleKeys.greetings.tr()))
+                    Row(children: [
+                      ElevatedButton(
+                          onPressed: () async {
+                            await context.setLocale(Locale('fil'));
+                          },
+                          child: Text('Filipino')),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      ElevatedButton(
+                          onPressed: () async {
+                            await context.setLocale(Locale('en'));
+                          },
+                          child: Text('English')),
+                    ])
                     // DropdownButton<String>(
                     //   value: dropdownValue,
                     //   icon: Icon(
@@ -118,7 +129,8 @@ class SettingsPage extends ConsumerWidget {
                         size: 17,
                       )),
                       TextSpan(
-                          text: '    Privacy', style: GoogleFonts.openSans())
+                          text: '    ' + LocaleKeys.privacy.tr(),
+                          style: GoogleFonts.openSans())
                     ])),
                   ],
                 ),
@@ -137,7 +149,9 @@ class SettingsPage extends ConsumerWidget {
                         Icons.help,
                         size: 17,
                       )),
-                      TextSpan(text: '    Help', style: GoogleFonts.openSans())
+                      TextSpan(
+                          text: '    ' + LocaleKeys.help.tr(),
+                          style: GoogleFonts.openSans())
                     ])),
                   ],
                 ),
@@ -157,7 +171,8 @@ class SettingsPage extends ConsumerWidget {
                         size: 17,
                       )),
                       TextSpan(
-                          text: '    About us', style: GoogleFonts.openSans())
+                          text: '    ' + LocaleKeys.aboutus.tr(),
+                          style: GoogleFonts.openSans())
                     ])),
                   ],
                 ),
@@ -178,7 +193,7 @@ class SettingsPage extends ConsumerWidget {
                         size: 17,
                       )),
                       TextSpan(
-                          text: '    Send Feedback',
+                          text: '    ' + LocaleKeys.sendfeedback.tr(),
                           style: GoogleFonts.openSans(
                             color: Colors.red,
                           ))

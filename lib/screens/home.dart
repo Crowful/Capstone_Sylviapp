@@ -6,8 +6,10 @@ import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_organizer.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_volunteer.dart';
+import 'package:sylviapp_project/translations/locale_keys.g.dart';
 import 'analytics_module/bar_graph.dart';
 import 'campaign_module/join_donate.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePage extends StatefulWidget {
@@ -400,7 +402,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: Text(
-              'All Reforestation Campaign',
+              LocaleKeys.allreforestationcampaign.tr(),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -659,7 +661,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: Text(
-              'Analytics in Overall Reforestation',
+              LocaleKeys.analyticsinoverallreforestation.tr(),
               style: Theme.of(context).textTheme.headline1,
             ),
           ),
@@ -785,7 +787,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 FadeAnimation(
                   0.25,
                   Text(
-                    'Overview',
+                    LocaleKeys.overview.tr(),
                     style: Theme.of(context).textTheme.headline1,
                   ),
                 ),
@@ -814,7 +816,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   height: 20,
                 ),
                 Text(
-                  'Your Campaigns',
+                  LocaleKeys.yourcampaigns.tr(),
                   style: Theme.of(context).textTheme.headline1,
                 ),
                 SizedBox(
