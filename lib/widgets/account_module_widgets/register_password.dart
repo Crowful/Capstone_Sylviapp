@@ -55,12 +55,6 @@ class _PasswordRegPageState extends State<PasswordRegPage>
     _widgetController.forward();
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
   onValidate() {
     setState(() {
       _overall = false;

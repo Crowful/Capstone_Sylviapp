@@ -299,8 +299,8 @@ class DatabaseService {
       'volunteerUID': uidOfVolunteer,
       'organizerUID': uidOfOrganizer,
       'deviceToken': devicetokenOfOrg,
-      'title': 'A SPECIFIC VOLUNTEER NEEDS HELP !!!',
-      'body': 'TAKE ACTION NOW'
+      'title': 'A SPECIFIC VOLUNTEER NEEDS HELP!!!',
+      'body': 'This volunteer need some attention go now'
     });
   }
 

@@ -33,6 +33,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     return Scaffold(
         body: PageView(
+      physics: NeverScrollableScrollPhysics(),
       scrollDirection: Axis.horizontal,
       controller: registerPageController,
       children: [
