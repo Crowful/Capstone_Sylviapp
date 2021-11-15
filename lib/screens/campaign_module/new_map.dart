@@ -102,6 +102,9 @@ class _MapCampaignState extends State<MapCampaign>
   List<Map<String, dynamic>> existingCampaign = List.empty(growable: true);
 
   List<Map<String, dynamic>> getVolunteers = List.empty(growable: true);
+  List<Map<String, dynamic>> getActive = List.empty(growable: true);
+  List<Map<String, dynamic>> getProgress = List.empty(growable: true);
+  List<Map<String, dynamic>> getDone = List.empty(growable: true);
 
   lt.LatLng? _initialCameraPosition = lt.LatLng(14.7452, 121.0984);
   double finalRadius = 0;

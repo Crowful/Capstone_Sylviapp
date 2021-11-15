@@ -27,8 +27,13 @@ import 'package:sylviapp_project/screens/layout_screen.dart';
 import 'package:sylviapp_project/screens/campaign_module/map.dart';
 import 'package:sylviapp_project/screens/settings_module/settings.dart';
 import 'package:sylviapp_project/translations/codegen_loader.g.dart';
+import 'package:flutter/services.dart';
 
 Future<void> main() async {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await EasyLocalization.ensureInitialized();
