@@ -14,9 +14,16 @@ class _StatusRoleScreenState extends State<StatusRoleScreen> {
         child: Scaffold(
       body: Center(
         child: Container(
-          color: Color(0xff65BFB8),
+          margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Text(
-              "You are already verified, please enjoy the features of being an Organizer!"),
+            "You are already verified, please enjoy the features of being an Organizer!",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+                color: Color(
+                  0xff65BFB8,
+                )),
+          ),
         ),
       ),
     ));

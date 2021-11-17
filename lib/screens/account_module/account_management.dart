@@ -350,7 +350,10 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                             radius: 25,
                             backgroundColor: Color(0xffFFD337),
                             child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, '/recent_activity');
+                                },
                                 icon: Icon(Icons.restore, color: Colors.white)),
                           ),
                           SizedBox(
