@@ -181,6 +181,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                     .signOut();
                                 await Navigator.pushNamed(
                                     context, "/wrapperAuth");
+                                dispose();
                               },
                               child: Text("yes")),
                         ],
