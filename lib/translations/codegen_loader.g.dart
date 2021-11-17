@@ -19,7 +19,7 @@ class CodegenLoader extends AssetLoader {
     'love': "I love you",
     'Dark Mode': "Dark Mode",
     'changeLanguage': 'Change Language',
-    'privacy': 'Privacy',
+    'privacy': 'Privacy Policy',
     'help': 'Help',
     'aboutus': 'About us',
     'sendfeedback': 'Send Feedback',

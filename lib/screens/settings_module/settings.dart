@@ -127,69 +127,84 @@ class SettingsPage extends ConsumerWidget {
                 ),
               ),
               Divider(),
-              Container(
-                height: 30,
-                padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                width: width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text.rich(TextSpan(children: [
-                      WidgetSpan(
-                          child: Icon(
-                        Icons.privacy_tip,
-                        size: 17,
-                      )),
-                      TextSpan(
-                        text: '    ' + LocaleKeys.privacy.tr(),
-                      )
-                    ])),
-                  ],
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/privacy');
+                },
+                child: Container(
+                  height: 30,
+                  padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                  width: width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text.rich(TextSpan(children: [
+                        WidgetSpan(
+                            child: Icon(
+                          Icons.privacy_tip,
+                          size: 17,
+                        )),
+                        TextSpan(
+                          text: '    ' + LocaleKeys.privacy.tr(),
+                        )
+                      ])),
+                    ],
+                  ),
                 ),
               ),
               Divider(),
-              Container(
-                height: 30,
-                padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                width: width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text.rich(TextSpan(children: [
-                      WidgetSpan(
-                          child: Icon(
-                        Icons.info_rounded,
-                        size: 17,
-                      )),
-                      TextSpan(
-                        text: '    ' + LocaleKeys.aboutus.tr(),
-                      )
-                    ])),
-                  ],
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/aboutus');
+                },
+                child: Container(
+                  height: 30,
+                  padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                  width: width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text.rich(TextSpan(children: [
+                        WidgetSpan(
+                            child: Icon(
+                          Icons.info_rounded,
+                          size: 17,
+                        )),
+                        TextSpan(
+                          text: '    ' + LocaleKeys.aboutus.tr(),
+                        )
+                      ])),
+                    ],
+                  ),
                 ),
               ),
               Divider(),
-              Container(
-                height: 30,
-                padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                width: width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text.rich(TextSpan(children: [
-                      WidgetSpan(
-                          child: Icon(
-                        Icons.feedback,
-                        color: Colors.red,
-                        size: 17,
-                      )),
-                      TextSpan(
-                          text: '    ' + LocaleKeys.sendfeedback.tr(),
-                          style: TextStyle(
-                            color: Colors.red,
-                          ))
-                    ])),
-                  ],
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/sendfeedback');
+                },
+                child: Container(
+                  height: 30,
+                  padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                  width: width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text.rich(TextSpan(children: [
+                        WidgetSpan(
+                            child: Icon(
+                          Icons.feedback,
+                          color: Colors.red,
+                          size: 17,
+                        )),
+                        TextSpan(
+                            text: '    ' + LocaleKeys.sendfeedback.tr(),
+                            style: TextStyle(
+                              color: Colors.red,
+                            ))
+                      ])),
+                    ],
+                  ),
                 ),
               ),
             ],

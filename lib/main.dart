@@ -26,6 +26,9 @@ import 'package:sylviapp_project/screens/account_module/register.dart';
 import 'package:sylviapp_project/screens/donation_module/donation_screen.dart';
 import 'package:sylviapp_project/screens/layout_screen.dart';
 import 'package:sylviapp_project/screens/campaign_module/map.dart';
+import 'package:sylviapp_project/screens/settings_module/aboutus.dart';
+import 'package:sylviapp_project/screens/settings_module/privacy.dart';
+import 'package:sylviapp_project/screens/settings_module/sendfeedback.dart';
 import 'package:sylviapp_project/screens/settings_module/settings.dart';
 import 'package:sylviapp_project/translations/codegen_loader.g.dart';
 import 'package:flutter/services.dart';
@@ -90,6 +93,9 @@ class MyApp extends ConsumerWidget {
             ),
         '/add_money': (_) => AddmoneyScreen(),
         '/wrapperCatchSignup': (_) => SignupDomain(),
+        '/privacy': (_) => PrivacyScreen(),
+        '/aboutus': (_) => AboutUsScreen(),
+        '/sendfeedback': (_) => SendFeedbackScreen(),
       },
     );
   }
