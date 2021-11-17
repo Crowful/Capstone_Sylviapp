@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/src/provider.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/screens/account_module/forgot_password.dart';
 import 'package:sylviapp_project/screens/account_module/register.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -300,6 +301,24 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                     ),
                   ),
+                ),
+                Center(
+                  child: RichText(
+                      text: TextSpan(text: 'Forgot Password?', children: [
+                    TextSpan(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ForgotPasswordScreen()));
+                          },
+                        text: ' Click here.',
+                        style: TextStyle(
+                            color: Color(0xff2b2b2b),
+                            fontWeight: FontWeight.w500)),
+                  ])),
                 ),
               ],
             ),
