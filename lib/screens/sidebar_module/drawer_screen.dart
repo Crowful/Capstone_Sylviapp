@@ -175,9 +175,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
                               },
                               child: Text("no")),
                           CupertinoDialogAction(
-                              onPressed: () {
-                                context.read(authserviceProvider).signOut();
-                                Navigator.pushNamed(context, "/wrapperAuth");
+                              onPressed: () async {
+                                await context
+                                    .read(authserviceProvider)
+                                    .signOut();
+                                await Navigator.pushNamed(
+                                    context, "/wrapperAuth");
                               },
                               child: Text("yes")),
                         ],

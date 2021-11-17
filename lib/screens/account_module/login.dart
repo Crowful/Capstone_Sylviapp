@@ -303,23 +303,18 @@ class _LoginScreenState extends State<LoginScreen>
                   ),
                 ),
                 Center(
-                  child: RichText(
-                      text: TextSpan(text: 'Forgot Password?', children: [
-                    TextSpan(
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ForgotPasswordScreen()));
-                          },
-                        text: ' Click here.',
-                        style: TextStyle(
-                            color: Color(0xff2b2b2b),
-                            fontWeight: FontWeight.w500)),
-                  ])),
-                ),
+                    child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ForgotPasswordScreen()));
+                  },
+                  child: Text('Forgot Password',
+                      style: TextStyle(
+                          color: Color(0xff2b2b2b),
+                          fontWeight: FontWeight.w500)),
+                )),
               ],
             ),
           ),
