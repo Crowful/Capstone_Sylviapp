@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:sylviapp_project/providers/providers.dart';
-import 'package:sylviapp_project/screens/campaign_module/new_map.dart';
 import 'package:sylviapp_project/translations/locale_keys.g.dart';
 
 class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, watch) {
+    String _chosenValue = "";
+    onLanguageChange() async {
+      if (_chosenValue == "Filipino") {
+        await context.setLocale(Locale('fil'));
+      } else if (_chosenValue == "English") {
+        await context.setLocale(Locale('en'));
+      }
+    }
+
     final isDark = watch(themingProvider);
     final width = MediaQuery.of(context).size.width;
 
@@ -16,7 +23,43 @@ class SettingsPage extends ConsumerWidget {
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Color(0xff65BFB8),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  color: Color(0xff403d55),
+                ),
+                Text(
+                  'Sylviapp',
+                  style: TextStyle(
+                      color: Color(0xff65BFB8),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  icon: Icon(Icons.bookmark_outline),
+                  onPressed: () {},
+                  color: Colors.transparent,
+                ),
+              ]),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  "Settings",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
               Container(
                 height: 35,
                 padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
@@ -31,15 +74,15 @@ class SettingsPage extends ConsumerWidget {
                         size: 18,
                       )),
                       TextSpan(
-                          text: "    " + LocaleKeys.DarkMode.tr(),
-                          style: GoogleFonts.openSans())
+                        text: "    " + LocaleKeys.DarkMode.tr(),
+                      )
                     ])),
                     Switch(
                         value: isDark.darkTheme,
                         onChanged: (value) {
                           context.read(themingProvider).toggleTheme();
                         },
-                        activeTrackColor: Colors.green[400],
+                        activeTrackColor: Color(0xff65BFB8),
                         activeColor: Colors.white),
                   ],
                 ),
@@ -59,58 +102,27 @@ class SettingsPage extends ConsumerWidget {
                         size: 17,
                       )),
                       TextSpan(
-                          text: '    ' + LocaleKeys.changeLanguage.tr(),
-                          style: GoogleFonts.openSans())
+                        text: '    ' + LocaleKeys.changeLanguage.tr(),
+                      )
                     ])),
-                    Row(children: [
-                      ElevatedButton(
-                          onPressed: () async {
-                            await context.setLocale(Locale('fil'));
-                          },
-                          child: Text('Filipino')),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      ElevatedButton(
-                          onPressed: () async {
-                            await context.setLocale(Locale('en'));
-                          },
-                          child: Text('English')),
-                    ])
-                    // DropdownButton<String>(
-                    //   value: dropdownValue,
-                    //   icon: Icon(
-                    //     Icons.arrow_downward,
-                    //     color: isDark.darkTheme ? Colors.white : Colors.black,
-                    //   ),
-                    //   style: GoogleFonts.openSans(),
-                    //   underline: Container(
-                    //     height: 0,
-                    //   ),
-                    //   items: <String>['English', 'Tagalog']
-                    //       .map<DropdownMenuItem<String>>((String value) {
-                    //     return DropdownMenuItem(
-                    //       child: Text(
-                    //         value,
-                    //         style: GoogleFonts.openSans(
-                    //             color: isDark.darkTheme
-                    //                 ? Colors.white
-                    //                 : Colors.black),
-                    //       ),
-                    //       value: value,
-                    //     );
-                    //   }).toList(),
-                    //   onChanged: (newValues) async {
-                    //     var tag = "Tagalog";
-                    //     if (tag == "Tagalog") {
-                    //       context.read(languageProvider).toggleLang();
-                    //       await context.setLocale(Locale('fil'));
-                    //     } else if (tag == "English") {
-                    //       context.read(languageProvider).toggleLang();
-                    //       await context.setLocale(Locale('en'));
-                    //     }
-                    //   },
-                    // )
+                    DropdownButton<String>(
+                      // ignore: unrelated_type_equality_checks
+                      value: null,
+                      style: const TextStyle(color: Colors.white),
+                      items: <String>['Filipino', 'English']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? value) async {
+                        _chosenValue = value!;
+                        onLanguageChange();
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -129,29 +141,8 @@ class SettingsPage extends ConsumerWidget {
                         size: 17,
                       )),
                       TextSpan(
-                          text: '    ' + LocaleKeys.privacy.tr(),
-                          style: GoogleFonts.openSans())
-                    ])),
-                  ],
-                ),
-              ),
-              Divider(),
-              Container(
-                height: 30,
-                padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                width: width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text.rich(TextSpan(children: [
-                      WidgetSpan(
-                          child: Icon(
-                        Icons.help,
-                        size: 17,
-                      )),
-                      TextSpan(
-                          text: '    ' + LocaleKeys.help.tr(),
-                          style: GoogleFonts.openSans())
+                        text: '    ' + LocaleKeys.privacy.tr(),
+                      )
                     ])),
                   ],
                 ),
@@ -171,8 +162,8 @@ class SettingsPage extends ConsumerWidget {
                         size: 17,
                       )),
                       TextSpan(
-                          text: '    ' + LocaleKeys.aboutus.tr(),
-                          style: GoogleFonts.openSans())
+                        text: '    ' + LocaleKeys.aboutus.tr(),
+                      )
                     ])),
                   ],
                 ),
@@ -194,54 +185,13 @@ class SettingsPage extends ConsumerWidget {
                       )),
                       TextSpan(
                           text: '    ' + LocaleKeys.sendfeedback.tr(),
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
                             color: Colors.red,
                           ))
                     ])),
                   ],
                 ),
               ),
-              Text(LocaleKeys.greetings.tr()),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, "/login");
-                },
-                child: Text('Go to Login'),
-                style: ButtonStyle(),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, "/home");
-                  },
-                  child: Text('try home')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, "/welcome");
-                  },
-                  child: Text('try welcome')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(
-                        context, "/try_organizer_monitor");
-                  },
-                  child: Text('try_organizer_monitor')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(
-                        context, "/try_volunteer_monitor");
-                  },
-                  child: Text('try_volunteer_monitor')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, "/onboarding");
-                  },
-                  child: Text('try onboarding')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MapCampaign()));
-                  },
-                  child: Text('try map'))
             ],
           ),
         ),
