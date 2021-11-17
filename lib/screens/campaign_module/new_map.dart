@@ -162,25 +162,26 @@ class _MapCampaignState extends State<MapCampaign>
               bool isVerified = data!['isVerify'];
               Widget add() {
                 return SizedBox(
-                  child: AbsorbPointer(
-                    absorbing: isVerified ? true : false,
-                    child: FloatingActionButton(
-                      heroTag: "herotag1",
-                      backgroundColor:
-                          isVerified ? Color(0xff65BFB8) : Colors.grey,
-                      onPressed: () {
-                        print(createMode);
-                        setState(() {
-                          if (isVerified == true) {
-                            createMode = !createMode;
+                  child: FloatingActionButton(
+                    heroTag: "herotag1",
+                    backgroundColor:
+                        isVerified ? Color(0xff65BFB8) : Colors.grey,
+                    onPressed: () {
+                      print(createMode);
+                      setState(() {
+                        if (isVerified == true) {
+                          createMode = !createMode;
+
+                          if (createMode == true) {
+                            Fluttertoast.showToast(msg: "In create mode.");
                           } else {
                             Fluttertoast.showToast(
-                                msg: "Please verify your account first");
+                                msg: "Disabled create mode.");
                           }
-                        });
-                      },
-                      child: Icon(Icons.add),
-                    ),
+                        }
+                      });
+                    },
+                    child: Icon(Icons.add),
                   ),
                 );
               }
@@ -195,6 +196,7 @@ class _MapCampaignState extends State<MapCampaign>
                         backgroundColor: Color(0xff65BFB8),
                         onPressed: () {
                           setState(() {
+                            print(isVerified);
                             showForest = !showForest;
                           });
                         },
@@ -443,7 +445,7 @@ class _MapCampaignState extends State<MapCampaign>
                                                                       } else {
                                                                         Fluttertoast.showToast(
                                                                             msg:
-                                                                                "You are not verified yet, please submit application first.");
+                                                                                "Please go into create mode before proceeding.");
                                                                       }
                                                                     },
                                                                     center: _initialCameraPosition,
@@ -673,63 +675,72 @@ class _MapCampaignState extends State<MapCampaign>
                                               ),
                                             ),
                                           ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                showForest = !showForest;
-                                                cntrler.move(
-                                                    lt.LatLng(
-                                                        14.7452, 121.0984),
-                                                    13);
-                                              });
-                                            },
-                                            child: Card(
-                                              elevation: 5,
-                                              child: Container(
-                                                height: 50,
-                                                width: 100,
-                                                decoration: BoxDecoration(
-                                                    color: Color(0xff65BFB8)),
-                                                child: Center(
-                                                    child: Text(
-                                                  "Lamesa Forest",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )),
+                                          AbsorbPointer(
+                                            absorbing:
+                                                showForest ? false : true,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  showForest = !showForest;
+                                                  cntrler.move(
+                                                      lt.LatLng(
+                                                          14.7452, 121.0984),
+                                                      13);
+                                                });
+                                              },
+                                              child: Card(
+                                                elevation: 5,
+                                                child: Container(
+                                                  height: 50,
+                                                  width: 100,
+                                                  decoration: BoxDecoration(
+                                                      color: Color(0xff65BFB8)),
+                                                  child: Center(
+                                                      child: Text(
+                                                    "Lamesa Forest",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  )),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                showForest = !showForest;
-                                                cntrler.move(
-                                                    lt.LatLng(
-                                                        15.780574, 121.121838),
-                                                    13);
-                                              });
-                                            },
-                                            child: Card(
-                                              elevation: 5,
-                                              child: Container(
-                                                padding: EdgeInsets.all(5),
-                                                height: 50,
-                                                width: 100,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(2)),
-                                                    color: Color(0xff65BFB8)),
-                                                child: Center(
-                                                    child: Text(
-                                                        "Pantabangan Forest",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                        overflow: TextOverflow
-                                                            .visible)),
+                                          AbsorbPointer(
+                                            absorbing:
+                                                showForest ? false : true,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  showForest = !showForest;
+                                                  cntrler.move(
+                                                      lt.LatLng(15.780574,
+                                                          121.121838),
+                                                      13);
+                                                });
+                                              },
+                                              child: Card(
+                                                elevation: 5,
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5),
+                                                  height: 50,
+                                                  width: 100,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  2)),
+                                                      color: Color(0xff65BFB8)),
+                                                  child: Center(
+                                                      child: Text(
+                                                          "Pantabangan Forest",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                          overflow: TextOverflow
+                                                              .visible)),
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -747,9 +758,14 @@ class _MapCampaignState extends State<MapCampaign>
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Container(
+                                          height: 500,
                                           width: 50,
                                           color: Colors.transparent,
                                           child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
                                             children: [
                                               Transform(
                                                 transform:
