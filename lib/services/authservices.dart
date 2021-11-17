@@ -158,13 +158,125 @@ class AuthService extends ChangeNotifier {
 
   Future resetPass(String email) async {
     try {
-      await _auth
-          .sendPasswordResetEmail(email: email)
-          .whenComplete(() => print("Successully Sent"));
+      await _auth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
-      print(e.message);
+      switch (e.code) {
+        case "unknown":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "invalid-email":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "missing-android-pkg-name":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "missing-continue-uri":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "missing-ios-bundle-id":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "unauthorized-continue-uri":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "user-not-found":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+      }
     } on PlatformException catch (e) {
-      print(e.message);
+      switch (e.code) {
+        case "unknown":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "invalid-email":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "missing-android-pkg-name":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "missing-continue-uri":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "missing-ios-bundle-id":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "unauthorized-continue-uri":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "user-not-found":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+      }
     }
   }
 
@@ -174,9 +286,27 @@ class AuthService extends ChangeNotifier {
           .deleteUserData()
           .whenComplete(() => _loggedInUser!.delete());
     } on FirebaseAuthException catch (e) {
-      print(e.message);
+      switch (e.code) {
+        case "email-already-in-use":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+      }
     } on PlatformException catch (e) {
-      print(e.message);
+      switch (e.code) {
+        case "email-already-in-use":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+      }
     }
   }
 
