@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
@@ -415,48 +416,96 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       SizedBox(
                         height: 15,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          showCupertinoDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return CupertinoAlertDialog(
-                                  title: Text(
-                                      "Are You sure you want to Delete your account?"),
-                                  content: Text(
-                                      "There's no turning back once this deletion is done."),
-                                  actions: [
-                                    CupertinoDialogAction(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("no")),
-                                    CupertinoDialogAction(
-                                        onPressed: () async {
-                                          await context
-                                              .read(authserviceProvider)
-                                              .deleteAcc()
-                                              .whenComplete(() => context
-                                                  .read(authserviceProvider)
-                                                  .signOut());
-
-                                          await Navigator.of(context)
-                                              .pushNamedAndRemoveUntil(
-                                                  '/login',
-                                                  (Route<dynamic> route) =>
-                                                      false);
-                                        },
-                                        child: Text("yes")),
-                                  ],
-                                );
-                              });
-                        },
-                        child: Text('Delete Account',
-                            style: TextStyle(
-                                color: Colors.orange,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15)),
-                      ),
+                      StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('campaigns')
+                              .where('uid',
+                                  isEqualTo: context
+                                      .read(authserviceProvider)
+                                      .getCurrentUserUID())
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            var numberOfCampaigns = snapshot.hasData
+                                ? snapshot.data!.docs.length
+                                : 0;
+                            return GestureDetector(
+                              onTap: () {
+                                showCupertinoDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CupertinoAlertDialog(
+                                        title: Text(
+                                            "Are You sure you want to Delete your account?"),
+                                        content: Text(
+                                            "There's no turning back once this deletion is done."),
+                                        actions: [
+                                          CupertinoDialogAction(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("no")),
+                                          CupertinoDialogAction(
+                                              onPressed: () async {
+                                                if (numberOfCampaigns > 0) {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          'you have have campaigns to finish, you cannot delete your account');
+                                                } else {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        TextEditingController
+                                                            emailReAuthController =
+                                                            TextEditingController();
+                                                        TextEditingController
+                                                            passwordReAuthController =
+                                                            TextEditingController();
+                                                        return Container(
+                                                          margin: EdgeInsets
+                                                              .fromLTRB(50, 100,
+                                                                  50, 200),
+                                                          child: Card(
+                                                            child: Column(
+                                                              children: [
+                                                                TextField(
+                                                                  controller:
+                                                                      emailReAuthController,
+                                                                ),
+                                                                TextField(
+                                                                  controller:
+                                                                      passwordReAuthController,
+                                                                ),
+                                                                ElevatedButton(
+                                                                    onPressed:
+                                                                        () async {
+                                                                      await context.read(authserviceProvider).deleteAcc(
+                                                                          emailReAuthController
+                                                                              .text,
+                                                                          passwordReAuthController
+                                                                              .text,
+                                                                          context);
+                                                                    },
+                                                                    child: Text(
+                                                                        'Delete'))
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        );
+                                                      });
+                                                }
+                                              },
+                                              child: Text("yes")),
+                                        ],
+                                      );
+                                    });
+                              },
+                              child: Text('Delete Account',
+                                  style: TextStyle(
+                                      color: Colors.orange,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15)),
+                            );
+                          }),
                       SizedBox(
                         height: 15,
                       ),

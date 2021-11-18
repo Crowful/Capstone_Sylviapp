@@ -281,14 +281,72 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  Future deleteAcc() async {
+  Future deleteAcc(String email, String password, context) async {
     try {
-      await _loggedInUser!.delete().whenComplete(() {
-        DatabaseService(uid: _loggedInUser!.uid).deleteUserData();
-      });
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      var credential =
+          EmailAuthProvider.credential(email: email, password: password);
+      await _loggedInUser!
+          .reauthenticateWithCredential(credential)
+          .then((value) => {
+                _loggedInUser!.delete().then((value) {
+                  Navigator.pushNamed(context, '/wrapperAuth');
+                  DatabaseService(uid: _loggedInUser!.uid).deleteUserData();
+                })
+              });
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "requires-recent-login":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "user-mismatch":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "invalid-credential":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "invalid-email":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "wrong-password":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "invalid-verification-code":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "invalid_verification_id":
           Fluttertoast.showToast(
               toastLength: Toast.LENGTH_LONG,
               msg: e.message.toString(),
@@ -300,6 +358,54 @@ class AuthService extends ChangeNotifier {
     } on PlatformException catch (e) {
       switch (e.code) {
         case "requires-recent-login":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "user-mismatch":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "invalid-credential":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "invalid-email":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "wrong-password":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "invalid-verification-code":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "invalid_verification_id":
           Fluttertoast.showToast(
               toastLength: Toast.LENGTH_LONG,
               msg: e.message.toString(),

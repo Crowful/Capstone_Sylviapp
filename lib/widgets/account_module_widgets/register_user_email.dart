@@ -86,6 +86,7 @@ class _UserRegPageState extends State<UserRegPage>
   @override
   void dispose() {
     _animationController.dispose();
+    _widgetController.dispose();
     super.dispose();
   }
 
