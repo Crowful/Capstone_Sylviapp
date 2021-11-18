@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +14,22 @@ class SendFeedbackScreen extends StatefulWidget {
 
 class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
   TextEditingController _feedbackController = TextEditingController();
+
+  String nameOfUser = "";
+
+  @override
+  void initState() {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(context.read(authserviceProvider).getCurrentUserUID())
+        .get()
+        .then((value) {
+      setState(() {
+        nameOfUser = value.get('fullname');
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +72,7 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
                   } else {
                     context
                         .read(authserviceProvider)
-                        .addFeedback(_feedbackController.text);
+                        .addFeedback(_feedbackController.text, nameOfUser);
                     _feedbackController.clear();
                   }
                 },
