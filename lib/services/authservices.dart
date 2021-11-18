@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
+import 'package:sylviapp_project/widgets/account_module_widgets/verification/verification_finalScreen.dart';
 import 'database_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -575,13 +576,21 @@ class AuthService extends ChangeNotifier {
       String reasonForApplication,
       String doHaveExperience,
       bool isVerify,
-      bool verified) async {
+      bool verified,
+      context) async {
     try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
       await DatabaseService(uid: _loggedInUser!.uid)
           .saveVerification(validIDUrl, idNumber, pictureURL,
               reasonForApplication, doHaveExperience, verified)
-          .whenComplete(() => Fluttertoast.showToast(
-              msg: "Application for Organizer is Successfully sent"));
+          .then((value) {
+        Fluttertoast.showToast(
+            msg: "Application for Organizer is Successfully sent");
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => VerificationFinalScreen()));
+      });
 
       await DatabaseService(uid: _loggedInUser!.uid).updateApplication();
     } catch (e) {
