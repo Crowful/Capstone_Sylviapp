@@ -63,6 +63,9 @@ class _MapCampaignState extends State<MapCampaign>
     ),
   ));
   bool showForest = false;
+  bool showActive = false;
+  bool showInProgress = false;
+  bool showInactive = false;
   bool showLatLng = false;
   bool showLayers = false;
   int numSeeds = 0;
@@ -237,11 +240,11 @@ class _MapCampaignState extends State<MapCampaign>
                   body: Container(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
-                    child: StreamBuilder<DocumentSnapshot>(
-                        stream: FirebaseFirestore.instance
+                    child: FutureBuilder<DocumentSnapshot>(
+                        future: FirebaseFirestore.instance
                             .collection('quarantineStatus')
                             .doc('status')
-                            .snapshots(),
+                            .get(),
                         builder: (context, statusSnapshot) {
                           if (!statusSnapshot.hasData) {
                             return CircularProgressIndicator();
@@ -505,15 +508,33 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                 borderColor: Colors.green,
                                                                                 borderStrokeWidth: 1),
                                                                           ]),
-                                                                      if (showLayers) ...[
+                                                                      for (var info
+                                                                          in existingCampaign)
+                                                                        fmap.CircleLayerOptions(
+                                                                            circles: [
+                                                                              fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: info.values.elementAt(2), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2)),
+                                                                            ]),
+                                                                      for (var info
+                                                                          in existingCampaign)
+                                                                        fmap.MarkerLayerOptions(
+                                                                            markers: [
+                                                                              fmap.Marker(
+                                                                                  width: 120,
+                                                                                  point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
+                                                                                  builder: (context) {
+                                                                                    return GestureDetector(
+                                                                                        onTap: () {
+                                                                                          Navigator.push(context, MaterialPageRoute(builder: (context) => JoinDonateCampaign(uidOfCampaign: info.values.elementAt(3), uidOfOrganizer: info.values.elementAt(4), nameOfCampaign: info.values.elementAt(6), city: info.values.elementAt(7), currentFund: info.values.elementAt(8), currentVolunteer: info.values.elementAt(9), maxFund: info.values.elementAt(10), totalVolunteer: info.values.elementAt(11), address: info.values.elementAt(5), description: info.values.elementAt(12))));
+                                                                                        },
+                                                                                        child: Icon(
+                                                                                          Icons.ac_unit,
+                                                                                          color: Colors.transparent,
+                                                                                        ));
+                                                                                  })
+                                                                            ]),
+                                                                      if (showActive) ...[
                                                                         for (var info
-                                                                            in existingCampaign)
-                                                                          fmap.CircleLayerOptions(
-                                                                              circles: [
-                                                                                fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: info.values.elementAt(2), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2)),
-                                                                              ]),
-                                                                        for (var info
-                                                                            in existingCampaign)
+                                                                            in getActive)
                                                                           fmap.MarkerLayerOptions(
                                                                               markers: [
                                                                                 fmap.Marker(
@@ -562,8 +583,12 @@ class _MapCampaignState extends State<MapCampaign>
                                 Align(
                                   alignment: Alignment.topRight,
                                   child: Padding(
-                                    padding: EdgeInsets.all(10),
+                                    padding: const EdgeInsets.all(10.0),
                                     child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         IconButton(
                                             onPressed: () {
@@ -581,9 +606,13 @@ class _MapCampaignState extends State<MapCampaign>
                                             duration:
                                                 Duration(milliseconds: 300),
                                             child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
                                               children: [
-                                                IconButton(
-                                                    onPressed: () {
+                                                GestureDetector(
+                                                    onTap: () {
                                                       setState(() {
                                                         FirebaseFirestore
                                                             .instance
@@ -613,16 +642,59 @@ class _MapCampaignState extends State<MapCampaign>
                                                             !showLatLng;
                                                       });
                                                     },
-                                                    icon: Icon(
-                                                      Icons.trip_origin_sharp,
-                                                      size: 30,
-                                                    )),
-                                                IconButton(
-                                                    onPressed: () {},
-                                                    icon: Icon(
-                                                      Icons.layers,
-                                                      size: 30,
-                                                    )),
+                                                    child: Text(
+                                                        'Show Volunteers',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 17,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .cardColor))),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              'campaigns')
+                                                          .where('isActive',
+                                                              isEqualTo: true)
+                                                          .get()
+                                                          .then((element) {
+                                                        element.docs.forEach(
+                                                            (elements) {
+                                                          getActive.add({
+                                                            "latitude":
+                                                                elements[
+                                                                    'latitude'],
+                                                            "longitude":
+                                                                elements[
+                                                                    'longitude'],
+                                                            "volunteer": elements[
+                                                                    'number_volunteers']
+                                                                as int,
+                                                            "campaignID":
+                                                                elements[
+                                                                    'campaignID']
+                                                          });
+                                                        });
+                                                      });
+                                                      showLatLng = !showLatLng;
+                                                    });
+                                                  },
+                                                  child: Text(
+                                                      'Active Campaigns',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 17,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .cardColor)),
+                                                )
                                               ],
                                             ))
                                       ],
