@@ -9,6 +9,7 @@ ThemeData light = ThemeData(
     scaffoldBackgroundColor: Colors.white,
     hintColor: AppColor.textColor,
     primaryColorLight: AppColor.buttonBackgroundColor,
+    cardColor: Colors.white,
     textTheme: TextTheme(
         headline2: TextStyle(
             color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400),
@@ -22,6 +23,7 @@ ThemeData dark = ThemeData(
     backgroundColor: AppColor.bodyColorDark,
     scaffoldBackgroundColor: AppColor.bodyColorDark,
     dialogBackgroundColor: AppColor.dialogColorDark,
+    cardColor: AppColor.dialogColorDark,
     hintColor: AppColor.textColor,
     primaryColorLight: AppColor.buttonBackgroundColorDark,
     textTheme: TextTheme(

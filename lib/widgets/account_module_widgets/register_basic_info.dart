@@ -233,6 +233,8 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                                       topRight: Radius.circular(15))),
                               width: double.infinity,
                               child: TextField(
+                                style: TextStyle(
+                                    color: Theme.of(context).cardColor),
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(30)
                                 ],
@@ -308,6 +310,8 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                                       topRight: Radius.circular(15))),
                               width: double.infinity,
                               child: TextField(
+                                style: TextStyle(
+                                    color: Theme.of(context).cardColor),
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(60)
                                 ],
@@ -343,6 +347,8 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                                       topRight: Radius.circular(15))),
                               width: double.infinity,
                               child: TextField(
+                                style: TextStyle(
+                                    color: Theme.of(context).cardColor),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(11)

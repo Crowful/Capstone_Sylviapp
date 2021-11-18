@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sylviapp_project/providers/providers.dart';
-import 'package:sylviapp_project/screens/campaign_module/map.dart';
 import 'package:sylviapp_project/screens/campaign_module/mapviewonly.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sylviapp_project/screens/campaign_module/new_map.dart';
 
 class WrapperMap extends StatefulWidget {
   const WrapperMap({Key? key}) : super(key: key);
@@ -29,7 +29,7 @@ class _WrapperMapState extends State<WrapperMap> {
           } else {
             bool status = snapshot.data!.get('isVerify');
             if (status == true) {
-              return MapScreen();
+              return MapCampaign();
             } else {
               return MapViewOnly();
             }

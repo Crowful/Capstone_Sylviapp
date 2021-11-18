@@ -60,6 +60,7 @@ dependencies:
   flutter_google_places: ^0.3.0
   geocoding: ^2.0.1
   flutter_map: ^0.14.0
+  simple_shadow: ^0.2.0
 
 
 dev_dependencies:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sylviapp_project/Domain/theme&language_notifier.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 
 class SliderWidget extends StatefulWidget {
@@ -46,8 +47,8 @@ class _SliderWidgetState extends State<SliderWidget> {
           ),
         ],
         borderRadius: BorderRadius.only(topLeft: Radius.circular(50)),
+        color: Theme.of(context).cardColor,
         shape: BoxShape.rectangle,
-        color: Colors.white,
       ),
       child: PageView(
         scrollDirection: Axis.horizontal,

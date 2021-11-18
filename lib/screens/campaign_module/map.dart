@@ -328,7 +328,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
         final radiusProvider = watch(mapProvider);
         int finalVolunteers = radiusProvider.volunteersRequired;
         int finalSeeds = radiusProvider.seedsRequired;
-        int finalFund = radiusProvider.fundRequired;
+        double finalFund = radiusProvider.fundRequired;
         finalRadius = radiusProvider.valueRadius;
         return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
             future: FirebaseFirestore.instance

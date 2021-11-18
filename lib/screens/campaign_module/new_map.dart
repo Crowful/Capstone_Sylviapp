@@ -6,10 +6,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as fmap;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:encrypt/encrypt.dart' as enc;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:latlong2/latlong.dart' as lt;
@@ -25,6 +24,8 @@ class MapCampaign extends StatefulWidget {
 
 class _MapCampaignState extends State<MapCampaign>
     with TickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _keyMap = GlobalKey<ScaffoldState>();
+
   late AnimationController controller =
       AnimationController(vsync: this, duration: Duration(milliseconds: 500));
 
@@ -65,8 +66,8 @@ class _MapCampaignState extends State<MapCampaign>
   bool showLatLng = false;
   bool showLayers = false;
   int numSeeds = 0;
-  double currentDonations = 10000.00;
-  double maxDonations = 10000.00;
+  double currentDonations = 0.00;
+  double maxDonations = 0.00;
   int currentVolunteers = 0;
   int numberVolunteers = 0;
   String title = "title test";
@@ -112,6 +113,12 @@ class _MapCampaignState extends State<MapCampaign>
   @override
   void initState() {
     super.initState();
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(context.read(authserviceProvider).getCurrentUserUID())
+        .get()
+        .then((value) => usernames = AESCryptography()
+            .decryptAES(enc.Encrypted.from64(value['username'])));
   }
 
   @override
@@ -147,7 +154,7 @@ class _MapCampaignState extends State<MapCampaign>
       final radiusProvider = watch(mapProvider);
       int finalVolunteers = radiusProvider.volunteersRequired;
       int finalSeeds = radiusProvider.seedsRequired;
-      int finalFund = radiusProvider.fundRequired;
+      double finalFund = radiusProvider.fundRequired;
       finalRadius = radiusProvider.valueRadius;
       return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
           future:
@@ -226,738 +233,759 @@ class _MapCampaignState extends State<MapCampaign>
               }
 
               return Scaffold(
+                  key: _keyMap,
                   body: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: StreamBuilder<DocumentSnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('quarantineStatus')
-                        .doc('status')
-                        .snapshots(),
-                    builder: (context, statusSnapshot) {
-                      if (!statusSnapshot.hasData) {
-                        return CircularProgressIndicator();
-                      } else {
-                        var status = statusSnapshot.data!.get('status');
-                        return Stack(
-                          children: [
-                            FutureBuilder<QuerySnapshot>(
-                                future: FirebaseFirestore.instance
-                                    .collection('polygon')
-                                    .doc('Lamesa_Forest')
-                                    .collection('polygons')
-                                    .get(),
-                                builder: (context, snapshotLamesa) {
-                                  if (!snapshotLamesa.hasData) {
-                                    return CircularProgressIndicator();
-                                  } else {
-                                    snapshotLamesa.data!.docs
-                                        .forEach((element) {
-                                      pointlist =
-                                          List<dynamic>.from(element['points']);
-                                    });
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: StreamBuilder<DocumentSnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('quarantineStatus')
+                            .doc('status')
+                            .snapshots(),
+                        builder: (context, statusSnapshot) {
+                          if (!statusSnapshot.hasData) {
+                            return CircularProgressIndicator();
+                          } else {
+                            var status = statusSnapshot.data!.get('status');
+                            return Stack(
+                              children: [
+                                FutureBuilder<QuerySnapshot>(
+                                    future: FirebaseFirestore.instance
+                                        .collection('polygon')
+                                        .doc('Lamesa_Forest')
+                                        .collection('polygons')
+                                        .get(),
+                                    builder: (context, snapshotLamesa) {
+                                      if (!snapshotLamesa.hasData) {
+                                        return CircularProgressIndicator();
+                                      } else {
+                                        snapshotLamesa.data!.docs
+                                            .forEach((element) {
+                                          pointlist = List<dynamic>.from(
+                                              element['points']);
+                                        });
 
-                                    for (var pts in pointlist) {
-                                      latlngpolygonlistLamesa.add(lt.LatLng(
-                                          pts["latitude"], pts["longitude"]));
-                                    }
+                                        for (var pts in pointlist) {
+                                          latlngpolygonlistLamesa.add(lt.LatLng(
+                                              pts["latitude"],
+                                              pts["longitude"]));
+                                        }
 
-                                    for (var pts in latlngpolygonlistLamesa) {
-                                      mtkPolygonLamesa.add(mtk.LatLng(
-                                          pts.latitude, pts.longitude));
-                                    }
-                                    return FutureBuilder<QuerySnapshot>(
-                                        future: FirebaseFirestore.instance
-                                            .collection('polygon')
-                                            .doc('Angat_Forest')
-                                            .collection('polygons')
-                                            .get(),
-                                        builder: (context, snapshotAngat) {
-                                          if (!snapshotAngat.hasData) {
-                                            return CircularProgressIndicator();
-                                          } else {
-                                            snapshotAngat.data!.docs
-                                                .forEach((element) {
-                                              pointlist = List<dynamic>.from(
-                                                  element['points']);
-                                            });
+                                        for (var pts
+                                            in latlngpolygonlistLamesa) {
+                                          mtkPolygonLamesa.add(mtk.LatLng(
+                                              pts.latitude, pts.longitude));
+                                        }
+                                        return FutureBuilder<QuerySnapshot>(
+                                            future: FirebaseFirestore.instance
+                                                .collection('polygon')
+                                                .doc('Angat_Forest')
+                                                .collection('polygons')
+                                                .get(),
+                                            builder: (context, snapshotAngat) {
+                                              if (!snapshotAngat.hasData) {
+                                                return CircularProgressIndicator();
+                                              } else {
+                                                snapshotAngat.data!.docs
+                                                    .forEach((element) {
+                                                  pointlist =
+                                                      List<dynamic>.from(
+                                                          element['points']);
+                                                });
 
-                                            for (var pts in pointlist) {
-                                              latlngpolygonlistAngat.add(
-                                                  lt.LatLng(pts["latitude"],
-                                                      pts["longitude"]));
-                                            }
+                                                for (var pts in pointlist) {
+                                                  latlngpolygonlistAngat.add(
+                                                      lt.LatLng(pts["latitude"],
+                                                          pts["longitude"]));
+                                                }
 
-                                            for (var pts
-                                                in latlngpolygonlistAngat) {
-                                              mtkPolygonAngat.add(mtk.LatLng(
-                                                  pts.latitude, pts.longitude));
-                                            }
-                                            return FutureBuilder<QuerySnapshot>(
-                                                future: FirebaseFirestore
-                                                    .instance
-                                                    .collection('polygon')
-                                                    .doc('Pantabangan_Forest')
-                                                    .collection('polygons')
-                                                    .get(),
-                                                builder: (context,
-                                                    snapshotPantabangan) {
-                                                  if (!snapshotPantabangan
-                                                      .hasData) {
-                                                    return CircularProgressIndicator();
-                                                  } else {
-                                                    snapshotAngat.data!.docs
-                                                        .forEach((element) {
-                                                      pointlist =
-                                                          List<dynamic>.from(
+                                                for (var pts
+                                                    in latlngpolygonlistAngat) {
+                                                  mtkPolygonAngat.add(
+                                                      mtk.LatLng(pts.latitude,
+                                                          pts.longitude));
+                                                }
+                                                return FutureBuilder<
+                                                        QuerySnapshot>(
+                                                    future: FirebaseFirestore
+                                                        .instance
+                                                        .collection('polygon')
+                                                        .doc(
+                                                            'Pantabangan_Forest')
+                                                        .collection('polygons')
+                                                        .get(),
+                                                    builder: (context,
+                                                        snapshotPantabangan) {
+                                                      if (!snapshotPantabangan
+                                                          .hasData) {
+                                                        return CircularProgressIndicator();
+                                                      } else {
+                                                        snapshotAngat.data!.docs
+                                                            .forEach((element) {
+                                                          pointlist = List<
+                                                                  dynamic>.from(
                                                               element[
                                                                   'points']);
-                                                    });
+                                                        });
 
-                                                    for (var pts in pointlist) {
-                                                      latlngpolygonlistPantabangan
-                                                          .add(lt.LatLng(
-                                                              pts["latitude"],
-                                                              pts["longitude"]));
-                                                    }
+                                                        for (var pts
+                                                            in pointlist) {
+                                                          latlngpolygonlistPantabangan
+                                                              .add(lt.LatLng(
+                                                                  pts["latitude"],
+                                                                  pts["longitude"]));
+                                                        }
 
-                                                    for (var pts
-                                                        in latlngpolygonlistPantabangan) {
-                                                      mtkPolygonPantabangan.add(
-                                                          mtk.LatLng(
-                                                              pts.latitude,
-                                                              pts.longitude));
-                                                    }
-                                                    return FutureBuilder<
-                                                            QuerySnapshot>(
-                                                        future:
-                                                            FirebaseFirestore
+                                                        for (var pts
+                                                            in latlngpolygonlistPantabangan) {
+                                                          mtkPolygonPantabangan
+                                                              .add(mtk.LatLng(
+                                                                  pts.latitude,
+                                                                  pts.longitude));
+                                                        }
+                                                        return FutureBuilder<
+                                                                QuerySnapshot>(
+                                                            future: FirebaseFirestore
                                                                 .instance
                                                                 .collection(
                                                                     'campaigns')
                                                                 .get(),
-                                                        builder: (context,
-                                                            snapshotCampaigns) {
-                                                          if (!snapshotCampaigns
-                                                              .hasData) {
-                                                            return CircularProgressIndicator();
-                                                          } else {
-                                                            snapshotCampaigns
-                                                                .data!.docs
-                                                                .forEach(
-                                                                    (element) {
-                                                              existingCampaign
-                                                                  .add({
-                                                                "latitude": element[
-                                                                    'latitude'],
-                                                                "longitude":
-                                                                    element[
-                                                                        'longitude'],
-                                                                "radius": element[
-                                                                        'radius'] *
-                                                                    10,
-                                                                "campaignUid":
-                                                                    element[
-                                                                        'campaignID'],
-                                                                "uid": element[
-                                                                    'uid'],
-                                                                "address": element[
-                                                                    'address'],
-                                                                "nameOfCampaign":
-                                                                    element[
-                                                                        'campaign_name'],
-                                                                "city": element[
-                                                                    'city'],
-                                                                "current_donations":
-                                                                    element[
-                                                                        'current_donations'],
-                                                                "current_volunteers":
-                                                                    element[
-                                                                        'current_volunteers'],
-                                                                "max_donation":
-                                                                    element[
-                                                                        'max_donation'],
-                                                                "number_volunteers":
-                                                                    element[
-                                                                        'number_volunteers'],
-                                                                "description":
-                                                                    element[
-                                                                        'description']
-                                                              });
-                                                            });
+                                                            builder: (context,
+                                                                snapshotCampaigns) {
+                                                              if (!snapshotCampaigns
+                                                                  .hasData) {
+                                                                return CircularProgressIndicator();
+                                                              } else {
+                                                                snapshotCampaigns
+                                                                    .data!.docs
+                                                                    .forEach(
+                                                                        (element) {
+                                                                  existingCampaign
+                                                                      .add({
+                                                                    "latitude":
+                                                                        element[
+                                                                            'latitude'],
+                                                                    "longitude":
+                                                                        element[
+                                                                            'longitude'],
+                                                                    "radius":
+                                                                        element['radius'] *
+                                                                            10,
+                                                                    "campaignUid":
+                                                                        element[
+                                                                            'campaignID'],
+                                                                    "uid": element[
+                                                                        'uid'],
+                                                                    "address":
+                                                                        element[
+                                                                            'address'],
+                                                                    "nameOfCampaign":
+                                                                        element[
+                                                                            'campaign_name'],
+                                                                    "city": element[
+                                                                        'city'],
+                                                                    "current_donations":
+                                                                        element[
+                                                                            'current_donations'],
+                                                                    "current_volunteers":
+                                                                        element[
+                                                                            'current_volunteers'],
+                                                                    "max_donation":
+                                                                        element[
+                                                                            'max_donation'],
+                                                                    "number_volunteers":
+                                                                        element[
+                                                                            'number_volunteers'],
+                                                                    "description":
+                                                                        element[
+                                                                            'description']
+                                                                  });
+                                                                });
 
-                                                            return fmap.FlutterMap(
-                                                                mapController: cntrler,
-                                                                options: fmap.MapOptions(
-                                                                    onLongPress: (tapPosition, latlng) {
-                                                                      if (createMode ==
-                                                                          true) {
-                                                                        if (status == "ECQ" ||
-                                                                            status ==
-                                                                                "MECQ" ||
-                                                                            status ==
-                                                                                "GCQ") {
-                                                                          Fluttertoast.showToast(
-                                                                              msg: "The area is still in lockdown.");
-                                                                        } else {
-                                                                          mtk.LatLng
-                                                                              latlngtoMTK =
-                                                                              mtk.LatLng(latlng.latitude, latlng.longitude);
-
-                                                                          List<mtk.LatLng>
-                                                                              mtkPolygonAngat =
-                                                                              List.empty(growable: true);
-                                                                          latlngpolygonlistAngat
-                                                                              .forEach((element) {
-                                                                            mtkPolygonAngat.add(mtk.LatLng(element.latitude,
-                                                                                element.longitude));
-                                                                          });
-
-                                                                          List<mtk.LatLng>
-                                                                              mtkPolygonPanbatanbangan =
-                                                                              List.empty(growable: true);
-                                                                          latlngpolygonlistPantabangan
-                                                                              .forEach((element) {
-                                                                            mtkPolygonPanbatanbangan.add(mtk.LatLng(element.latitude,
-                                                                                element.longitude));
-                                                                          });
-
-                                                                          isPointValid =
-                                                                              mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonLamesa, false) || mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonAngat, false);
-
-                                                                          if (isPointValid ==
+                                                                return fmap.FlutterMap(
+                                                                    mapController: cntrler,
+                                                                    options: fmap.MapOptions(
+                                                                        onTap: (tapPosition, latlngs) {},
+                                                                        onLongPress: (tapPosition, latlng) {
+                                                                          if (createMode ==
                                                                               true) {
-                                                                            setState(() {
-                                                                              print('gana e');
-                                                                              latitude = latlng.latitude;
+                                                                            if (status == "ECQ" ||
+                                                                                status == "MECQ" ||
+                                                                                status == "GCQ") {
+                                                                              Fluttertoast.showToast(msg: "The area is still in lockdown.");
+                                                                            } else {
+                                                                              mtk.LatLng latlngtoMTK = mtk.LatLng(latlng.latitude, latlng.longitude);
 
-                                                                              longitude = latlng.longitude;
-                                                                              testlatlng = latlng;
-                                                                              putCircle(finalRadius, latitude, longitude);
-                                                                              cntrler.move(lt.LatLng(latlng.latitude - 0.0050, latlng.longitude), 16);
-                                                                            });
-                                                                          } else if (isPointValid ==
-                                                                              false) {
-                                                                            print('ayaw e');
-                                                                            Fluttertoast.showToast(msg: "You cannot put campaign there");
+                                                                              List<mtk.LatLng> mtkPolygonAngat = List.empty(growable: true);
+                                                                              latlngpolygonlistAngat.forEach((element) {
+                                                                                mtkPolygonAngat.add(mtk.LatLng(element.latitude, element.longitude));
+                                                                              });
+
+                                                                              List<mtk.LatLng> mtkPolygonPanbatanbangan = List.empty(growable: true);
+                                                                              latlngpolygonlistPantabangan.forEach((element) {
+                                                                                mtkPolygonPanbatanbangan.add(mtk.LatLng(element.latitude, element.longitude));
+                                                                              });
+
+                                                                              isPointValid = mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonLamesa, false) || mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonAngat, false);
+
+                                                                              if (isPointValid == true) {
+                                                                                setState(() {
+                                                                                  print('gana e');
+                                                                                  latitude = latlng.latitude;
+
+                                                                                  longitude = latlng.longitude;
+                                                                                  testlatlng = latlng;
+                                                                                  putCircle(finalRadius, latitude, longitude);
+                                                                                  cntrler.move(lt.LatLng(latlng.latitude - 0.0050, latlng.longitude), 16);
+                                                                                });
+                                                                              } else if (isPointValid == false) {
+                                                                                print(isPointValid);
+                                                                                Fluttertoast.showToast(msg: "You cannot put campaign there");
+                                                                              }
+                                                                            }
+                                                                          } else {
+                                                                            Fluttertoast.showToast(msg: "Please go into create mode before proceeding.");
                                                                           }
-                                                                        }
-                                                                      } else {
-                                                                        Fluttertoast.showToast(
-                                                                            msg:
-                                                                                "Please go into create mode before proceeding.");
-                                                                      }
-                                                                    },
-                                                                    center: _initialCameraPosition,
-                                                                    zoom: 13),
-                                                                children: [
-                                                                  fmap.TileLayerWidget(
-                                                                      options: fmap.TileLayerOptions(
-                                                                    urlTemplate:
-                                                                        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                                                    subdomains: [
-                                                                      'a',
-                                                                      'b',
-                                                                      'c'
+                                                                        },
+                                                                        center: _initialCameraPosition,
+                                                                        zoom: 13),
+                                                                    children: [
+                                                                      fmap.TileLayerWidget(
+                                                                          options: fmap.TileLayerOptions(
+                                                                        urlTemplate:
+                                                                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                                                        subdomains: [
+                                                                          'a',
+                                                                          'b',
+                                                                          'c'
+                                                                        ],
+                                                                        attributionBuilder:
+                                                                            (_) {
+                                                                          return const Text(
+                                                                              "© OpenStreetMap contributors");
+                                                                        },
+                                                                      )),
                                                                     ],
-                                                                    attributionBuilder:
-                                                                        (_) {
-                                                                      return const Text(
-                                                                          "© OpenStreetMap contributors");
-                                                                    },
-                                                                  )),
-                                                                ],
-                                                                layers: [
-                                                                  fmap.TileLayerOptions(
-                                                                    urlTemplate:
-                                                                        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                                                    subdomains: [
-                                                                      'a',
-                                                                      'b',
-                                                                      'c'
-                                                                    ],
-                                                                    attributionBuilder:
-                                                                        (_) {
-                                                                      return const Text(
-                                                                          "© OpenStreetMap contributors");
-                                                                    },
-                                                                  ),
-                                                                  fmap.PolygonLayerOptions(
-                                                                      polygons: [
-                                                                        fmap.Polygon(
-                                                                            points:
-                                                                                latlngpolygonlistLamesa,
-                                                                            color:
-                                                                                Colors.green.withOpacity(0.5),
-                                                                            borderColor: Colors.green,
-                                                                            borderStrokeWidth: 1),
-                                                                      ]),
-                                                                  fmap.PolygonLayerOptions(
-                                                                      polygons: [
-                                                                        fmap.Polygon(
-                                                                            points:
-                                                                                latlngpolygonlistPantabangan,
-                                                                            color:
-                                                                                Colors.green.withOpacity(0.5),
-                                                                            borderColor: Colors.green,
-                                                                            borderStrokeWidth: 1),
-                                                                      ]),
-                                                                  fmap.PolygonLayerOptions(
-                                                                      polygons: [
-                                                                        fmap.Polygon(
-                                                                            points:
-                                                                                latlngpolygonlistAngat,
-                                                                            color:
-                                                                                Colors.green.withOpacity(0.5),
-                                                                            borderColor: Colors.green,
-                                                                            borderStrokeWidth: 1),
-                                                                      ]),
-                                                                  if (showLayers) ...[
-                                                                    for (var info
-                                                                        in existingCampaign)
-                                                                      fmap.CircleLayerOptions(
-                                                                          circles: [
-                                                                            fmap.CircleMarker(
-                                                                                point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
-                                                                                radius: info.values.elementAt(2),
-                                                                                borderColor: Colors.red,
-                                                                                borderStrokeWidth: 1,
-                                                                                color: Colors.red.withOpacity(0.2)),
+                                                                    layers: [
+                                                                      fmap.TileLayerOptions(
+                                                                        urlTemplate:
+                                                                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                                                        subdomains: [
+                                                                          'a',
+                                                                          'b',
+                                                                          'c'
+                                                                        ],
+                                                                        attributionBuilder:
+                                                                            (_) {
+                                                                          return const Text(
+                                                                              "© OpenStreetMap contributors");
+                                                                        },
+                                                                      ),
+                                                                      fmap.PolygonLayerOptions(
+                                                                          polygons: [
+                                                                            fmap.Polygon(
+                                                                                points: latlngpolygonlistLamesa,
+                                                                                color: Colors.green.withOpacity(0.5),
+                                                                                borderColor: Colors.green,
+                                                                                borderStrokeWidth: 1),
                                                                           ]),
-                                                                    for (var info
-                                                                        in existingCampaign)
-                                                                      fmap.MarkerLayerOptions(
-                                                                          markers: [
-                                                                            fmap.Marker(
-                                                                                width: 120,
-                                                                                point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
-                                                                                builder: (context) {
-                                                                                  return GestureDetector(
-                                                                                      onTap: () {
-                                                                                        Navigator.push(context, MaterialPageRoute(builder: (context) => JoinDonateCampaign(uidOfCampaign: info.values.elementAt(3), uidOfOrganizer: info.values.elementAt(4), nameOfCampaign: info.values.elementAt(6), city: info.values.elementAt(7), currentFund: info.values.elementAt(8), currentVolunteer: info.values.elementAt(9), maxFund: info.values.elementAt(10), totalVolunteer: info.values.elementAt(11), address: info.values.elementAt(5), description: info.values.elementAt(12))));
-                                                                                      },
-                                                                                      child: Icon(
-                                                                                        Icons.ac_unit,
-                                                                                        color: Colors.transparent,
-                                                                                      ));
-                                                                                })
+                                                                      fmap.PolygonLayerOptions(
+                                                                          polygons: [
+                                                                            fmap.Polygon(
+                                                                                points: latlngpolygonlistPantabangan,
+                                                                                color: Colors.green.withOpacity(0.5),
+                                                                                borderColor: Colors.green,
+                                                                                borderStrokeWidth: 1),
                                                                           ]),
-                                                                  ],
-                                                                  if (showLatLng) ...[
-                                                                    for (var info
-                                                                        in getVolunteers)
-                                                                      fmap.MarkerLayerOptions(
-                                                                          markers: [
-                                                                            fmap.Marker(
-                                                                                width: 120,
-                                                                                point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
-                                                                                builder: (context) {
-                                                                                  return Text(info.values.elementAt(2).toString() + " Volunteers");
-                                                                                })
+                                                                      fmap.PolygonLayerOptions(
+                                                                          polygons: [
+                                                                            fmap.Polygon(
+                                                                                points: latlngpolygonlistAngat,
+                                                                                color: Colors.green.withOpacity(0.5),
+                                                                                borderColor: Colors.green,
+                                                                                borderStrokeWidth: 1),
                                                                           ]),
-                                                                  ],
-                                                                  for (var info
-                                                                      in circleMarkersCampaigns)
-                                                                    fmap.CircleLayerOptions(
-                                                                        circles: [
-                                                                          fmap.CircleMarker(
-                                                                              point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
-                                                                              radius: info.values.elementAt(2),
-                                                                              color: Colors.red)
-                                                                        ])
-                                                                ]);
-                                                          }
-                                                        });
-                                                  }
-                                                });
-                                          }
-                                        });
-                                  }
-                                }),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Column(
-                                  children: [
-                                    IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            showLayers = !showLayers;
-                                          });
-                                        },
-                                        icon: Icon(
-                                          Icons.layers,
-                                          size: 30,
-                                        )),
-                                    AnimatedOpacity(
-                                        opacity: showLayers ? 1 : 0,
-                                        duration: Duration(milliseconds: 300),
-                                        child: Column(
-                                          children: [
-                                            IconButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    FirebaseFirestore.instance
-                                                        .collection('campaigns')
-                                                        .get()
-                                                        .then((element) {
-                                                      element.docs
-                                                          .forEach((elements) {
-                                                        getVolunteers.add({
-                                                          "latitude": elements[
-                                                              'latitude'],
-                                                          "longitude": elements[
-                                                              'longitude'],
-                                                          "volunteer": elements[
-                                                                  'number_volunteers']
-                                                              as int,
-                                                          "campaignID":
-                                                              elements[
-                                                                  'campaignID']
-                                                        });
-                                                      });
+                                                                      if (showLayers) ...[
+                                                                        for (var info
+                                                                            in existingCampaign)
+                                                                          fmap.CircleLayerOptions(
+                                                                              circles: [
+                                                                                fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: info.values.elementAt(2), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2)),
+                                                                              ]),
+                                                                        for (var info
+                                                                            in existingCampaign)
+                                                                          fmap.MarkerLayerOptions(
+                                                                              markers: [
+                                                                                fmap.Marker(
+                                                                                    width: 120,
+                                                                                    point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
+                                                                                    builder: (context) {
+                                                                                      return GestureDetector(
+                                                                                          onTap: () {
+                                                                                            Navigator.push(context, MaterialPageRoute(builder: (context) => JoinDonateCampaign(uidOfCampaign: info.values.elementAt(3), uidOfOrganizer: info.values.elementAt(4), nameOfCampaign: info.values.elementAt(6), city: info.values.elementAt(7), currentFund: info.values.elementAt(8), currentVolunteer: info.values.elementAt(9), maxFund: info.values.elementAt(10), totalVolunteer: info.values.elementAt(11), address: info.values.elementAt(5), description: info.values.elementAt(12))));
+                                                                                          },
+                                                                                          child: Icon(
+                                                                                            Icons.ac_unit,
+                                                                                            color: Colors.transparent,
+                                                                                          ));
+                                                                                    })
+                                                                              ]),
+                                                                      ],
+                                                                      if (showLatLng) ...[
+                                                                        for (var info
+                                                                            in getVolunteers)
+                                                                          fmap.MarkerLayerOptions(
+                                                                              markers: [
+                                                                                fmap.Marker(
+                                                                                    width: 120,
+                                                                                    point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
+                                                                                    builder: (context) {
+                                                                                      return Text(info.values.elementAt(2).toString() + " Volunteers");
+                                                                                    })
+                                                                              ]),
+                                                                      ],
+                                                                      for (var info
+                                                                          in circleMarkersCampaigns)
+                                                                        fmap.CircleLayerOptions(
+                                                                            circles: [
+                                                                              fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: info.values.elementAt(2), color: Colors.red)
+                                                                            ])
+                                                                    ]);
+                                                              }
+                                                            });
+                                                      }
                                                     });
-                                                    showLatLng = !showLatLng;
-                                                  });
-                                                },
-                                                icon: Icon(
-                                                  Icons.trip_origin_sharp,
-                                                  size: 30,
-                                                )),
-                                            IconButton(
-                                                onPressed: () {},
-                                                icon: Icon(
-                                                  Icons.layers,
-                                                  size: 30,
-                                                )),
-                                          ],
-                                        ))
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: AnimatedOpacity(
-                                    opacity: showForest ? 1 : 0,
-                                    duration: Duration(milliseconds: 300),
-                                    child: AbsorbPointer(
-                                      absorbing: showForest ? false : true,
-                                      child: Row(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                showForest = !showForest;
-                                                cntrler.move(
-                                                    lt.LatLng(
-                                                        14.918990, 121.165563),
-                                                    13);
-                                              });
-                                            },
-                                            child: Card(
-                                              elevation: 5,
-                                              child: Container(
-                                                height: 50,
-                                                width: 100,
-                                                decoration: BoxDecoration(
-                                                    color: Color(0xff65BFB8)),
-                                                child: Center(
-                                                    child: Text(
-                                                  "Angat Forest",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )),
-                                              ),
-                                            ),
-                                          ),
-                                          AbsorbPointer(
-                                            absorbing:
-                                                showForest ? false : true,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  showForest = !showForest;
-                                                  cntrler.move(
-                                                      lt.LatLng(
-                                                          14.7452, 121.0984),
-                                                      13);
-                                                });
-                                              },
-                                              child: Card(
-                                                elevation: 5,
-                                                child: Container(
-                                                  height: 50,
-                                                  width: 100,
-                                                  decoration: BoxDecoration(
-                                                      color: Color(0xff65BFB8)),
-                                                  child: Center(
-                                                      child: Text(
-                                                    "Lamesa Forest",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  )),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          AbsorbPointer(
-                                            absorbing:
-                                                showForest ? false : true,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  showForest = !showForest;
-                                                  cntrler.move(
-                                                      lt.LatLng(15.780574,
-                                                          121.121838),
-                                                      13);
-                                                });
-                                              },
-                                              child: Card(
-                                                elevation: 5,
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5),
-                                                  height: 50,
-                                                  width: 100,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  2)),
-                                                      color: Color(0xff65BFB8)),
-                                                  child: Center(
-                                                      child: Text(
-                                                          "Pantabangan Forest",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                          overflow: TextOverflow
-                                                              .visible)),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Container(
-                                          height: 500,
-                                          width: 50,
-                                          color: Colors.transparent,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              Transform(
-                                                transform:
-                                                    Matrix4.translationValues(
-                                                  0.0,
-                                                  _translateButton.value * 3.0,
-                                                  0.0,
-                                                ),
-                                                child: add(),
-                                              ),
-                                              Transform(
-                                                transform:
-                                                    Matrix4.translationValues(
-                                                  0.0,
-                                                  _translateButton.value * 2.0,
-                                                  0.0,
-                                                ),
-                                                child: image(),
-                                              ),
-                                              toggle(),
-                                            ],
-                                          ))
-                                    ]),
-                              ),
-                            ),
-                            SlideTransition(
-                                position: Tween<Offset>(
-                                        begin: Offset(0, 1.2),
-                                        end: Offset(0, 0.4))
-                                    .animate(
-                                  new CurvedAnimation(
-                                      parent: controller,
-                                      curve: Curves.fastOutSlowIn),
-                                ),
-                                child: SliderWidget(
-                                  done: GestureDetector(
-                                    onTap: () async {
-                                      const _chars =
-                                          'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-                                      Random _rnd = Random();
-
-                                      String getRandomString(int length) =>
-                                          String.fromCharCodes(
-                                              Iterable.generate(
-                                                  length,
-                                                  (_) => _chars.codeUnitAt(
-                                                      _rnd.nextInt(
-                                                          _chars.length))));
-                                      String uniqueID = getRandomString(15);
-                                      setState(() {
-                                        dateCreated = formatDate(DateTime.now(),
-                                            [yyyy, '-', mm, '-', dd]);
-
-                                        dateStart = formatDate(
-                                            DateTime(2021, 10, 27, 2, 30, 50),
-                                            [yyyy, '-', mm, '-', dd]);
-
-                                        dateEnded = formatDate(
-                                            DateTime(2021, 10, 27, 2, 30, 50),
-                                            [yyyy, '-', mm, '-', dd]);
-
-                                        time = formatDate(
-                                            DateTime(2021, 09, 27, 2, 30, 50),
-                                            [HH, ':', nn, ':', ss]);
-
-                                        FirebaseMessaging.instance
-                                            .getToken()
-                                            .then((value) {
-                                          context
-                                              .read(authserviceProvider)
-                                              .createCampaign(
-                                                  context
-                                                      .read(campaignProvider)
-                                                      .getCampaignName,
-                                                  context
-                                                      .read(campaignProvider)
-                                                      .getDescription,
-                                                  uniqueID,
-                                                  dateCreated,
-                                                  context
-                                                      .read(campaignProvider)
-                                                      .getStartDate,
-                                                  dateEnded,
-                                                  context
-                                                      .read(campaignProvider)
-                                                      .getAddress,
-                                                  context
-                                                      .read(campaignProvider)
-                                                      .getCity,
-                                                  time,
-                                                  userUID,
-                                                  usernames,
-                                                  latitude,
-                                                  longitude,
-                                                  finalSeeds,
-                                                  currentDonations,
-                                                  maxDonations,
-                                                  currentVolunteers,
-                                                  finalVolunteers,
-                                                  value!,
-                                                  radius)
-                                              .whenComplete(
-                                                  () => controller.reverse());
-                                        });
-                                      });
-                                    },
-                                    child: Container(
-                                        height: 55,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                            color: Color(0xff65BFB8),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5))),
-                                        child: Center(
-                                          child: Text(
-                                            'Done',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 15),
-                                          ),
-                                        )),
-                                  ),
-                                  status: Row(
-                                    children: [
-                                      Text("Volunteers: " +
-                                          finalVolunteers.toString()),
-                                      SizedBox(
-                                        width: 30,
-                                      ),
-                                      Text("Seeds: " + finalSeeds.toString()),
-                                      SizedBox(
-                                        width: 30,
-                                      ),
-                                      Expanded(
-                                          child: Text("Fund Needed: " +
-                                              finalFund.toString() +
-                                              "pesos")),
-                                    ],
-                                  ),
-                                  radius: radius,
-                                  back: IconButton(
-                                    icon: Icon(Icons.arrow_back_ios),
-                                    onPressed: () {
-                                      setState(() {
-                                        controller.reverse();
-                                      });
-                                    },
-                                  ),
-                                  slide: Center(
+                                              }
+                                            });
+                                      }
+                                    }),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10),
                                     child: Column(
                                       children: [
-                                        Slider(
-                                          activeColor: Colors.green,
-                                          inactiveColor: Colors.red,
-                                          value: radius,
-                                          min: 0,
-                                          max: 0.10,
-                                          onChanged: (radius1) {
-                                            setState(() {
-                                              radius = radius1;
-
-                                              context
-                                                  .read(mapProvider)
-                                                  .RadiusAssign(radius);
-                                              putCircle(finalRadius, latitude,
-                                                  longitude);
-
-                                              context
-                                                  .read(mapProvider)
-                                                  .checkVolunteersNeeded(
-                                                      finalRadius);
-                                              context
-                                                  .read(mapProvider)
-                                                  .checkseedsNeeded(
-                                                      finalRadius);
-                                              context
-                                                  .read(mapProvider)
-                                                  .checkFundRequired(
-                                                      finalRadius);
-                                            });
-                                          },
-                                        )
+                                        IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                showLayers = !showLayers;
+                                              });
+                                            },
+                                            icon: Icon(
+                                              Icons.layers,
+                                              size: 30,
+                                              color: Color(0xff65BFB8),
+                                            )),
+                                        AnimatedOpacity(
+                                            opacity: showLayers ? 1 : 0,
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            child: Column(
+                                              children: [
+                                                IconButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                                'campaigns')
+                                                            .get()
+                                                            .then((element) {
+                                                          element.docs.forEach(
+                                                              (elements) {
+                                                            getVolunteers.add({
+                                                              "latitude":
+                                                                  elements[
+                                                                      'latitude'],
+                                                              "longitude":
+                                                                  elements[
+                                                                      'longitude'],
+                                                              "volunteer": elements[
+                                                                      'number_volunteers']
+                                                                  as int,
+                                                              "campaignID":
+                                                                  elements[
+                                                                      'campaignID']
+                                                            });
+                                                          });
+                                                        });
+                                                        showLatLng =
+                                                            !showLatLng;
+                                                      });
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.trip_origin_sharp,
+                                                      size: 30,
+                                                    )),
+                                                IconButton(
+                                                    onPressed: () {},
+                                                    icon: Icon(
+                                                      Icons.layers,
+                                                      size: 30,
+                                                    )),
+                                              ],
+                                            ))
                                       ],
                                     ),
                                   ),
-                                )),
-                          ],
-                        );
-                      }
-                    }),
-              ));
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: IconButton(
+                                        icon: Icon(
+                                          Icons.arrow_back,
+                                          color: Color(0xff65BFB8),
+                                          size: 30,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      )),
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: AnimatedOpacity(
+                                        opacity: showForest ? 1 : 0,
+                                        duration: Duration(milliseconds: 300),
+                                        child: AbsorbPointer(
+                                          absorbing: showForest ? false : true,
+                                          child: Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    showForest = !showForest;
+                                                    cntrler.move(
+                                                        lt.LatLng(14.918990,
+                                                            121.165563),
+                                                        13);
+                                                  });
+                                                },
+                                                child: Card(
+                                                  elevation: 5,
+                                                  child: Container(
+                                                    height: 50,
+                                                    width: 100,
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xff65BFB8)),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Angat Forest",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                                  ),
+                                                ),
+                                              ),
+                                              AbsorbPointer(
+                                                absorbing:
+                                                    showForest ? false : true,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      showForest = !showForest;
+                                                      cntrler.move(
+                                                          lt.LatLng(14.7452,
+                                                              121.0984),
+                                                          13);
+                                                    });
+                                                  },
+                                                  child: Card(
+                                                    elevation: 5,
+                                                    child: Container(
+                                                      height: 50,
+                                                      width: 100,
+                                                      decoration: BoxDecoration(
+                                                          color: Color(
+                                                              0xff65BFB8)),
+                                                      child: Center(
+                                                          child: Text(
+                                                        "Lamesa Forest",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              AbsorbPointer(
+                                                absorbing:
+                                                    showForest ? false : true,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      showForest = !showForest;
+                                                      cntrler.move(
+                                                          lt.LatLng(15.780574,
+                                                              121.121838),
+                                                          13);
+                                                    });
+                                                  },
+                                                  child: Card(
+                                                    elevation: 5,
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.all(5),
+                                                      height: 50,
+                                                      width: 100,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          2)),
+                                                          color: Color(
+                                                              0xff65BFB8)),
+                                                      child: Center(
+                                                          child: Text(
+                                                              "Pantabangan Forest",
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .visible)),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Container(
+                                              height: 500,
+                                              width: 50,
+                                              color: Colors.transparent,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Transform(
+                                                    transform: Matrix4
+                                                        .translationValues(
+                                                      0.0,
+                                                      _translateButton.value *
+                                                          3.0,
+                                                      0.0,
+                                                    ),
+                                                    child: add(),
+                                                  ),
+                                                  Transform(
+                                                    transform: Matrix4
+                                                        .translationValues(
+                                                      0.0,
+                                                      _translateButton.value *
+                                                          2.0,
+                                                      0.0,
+                                                    ),
+                                                    child: image(),
+                                                  ),
+                                                  toggle(),
+                                                ],
+                                              ))
+                                        ]),
+                                  ),
+                                ),
+                                SlideTransition(
+                                    position: Tween<Offset>(
+                                            begin: Offset(0, 1.2),
+                                            end: Offset(0, 0.4))
+                                        .animate(
+                                      new CurvedAnimation(
+                                          parent: controller,
+                                          curve: Curves.fastOutSlowIn),
+                                    ),
+                                    child: SliderWidget(
+                                      done: GestureDetector(
+                                        onTap: () async {
+                                          const _chars =
+                                              'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+                                          Random _rnd = Random();
+
+                                          String getRandomString(int length) =>
+                                              String.fromCharCodes(
+                                                  Iterable.generate(
+                                                      length,
+                                                      (_) => _chars.codeUnitAt(
+                                                          _rnd.nextInt(
+                                                              _chars.length))));
+                                          String uniqueID = getRandomString(15);
+                                          setState(() {
+                                            dateCreated = formatDate(
+                                                DateTime.now(),
+                                                [yyyy, '-', mm, '-', dd]);
+
+                                            dateStart = formatDate(
+                                                DateTime(
+                                                    2021, 10, 27, 2, 30, 50),
+                                                [yyyy, '-', mm, '-', dd]);
+
+                                            dateEnded = formatDate(
+                                                DateTime(
+                                                    2021, 10, 27, 2, 30, 50),
+                                                [yyyy, '-', mm, '-', dd]);
+
+                                            time = formatDate(
+                                                DateTime(
+                                                    2021, 09, 27, 2, 30, 50),
+                                                [HH, ':', nn, ':', ss]);
+
+                                            FirebaseMessaging.instance
+                                                .getToken()
+                                                .then((value) {
+                                              context
+                                                  .read(authserviceProvider)
+                                                  .createCampaign(
+                                                      context
+                                                          .read(
+                                                              campaignProvider)
+                                                          .getCampaignName,
+                                                      context
+                                                          .read(
+                                                              campaignProvider)
+                                                          .getDescription,
+                                                      uniqueID,
+                                                      dateCreated,
+                                                      context
+                                                          .read(
+                                                              campaignProvider)
+                                                          .getStartDate,
+                                                      dateEnded,
+                                                      context
+                                                          .read(
+                                                              campaignProvider)
+                                                          .getAddress,
+                                                      context
+                                                          .read(
+                                                              campaignProvider)
+                                                          .getCity,
+                                                      time,
+                                                      userUID,
+                                                      usernames,
+                                                      latitude,
+                                                      longitude,
+                                                      finalSeeds,
+                                                      currentDonations,
+                                                      finalFund,
+                                                      currentVolunteers,
+                                                      finalVolunteers,
+                                                      value!,
+                                                      finalRadius)
+                                                  .whenComplete(() =>
+                                                      controller.reverse());
+                                            });
+                                          });
+                                        },
+                                        child: Container(
+                                            height: 55,
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                                color: Color(0xff65BFB8),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(5))),
+                                            child: Center(
+                                              child: Text(
+                                                'Done',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 15),
+                                              ),
+                                            )),
+                                      ),
+                                      status: Row(
+                                        children: [
+                                          Text("Volunteers: " +
+                                              finalVolunteers.toString()),
+                                          SizedBox(
+                                            width: 30,
+                                          ),
+                                          Text("Seeds: " +
+                                              finalSeeds.toString()),
+                                          SizedBox(
+                                            width: 30,
+                                          ),
+                                          Expanded(
+                                              child: Text("Fund Needed: " +
+                                                  finalFund.toString() +
+                                                  "pesos")),
+                                        ],
+                                      ),
+                                      radius: radius,
+                                      back: IconButton(
+                                        icon: Icon(Icons.arrow_back_ios),
+                                        onPressed: () {
+                                          setState(() {
+                                            controller.reverse();
+                                          });
+                                        },
+                                      ),
+                                      slide: Center(
+                                        child: Column(
+                                          children: [
+                                            Slider(
+                                              activeColor: Colors.green,
+                                              inactiveColor: Colors.red,
+                                              value: radius,
+                                              min: 0,
+                                              max: 0.10,
+                                              onChanged: (radius1) {
+                                                setState(() {
+                                                  radius = radius1;
+
+                                                  context
+                                                      .read(mapProvider)
+                                                      .RadiusAssign(radius);
+                                                  putCircle(finalRadius,
+                                                      latitude, longitude);
+
+                                                  context
+                                                      .read(mapProvider)
+                                                      .checkVolunteersNeeded(
+                                                          finalRadius);
+                                                  context
+                                                      .read(mapProvider)
+                                                      .checkseedsNeeded(
+                                                          finalRadius);
+                                                  context
+                                                      .read(mapProvider)
+                                                      .checkFundRequired(
+                                                          finalRadius);
+                                                });
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    )),
+                              ],
+                            );
+                          }
+                        }),
+                  ));
             }
           });
     }));
