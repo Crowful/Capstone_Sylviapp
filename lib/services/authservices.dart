@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'database_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -282,12 +283,12 @@ class AuthService extends ChangeNotifier {
 
   Future deleteAcc() async {
     try {
-      await DatabaseService(uid: _loggedInUser!.uid)
-          .deleteUserData()
-          .whenComplete(() => _loggedInUser!.delete());
+      await _loggedInUser!.delete().whenComplete(() {
+        DatabaseService(uid: _loggedInUser!.uid).deleteUserData();
+      });
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
-        case "email-already-in-use":
+        case "requires-recent-login":
           Fluttertoast.showToast(
               toastLength: Toast.LENGTH_LONG,
               msg: e.message.toString(),
@@ -298,7 +299,7 @@ class AuthService extends ChangeNotifier {
       }
     } on PlatformException catch (e) {
       switch (e.code) {
-        case "email-already-in-use":
+        case "requires-recent-login":
           Fluttertoast.showToast(
               toastLength: Toast.LENGTH_LONG,
               msg: e.message.toString(),
@@ -310,16 +311,71 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  Future updateAcc(String newFullName, int phoneNumber, String newEmail) async {
+  Future updateAcc(
+      String newFullName, String phoneNumber, String newAddress) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
-      await _loggedInUser!.updateEmail(newEmail);
+
       await DatabaseService(uid: _loggedInUser!.uid)
-          .updateUserData(newEmail, newFullName, phoneNumber);
-    } catch (e) {
-      print("EROOOOOOOOOOOOOOOOOOR" + e.toString());
+          .updateUserData(AESCryptography().encryptAES(newAddress), newFullName,
+              AESCryptography().encryptAES(phoneNumber))
+          .whenComplete(() => Fluttertoast.showToast(msg: 'Updated'));
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "invalid-email":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "email-already-in-use":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "requires-recent-login":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+      }
+    } on PlatformException catch (e) {
+      switch (e.code) {
+        case "invalid-email":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "email-already-in-use":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+        case "requires-recent-login":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+      }
     }
   }
 
@@ -327,8 +383,28 @@ class AuthService extends ChangeNotifier {
     try {
       await _loggedInUser!.updatePassword(newpass).whenComplete(
           () => Fluttertoast.showToast(msg: "Password Sucessfully Changed"));
-    } catch (e) {
-      print(e);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "invalid-email":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+      }
+    } on PlatformException catch (e) {
+      switch (e.code) {
+        case "invalid-email":
+          Fluttertoast.showToast(
+              toastLength: Toast.LENGTH_LONG,
+              msg: e.message.toString(),
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.black);
+
+          break;
+      }
     }
   }
 

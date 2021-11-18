@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +31,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
       Tween<Offset>(begin: Offset(-1, 0), end: Offset(0, 0))
           .animate(widget.controller);
 
+  Stream<DocumentSnapshot> firebaseStream() {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(context.read(authserviceProvider).getCurrentUserUID())
+        .snapshots();
+  }
+
   String? taske;
   String? errorText;
   String? urlTest = "";
@@ -52,6 +61,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
         urlTest = taske.toString();
       });
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -115,12 +129,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   print(urlTest);
                 },
                 child: StreamBuilder<DocumentSnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(context
-                            .read(authserviceProvider)
-                            .getCurrentUserUID())
-                        .snapshots(),
+                    stream: firebaseStream(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return Container(
@@ -179,9 +188,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                 await context
                                     .read(authserviceProvider)
                                     .signOut();
-                                await Navigator.pushNamed(
-                                    context, "/wrapperAuth");
-                                dispose();
+
+                                await Navigator.of(context)
+                                    .pushNamedAndRemoveUntil('/wrapperAuth',
+                                        (Route<dynamic> route) => false);
                               },
                               child: Text("yes")),
                         ],

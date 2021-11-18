@@ -56,6 +56,7 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
                     context
                         .read(authserviceProvider)
                         .addFeedback(_feedbackController.text);
+                    _feedbackController.clear();
                   }
                 },
                 child: Text("Submit"),

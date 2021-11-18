@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
@@ -395,7 +396,35 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
             IconButton(
               icon: Icon(Icons.bookmark_outline),
-              onPressed: () {},
+              onPressed: () {
+                showCupertinoDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CupertinoAlertDialog(
+                        title: Text("Are You sure you want to log out ?"),
+                        content: Text(
+                            "this will log out your account in this device"),
+                        actions: [
+                          CupertinoDialogAction(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text("no")),
+                          CupertinoDialogAction(
+                              onPressed: () async {
+                                await context
+                                    .read(authserviceProvider)
+                                    .signOut();
+
+                                await Navigator.of(context)
+                                    .pushNamedAndRemoveUntil('/wrapperAuth',
+                                        (Route<dynamic> route) => false);
+                              },
+                              child: Text("yes")),
+                        ],
+                      );
+                    });
+              },
               color: Colors.transparent,
             ),
           ]),

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -84,6 +85,24 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   void initState() {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(context.read(authserviceProvider).getCurrentUserUID())
+        .get()
+        .then((value) {
+      fullnameController.value = fullnameController.value.copyWith(
+          text: AESCryptography()
+              .decryptAES(enc.Encrypted.fromBase64(value.get('fullname'))));
+
+      addressController.value = emailController.value.copyWith(
+          text: AESCryptography()
+              .decryptAES(enc.Encrypted.fromBase64(value.get('address'))));
+
+      phoneNumberController.value = phoneNumberController.value.copyWith(
+          text: AESCryptography()
+              .decryptAES(enc.Encrypted.fromBase64(value.get('phoneNumber'))));
+    });
+
     showProfile(context.read(authserviceProvider).getCurrentUserUID());
     super.initState();
     showProfile(context.read(authserviceProvider).getCurrentUserUID());
@@ -151,19 +170,7 @@ class _EditProfileState extends State<EditProfile> {
                       var fullname = AESCryptography().decryptAES(
                           enc.Encrypted.fromBase64(
                               snapshot.data!.get('fullname')));
-                      var address = AESCryptography().decryptAES(
-                          enc.Encrypted.fromBase64(
-                              snapshot.data!.get('address')));
-                      print(address);
 
-                      var email = snapshot.data!.get('email');
-                      var phoneNum = AESCryptography().decryptAES(
-                          enc.Encrypted.fromBase64(
-                              snapshot.data!.get('phoneNumber')));
-                      fullnameController.text = fullname;
-                      addressController.text = address;
-                      emailController.text = email;
-                      phoneNumberController.text = phoneNum;
                       return Expanded(
                         child: SizedBox(
                             width: MediaQuery.of(context).size.width,
@@ -175,8 +182,13 @@ class _EditProfileState extends State<EditProfile> {
                                   height: 15,
                                 ),
                                 Stack(children: [
-                                  urlTest != "null"
+                                  urlTest != ""
                                       ? CircleAvatar(
+                                          child: Icon(
+                                            Icons.person,
+                                            color: Colors.green,
+                                            size: 40,
+                                          ),
                                           backgroundImage: urlTest != "null"
                                               ? Image.network(
                                                   urlTest.toString(),
@@ -254,31 +266,7 @@ class _EditProfileState extends State<EditProfile> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Full Name",
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container(
-                                            height: 10,
-                                            child: TextField(
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                              controller: fullnameController,
-                                              decoration: InputDecoration(
-                                                hintText: "Full Name",
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Text(
-                                            "Email",
+                                            "Fullname",
                                             style: TextStyle(
                                                 color: Colors.grey,
                                                 fontSize: 12,
@@ -290,9 +278,34 @@ class _EditProfileState extends State<EditProfile> {
                                           Container(
                                             height: 20,
                                             child: TextField(
+                                              inputFormatters: [
+                                                LengthLimitingTextInputFormatter(
+                                                    30),
+                                              ],
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
-                                              controller: emailController,
+                                              controller: fullnameController,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Text(
+                                            "Address",
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container(
+                                            child: TextField(
+                                              maxLines: 2,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                              controller: addressController,
                                             ),
                                           ),
                                           SizedBox(
@@ -306,15 +319,20 @@ class _EditProfileState extends State<EditProfile> {
                                                 fontWeight: FontWeight.w500),
                                           ),
                                           SizedBox(
-                                            height: 5,
+                                            height: 15,
                                           ),
                                           Container(
                                             height: 20,
                                             child: TextField(
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                              controller: phoneNumberController,
-                                            ),
+                                                inputFormatters: [
+                                                  LengthLimitingTextInputFormatter(
+                                                      11),
+                                                ],
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                controller:
+                                                    phoneNumberController),
                                           ),
                                         ],
                                       ),
@@ -325,15 +343,36 @@ class _EditProfileState extends State<EditProfile> {
                                         alignment: Alignment.bottomRight,
                                         child: GestureDetector(
                                           onTap: () async {
-                                            await context
-                                                .read(authserviceProvider)
-                                                .updateAcc(
-                                                    fullnameController.text,
-                                                    phoneNum,
-                                                    emailController.text)
-                                                .whenComplete(() =>
-                                                    Fluttertoast.showToast(
-                                                        msg: "updated"));
+                                            if (fullnameController.text == "" ||
+                                                fullnameController.text.length <
+                                                    5 ||
+                                                addressController.text == "" ||
+                                                addressController.text.length <
+                                                    5 ||
+                                                phoneNumberController.text ==
+                                                    "" ||
+                                                phoneNumberController
+                                                        .text.length <
+                                                    11) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      "Please Input valid information");
+                                            } else {
+                                              print(fullnameController.text);
+                                              print(emailController.text);
+                                              print(phoneNumberController.text);
+                                              await context
+                                                  .read(authserviceProvider)
+                                                  .updateAcc(
+                                                      AESCryptography()
+                                                          .encryptAES(
+                                                              fullnameController
+                                                                  .text),
+                                                      phoneNumberController
+                                                          .text,
+                                                      addressController.text
+                                                          .trim());
+                                            }
                                           },
                                           child: Container(
                                             height: 50,

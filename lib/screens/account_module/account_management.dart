@@ -417,6 +417,51 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
+                          showCupertinoDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CupertinoAlertDialog(
+                                  title: Text(
+                                      "Are You sure you want to Delete your account?"),
+                                  content: Text(
+                                      "There's no turning back once this deletion is done."),
+                                  actions: [
+                                    CupertinoDialogAction(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("no")),
+                                    CupertinoDialogAction(
+                                        onPressed: () async {
+                                          await context
+                                              .read(authserviceProvider)
+                                              .deleteAcc()
+                                              .whenComplete(() => context
+                                                  .read(authserviceProvider)
+                                                  .signOut());
+
+                                          await Navigator.of(context)
+                                              .pushNamedAndRemoveUntil(
+                                                  '/login',
+                                                  (Route<dynamic> route) =>
+                                                      false);
+                                        },
+                                        child: Text("yes")),
+                                  ],
+                                );
+                              });
+                        },
+                        child: Text('Delete Account',
+                            style: TextStyle(
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15)),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      GestureDetector(
+                        onTap: () {
                           Navigator.pushNamed(context, "/reset_password");
                         },
                         child: Text(LocaleKeys.resetpassword.tr(),
@@ -428,11 +473,45 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       SizedBox(
                         height: 15,
                       ),
-                      Text(LocaleKeys.logout.tr(),
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15)),
+                      GestureDetector(
+                        onTap: () {
+                          showCupertinoDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CupertinoAlertDialog(
+                                  title: Text(
+                                      "Are You sure you want to log out ?"),
+                                  content: Text(
+                                      "this will log out your account in this device"),
+                                  actions: [
+                                    CupertinoDialogAction(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("no")),
+                                    CupertinoDialogAction(
+                                        onPressed: () async {
+                                          await context
+                                              .read(authserviceProvider)
+                                              .signOut();
+
+                                          await Navigator.of(context)
+                                              .pushNamedAndRemoveUntil(
+                                                  '/wrapperAuth',
+                                                  (Route<dynamic> route) =>
+                                                      false);
+                                        },
+                                        child: Text("yes")),
+                                  ],
+                                );
+                              });
+                        },
+                        child: Text(LocaleKeys.logout.tr(),
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15)),
+                      ),
                     ],
                   ),
                 )
