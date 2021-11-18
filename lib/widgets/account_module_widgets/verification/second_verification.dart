@@ -42,7 +42,7 @@ class _GetVerifyState extends State<GetVerify> {
 
     if (pickedFile != null) {
       setState(() {
-        _imageFile = File(pickedFile!.path);
+        _imageFile = File(pickedFile.path);
       });
     } else {
       Fluttertoast.showToast(msg: 'image file is empty');
