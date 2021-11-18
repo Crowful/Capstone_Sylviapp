@@ -189,7 +189,7 @@ class _EditProfileState extends State<EditProfile> {
                                             color: Colors.green,
                                             size: 40,
                                           ),
-                                          backgroundImage: urlTest != "null"
+                                          foregroundImage: urlTest != "null"
                                               ? Image.network(
                                                   urlTest.toString(),
                                                 ).image

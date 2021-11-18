@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io';
 
@@ -41,7 +42,7 @@ class _GetVerifyState extends State<GetVerify> {
 
     if (pickedFile != null) {
       setState(() {
-        _imageFile = File(pickedFile!.path);
+        _imageFile = File(pickedFile.path);
       });
     } else {
       Fluttertoast.showToast(msg: 'image file is empty');
@@ -184,9 +185,17 @@ class _GetVerifyState extends State<GetVerify> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(Icons.upload),
-                                      Text('Upload ID')
+                                      Text('Upload ID'),
                                     ],
-                                  ))
+                                  )),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              _imageFile != null
+                                  ? Icon(Icons.check_circle_rounded,
+                                      color: Colors.green)
+                                  : Icon(Icons.check_circle_outline,
+                                      color: Colors.green)
                             ],
                           ),
                         ),
@@ -213,6 +222,11 @@ class _GetVerifyState extends State<GetVerify> {
                                     BorderRadius.all(Radius.circular(5)),
                               ),
                               child: TextField(
+                                textAlign: TextAlign.center,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(6)
+                                ],
                                 controller: idNumberController,
                               ),
                             )
@@ -255,7 +269,15 @@ class _GetVerifyState extends State<GetVerify> {
                                   ],
                                 ),
                               ),
-                            )
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            _cameraFile != null
+                                ? Icon(Icons.check_circle_rounded,
+                                    color: Colors.green)
+                                : Icon(Icons.check_circle_outline,
+                                    color: Colors.green)
                           ],
                         ),
                         SizedBox(
@@ -282,6 +304,9 @@ class _GetVerifyState extends State<GetVerify> {
                                     BorderRadius.all(Radius.circular(5)),
                               ),
                               child: TextField(
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(80)
+                                ],
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   isDense: true,
@@ -366,25 +391,33 @@ class _GetVerifyState extends State<GetVerify> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      isVerify = false;
-                      bool isAppplying = true;
-                      print('urlforID ' + urlForID.toString());
-                      print('idnumberController ' + idNumberController.text);
-                      print('urlforpic ' + urlForPic.toString());
-                      print('whydidyouController ' + whydidyouController.text);
-                      print('_experience ' + _experience);
-                      print('isVerify ' + isVerify.toString());
-                      print('isAppplying ' + isAppplying.toString());
+                      if (isChecked == false ||
+                          _imageFile == null ||
+                          _cameraFile == null ||
+                          whydidyouController.text == "") {
+                        Fluttertoast.showToast(msg: 'Please Complete the form');
+                      } else {
+                        isVerify = false;
+                        bool isAppplying = true;
+                        print('urlforID ' + urlForID.toString());
+                        print('idnumberController ' + idNumberController.text);
+                        print('urlforpic ' + urlForPic.toString());
+                        print(
+                            'whydidyouController ' + whydidyouController.text);
+                        print('_experience ' + _experience);
+                        print('isVerify ' + isVerify.toString());
+                        print('isAppplying ' + isAppplying.toString());
 
-                      context.read(authserviceProvider).createApplication(
-                          urlForID,
-                          idNumberController.text,
-                          urlForPic,
-                          whydidyouController.text,
-                          _experience,
-                          isVerify,
-                          isAppplying,
-                          context);
+                        context.read(authserviceProvider).createApplication(
+                            urlForID,
+                            idNumberController.text,
+                            urlForPic,
+                            whydidyouController.text,
+                            _experience,
+                            isVerify,
+                            isAppplying,
+                            context);
+                      }
                     },
                     child: Container(
                       height: 50,
