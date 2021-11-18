@@ -626,10 +626,18 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            name,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16),
+                          Container(
+                            width: 200,
+                            child: Text(
+                              name,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
                           ),
                           Row(children: [
                             Text(

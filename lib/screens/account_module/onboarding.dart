@@ -30,7 +30,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       width: isActive ? 24.0 : 16.0,
       decoration: BoxDecoration(
         color:
-            isActive ? Color(0xff403d55) : Color(0xff403d55).withOpacity(0.5),
+            isActive ? Color(0xff65BFB8) : Color(0xff65BFB8).withOpacity(0.5),
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
     );
@@ -60,7 +60,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         child: Text(
                           'Skip',
                           style: GoogleFonts.openSans(
-                              color: Color(0xff403d55),
+                              color: Color(0xff65BFB8),
                               fontWeight: FontWeight.w600),
                         ))),
               ),
@@ -123,7 +123,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         child: Container(
                           height: 100,
                           width: double.infinity,
-                          color: Color(0xff403d55),
+                          color: Color(0xff65BFB8),
                           child: Align(
                               alignment: Alignment.center,
                               child: InkWell(

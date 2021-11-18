@@ -22,11 +22,9 @@ class _ThirdOnboardingState extends State<ThirdOnboarding> {
               child: Column(
                 children: [
                   Text(
-                    'Onboarding 1',
+                    'That\' all! ',
                     style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xff403d55),
-                        fontSize: 25),
+                        fontWeight: FontWeight.bold, fontSize: 25),
                   ),
                   Container(
                     height: 300,
@@ -38,11 +36,11 @@ class _ThirdOnboardingState extends State<ThirdOnboarding> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Get a new experience\nof sensation',
+                      'Now let\'s dive in to Sylviapp!',
                       style: GoogleFonts.roboto(
                           fontWeight: FontWeight.w700,
                           fontSize: 20,
-                          color: Color(0xff403d55)),
+                          color: Color(0xff65BFB8)),
                     ),
                   ),
                   SizedBox(
@@ -51,7 +49,7 @@ class _ThirdOnboardingState extends State<ThirdOnboarding> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                        'Lorem ipsum dolor sit amet, consect adipiscing elit, sed do eiusmod tempor incididunt ut labore et.',
+                        'Enjoy and help each other to facilitate reforestation campaigns.',
                         style: GoogleFonts.roboto(
                             fontWeight: FontWeight.w500, fontSize: 17)),
                   )

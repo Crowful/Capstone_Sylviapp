@@ -158,6 +158,8 @@ class _LoginScreenState extends State<LoginScreen>
                                   topRight: Radius.circular(15))),
                           width: double.infinity,
                           child: TextField(
+                            style:
+                                TextStyle(color: Theme.of(context).cardColor),
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(30)
                             ],
@@ -193,6 +195,8 @@ class _LoginScreenState extends State<LoginScreen>
                                   bottomRight: Radius.circular(15))),
                           width: double.infinity,
                           child: TextField(
+                            style:
+                                TextStyle(color: Theme.of(context).cardColor),
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(30)
                             ],

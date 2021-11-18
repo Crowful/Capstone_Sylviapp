@@ -6,7 +6,7 @@ class MapBackend extends ChangeNotifier {
   late LatLng latlngs;
   int volunteersRequired = 0;
   int seedsRequired = 0;
-  int fundRequired = 0;
+  double fundRequired = 0;
 
   // ignore: non_constant_identifier_names
   CampaignProcess(latlng) {

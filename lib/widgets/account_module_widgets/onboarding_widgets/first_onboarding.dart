@@ -22,11 +22,9 @@ class FirstonboardingState extends State<FirstOnboarding> {
               child: Column(
                 children: [
                   Text(
-                    'Onboarding 1',
+                    'What is Sylviapp?',
                     style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xff403d55),
-                        fontSize: 25),
+                        fontWeight: FontWeight.bold, fontSize: 25),
                   ),
                   Container(
                     height: 300,
@@ -37,11 +35,11 @@ class FirstonboardingState extends State<FirstOnboarding> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Get a new experience\nof sensation',
+                      'Focused on Reforestation',
                       style: GoogleFonts.roboto(
                           fontWeight: FontWeight.w700,
                           fontSize: 20,
-                          color: Color(0xff403d55)),
+                          color: Color(0xff65BFB8)),
                     ),
                   ),
                   SizedBox(
@@ -50,7 +48,7 @@ class FirstonboardingState extends State<FirstOnboarding> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                        'Lorem ipsum dolor sit amet, consect adipiscing elit, sed do eiusmod tempor incididunt ut labore et.',
+                        'Is a system to allow the creation of reforestation campaigns for local communities.',
                         style: GoogleFonts.roboto(
                             fontWeight: FontWeight.w500, fontSize: 17)),
                   )

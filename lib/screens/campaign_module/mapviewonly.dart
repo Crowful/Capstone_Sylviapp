@@ -209,7 +209,7 @@ class _MapViewOnlyState extends State<MapViewOnly>
         final radiusProvider = watch(mapProvider);
         int finalVolunteers = radiusProvider.volunteersRequired;
         int finalSeeds = radiusProvider.seedsRequired;
-        int finalFund = radiusProvider.fundRequired;
+        double finalFund = radiusProvider.fundRequired;
         finalRadius = radiusProvider.valueRadius;
         return Scaffold(
           body: Stack(children: [
@@ -336,133 +336,6 @@ class _MapViewOnlyState extends State<MapViewOnly>
                     ]),
               ),
             ),
-            SlideTransition(
-                position:
-                    Tween<Offset>(begin: Offset(0, 1.2), end: Offset(0, 0.4))
-                        .animate(
-                  new CurvedAnimation(
-                      parent: controller, curve: Curves.fastOutSlowIn),
-                ),
-                child: SliderWidget(
-                  done: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        dateCreated = formatDate(
-                            DateTime.now(), [yyyy, '-', mm, '-', dd]);
-
-                        dateStart = formatDate(
-                            DateTime(2021, 10, 27, 2, 30, 50),
-                            [yyyy, '-', mm, '-', dd]);
-
-                        dateEnded = formatDate(
-                            DateTime(2021, 10, 27, 2, 30, 50),
-                            [yyyy, '-', mm, '-', dd]);
-
-                        time = formatDate(DateTime(2021, 09, 27, 2, 30, 50),
-                            [HH, ':', nn, ':', ss]);
-
-                        FirebaseMessaging.instance.getToken().then((value) {
-                          context
-                              .read(authserviceProvider)
-                              .createCampaign(
-                                  context
-                                      .read(campaignProvider)
-                                      .getCampaignName,
-                                  context.read(campaignProvider).getDescription,
-                                  campaignID,
-                                  dateCreated,
-                                  context.read(campaignProvider).getStartDate,
-                                  dateEnded,
-                                  context.read(campaignProvider).getAddress,
-                                  context.read(campaignProvider).getCity,
-                                  time,
-                                  userUID,
-                                  userName,
-                                  latitude,
-                                  longitude,
-                                  finalSeeds,
-                                  currentDonations,
-                                  maxDonations,
-                                  currentVolunteers,
-                                  finalVolunteers,
-                                  value!,
-                                  radius)
-                              .whenComplete(() => controller.reverse());
-                        });
-                      });
-                    },
-                    child: Container(
-                        height: 55,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: Color(0xff65BFB8),
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: Center(
-                          child: Text(
-                            'Done',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15),
-                          ),
-                        )),
-                  ),
-                  status: Row(
-                    children: [
-                      Text("Volunteers: " + finalVolunteers.toString()),
-                      SizedBox(
-                        width: 30,
-                      ),
-                      Text("Seeds: " + finalSeeds.toString()),
-                      SizedBox(
-                        width: 30,
-                      ),
-                      Expanded(
-                          child: Text("Fund Needed: " +
-                              finalFund.toString() +
-                              "pesos")),
-                    ],
-                  ),
-                  radius: radius,
-                  back: IconButton(
-                    icon: Icon(Icons.arrow_back_ios),
-                    onPressed: () {
-                      setState(() {
-                        controller.reverse();
-                      });
-                    },
-                  ),
-                  slide: Center(
-                    child: Column(
-                      children: [
-                        Slider(
-                          activeColor: Colors.green,
-                          inactiveColor: Colors.red,
-                          value: radius,
-                          onChanged: (radius1) {
-                            setState(() {
-                              radius = radius1;
-                              context
-                                  .read(mapProvider)
-                                  .RadiusAssign(radius * 100);
-                              putCircle(testlatlng, finalRadius, circleID);
-                              print(circleID);
-                              context
-                                  .read(mapProvider)
-                                  .checkVolunteersNeeded(finalRadius);
-                              context
-                                  .read(mapProvider)
-                                  .checkseedsNeeded(finalRadius);
-                              context
-                                  .read(mapProvider)
-                                  .checkFundRequired(finalRadius);
-                            });
-                          },
-                        )
-                      ],
-                    ),
-                  ),
-                )),
           ]),
         );
       }),
