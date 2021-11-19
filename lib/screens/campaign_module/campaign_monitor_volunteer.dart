@@ -38,6 +38,7 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
 
   @override
   void initState() {
+    _getUserLocation();
     FirebaseMessaging.onMessage.listen((event) {
       showDialog(
           context: context,
@@ -60,7 +61,6 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
     FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
         alert: true, badge: true, sound: true);
     super.initState();
-    _getUserLocation();
   }
 
   @override
@@ -400,7 +400,7 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: MediaQuery.of(context).size.height - 670,
+              height: MediaQuery.of(context).size.height * 0.19,
               decoration: BoxDecoration(
                 color: Color(0xff65BFB8),
               ),
