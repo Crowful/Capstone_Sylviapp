@@ -441,7 +441,6 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                 setState(() {
                                                                                   print('gana e');
                                                                                   latitude = latlng.latitude;
-
                                                                                   longitude = latlng.longitude;
                                                                                   testlatlng = latlng;
                                                                                   putCircle(finalRadius, latitude, longitude);
