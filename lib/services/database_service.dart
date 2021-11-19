@@ -202,6 +202,8 @@ class DatabaseService {
   Future starTheCampaign(String uidOfCampaign) async {
     return await approvedCampaignCollection.doc(uidOfCampaign).update({
       'inProgress': true,
+      'isActive': false,
+      'isCompleted': false,
     });
   }
 

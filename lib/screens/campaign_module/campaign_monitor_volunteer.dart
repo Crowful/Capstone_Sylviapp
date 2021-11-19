@@ -85,7 +85,7 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                       snapshotCampaignName.data!.get("campaign_name");
 
                   var deviceTokenOrganizer =
-                      snapshotCampaignName.data!.get("deviceTokenOfOrganizer");
+                      snapshotCampaignName.data!.get("deviceTokenofOrganizer");
 
                   var date = snapshotCampaignName.data!.get("date_start");
 
