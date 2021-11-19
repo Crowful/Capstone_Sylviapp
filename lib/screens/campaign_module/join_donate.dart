@@ -200,24 +200,38 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                     radius: 35,
                                                     backgroundColor:
                                                         Color(0xff65BFB8),
-                                                    child: CircleAvatar(
-                                                      radius: 32,
-                                                      backgroundImage:
-                                                          FadeInImage
-                                                              .memoryNetwork(
-                                                        placeholder:
-                                                            kTransparentImage,
-                                                        image: urlTest2,
-                                                        imageErrorBuilder:
-                                                            (context, error,
-                                                                stackTrace) {
-                                                          return CircularProgressIndicator();
-                                                        },
-                                                      ).image,
-                                                      backgroundColor: Colors
-                                                          .white
-                                                          .withOpacity(0.5),
-                                                    ),
+                                                    child: urlTest2 == ""
+                                                        ? CircleAvatar(
+                                                            radius: 32,
+                                                            child: FittedBox(
+                                                              child: Icon(
+                                                                  Icons.person),
+                                                            ),
+                                                            backgroundColor:
+                                                                Colors.white
+                                                                    .withOpacity(
+                                                                        0.5),
+                                                          )
+                                                        : CircleAvatar(
+                                                            radius: 32,
+                                                            backgroundImage:
+                                                                FadeInImage
+                                                                    .memoryNetwork(
+                                                              placeholder:
+                                                                  kTransparentImage,
+                                                              image: urlTest2,
+                                                              imageErrorBuilder:
+                                                                  (context,
+                                                                      error,
+                                                                      stackTrace) {
+                                                                return CircularProgressIndicator();
+                                                              },
+                                                            ).image,
+                                                            backgroundColor:
+                                                                Colors.white
+                                                                    .withOpacity(
+                                                                        0.5),
+                                                          ),
                                                   ),
                                                 ]),
                                                 SizedBox(
