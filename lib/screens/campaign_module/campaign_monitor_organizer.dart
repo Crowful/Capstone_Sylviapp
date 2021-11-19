@@ -489,35 +489,41 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                                   showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return Card(
-                                          child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  child: TextField(
-                                                    controller:
-                                                        announcementTextController,
+                                        return Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              20, 200, 20, 400),
+                                          child: Card(
+                                            child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    width: 200,
+                                                    height: 50,
+                                                    child: TextField(
+                                                      controller:
+                                                          announcementTextController,
+                                                    ),
                                                   ),
-                                                ),
-                                                ElevatedButton(
-                                                    onPressed: () async {
-                                                      await context
-                                                          .read(
-                                                              authserviceProvider)
-                                                          .addAnnouncement(
-                                                              widget
-                                                                  .uidOfCampaign,
-                                                              announcementTextController
-                                                                  .text);
+                                                  ElevatedButton(
+                                                      onPressed: () async {
+                                                        await context
+                                                            .read(
+                                                                authserviceProvider)
+                                                            .addAnnouncement(
+                                                                widget
+                                                                    .uidOfCampaign,
+                                                                announcementTextController
+                                                                    .text);
 
-                                                      announcementTextController
-                                                          .clear();
-                                                    },
-                                                    child: Text("Post"))
-                                              ]),
+                                                        announcementTextController
+                                                            .clear();
+                                                      },
+                                                      child: Text("Post"))
+                                                ]),
+                                          ),
                                         );
                                       });
                                 },
@@ -528,7 +534,10 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                                 onPressed: () {
                                   Navigator.of(context)
                                       .push(HeroDialogRoute(builder: (context) {
-                                    return cancelCampaign();
+                                    return Container(
+                                        margin: EdgeInsets.fromLTRB(
+                                            20, 200, 20, 400),
+                                        child: cancelCampaign());
                                   }));
                                 },
                                 child: Center(
@@ -595,9 +604,14 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                     SizedBox(
                       width: 20,
                     ),
-                    Text(
-                      "Cancel",
-                      style: TextStyle(fontWeight: FontWeight.w600),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
                     )
                   ],
                 ),
