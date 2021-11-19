@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/animation/pop_up.dart';
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/screens/campaign_module/campaign_done.dart';
 import 'package:sylviapp_project/screens/campaign_module/organizer_inprogress_campaign.dart';
 import 'package:sylviapp_project/screens/campaign_module/showVolunteer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -163,6 +164,11 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                                   true) {
                                 return InProgressCampaign(
                                     uidOfCampaign: widget.uidOfCampaign);
+                              }
+
+                              if (snapshotCampaign.data!.get('isCompleted') ==
+                                  true) {
+                                return CampaignCompleted();
                               }
                               var campaignName =
                                   snapshotCampaign.data?.get("campaign_name");
