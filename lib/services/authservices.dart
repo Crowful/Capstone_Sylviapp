@@ -674,6 +674,20 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  endTheCampaign(String campaignUID) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .endTheCampaign(campaignUID)
+          .whenComplete(() => Fluttertoast.showToast(msg: "CAMPAIGN ENDED"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
   donateCampaign(String uidOfCampaign, int amount, String dateDonated,
       String uidUser) async {
     try {

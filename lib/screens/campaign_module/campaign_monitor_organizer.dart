@@ -161,7 +161,8 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                             } else {
                               if (snapshotCampaign.data!.get('inProgress') ==
                                   true) {
-                                return InProgressCampaign();
+                                return InProgressCampaign(
+                                    uidOfCampaign: widget.uidOfCampaign);
                               }
                               var campaignName =
                                   snapshotCampaign.data?.get("campaign_name");

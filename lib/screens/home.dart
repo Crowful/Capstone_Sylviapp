@@ -717,7 +717,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             child: StreamBuilder<QuerySnapshot>(
                                 stream: FirebaseFirestore.instance
                                     .collection("campaigns")
-                                    .where('isDone', isEqualTo: true)
+                                    .where('isCompleted', isEqualTo: true)
                                     .snapshots(),
                                 builder: (context, snapshotAnalyticsDone) {
                                   if (!snapshotAnalyticsDone.hasData) {

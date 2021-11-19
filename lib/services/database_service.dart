@@ -207,6 +207,14 @@ class DatabaseService {
     });
   }
 
+  Future endTheCampaign(String uidOfCampaign) async {
+    return await approvedCampaignCollection.doc(uidOfCampaign).update({
+      'inProgress': false,
+      'isActive': false,
+      'isCompleted': true,
+    });
+  }
+
   Future donatedToCampaign(
     String uidOfCampaign,
     int amount,
