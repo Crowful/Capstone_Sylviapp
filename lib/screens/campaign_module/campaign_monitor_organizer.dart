@@ -119,6 +119,8 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
     }
   }
 
+  bool isShow = true;
+
   DateTime selectedDate = DateTime.now();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -162,385 +164,410 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                             } else {
                               if (snapshotCampaign.data!.get('inProgress') ==
                                   true) {
+                                isShow = false;
                                 return InProgressCampaign(
                                     uidOfCampaign: widget.uidOfCampaign);
                               }
 
                               if (snapshotCampaign.data!.get('isCompleted') ==
                                   true) {
+                                isShow = false;
                                 return CampaignCompleted();
                               }
-                              var campaignName =
-                                  snapshotCampaign.data?.get("campaign_name");
+                              if (snapshotCampaign.data!.get('isActive') ==
+                                  true) {
+                                isShow = false;
+                                var campaignName =
+                                    snapshotCampaign.data?.get("campaign_name");
 
-                              var orgName = snapshotCampaign.data?.get("uid");
+                                var orgName = snapshotCampaign.data?.get("uid");
 
-                              return Container(
-                                height: MediaQuery.of(context).size.height,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height:
-                                          MediaQuery.of(context).size.height -
-                                              670,
-                                      color: Color(0xff65BFB8),
-                                      child: Stack(
-                                        children: [
-                                          Positioned(
-                                            top: 40,
-                                            right: 10,
-                                            child: Container(
-                                              height: 150,
-                                              width: 150,
-                                              decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                      image: AssetImage(
-                                                          "assets/images/userpass.png"))),
-                                            ),
-                                          ),
-                                          FadeAnimation(
-                                            0.1,
-                                            Container(
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      IconButton(
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          icon: Icon(Icons
-                                                              .arrow_back)),
-                                                      Text(
-                                                        campaignName,
-                                                        style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  StreamBuilder<
-                                                          DocumentSnapshot>(
-                                                      stream: FirebaseFirestore
-                                                          .instance
-                                                          .collection(
-                                                              "campaigns")
-                                                          .doc(widget
-                                                              .uidOfCampaign)
-                                                          .snapshots(),
-                                                      builder:
-                                                          (context, snapshot) {
-                                                        if (!snapshot.hasData) {
-                                                          return CircularProgressIndicator();
-                                                        } else {
-                                                          return StreamBuilder<
-                                                                  DocumentSnapshot>(
-                                                              stream: FirebaseFirestore
-                                                                  .instance
-                                                                  .collection(
-                                                                      'users')
-                                                                  .doc(snapshot
-                                                                      .data!
-                                                                      .get(
-                                                                          'uid'))
-                                                                  .snapshots(),
-                                                              builder: (context,
-                                                                  snapshoteds) {
-                                                                if (!snapshoteds
-                                                                    .hasData) {
-                                                                  return CircularProgressIndicator();
-                                                                } else {
-                                                                  return FadeAnimation(
-                                                                    0.3,
-                                                                    Container(
-                                                                      padding:
-                                                                          EdgeInsets.all(
-                                                                              15),
-                                                                      child:
-                                                                          Column(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.start,
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Text(
-                                                                            "Hello, Organizer",
-                                                                            style:
-                                                                                Theme.of(context).textTheme.headline1,
-                                                                          ),
-                                                                          SizedBox(
-                                                                            height:
-                                                                                5,
-                                                                          ),
-                                                                          Text(
-                                                                            "Manage the volunteers for your upcoming campaign, organizer.",
-                                                                            style:
-                                                                                Theme.of(context).textTheme.headline2,
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  );
-                                                                }
-                                                              });
-                                                        }
-                                                      }),
-                                                ],
+                                return Container(
+                                  height: MediaQuery.of(context).size.height,
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height -
+                                                670,
+                                        color: Color(0xff65BFB8),
+                                        child: Stack(
+                                          children: [
+                                            Positioned(
+                                              top: 40,
+                                              right: 10,
+                                              child: Container(
+                                                height: 150,
+                                                width: 150,
+                                                decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                        image: AssetImage(
+                                                            "assets/images/userpass.png"))),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: FadeAnimation(
-                                        0.5,
-                                        Container(
-                                          width: double.infinity,
-                                          padding: EdgeInsets.all(20),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Manage Volunteers",
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Expanded(
-                                                child: Container(
-                                                  padding:
-                                                      const EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  5))),
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: ListView(
-                                                      children:
-                                                          snapshotVolunteers
-                                                              .data!.docs
-                                                              .map((e) {
-                                                    return StreamBuilder<
+                                            FadeAnimation(
+                                              0.1,
+                                              Container(
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        IconButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            icon: Icon(Icons
+                                                                .arrow_back)),
+                                                        Text(
+                                                          campaignName,
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    StreamBuilder<
                                                             DocumentSnapshot>(
                                                         stream: FirebaseFirestore
                                                             .instance
-                                                            .collection('users')
-                                                            .doc(e[
-                                                                "volunteerUID"])
+                                                            .collection(
+                                                                "campaigns")
+                                                            .doc(widget
+                                                                .uidOfCampaign)
                                                             .snapshots(),
                                                         builder: (context,
-                                                            snapshotList) {
-                                                          if (!snapshotList
+                                                            snapshot) {
+                                                          if (!snapshot
                                                               .hasData) {
                                                             return CircularProgressIndicator();
                                                           } else {
-                                                            String? sentence = toBeginningOfSentenceCase(
-                                                                AESCryptography().decryptAES(enc
-                                                                        .Encrypted
-                                                                    .from64(snapshotList
+                                                            return StreamBuilder<
+                                                                    DocumentSnapshot>(
+                                                                stream: FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'users')
+                                                                    .doc(snapshot
                                                                         .data!
                                                                         .get(
-                                                                            ("gender")))));
-                                                            return FadeAnimation(
-                                                              0.7,
-                                                              volunteerWidget(
-                                                                  number: AESCryptography().decryptAES(enc.Encrypted.from64(
-                                                                      snapshotList
+                                                                            'uid'))
+                                                                    .snapshots(),
+                                                                builder: (context,
+                                                                    snapshoteds) {
+                                                                  if (!snapshoteds
+                                                                      .hasData) {
+                                                                    return CircularProgressIndicator();
+                                                                  } else {
+                                                                    return FadeAnimation(
+                                                                      0.3,
+                                                                      Container(
+                                                                        padding:
+                                                                            EdgeInsets.all(15),
+                                                                        child:
+                                                                            Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.start,
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                              "Hello, Organizer",
+                                                                              style: Theme.of(context).textTheme.headline1,
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 5,
+                                                                            ),
+                                                                            Text(
+                                                                              "Manage the volunteers for your upcoming campaign, organizer.",
+                                                                              style: Theme.of(context).textTheme.headline2,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  }
+                                                                });
+                                                          }
+                                                        }),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: FadeAnimation(
+                                          0.5,
+                                          Container(
+                                            width: double.infinity,
+                                            padding: EdgeInsets.all(20),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Manage Volunteers",
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Expanded(
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    5))),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: ListView(
+                                                        children:
+                                                            snapshotVolunteers
+                                                                .data!.docs
+                                                                .map((e) {
+                                                      return StreamBuilder<
+                                                              DocumentSnapshot>(
+                                                          stream: FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'users')
+                                                              .doc(e[
+                                                                  "volunteerUID"])
+                                                              .snapshots(),
+                                                          builder: (context,
+                                                              snapshotList) {
+                                                            if (!snapshotList
+                                                                .hasData) {
+                                                              return CircularProgressIndicator();
+                                                            } else {
+                                                              String? sentence =
+                                                                  toBeginningOfSentenceCase(AESCryptography().decryptAES(enc
+                                                                          .Encrypted
+                                                                      .from64(snapshotList
                                                                           .data!
                                                                           .get(
-                                                                              "phoneNumber"))),
-                                                                  imgLink:
-                                                                      snapshotList
-                                                                          .data!
-                                                                          .id,
-                                                                  orgID:
-                                                                      orgName,
-                                                                  uid:
-                                                                      snapshotList
-                                                                          .data!
-                                                                          .id,
-                                                                  name: AESCryptography()
-                                                                      .decryptAES(enc.Encrypted.from64(snapshotList
-                                                                          .data!
-                                                                          .get("fullname"))),
-                                                                  gender: sentence!),
-                                                            );
-                                                          }
-                                                        });
-                                                  }).toList()),
-                                                ),
-                                              )
-                                            ],
+                                                                              ("gender")))));
+                                                              return FadeAnimation(
+                                                                0.7,
+                                                                volunteerWidget(
+                                                                    number: AESCryptography().decryptAES(enc.Encrypted
+                                                                        .from64(snapshotList
+                                                                            .data!
+                                                                            .get(
+                                                                                "phoneNumber"))),
+                                                                    imgLink:
+                                                                        snapshotList
+                                                                            .data!
+                                                                            .id,
+                                                                    orgID:
+                                                                        orgName,
+                                                                    uid: snapshotList
+                                                                        .data!
+                                                                        .id,
+                                                                    name: AESCryptography()
+                                                                        .decryptAES(
+                                                                            enc.Encrypted.from64(snapshotList.data!.get("fullname"))),
+                                                                    gender: sentence!),
+                                                              );
+                                                            }
+                                                          });
+                                                    }).toList()),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              );
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return Center(
+                                  child: Text('Something went wrong'),
+                                );
+                              }
                             }
                           });
                     }
                   }),
-              AnimatedPositioned(
-                top: isOpened
-                    ? MediaQuery.of(context).size.height - 80
-                    : MediaQuery.of(context).size.height - 350,
-                duration: Duration(milliseconds: 500),
-                child: FadeAnimation(
-                  0.9,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10))),
-                        padding: const EdgeInsets.all(20),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isOpened = !isOpened;
-                              _handleIcon();
-                            });
-                          },
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: AnimatedIcon(
-                              progress: _animationController,
-                              icon: AnimatedIcons.menu_close,
-                              size: 25,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        height: 400,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Color(0xff65BFB8),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20)),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+              isShow == false
+                  ? AnimatedPositioned(
+                      top: isOpened
+                          ? MediaQuery.of(context).size.height - 80
+                          : MediaQuery.of(context).size.height - 350,
+                      duration: Duration(milliseconds: 500),
+                      child: FadeAnimation(
+                        0.9,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text(
-                              "Campaign Settings",
-                              style: Theme.of(context).textTheme.headline1,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            ElevatedButton(
-                              onPressed: () =>
-                                  _selectDate(context).whenComplete(() {
-                                context
-                                    .read(authserviceProvider)
-                                    .setStartingDate(widget.uidOfCampaign,
-                                        selectedDate.toString());
-                              }),
-                              child: Center(
-                                child: Text(
-                                  "Set Start Date",
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10))),
+                              padding: const EdgeInsets.all(20),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    isOpened = !isOpened;
+                                    _handleIcon();
+                                  });
+                                },
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: AnimatedIcon(
+                                    progress: _animationController,
+                                    icon: AnimatedIcons.menu_close,
+                                    size: 25,
+                                  ),
                                 ),
                               ),
                             ),
-                            ElevatedButton(
-                              onPressed: () => context
-                                  .read(authserviceProvider)
-                                  .startTheCampaign(widget.uidOfCampaign),
-                              child: Center(
-                                child: Text(
-                                  "Start The Campaign now",
-                                ),
+                            Container(
+                              padding: const EdgeInsets.all(20),
+                              height: 400,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: Color(0xff65BFB8),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20)),
                               ),
-                            ),
-                            ElevatedButton(
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return Card(
-                                          child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  child: TextField(
-                                                    controller:
-                                                        announcementTextController,
-                                                  ),
-                                                ),
-                                                ElevatedButton(
-                                                    onPressed: () async {
-                                                      await context
-                                                          .read(
-                                                              authserviceProvider)
-                                                          .addAnnouncement(
-                                                              widget
-                                                                  .uidOfCampaign,
-                                                              announcementTextController
-                                                                  .text);
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Campaign Settings",
+                                    style:
+                                        Theme.of(context).textTheme.headline1,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () =>
+                                        _selectDate(context).whenComplete(() {
+                                      context
+                                          .read(authserviceProvider)
+                                          .setStartingDate(widget.uidOfCampaign,
+                                              selectedDate.toString());
+                                    }),
+                                    child: Center(
+                                      child: Text(
+                                        "Set Start Date",
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () => context
+                                        .read(authserviceProvider)
+                                        .startTheCampaign(widget.uidOfCampaign),
+                                    child: Center(
+                                      child: Text(
+                                        "Start The Campaign now",
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return Container(
+                                                margin: EdgeInsets.fromLTRB(
+                                                    20, 200, 20, 400),
+                                                child: Card(
+                                                  child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Container(
+                                                          width: 200,
+                                                          height: 50,
+                                                          child: TextField(
+                                                            controller:
+                                                                announcementTextController,
+                                                          ),
+                                                        ),
+                                                        ElevatedButton(
+                                                            onPressed:
+                                                                () async {
+                                                              await context
+                                                                  .read(
+                                                                      authserviceProvider)
+                                                                  .addAnnouncement(
+                                                                      widget
+                                                                          .uidOfCampaign,
+                                                                      announcementTextController
+                                                                          .text);
 
-                                                      announcementTextController
-                                                          .clear();
-                                                    },
-                                                    child: Text("Post"))
-                                              ]),
-                                        );
-                                      });
-                                },
-                                child: Center(
-                                  child: Text("Announce"),
-                                )),
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .push(HeroDialogRoute(builder: (context) {
-                                    return cancelCampaign();
-                                  }));
-                                },
-                                child: Center(
-                                  child: Text("Cancel Campaign"),
-                                ))
+                                                              announcementTextController
+                                                                  .clear();
+                                                            },
+                                                            child: Text("Post"))
+                                                      ]),
+                                                ),
+                                              );
+                                            });
+                                      },
+                                      child: Center(
+                                        child: Text("Announce"),
+                                      )),
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            HeroDialogRoute(builder: (context) {
+                                          return Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  20, 200, 20, 400),
+                                              child: cancelCampaign());
+                                        }));
+                                      },
+                                      child: Center(
+                                        child: Text("Cancel Campaign"),
+                                      ))
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
+                    )
+                  : Text(''),
             ],
           ),
         ),
@@ -595,9 +622,14 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                     SizedBox(
                       width: 20,
                     ),
-                    Text(
-                      "Cancel",
-                      style: TextStyle(fontWeight: FontWeight.w600),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
                     )
                   ],
                 ),
