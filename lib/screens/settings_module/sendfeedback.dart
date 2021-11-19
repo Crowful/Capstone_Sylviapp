@@ -1,3 +1,4 @@
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,12 +51,15 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
                 style: ElevatedButton.styleFrom(
                     shape: StadiumBorder(), primary: Colors.green),
                 onPressed: () {
+                  String dateCreated =
+                      formatDate(DateTime.now(), [yyyy, '-', mm, '-', dd]);
                   if (_feedbackController.text == "") {
                     Fluttertoast.showToast(msg: 'Please Input feedback');
                   } else {
-                    context
-                        .read(authserviceProvider)
-                        .addFeedback(_feedbackController.text);
+                    context.read(authserviceProvider).addFeedback(
+                        _feedbackController.text,
+                        context.read(authserviceProvider).getCurrentUserUID(),
+                        dateCreated);
                     _feedbackController.clear();
                   }
                 },

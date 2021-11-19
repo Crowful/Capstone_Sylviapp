@@ -288,8 +288,11 @@ class DatabaseService {
         .set({"report": typeOfReport});
   }
 
-  Future addFeedbacks(String feedback) async {
-    return await feedbackCollection.doc().set({"feedback": feedback});
+  Future addFeedbacks(
+      String feedback, String uidOfVolunteer, String date) async {
+    return await feedbackCollection
+        .doc()
+        .set({"feedback": feedback, "uid": uidOfVolunteer, "date": date});
   }
 
   Future addMessage(String uidOfCampaign, String uidOfOrganizer,
