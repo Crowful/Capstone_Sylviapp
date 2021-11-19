@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-import 'package:date_format/date_format.dart';
-=======
 import 'package:cloud_firestore/cloud_firestore.dart';
->>>>>>> a888738237e53f6e6bec7ff91fe2961e7aa88b23
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,16 +73,10 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
                   if (_feedbackController.text == "") {
                     Fluttertoast.showToast(msg: 'Please Input feedback');
                   } else {
-<<<<<<< HEAD
                     context.read(authserviceProvider).addFeedback(
                         _feedbackController.text,
                         context.read(authserviceProvider).getCurrentUserUID(),
                         dateCreated);
-=======
-                    context
-                        .read(authserviceProvider)
-                        .addFeedback(_feedbackController.text, nameOfUser);
->>>>>>> a888738237e53f6e6bec7ff91fe2961e7aa88b23
                     _feedbackController.clear();
                   }
                 },

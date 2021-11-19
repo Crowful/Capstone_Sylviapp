@@ -372,8 +372,8 @@ class _MapCampaignState extends State<MapCampaign>
                                                                         element[
                                                                             'longitude'],
                                                                     "radius":
-                                                                        element['radius'] *
-                                                                            10,
+                                                                        element[
+                                                                            'radius'],
                                                                     "campaignUid":
                                                                         element[
                                                                             'campaignID'],
