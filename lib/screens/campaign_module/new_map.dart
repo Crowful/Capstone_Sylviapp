@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as fmap;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -93,7 +94,6 @@ class _MapCampaignState extends State<MapCampaign>
   List<lt.LatLng> latlngpolygonlistPantabangan = List.empty(growable: true);
   late List<dynamic> pointlist = List.empty(growable: true);
   List<mtk.LatLng> mtkPolygonLamesa = List.empty(growable: true);
-
   List<mtk.LatLng> mtkPolygonAngat = List.empty(growable: true);
   List<mtk.LatLng> mtkPolygonPantabangan = List.empty(growable: true);
   fmap.MapController cntrler = fmap.MapController();
@@ -429,7 +429,13 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                 mtkPolygonPanbatanbangan.add(mtk.LatLng(element.latitude, element.longitude));
                                                                               });
 
-                                                                              isPointValid = mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonLamesa, false) || mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonAngat, false);
+                                                                              List<mtk.LatLng> mtkPolygonLamesa = List.empty(growable: true);
+                                                                              latlngpolygonlistLamesa.forEach((element) {
+                                                                                mtkPolygonLamesa.add(mtk.LatLng(element.latitude, element.longitude));
+                                                                              });
+                                                                              setState(() {
+                                                                                isPointValid = mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonLamesa, false) || mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonAngat, false) || mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonPantabangan, false);
+                                                                              });
 
                                                                               if (isPointValid == true) {
                                                                                 setState(() {
@@ -512,7 +518,7 @@ class _MapCampaignState extends State<MapCampaign>
                                                                           in existingCampaign)
                                                                         fmap.CircleLayerOptions(
                                                                             circles: [
-                                                                              fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: info.values.elementAt(2), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2)),
+                                                                              fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2)),
                                                                             ]),
                                                                       for (var info
                                                                           in existingCampaign)
@@ -989,21 +995,64 @@ class _MapCampaignState extends State<MapCampaign>
                                             )),
                                       ),
                                       status: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Text("Volunteers: " +
-                                              finalVolunteers.toString()),
+                                          Column(children: [
+                                            Text(
+                                              "Volunteers:",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              finalVolunteers.toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w300,
+                                                  fontSize: 25),
+                                            )
+                                          ]),
                                           SizedBox(
                                             width: 30,
                                           ),
-                                          Text("Seeds: " +
-                                              finalSeeds.toString()),
+                                          Column(children: [
+                                            Text(
+                                              "Seeds:",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(finalSeeds.toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w300,
+                                                    fontSize: 25))
+                                          ]),
                                           SizedBox(
                                             width: 30,
                                           ),
-                                          Expanded(
-                                              child: Text("Fund Needed: " +
-                                                  finalFund.toString() +
-                                                  "pesos")),
+                                          Column(children: [
+                                            Text(
+                                              "Fund Needed:",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(finalFund.toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w300,
+                                                    fontSize: 25))
+                                          ]),
                                         ],
                                       ),
                                       radius: radius,
