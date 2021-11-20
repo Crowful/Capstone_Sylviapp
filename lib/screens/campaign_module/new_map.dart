@@ -111,7 +111,6 @@ class _MapCampaignState extends State<MapCampaign>
   List<Map<String, dynamic>> getDone = List.empty(growable: true);
 
   lt.LatLng? _initialCameraPosition = lt.LatLng(14.7452, 121.0984);
-  double finalRadius = 0;
 
   @override
   void initState() {
@@ -856,6 +855,7 @@ class _MapCampaignState extends State<MapCampaign>
                                     child: Consumer(
                                         builder: (context, watch, child) {
                                       double radius = 0;
+                                      double finalRadius = 0;
                                       double radiusTest = 0;
                                       final radiusProvider = watch(mapProvider);
                                       int finalVolunteers =
@@ -902,51 +902,50 @@ class _MapCampaignState extends State<MapCampaign>
                                                   DateTime(
                                                       2021, 09, 27, 2, 30, 50),
                                                   [HH, ':', nn, ':', ss]);
-
-                                              FirebaseMessaging.instance
-                                                  .getToken()
-                                                  .then((value) {
-                                                context
-                                                    .read(authserviceProvider)
-                                                    .createCampaign(
-                                                        context
-                                                            .read(
-                                                                campaignProvider)
-                                                            .getCampaignName,
-                                                        context
-                                                            .read(
-                                                                campaignProvider)
-                                                            .getDescription,
-                                                        uniqueID,
-                                                        dateCreated,
-                                                        context
-                                                            .read(
-                                                                campaignProvider)
-                                                            .getStartDate,
-                                                        dateEnded,
-                                                        context
-                                                            .read(
-                                                                campaignProvider)
-                                                            .getAddress,
-                                                        context
-                                                            .read(
-                                                                campaignProvider)
-                                                            .getCity,
-                                                        time,
-                                                        userUID,
-                                                        usernames,
-                                                        latitude,
-                                                        longitude,
-                                                        finalSeeds,
-                                                        currentDonations,
-                                                        finalFund,
-                                                        currentVolunteers,
-                                                        finalVolunteers,
-                                                        value!,
-                                                        finalRadius)
-                                                    .whenComplete(() =>
-                                                        controller.reverse());
-                                              });
+                                            });
+                                            FirebaseMessaging.instance
+                                                .getToken()
+                                                .then((value) {
+                                              context
+                                                  .read(authserviceProvider)
+                                                  .createCampaign(
+                                                      context
+                                                          .read(
+                                                              campaignProvider)
+                                                          .getCampaignName,
+                                                      context
+                                                          .read(
+                                                              campaignProvider)
+                                                          .getDescription,
+                                                      uniqueID,
+                                                      dateCreated,
+                                                      context
+                                                          .read(
+                                                              campaignProvider)
+                                                          .getStartDate,
+                                                      dateEnded,
+                                                      context
+                                                          .read(
+                                                              campaignProvider)
+                                                          .getAddress,
+                                                      context
+                                                          .read(
+                                                              campaignProvider)
+                                                          .getCity,
+                                                      time,
+                                                      userUID,
+                                                      usernames,
+                                                      latitude,
+                                                      longitude,
+                                                      finalSeeds,
+                                                      currentDonations,
+                                                      finalFund,
+                                                      currentVolunteers,
+                                                      finalVolunteers,
+                                                      value!,
+                                                      finalRadius)
+                                                  .whenComplete(() =>
+                                                      controller.reverse());
                                             });
                                           },
                                           child: Container(
@@ -1037,6 +1036,7 @@ class _MapCampaignState extends State<MapCampaign>
                                               color: Colors.black),
                                           onPressed: () {
                                             setState(() {
+                                              print(finalRadius);
                                               controller.reverse();
                                             });
                                           },
@@ -1047,16 +1047,18 @@ class _MapCampaignState extends State<MapCampaign>
                                               Slider(
                                                 activeColor: Colors.green,
                                                 inactiveColor: Colors.red,
-                                                value: radius,
+                                                value: finalRadius,
                                                 min: 0,
-                                                max: 0.10,
+                                                max: 100,
                                                 onChanged: (newValue) {
                                                   setState(() {
                                                     radius = newValue;
+                                                    context
+                                                        .read(mapProvider)
+                                                        .RadiusAssign(radius);
+                                                    finalRadius = newValue;
                                                   });
-                                                  context
-                                                      .read(mapProvider)
-                                                      .RadiusAssign(radius);
+
                                                   putCircle(finalRadius,
                                                       latitude, longitude);
 
