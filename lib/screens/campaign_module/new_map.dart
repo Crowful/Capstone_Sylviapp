@@ -177,19 +177,15 @@ class _MapCampaignState extends State<MapCampaign>
                     backgroundColor:
                         isVerified ? Color(0xff65BFB8) : Colors.grey,
                     onPressed: () {
-                      print(createMode);
-                      setState(() {
-                        if (isVerified == true) {
-                          createMode = !createMode;
+                      if (isVerified == true) {
+                        createMode = !createMode;
 
-                          if (createMode == true) {
-                            Fluttertoast.showToast(msg: "In create mode.");
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: "Disabled create mode.");
-                          }
+                        if (createMode == true) {
+                          Fluttertoast.showToast(msg: "In create mode.");
+                        } else {
+                          Fluttertoast.showToast(msg: "Disabled create mode.");
                         }
-                      });
+                      }
                     },
                     child: Icon(Icons.add),
                   ),
@@ -323,7 +319,8 @@ class _MapCampaignState extends State<MapCampaign>
                                                           .hasData) {
                                                         return CircularProgressIndicator();
                                                       } else {
-                                                        snapshotAngat.data!.docs
+                                                        snapshotPantabangan
+                                                            .data!.docs
                                                             .forEach((element) {
                                                           pointlist = List<
                                                                   dynamic>.from(
