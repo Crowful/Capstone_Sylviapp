@@ -436,7 +436,7 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                 latitude = latlng.latitude;
                                                                                 longitude = latlng.longitude;
                                                                                 testlatlng = latlng;
-                                                                                putCircle(finalRadius, latitude, longitude);
+                                                                                controller.forward();
                                                                                 cntrler.move(lt.LatLng(latlng.latitude - 0.0050, latlng.longitude), 16);
                                                                               } else if (isPointValid == false) {
                                                                                 print(isPointValid);
@@ -566,7 +566,7 @@ class _MapCampaignState extends State<MapCampaign>
                                                                           in circleMarkersCampaigns)
                                                                         fmap.CircleLayerOptions(
                                                                             circles: [
-                                                                              fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: info.values.elementAt(2), color: Colors.red)
+                                                                              fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: info.values.elementAt(2), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2))
                                                                             ])
                                                                     ]);
                                                               }
