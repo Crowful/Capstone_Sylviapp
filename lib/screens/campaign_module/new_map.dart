@@ -5,6 +5,7 @@ import 'package:date_format/date_format.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_map/flutter_map.dart' as fmap;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
@@ -31,7 +32,7 @@ class _MapCampaignState extends State<MapCampaign>
       AnimationController(vsync: this, duration: Duration(milliseconds: 500));
 
   String uid = "";
-  double radius = 0;
+
   bool isVerified = false;
   late String userHolder;
   late AnimationController _animationController =
@@ -104,7 +105,6 @@ class _MapCampaignState extends State<MapCampaign>
       List.empty(growable: true);
 
   List<Map<String, dynamic>> existingCampaign = List.empty(growable: true);
-
   List<Map<String, dynamic>> getVolunteers = List.empty(growable: true);
   List<Map<String, dynamic>> getActive = List.empty(growable: true);
   List<Map<String, dynamic>> getProgress = List.empty(growable: true);
@@ -141,7 +141,7 @@ class _MapCampaignState extends State<MapCampaign>
 
   void putCircle(double radius1, double latitude, double longitude) {
     controller.forward();
-
+    circleMarkersCampaigns.clear();
     circleMarkersCampaigns.add({
       "latitude": latitude,
       "longitude": longitude,
@@ -153,13 +153,8 @@ class _MapCampaignState extends State<MapCampaign>
   @override
   Widget build(BuildContext context) {
     dynamic userUID = context.read(authserviceProvider).getCurrentUserUID();
-    return SafeArea(child: Consumer(builder: (context, watch, child) {
-      final radiusProvider = watch(mapProvider);
-      int finalVolunteers = radiusProvider.volunteersRequired;
-      int finalSeeds = radiusProvider.seedsRequired;
-      double finalFund = radiusProvider.fundRequired;
-      finalRadius = radiusProvider.valueRadius;
-      return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+    return SafeArea(
+      child: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
           future:
               FirebaseFirestore.instance.collection('users').doc(userUID).get(),
           builder: (context, snapshot) {
@@ -356,6 +351,8 @@ class _MapCampaignState extends State<MapCampaign>
                                                                   .hasData) {
                                                                 return CircularProgressIndicator();
                                                               } else {
+                                                                existingCampaign
+                                                                    .clear();
                                                                 snapshotCampaigns
                                                                     .data!.docs
                                                                     .forEach(
@@ -435,14 +432,12 @@ class _MapCampaignState extends State<MapCampaign>
                                                                               });
 
                                                                               if (isPointValid == true) {
-                                                                                setState(() {
-                                                                                  print('gana e');
-                                                                                  latitude = latlng.latitude;
-                                                                                  longitude = latlng.longitude;
-                                                                                  testlatlng = latlng;
-                                                                                  putCircle(finalRadius, latitude, longitude);
-                                                                                  cntrler.move(lt.LatLng(latlng.latitude - 0.0050, latlng.longitude), 16);
-                                                                                });
+                                                                                print('gana e');
+                                                                                latitude = latlng.latitude;
+                                                                                longitude = latlng.longitude;
+                                                                                testlatlng = latlng;
+                                                                                putCircle(finalRadius, latitude, longitude);
+                                                                                cntrler.move(lt.LatLng(latlng.latitude - 0.0050, latlng.longitude), 16);
                                                                               } else if (isPointValid == false) {
                                                                                 print(isPointValid);
                                                                                 Fluttertoast.showToast(msg: "You cannot put campaign there");
@@ -594,6 +589,28 @@ class _MapCampaignState extends State<MapCampaign>
                                       children: [
                                         IconButton(
                                             onPressed: () {
+                                              if (isVerified == true) {
+                                                setState(() {
+                                                  createMode = !createMode;
+                                                });
+
+                                                if (createMode == true) {
+                                                  Fluttertoast.showToast(
+                                                      msg: "In create mode.");
+                                                } else {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "Disabled create mode.");
+                                                }
+                                              }
+                                            },
+                                            icon: Icon(
+                                              Icons.person_add_sharp,
+                                              size: 30,
+                                              color: Colors.grey,
+                                            )),
+                                        IconButton(
+                                            onPressed: () {
                                               setState(() {
                                                 showLayers = !showLayers;
                                               });
@@ -719,25 +736,30 @@ class _MapCampaignState extends State<MapCampaign>
                                       )),
                                 ),
                                 Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: createMode
+                                          ? Text('Create Mode')
+                                          : Text('View Mode')),
+                                ),
+                                Align(
                                   alignment: Alignment.bottomLeft,
                                   child: Padding(
                                     padding: EdgeInsets.all(10),
-                                    child: AnimatedOpacity(
-                                        opacity: showForest ? 1 : 0,
-                                        duration: Duration(milliseconds: 300),
-                                        child: AbsorbPointer(
-                                          absorbing: showForest ? false : true,
+                                    child: Container(
+                                      child: Card(
+                                        child: Container(
+                                          padding: EdgeInsets.fromLTRB(
+                                              20, 20, 20, 20),
                                           child: Row(
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
-                                                  setState(() {
-                                                    showForest = !showForest;
-                                                    cntrler.move(
-                                                        lt.LatLng(14.918990,
-                                                            121.165563),
-                                                        13);
-                                                  });
+                                                  cntrler.move(
+                                                      lt.LatLng(14.918990,
+                                                          121.165563),
+                                                      13);
                                                 },
                                                 child: Card(
                                                   elevation: 5,
@@ -757,130 +779,69 @@ class _MapCampaignState extends State<MapCampaign>
                                                   ),
                                                 ),
                                               ),
-                                              AbsorbPointer(
-                                                absorbing:
-                                                    showForest ? false : true,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      showForest = !showForest;
-                                                      cntrler.move(
-                                                          lt.LatLng(14.7452,
-                                                              121.0984),
-                                                          13);
-                                                    });
-                                                  },
-                                                  child: Card(
-                                                    elevation: 5,
-                                                    child: Container(
-                                                      height: 50,
-                                                      width: 100,
-                                                      decoration: BoxDecoration(
-                                                          color: Color(
-                                                              0xff65BFB8)),
-                                                      child: Center(
-                                                          child: Text(
-                                                        "Lamesa Forest",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      )),
-                                                    ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  cntrler.move(
+                                                      lt.LatLng(
+                                                          14.7452, 121.0984),
+                                                      13);
+                                                },
+                                                child: Card(
+                                                  elevation: 5,
+                                                  child: Container(
+                                                    height: 50,
+                                                    width: 100,
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xff65BFB8)),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Lamesa Forest",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
                                                   ),
                                                 ),
                                               ),
-                                              AbsorbPointer(
-                                                absorbing:
-                                                    showForest ? false : true,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      showForest = !showForest;
-                                                      cntrler.move(
-                                                          lt.LatLng(15.780574,
-                                                              121.121838),
-                                                          13);
-                                                    });
-                                                  },
-                                                  child: Card(
-                                                    elevation: 5,
-                                                    child: Container(
-                                                      padding:
-                                                          EdgeInsets.all(5),
-                                                      height: 50,
-                                                      width: 100,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          2)),
-                                                          color: Color(
-                                                              0xff65BFB8)),
-                                                      child: Center(
-                                                          child: Text(
-                                                              "Pantabangan Forest",
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .visible)),
-                                                    ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  cntrler.move(
+                                                      lt.LatLng(15.780574,
+                                                          121.121838),
+                                                      13);
+                                                },
+                                                child: Card(
+                                                  elevation: 5,
+                                                  child: Container(
+                                                    padding: EdgeInsets.all(5),
+                                                    height: 50,
+                                                    width: 100,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    2)),
+                                                        color:
+                                                            Color(0xff65BFB8)),
+                                                    child: Center(
+                                                        child: Text(
+                                                            "Pantabangan Forest",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .visible)),
                                                   ),
                                                 ),
                                               ),
                                             ],
                                           ),
-                                        )),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Container(
-                                              height: 500,
-                                              width: 50,
-                                              color: Colors.transparent,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  Transform(
-                                                    transform: Matrix4
-                                                        .translationValues(
-                                                      0.0,
-                                                      _translateButton.value *
-                                                          3.0,
-                                                      0.0,
-                                                    ),
-                                                    child: add(),
-                                                  ),
-                                                  Transform(
-                                                    transform: Matrix4
-                                                        .translationValues(
-                                                      0.0,
-                                                      _translateButton.value *
-                                                          2.0,
-                                                      0.0,
-                                                    ),
-                                                    child: image(),
-                                                  ),
-                                                  toggle(),
-                                                ],
-                                              ))
-                                        ]),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 SlideTransition(
@@ -892,187 +853,207 @@ class _MapCampaignState extends State<MapCampaign>
                                           parent: controller,
                                           curve: Curves.fastOutSlowIn),
                                     ),
-                                    child: SliderWidget(
-                                      done: GestureDetector(
-                                        onTap: () async {
-                                          const _chars =
-                                              'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-                                          Random _rnd = Random();
+                                    child: Consumer(
+                                        builder: (context, watch, child) {
+                                      double radius = 0;
+                                      double radiusTest = 0;
+                                      final radiusProvider = watch(mapProvider);
+                                      int finalVolunteers =
+                                          radiusProvider.volunteersRequired;
+                                      int finalSeeds =
+                                          radiusProvider.seedsRequired;
+                                      double finalFund =
+                                          radiusProvider.fundRequired;
+                                      finalRadius = radiusProvider.valueRadius;
+                                      return SliderWidget(
+                                        done: GestureDetector(
+                                          onTap: () async {
+                                            const _chars =
+                                                'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+                                            Random _rnd = Random();
 
-                                          String getRandomString(int length) =>
-                                              String.fromCharCodes(
-                                                  Iterable.generate(
-                                                      length,
-                                                      (_) => _chars.codeUnitAt(
-                                                          _rnd.nextInt(
-                                                              _chars.length))));
-                                          String uniqueID = getRandomString(15);
-                                          setState(() {
-                                            dateCreated = formatDate(
-                                                DateTime.now(),
-                                                [yyyy, '-', mm, '-', dd]);
+                                            String getRandomString(
+                                                    int length) =>
+                                                String.fromCharCodes(
+                                                    Iterable.generate(
+                                                        length,
+                                                        (_) => _chars
+                                                            .codeUnitAt(_rnd
+                                                                .nextInt(_chars
+                                                                    .length))));
+                                            String uniqueID =
+                                                getRandomString(15);
+                                            setState(() {
+                                              dateCreated = formatDate(
+                                                  DateTime.now(),
+                                                  [yyyy, '-', mm, '-', dd]);
 
-                                            dateStart = formatDate(
-                                                DateTime(
-                                                    2021, 10, 27, 2, 30, 50),
-                                                [yyyy, '-', mm, '-', dd]);
+                                              dateStart = formatDate(
+                                                  DateTime(
+                                                      2021, 10, 27, 2, 30, 50),
+                                                  [yyyy, '-', mm, '-', dd]);
 
-                                            dateEnded = formatDate(
-                                                DateTime(
-                                                    2021, 10, 27, 2, 30, 50),
-                                                [yyyy, '-', mm, '-', dd]);
+                                              dateEnded = formatDate(
+                                                  DateTime(
+                                                      2021, 10, 27, 2, 30, 50),
+                                                  [yyyy, '-', mm, '-', dd]);
 
-                                            time = formatDate(
-                                                DateTime(
-                                                    2021, 09, 27, 2, 30, 50),
-                                                [HH, ':', nn, ':', ss]);
+                                              time = formatDate(
+                                                  DateTime(
+                                                      2021, 09, 27, 2, 30, 50),
+                                                  [HH, ':', nn, ':', ss]);
 
-                                            FirebaseMessaging.instance
-                                                .getToken()
-                                                .then((value) {
-                                              context
-                                                  .read(authserviceProvider)
-                                                  .createCampaign(
-                                                      context
-                                                          .read(
-                                                              campaignProvider)
-                                                          .getCampaignName,
-                                                      context
-                                                          .read(
-                                                              campaignProvider)
-                                                          .getDescription,
-                                                      uniqueID,
-                                                      dateCreated,
-                                                      context
-                                                          .read(
-                                                              campaignProvider)
-                                                          .getStartDate,
-                                                      dateEnded,
-                                                      context
-                                                          .read(
-                                                              campaignProvider)
-                                                          .getAddress,
-                                                      context
-                                                          .read(
-                                                              campaignProvider)
-                                                          .getCity,
-                                                      time,
-                                                      userUID,
-                                                      usernames,
-                                                      latitude,
-                                                      longitude,
-                                                      finalSeeds,
-                                                      currentDonations,
-                                                      finalFund,
-                                                      currentVolunteers,
-                                                      finalVolunteers,
-                                                      value!,
-                                                      finalRadius)
-                                                  .whenComplete(() =>
-                                                      controller.reverse());
+                                              FirebaseMessaging.instance
+                                                  .getToken()
+                                                  .then((value) {
+                                                context
+                                                    .read(authserviceProvider)
+                                                    .createCampaign(
+                                                        context
+                                                            .read(
+                                                                campaignProvider)
+                                                            .getCampaignName,
+                                                        context
+                                                            .read(
+                                                                campaignProvider)
+                                                            .getDescription,
+                                                        uniqueID,
+                                                        dateCreated,
+                                                        context
+                                                            .read(
+                                                                campaignProvider)
+                                                            .getStartDate,
+                                                        dateEnded,
+                                                        context
+                                                            .read(
+                                                                campaignProvider)
+                                                            .getAddress,
+                                                        context
+                                                            .read(
+                                                                campaignProvider)
+                                                            .getCity,
+                                                        time,
+                                                        userUID,
+                                                        usernames,
+                                                        latitude,
+                                                        longitude,
+                                                        finalSeeds,
+                                                        currentDonations,
+                                                        finalFund,
+                                                        currentVolunteers,
+                                                        finalVolunteers,
+                                                        value!,
+                                                        finalRadius)
+                                                    .whenComplete(() =>
+                                                        controller.reverse());
+                                              });
                                             });
-                                          });
-                                        },
-                                        child: Container(
-                                            height: 55,
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                                color: Color(0xff65BFB8),
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5))),
-                                            child: Center(
-                                              child: Text(
-                                                'Done',
+                                          },
+                                          child: Container(
+                                              height: 55,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                  color: Color(0xff65BFB8),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(5))),
+                                              child: Center(
+                                                child: Text(
+                                                  'Done',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 15),
+                                                ),
+                                              )),
+                                        ),
+                                        status: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Column(children: [
+                                              Text(
+                                                "Volunteers:",
                                                 style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w500,
+                                                    fontWeight: FontWeight.bold,
                                                     fontSize: 15),
                                               ),
-                                            )),
-                                      ),
-                                      status: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Column(children: [
-                                            Text(
-                                              "Volunteers:",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              finalVolunteers.toString(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontSize: 25),
-                                            )
-                                          ]),
-                                          SizedBox(
-                                            width: 30,
-                                          ),
-                                          Column(children: [
-                                            Text(
-                                              "Seeds:",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(finalSeeds.toString(),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                finalVolunteers.toString(),
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w300,
-                                                    fontSize: 25))
-                                          ]),
-                                          SizedBox(
-                                            width: 30,
-                                          ),
-                                          Column(children: [
-                                            Text(
-                                              "Fund Needed:",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15),
-                                            ),
+                                                    fontSize: 25),
+                                              )
+                                            ]),
                                             SizedBox(
-                                              height: 10,
+                                              width: 30,
                                             ),
-                                            Text(finalFund.toString(),
+                                            Column(children: [
+                                              Text(
+                                                "Seeds:",
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w300,
-                                                    fontSize: 25))
-                                          ]),
-                                        ],
-                                      ),
-                                      radius: radius,
-                                      back: IconButton(
-                                        icon: Icon(Icons.arrow_back_ios),
-                                        onPressed: () {
-                                          setState(() {
-                                            controller.reverse();
-                                          });
-                                        },
-                                      ),
-                                      slide: Center(
-                                        child: Column(
-                                          children: [
-                                            Slider(
-                                              activeColor: Colors.green,
-                                              inactiveColor: Colors.red,
-                                              value: radius,
-                                              min: 0,
-                                              max: 0.10,
-                                              onChanged: (radius1) {
-                                                setState(() {
-                                                  radius = radius1;
-
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(finalSeeds.toString(),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      fontSize: 25))
+                                            ]),
+                                            SizedBox(
+                                              width: 30,
+                                            ),
+                                            Column(children: [
+                                              Text(
+                                                "Fund Needed:",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(finalFund.toString(),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      fontSize: 25))
+                                            ]),
+                                          ],
+                                        ),
+                                        radius: radius,
+                                        back: IconButton(
+                                          icon: Icon(Icons.arrow_back_ios,
+                                              color: Colors.black),
+                                          onPressed: () {
+                                            setState(() {
+                                              controller.reverse();
+                                            });
+                                          },
+                                        ),
+                                        slide: Center(
+                                          child: Column(
+                                            children: [
+                                              Slider(
+                                                activeColor: Colors.green,
+                                                inactiveColor: Colors.red,
+                                                value: radius,
+                                                min: 0,
+                                                max: 0.10,
+                                                onChanged: (newValue) {
+                                                  setState(() {
+                                                    radius = newValue;
+                                                  });
                                                   context
                                                       .read(mapProvider)
                                                       .RadiusAssign(radius);
@@ -1083,28 +1064,30 @@ class _MapCampaignState extends State<MapCampaign>
                                                       .read(mapProvider)
                                                       .checkVolunteersNeeded(
                                                           finalRadius);
+
                                                   context
                                                       .read(mapProvider)
                                                       .checkseedsNeeded(
                                                           finalRadius);
+
                                                   context
                                                       .read(mapProvider)
                                                       .checkFundRequired(
                                                           finalRadius);
-                                                });
-                                              },
-                                            )
-                                          ],
+                                                },
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    )),
+                                      );
+                                    })),
                               ],
                             );
                           }
                         }),
                   ));
             }
-          });
-    }));
+          }),
+    );
   }
 }
