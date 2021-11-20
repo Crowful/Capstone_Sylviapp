@@ -519,9 +519,7 @@ class _MapViewOnlyState extends State<MapViewOnly>
                                                                                     point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
                                                                                     builder: (context) {
                                                                                       return GestureDetector(
-                                                                                          onTap: () {
-                                                                                            Navigator.push(context, MaterialPageRoute(builder: (context) => JoinDonateCampaign(uidOfCampaign: info.values.elementAt(3), uidOfOrganizer: info.values.elementAt(4), nameOfCampaign: info.values.elementAt(6), city: info.values.elementAt(7), currentFund: info.values.elementAt(8), currentVolunteer: info.values.elementAt(9), maxFund: info.values.elementAt(10), totalVolunteer: info.values.elementAt(11), address: info.values.elementAt(5), description: info.values.elementAt(12))));
-                                                                                          },
+                                                                                          onTap: () {},
                                                                                           child: Icon(
                                                                                             Icons.ac_unit,
                                                                                             color: Colors.transparent,
@@ -545,9 +543,7 @@ class _MapViewOnlyState extends State<MapViewOnly>
                                                                                     point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
                                                                                     builder: (context) {
                                                                                       return GestureDetector(
-                                                                                          onTap: () {
-                                                                                            Navigator.push(context, MaterialPageRoute(builder: (context) => JoinDonateCampaign(uidOfCampaign: info.values.elementAt(3), uidOfOrganizer: info.values.elementAt(4), nameOfCampaign: info.values.elementAt(6), city: info.values.elementAt(7), currentFund: info.values.elementAt(8), currentVolunteer: info.values.elementAt(9), maxFund: info.values.elementAt(10), totalVolunteer: info.values.elementAt(11), address: info.values.elementAt(5), description: info.values.elementAt(12))));
-                                                                                          },
+                                                                                          onTap: () {},
                                                                                           child: Icon(
                                                                                             Icons.ac_unit,
                                                                                             color: Colors.transparent,
@@ -678,9 +674,8 @@ class _MapViewOnlyState extends State<MapViewOnly>
                                                 GestureDetector(
                                                   onTap: () {
                                                     setState(() {
-                                                      showCompleted =
-                                                          !showCompleted;
-                                                      showActive = !showActive;
+                                                      showInProgress =
+                                                          !showInProgress;
 
                                                       FirebaseFirestore.instance
                                                           .collection(
@@ -735,9 +730,8 @@ class _MapViewOnlyState extends State<MapViewOnly>
                                                 GestureDetector(
                                                   onTap: () {
                                                     setState(() {
-                                                      showActive = !showActive;
-                                                      showInProgress =
-                                                          !showInProgress;
+                                                      showCompleted =
+                                                          !showCompleted;
                                                       FirebaseFirestore.instance
                                                           .collection(
                                                               'campaigns')
