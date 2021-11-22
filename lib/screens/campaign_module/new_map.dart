@@ -586,39 +586,54 @@ class _MapCampaignState extends State<MapCampaign>
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: [
-                                        IconButton(
-                                            onPressed: () {
-                                              if (isVerified == true) {
-                                                setState(() {
-                                                  createMode = !createMode;
-                                                });
+                                        Card(
+                                          elevation: 20,
+                                          child: Column(
+                                            children: [
+                                              IconButton(
+                                                  onPressed: () {
+                                                    if (isVerified == true) {
+                                                      setState(() {
+                                                        createMode =
+                                                            !createMode;
+                                                      });
 
-                                                if (createMode == true) {
-                                                  Fluttertoast.showToast(
-                                                      msg: "In create mode.");
-                                                } else {
-                                                  Fluttertoast.showToast(
-                                                      msg:
-                                                          "Disabled create mode.");
-                                                }
-                                              }
-                                            },
-                                            icon: Icon(
-                                              Icons.person_add_sharp,
-                                              size: 30,
-                                              color: Colors.grey,
-                                            )),
-                                        IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                showLayers = !showLayers;
-                                              });
-                                            },
-                                            icon: Icon(
-                                              Icons.layers,
-                                              size: 30,
-                                              color: Color(0xff65BFB8),
-                                            )),
+                                                      if (createMode == true) {
+                                                        Fluttertoast.showToast(
+                                                            msg:
+                                                                "In create mode.");
+                                                      } else {
+                                                        Fluttertoast.showToast(
+                                                            msg:
+                                                                "Disabled create mode.");
+                                                      }
+                                                    }
+                                                  },
+                                                  icon: createMode
+                                                      ? Icon(
+                                                          Icons.widgets,
+                                                          size: 30,
+                                                          color:
+                                                              Color(0xff65BFB8),
+                                                        )
+                                                      : Icon(Icons.view_compact,
+                                                          size: 30,
+                                                          color: Color(
+                                                              0xff65BFB8))),
+                                              IconButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      showLayers = !showLayers;
+                                                    });
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.layers,
+                                                    size: 30,
+                                                    color: Color(0xff65BFB8),
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
                                         AnimatedOpacity(
                                             opacity: showLayers ? 1 : 0,
                                             duration:
@@ -723,15 +738,22 @@ class _MapCampaignState extends State<MapCampaign>
                                   alignment: Alignment.topLeft,
                                   child: Padding(
                                       padding: EdgeInsets.all(5),
-                                      child: IconButton(
-                                        icon: Icon(
-                                          Icons.arrow_back,
-                                          color: Color(0xff65BFB8),
-                                          size: 30,
+                                      child: Container(
+                                        margin:
+                                            EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                        child: Card(
+                                          elevation: 20,
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.arrow_back,
+                                              color: Color(0xff65BFB8),
+                                              size: 30,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
                                         ),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
                                       )),
                                 ),
                                 Align(
@@ -739,105 +761,147 @@ class _MapCampaignState extends State<MapCampaign>
                                   child: Padding(
                                       padding: EdgeInsets.all(5),
                                       child: createMode
-                                          ? Text('Create Mode')
-                                          : Text('View Mode')),
+                                          ? Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0, 0, 0, 25),
+                                              child: Card(
+                                                child: Container(
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      20, 20, 20, 20),
+                                                  child: Text(
+                                                    'Create Mode',
+                                                    style:
+                                                        TextStyle(fontSize: 14),
+                                                  ),
+                                                ),
+                                              ))
+                                          : Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0, 0, 0, 25),
+                                              child: Card(
+                                                child: Container(
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      20, 20, 20, 20),
+                                                  child: Text(
+                                                    'View Mode',
+                                                    style:
+                                                        TextStyle(fontSize: 14),
+                                                  ),
+                                                ),
+                                              ))),
                                 ),
                                 Align(
                                   alignment: Alignment.bottomLeft,
                                   child: Padding(
                                     padding: EdgeInsets.all(10),
                                     child: Container(
+                                      margin: EdgeInsets.fromLTRB(0, 615, 0, 0),
                                       child: Card(
+                                        elevation: 20,
                                         child: Container(
                                           padding: EdgeInsets.fromLTRB(
                                               20, 20, 20, 20),
-                                          child: Row(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  cntrler.move(
-                                                      lt.LatLng(14.918990,
-                                                          121.165563),
-                                                      13);
-                                                },
-                                                child: Card(
-                                                  elevation: 5,
-                                                  child: Container(
-                                                    height: 50,
-                                                    width: 100,
-                                                    decoration: BoxDecoration(
-                                                        color:
-                                                            Color(0xff65BFB8)),
-                                                    child: Center(
-                                                        child: Text(
-                                                      "Angat Forest",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    )),
-                                                  ),
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  cntrler.move(
-                                                      lt.LatLng(
-                                                          14.7452, 121.0984),
-                                                      13);
-                                                },
-                                                child: Card(
-                                                  elevation: 5,
-                                                  child: Container(
-                                                    height: 50,
-                                                    width: 100,
-                                                    decoration: BoxDecoration(
-                                                        color:
-                                                            Color(0xff65BFB8)),
-                                                    child: Center(
-                                                        child: Text(
-                                                      "Lamesa Forest",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    )),
-                                                  ),
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  cntrler.move(
-                                                      lt.LatLng(15.780574,
-                                                          121.121838),
-                                                      13);
-                                                },
-                                                child: Card(
-                                                  elevation: 5,
-                                                  child: Container(
-                                                    padding: EdgeInsets.all(5),
-                                                    height: 50,
-                                                    width: 100,
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    2)),
-                                                        color:
-                                                            Color(0xff65BFB8)),
-                                                    child: Center(
-                                                        child: Text(
-                                                            "Pantabangan Forest",
+                                          child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text('Choose Forest'),
+                                                Row(
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        cntrler.move(
+                                                            lt.LatLng(14.918990,
+                                                                121.165563),
+                                                            13);
+                                                      },
+                                                      child: Card(
+                                                        elevation: 5,
+                                                        child: Container(
+                                                          height: 50,
+                                                          width: 100,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  color: Color(
+                                                                      0xff65BFB8)),
+                                                          child: Center(
+                                                              child: Text(
+                                                            "Angat Forest",
                                                             style: TextStyle(
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold),
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .visible)),
-                                                  ),
+                                                          )),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        cntrler.move(
+                                                            lt.LatLng(14.7452,
+                                                                121.0984),
+                                                            13);
+                                                      },
+                                                      child: Card(
+                                                        elevation: 5,
+                                                        child: Container(
+                                                          height: 50,
+                                                          width: 100,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  color: Color(
+                                                                      0xff65BFB8)),
+                                                          child: Center(
+                                                              child: Text(
+                                                            "Lamesa Forest",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          )),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        cntrler.move(
+                                                            lt.LatLng(15.780574,
+                                                                121.121838),
+                                                            13);
+                                                      },
+                                                      child: Card(
+                                                        elevation: 5,
+                                                        child: Container(
+                                                          padding:
+                                                              EdgeInsets.all(5),
+                                                          height: 50,
+                                                          width: 100,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(Radius
+                                                                          .circular(
+                                                                              2)),
+                                                              color: Color(
+                                                                  0xff65BFB8)),
+                                                          child: Center(
+                                                              child: Text(
+                                                                  "Pantabangan Forest",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .visible)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ),
-                                            ],
-                                          ),
+                                              ]),
                                         ),
                                       ),
                                     ),
