@@ -168,50 +168,6 @@ void main() {
       expect(idTokenResult, isA<IdTokenResult>());
     });
 
-    group('linkWithCredential()', () {
-      setUp(() {
-        when(mockUserPlatform!.linkWithCredential(any))
-            .thenAnswer((_) async => mockUserCredPlatform!);
-      });
-
-      test('should call linkWithCredential()', () async {
-        String newEmail = 'new@email.com';
-        EmailAuthCredential credential =
-            EmailAuthProvider.credential(email: newEmail, password: 'test')
-                as EmailAuthCredential;
-
-        await auth!.currentUser!.linkWithCredential(credential);
-
-        verify(mockUserPlatform!.linkWithCredential(credential));
-      });
-    });
-
-    group('reauthenticateWithCredential()', () {
-      setUp(() {
-        when(mockUserPlatform!.reauthenticateWithCredential(any))
-            .thenAnswer((_) => Future.value(mockUserCredPlatform));
-      });
-      test('should call reauthenticateWithCredential()', () async {
-        String newEmail = 'new@email.com';
-        EmailAuthCredential credential =
-            EmailAuthProvider.credential(email: newEmail, password: 'test')
-                as EmailAuthCredential;
-
-        await auth!.currentUser!.reauthenticateWithCredential(credential);
-
-        verify(mockUserPlatform!.reauthenticateWithCredential(credential));
-      });
-    });
-
-    test('reload()', () async {
-      // Necessary as we otherwise get a "null is not a Future<void>" error
-      when(mockUserPlatform!.reload()).thenAnswer((i) async {});
-
-      await auth!.currentUser!.reload();
-
-      verify(mockUserPlatform!.reload());
-    });
-
     test('sendEmailVerification()', () async {
       // Necessary as we otherwise get a "null is not a Future<void>" error
       when(mockUserPlatform!.sendEmailVerification(any))
@@ -225,32 +181,6 @@ void main() {
       verify(mockUserPlatform!.sendEmailVerification(actionCodeSettings));
     });
 
-    group('unlink()', () {
-      setUp(() {
-        when(mockUserPlatform!.unlink(any))
-            .thenAnswer((_) => Future.value(mockUserPlatform));
-      });
-      test('should call unlink()', () async {
-        const String providerId = 'providerId';
-
-        await auth!.currentUser!.unlink(providerId);
-
-        verify(mockUserPlatform!.unlink(providerId));
-      });
-    });
-    group('updateEmail()', () {
-      test('should call updateEmail()', () async {
-        // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockUserPlatform!.updateEmail(any)).thenAnswer((i) async {});
-
-        const String newEmail = 'newEmail';
-
-        await auth!.currentUser!.updateEmail(newEmail);
-
-        verify(mockUserPlatform!.updateEmail(newEmail));
-      });
-    });
-
     group('updatePassword()', () {
       test('should call updatePassword()', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
@@ -262,90 +192,6 @@ void main() {
 
         verify(mockUserPlatform!.updatePassword(newPassword));
       });
-    });
-    group('updatePhoneNumber()', () {
-      test('should call updatePhoneNumber()', () async {
-        // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockUserPlatform!.updatePhoneNumber(any)).thenAnswer((i) async {});
-
-        PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-          verificationId: 'test',
-          smsCode: 'test',
-        );
-
-        await auth!.currentUser!.updatePhoneNumber(phoneAuthCredential);
-
-        verify(mockUserPlatform!.updatePhoneNumber(phoneAuthCredential));
-      });
-    });
-
-    test('updateProfile()', () async {
-      // Necessary as we otherwise get a "null is not a Future<void>" error
-      when(mockUserPlatform!.updateProfile(any)).thenAnswer((i) async {});
-
-      const String displayName = 'updatedName';
-      const String photoURL = 'testUrl';
-      Map<String, String> data = <String, String>{
-        'displayName': displayName,
-        'photoURL': photoURL
-      };
-
-      await auth!.currentUser!
-          // ignore: deprecated_member_use_from_same_package
-          .updateProfile(displayName: displayName, photoURL: photoURL);
-
-      verify(mockUserPlatform!.updateProfile(data));
-    });
-
-    group('verifyBeforeUpdateEmail()', () {
-      test('should call verifyBeforeUpdateEmail()', () async {
-        // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockUserPlatform!.verifyBeforeUpdateEmail(any, any))
-            .thenAnswer((i) async {});
-
-        const newEmail = 'new@email.com';
-        ActionCodeSettings actionCodeSettings = ActionCodeSettings(url: 'test');
-
-        await auth!.currentUser!
-            .verifyBeforeUpdateEmail(newEmail, actionCodeSettings);
-
-        verify(mockUserPlatform!
-            .verifyBeforeUpdateEmail(newEmail, actionCodeSettings));
-      });
-    });
-
-    test('toString()', () async {
-      when(mockAuthPlatform.currentUser)
-          .thenReturn(TestUserPlatform(mockAuthPlatform, user!));
-
-      const userInfo = 'UserInfo('
-          'displayName: Flutter Test User, '
-          'email: test@example.com, '
-          'phoneNumber: null, '
-          'photoURL: http://www.example.com/, '
-          'providerId: firebase, '
-          'uid: 12345)';
-
-      final userMetadata = 'UserMetadata('
-          'creationTime: ${DateTime.fromMillisecondsSinceEpoch(kMockCreationTimestamp)}, '
-          'lastSignInTime: ${DateTime.fromMillisecondsSinceEpoch(kMockLastSignInTimestamp)})';
-
-      expect(
-        auth!.currentUser.toString(),
-        'User('
-        'displayName: displayName, '
-        'email: null, '
-        'emailVerified: false, '
-        'isAnonymous: true, '
-        'metadata: $userMetadata, '
-        'phoneNumber: null, '
-        'photoURL: null, '
-        'providerData, '
-        '[$userInfo], '
-        'refreshToken: null, '
-        'tenantId: null, '
-        'uid: 42)',
-      );
     });
   });
 }
@@ -400,23 +246,7 @@ class MockUserPlatform extends Mock
   }
 
   @override
-  Future<void> delete() {
-    return super.noSuchMethod(
-      Invocation.method(#delete, []),
-      returnValue: neverEndingFuture<void>(),
-      returnValueForMissingStub: neverEndingFuture<void>(),
-    );
-  }
-
   @override
-  Future<void> reload() {
-    return super.noSuchMethod(
-      Invocation.method(#reload, []),
-      returnValue: neverEndingFuture<void>(),
-      returnValueForMissingStub: neverEndingFuture<void>(),
-    );
-  }
-
   @override
   Future<String> getIdToken(bool? forceRefresh) {
     return super.noSuchMethod(
@@ -456,17 +286,6 @@ class MockUserPlatform extends Mock
   }
 
   @override
-  Future<UserCredentialPlatform> linkWithCredential(
-    AuthCredential? credential,
-  ) {
-    return super.noSuchMethod(
-      Invocation.method(#linkWithCredential, [credential]),
-      returnValue: neverEndingFuture<UserCredentialPlatform>(),
-      returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
-    );
-  }
-
-  @override
   Future<void> sendEmailVerification(ActionCodeSettings? actionCodeSettings) {
     return super.noSuchMethod(
       Invocation.method(#sendEmailVerification, [actionCodeSettings]),
@@ -488,24 +307,6 @@ class MockUserPlatform extends Mock
   Future<void> updatePassword(String? newPassword) {
     return super.noSuchMethod(
       Invocation.method(#updatePassword, [newPassword]),
-      returnValue: neverEndingFuture<void>(),
-      returnValueForMissingStub: neverEndingFuture<void>(),
-    );
-  }
-
-  @override
-  Future<void> updatePhoneNumber(PhoneAuthCredential? phoneCredential) {
-    return super.noSuchMethod(
-      Invocation.method(#updatePhoneNumber, [phoneCredential]),
-      returnValue: neverEndingFuture<void>(),
-      returnValueForMissingStub: neverEndingFuture<void>(),
-    );
-  }
-
-  @override
-  Future<void> updateProfile(Map<String, String?>? profile) {
-    return super.noSuchMethod(
-      Invocation.method(#updateProfile, [profile]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
     );
