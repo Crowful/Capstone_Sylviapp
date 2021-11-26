@@ -19,19 +19,18 @@ void main() async {
     }
 
     testWidgets('Login Screen', (WidgetTester tester) async {
-      // Create the widget by telling the tester to build it.
-
       await Firebase.initializeApp();
       await tester.pumpWidget(test(
         child: LoginScreen(),
       ));
-      var textField = find.byType(TextField);
-      expect(textField, findsOneWidget);
-      await tester.enterText(textField, 'trtryy@gmail.com');
-      print('User');
-      expect(textField, findsOneWidget);
-      await tester.enterText(textField, 'qwer1qwer');
-      print('User');
+      var email = find.byType(TextField);
+      var password = find.byType(TextField);
+      expect(email, findsOneWidget);
+      await tester.enterText(email, 'trtryy@gmail.com');
+      print('email');
+      expect(password, findsOneWidget);
+      await tester.enterText(password, 'qwer1qwer');
+      print('pass');
       var button = find.text("Login");
       expect(button, findsOneWidget);
       print('Login Button');
