@@ -101,6 +101,7 @@ class _MapCampaignState extends State<MapCampaign>
   bool isOrganizer = false;
   bool createMode = false;
   bool isOpened = false;
+  bool isApplicable = false;
   List<Map<String, dynamic>> circleMarkersCampaigns =
       List.empty(growable: true);
 
@@ -112,9 +113,30 @@ class _MapCampaignState extends State<MapCampaign>
 
   lt.LatLng? _initialCameraPosition = lt.LatLng(14.7452, 121.0984);
 
+  void getBalance() {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(context.read(authserviceProvider).getCurrentUserUID())
+        .get()
+        .then((value) {
+      var balance = value.get('balance');
+      if (balance > 50) {
+        setState(() {
+          isApplicable = true;
+        });
+      } else {
+        setState(() {
+          isApplicable = false;
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
+    getBalance();
     FirebaseFirestore.instance
         .collection('users')
         .doc(context.read(authserviceProvider).getCurrentUserUID())
@@ -410,36 +432,40 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                 status == "GCQ") {
                                                                               Fluttertoast.showToast(msg: "The area is still in lockdown.");
                                                                             } else {
-                                                                              mtk.LatLng latlngtoMTK = mtk.LatLng(latlng.latitude, latlng.longitude);
+                                                                              if (isApplicable == true) {
+                                                                                mtk.LatLng latlngtoMTK = mtk.LatLng(latlng.latitude, latlng.longitude);
 
-                                                                              List<mtk.LatLng> mtkPolygonAngat = List.empty(growable: true);
-                                                                              latlngpolygonlistAngat.forEach((element) {
-                                                                                mtkPolygonAngat.add(mtk.LatLng(element.latitude, element.longitude));
-                                                                              });
+                                                                                List<mtk.LatLng> mtkPolygonAngat = List.empty(growable: true);
+                                                                                latlngpolygonlistAngat.forEach((element) {
+                                                                                  mtkPolygonAngat.add(mtk.LatLng(element.latitude, element.longitude));
+                                                                                });
 
-                                                                              List<mtk.LatLng> mtkPolygonPanbatanbangan = List.empty(growable: true);
-                                                                              latlngpolygonlistPantabangan.forEach((element) {
-                                                                                mtkPolygonPanbatanbangan.add(mtk.LatLng(element.latitude, element.longitude));
-                                                                              });
+                                                                                List<mtk.LatLng> mtkPolygonPanbatanbangan = List.empty(growable: true);
+                                                                                latlngpolygonlistPantabangan.forEach((element) {
+                                                                                  mtkPolygonPanbatanbangan.add(mtk.LatLng(element.latitude, element.longitude));
+                                                                                });
 
-                                                                              List<mtk.LatLng> mtkPolygonLamesa = List.empty(growable: true);
-                                                                              latlngpolygonlistLamesa.forEach((element) {
-                                                                                mtkPolygonLamesa.add(mtk.LatLng(element.latitude, element.longitude));
-                                                                              });
-                                                                              setState(() {
-                                                                                isPointValid = mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonLamesa, false) || mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonAngat, false) || mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonPantabangan, false);
-                                                                              });
+                                                                                List<mtk.LatLng> mtkPolygonLamesa = List.empty(growable: true);
+                                                                                latlngpolygonlistLamesa.forEach((element) {
+                                                                                  mtkPolygonLamesa.add(mtk.LatLng(element.latitude, element.longitude));
+                                                                                });
+                                                                                setState(() {
+                                                                                  isPointValid = mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonLamesa, false) || mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonAngat, false) || mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonPantabangan, false);
+                                                                                });
 
-                                                                              if (isPointValid == true) {
-                                                                                print('gana e');
-                                                                                latitude = latlng.latitude;
-                                                                                longitude = latlng.longitude;
-                                                                                testlatlng = latlng;
-                                                                                controller.forward();
-                                                                                cntrler.move(lt.LatLng(latlng.latitude - 0.0050, latlng.longitude), 16);
-                                                                              } else if (isPointValid == false) {
-                                                                                print(isPointValid);
-                                                                                Fluttertoast.showToast(msg: "You cannot put campaign there");
+                                                                                if (isPointValid == true) {
+                                                                                  print('gana e');
+                                                                                  latitude = latlng.latitude;
+                                                                                  longitude = latlng.longitude;
+                                                                                  testlatlng = latlng;
+                                                                                  controller.forward();
+                                                                                  cntrler.move(lt.LatLng(latlng.latitude - 0.0050, latlng.longitude), 16);
+                                                                                } else if (isPointValid == false) {
+                                                                                  print(isPointValid);
+                                                                                  Fluttertoast.showToast(msg: "You cannot put campaign there");
+                                                                                }
+                                                                              } else {
+                                                                                Fluttertoast.showToast(msg: 'You do not have enough balance to create a campaign');
                                                                               }
                                                                             }
                                                                           } else {
