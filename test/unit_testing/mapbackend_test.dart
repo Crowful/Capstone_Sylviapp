@@ -9,10 +9,24 @@ void main() {
     expect(mapbackend.valueRadius, radiusAssigned);
   });
 
-  test('volunteer required is relative to the radius', () {
+  test('volunteers required is relative to the radius', () {
     var mapbackend = MapBackend();
     var radiusAssigned = 30.4;
     mapbackend.checkVolunteersNeeded(radiusAssigned);
     expect(mapbackend.volunteersRequired, 60);
+  });
+
+  test('funds required is relative to the radius', () {
+    var mapbackend = MapBackend();
+    var radiusAssigned = 30.4;
+    mapbackend.checkFundRequired(radiusAssigned);
+    expect(mapbackend.fundRequired, 2000.0);
+  });
+
+  test('seeds required is relative to the radius', () {
+    var mapbackend = MapBackend();
+    var radiusAssigned = 30.4;
+    mapbackend.checkseedsNeeded(radiusAssigned);
+    expect(mapbackend.seedsRequired, 80);
   });
 }
