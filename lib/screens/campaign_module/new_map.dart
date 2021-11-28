@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -67,8 +68,12 @@ class _MapCampaignState extends State<MapCampaign>
   late lt.LatLng testlatlng;
   bool focused = false;
   bool focused1 = false;
+  bool focused2 = false;
+  bool focused3 = false;
   bool camName = false;
   bool camDes = false;
+  bool camCity = false;
+  bool camAddress = false;
   double latitude = 0;
   double longitude = 0;
   bool isPointValid = false;
@@ -119,7 +124,7 @@ class _MapCampaignState extends State<MapCampaign>
     });
   }
 
-  var selectedDate;
+  DateTime selectedDate = new DateTime.now();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -169,6 +174,8 @@ class _MapCampaignState extends State<MapCampaign>
 
   @override
   Widget build(BuildContext context) {
+    var formatter = new DateFormat('MM-dd-yyyy');
+    String formattedDate = formatter.format(selectedDate);
     dynamic userUID = context.read(authserviceProvider).getCurrentUserUID();
     return SafeArea(
       child: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
@@ -180,9 +187,6 @@ class _MapCampaignState extends State<MapCampaign>
                 child: CircularProgressIndicator(),
               );
             } else {
-              var data = snapshot.data!.data();
-              bool isVerified = data!['isVerify'];
-
               return KeyboardDismissOnTap(
                 child: Scaffold(
                     resizeToAvoidBottomInset: true,
@@ -502,13 +506,12 @@ class _MapCampaignState extends State<MapCampaign>
                                                                             child: Consumer(builder: (context, watch, child) {
                                                                               double radius = 0;
                                                                               double finalRadius = 0;
-                                                                              double radiusTest = 0;
                                                                               final radiusProvider = watch(mapProvider);
                                                                               int finalVolunteers = radiusProvider.volunteersRequired;
                                                                               int finalSeeds = radiusProvider.seedsRequired;
                                                                               double finalFund = radiusProvider.fundRequired;
                                                                               finalRadius = radiusProvider.valueRadius;
-                                                                              child:
+
                                                                               return PageView(
                                                                                 controller: pageController,
                                                                                 physics: NeverScrollableScrollPhysics(),
@@ -516,7 +519,7 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                   firstPage(),
                                                                                   secondPage(finalFund: finalFund, finalRadius: finalRadius, finalSeeds: finalSeeds, finalVolunteers: finalVolunteers, radius: radius),
                                                                                   thirdPage(),
-                                                                                  fourthPage(finalFund: finalFund, finalRadius: finalRadius, finalSeeds: finalSeeds, userUID: userUID, finalVolunteers: finalVolunteers)
+                                                                                  fourthPage(date: formattedDate, finalFund: finalFund, finalRadius: finalRadius, finalSeeds: finalSeeds, userUID: userUID, finalVolunteers: finalVolunteers)
                                                                                 ],
                                                                               );
                                                                             })),
@@ -680,23 +683,147 @@ class _MapCampaignState extends State<MapCampaign>
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
-                                                  Container(
-                                                    padding: EdgeInsets.all(20),
-                                                    width: double.infinity,
-                                                    height: 100,
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    20)),
-                                                        color: Theme.of(context)
-                                                            .cardColor),
-                                                    child: Text(
-                                                      context
-                                                          .read(
-                                                              campaignProvider)
-                                                          .getDescription
-                                                          .toString(),
+                                                  Card(
+                                                    elevation: 10,
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.all(20),
+                                                      width: double.infinity,
+                                                      height: 100,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          20)),
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .cardColor),
+                                                      child: Text(
+                                                        context
+                                                            .read(
+                                                                campaignProvider)
+                                                            .getDescription
+                                                            .toString(),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                  KeyboardVisibilityBuilder(
+                                      builder: (context, visible) {
+                                    return IgnorePointer(
+                                      ignoring: true,
+                                      child: AnimatedOpacity(
+                                        opacity: visible ? 1 : 0,
+                                        duration: Duration(milliseconds: 500),
+                                        child: Opacity(
+                                          opacity: camCity ? 1 : 0,
+                                          child: Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Container(
+                                              padding: EdgeInsets.all(10),
+                                              height: 200,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'City',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Card(
+                                                    elevation: 10,
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.all(20),
+                                                      width: double.infinity,
+                                                      height: 60,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          20)),
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .cardColor),
+                                                      child: Text(
+                                                        context
+                                                            .read(
+                                                                campaignProvider)
+                                                            .getCity
+                                                            .toString(),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                  KeyboardVisibilityBuilder(
+                                      builder: (context, visible) {
+                                    return IgnorePointer(
+                                      ignoring: true,
+                                      child: AnimatedOpacity(
+                                        opacity: visible ? 1 : 0,
+                                        duration: Duration(milliseconds: 500),
+                                        child: Opacity(
+                                          opacity: camAddress ? 1 : 0,
+                                          child: Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Container(
+                                              padding: EdgeInsets.all(10),
+                                              height: 200,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'Address',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Card(
+                                                    elevation: 10,
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.all(20),
+                                                      width: double.infinity,
+                                                      height: 60,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          20)),
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .cardColor),
+                                                      child: Text(
+                                                        context
+                                                            .read(
+                                                                campaignProvider)
+                                                            .getAddress
+                                                            .toString(),
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
@@ -726,7 +853,7 @@ class _MapCampaignState extends State<MapCampaign>
         FadeAnimation(
           0.2,
           Text(
-            'Hello ' + 'Organizer',
+            'Hello, ' + usernames,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
         ),
@@ -831,17 +958,19 @@ class _MapCampaignState extends State<MapCampaign>
           0.8,
           GestureDetector(
             onTap: () {
-              if (isVerified == true) {
-                setState(() {
-                  createMode = !createMode;
-                });
+              // if (isVerified == true) {
+              //   setState(() {
+              //     createMode = !createMode;
+              //   });
 
-                if (createMode == true) {
-                  Fluttertoast.showToast(msg: "In create mode.");
-                } else {
-                  Fluttertoast.showToast(msg: "Disabled create mode.");
-                }
-              }
+              //   if (createMode == true) {
+              //     Fluttertoast.showToast(msg: "In create mode.");
+              //   } else {
+              //     Fluttertoast.showToast(msg: "Disabled create mode.");
+              //   }
+              // }
+
+              pageController.jumpToPage(1);
             },
             child: Container(
               height: 50,
@@ -850,7 +979,9 @@ class _MapCampaignState extends State<MapCampaign>
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Color(0xff65BFB8)),
               child: Center(
-                child: Text('Create Campaign'),
+                child: createMode
+                    ? Text('Exit Create Mode')
+                    : Text('Enter Create Mode'),
               ),
             ),
           ),
@@ -1221,8 +1352,9 @@ class _MapCampaignState extends State<MapCampaign>
       required int finalSeeds,
       required double finalFund,
       required int finalVolunteers,
-      required double finalRadius}) {
-    return Container(
+      required double finalRadius,
+      required String date}) {
+    return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -1240,7 +1372,7 @@ class _MapCampaignState extends State<MapCampaign>
               style: TextStyle(
                   fontWeight: FontWeight.w300,
                   fontSize: 14,
-                  color: Colors.black54)),
+                  color: Colors.grey)),
           SizedBox(
             height: 10,
           ),
@@ -1258,14 +1390,28 @@ class _MapCampaignState extends State<MapCampaign>
                     borderRadius: BorderRadius.all(Radius.circular(5))),
                 width: 200,
                 height: 50,
-                child: TextField(
-                  controller: cityController,
-                  onChanged: (value) =>
-                      {context.read(campaignProvider).setCityName(value)},
-                  decoration: InputDecoration(
-                      focusColor: Color(0xff65BFB8),
-                      contentPadding: EdgeInsets.all(15),
-                      border: InputBorder.none),
+                child: FocusScope(
+                  child: Focus(
+                    onFocusChange: (focus) {
+                      setState(() {
+                        focused2 = !focused2;
+                        if (focused2 == true) {
+                          camCity = true;
+                        } else {
+                          camCity = false;
+                        }
+                      });
+                    },
+                    child: TextField(
+                      controller: cityController,
+                      onChanged: (value) =>
+                          {context.read(campaignProvider).setCityName(value)},
+                      decoration: InputDecoration(
+                          focusColor: Color(0xff65BFB8),
+                          contentPadding: EdgeInsets.all(15),
+                          border: InputBorder.none),
+                    ),
+                  ),
                 ),
               )
             ],
@@ -1284,14 +1430,28 @@ class _MapCampaignState extends State<MapCampaign>
                     borderRadius: BorderRadius.all(Radius.circular(5))),
                 width: 200,
                 height: 50,
-                child: TextField(
-                  controller: addressController,
-                  onChanged: (value) =>
-                      {context.read(campaignProvider).setAddress(value)},
-                  decoration: InputDecoration(
-                      focusColor: Color(0xff65BFB8),
-                      contentPadding: EdgeInsets.all(15),
-                      border: InputBorder.none),
+                child: FocusScope(
+                  child: Focus(
+                    onFocusChange: (focus) {
+                      setState(() {
+                        focused3 = !focused3;
+                        if (focused3 == true) {
+                          camAddress = true;
+                        } else {
+                          camAddress = false;
+                        }
+                      });
+                    },
+                    child: TextField(
+                      controller: addressController,
+                      onChanged: (value) =>
+                          {context.read(campaignProvider).setAddress(value)},
+                      decoration: InputDecoration(
+                          focusColor: Color(0xff65BFB8),
+                          contentPadding: EdgeInsets.all(15),
+                          border: InputBorder.none),
+                    ),
+                  ),
                 ),
               )
             ],
@@ -1326,16 +1486,15 @@ class _MapCampaignState extends State<MapCampaign>
                     margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
                     child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Icon(Icons.date_range)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(Icons.date_range),
+                            SizedBox(width: 20),
+                            Text(date)
+                          ],
+                        )),
                   ),
-                  // child: TextField(
-                  //   onChanged: (value) =>
-                  //       {context.read(campaignProvider).setStartingDate(value)},
-                  //   decoration: InputDecoration(
-                  //       focusColor: Color(0xff65BFB8),
-                  //       contentPadding: EdgeInsets.all(15),
-                  //       border: InputBorder.none),
-                  // ),
                 ),
               )
             ],
@@ -1404,11 +1563,8 @@ class _MapCampaignState extends State<MapCampaign>
                   borderRadius: BorderRadius.all(Radius.circular(5))),
               child: Center(
                 child: Text(
-                  'Next',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15),
+                  'Create Campaign Request',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
                 ),
               ),
             ),
