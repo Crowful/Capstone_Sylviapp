@@ -46,6 +46,7 @@ class _MapCampaignState extends State<MapCampaign>
   int numberActive = 0;
   int numberOngoing = 0;
   int numberCompleted = 0;
+  int balanse = 0;
 
   //Strings
   String title = "title test";
@@ -147,7 +148,6 @@ class _MapCampaignState extends State<MapCampaign>
     super.initState();
 
     getBalance();
-
     //get user's username
     FirebaseFirestore.instance
         .collection('users')
@@ -155,6 +155,12 @@ class _MapCampaignState extends State<MapCampaign>
         .get()
         .then((value) => usernames = AESCryptography()
             .decryptAES(enc.Encrypted.from64(value['username'])));
+    //get user's username
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(context.read(authserviceProvider).getCurrentUserUID())
+        .get()
+        .then((value) => balanse = value.get('balance'));
 //Is the user verify
     FirebaseFirestore.instance
         .collection('users')
@@ -942,7 +948,7 @@ class _MapCampaignState extends State<MapCampaign>
         ),
         FadeAnimation(
           0.3,
-          Text('Current Balance: ' + 'P1000',
+          Text('Current Balance: ' + balanse.toString(),
               style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13)),
         ),
         Divider(
@@ -1321,138 +1327,152 @@ class _MapCampaignState extends State<MapCampaign>
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text('About the Campaign',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 23,
-                    color: Color(0xff65BFB8))),
+            FadeAnimation(
+              0.1,
+              Text('About the Campaign',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 23,
+                      color: Color(0xff65BFB8))),
+            ),
             SizedBox(
               height: 10,
             ),
             SizedBox(
               height: 5,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Campaign Name',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.299),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  height: 40,
-                  child: FocusScope(
-                    child: Focus(
-                      onFocusChange: (focus) {
-                        focused = !focused;
-                        if (focused == true) {
-                          camName = true;
-                        } else {
-                          camName = false;
-                        }
-                      },
-                      child: TextField(
-                        inputFormatters: [LengthLimitingTextInputFormatter(20)],
-                        controller: campaignNameController,
-                        onChanged: (value) {
-                          setState(() {
-                            context
-                                .read(campaignProvider)
-                                .setCampaignName(value);
-                          });
+            FadeAnimation(
+              0.2,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Campaign Name',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.299),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    height: 40,
+                    child: FocusScope(
+                      child: Focus(
+                        onFocusChange: (focus) {
+                          focused = !focused;
+                          if (focused == true) {
+                            camName = true;
+                          } else {
+                            camName = false;
+                          }
                         },
-                        decoration: InputDecoration(
-                            focusColor: Color(0xff65BFB8),
-                            contentPadding: EdgeInsets.all(15),
-                            border: InputBorder.none),
+                        child: TextField(
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(20)
+                          ],
+                          controller: campaignNameController,
+                          onChanged: (value) {
+                            setState(() {
+                              context
+                                  .read(campaignProvider)
+                                  .setCampaignName(value);
+                            });
+                          },
+                          decoration: InputDecoration(
+                              focusColor: Color(0xff65BFB8),
+                              contentPadding: EdgeInsets.all(15),
+                              border: InputBorder.none),
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
             SizedBox(
               height: 15,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Description:',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.299),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  child: FocusScope(
-                    child: Focus(
-                      onFocusChange: (focus2) {
-                        focused1 = !focused1;
-                        if (focused1 == true) {
-                          camDes = true;
-                        } else {
-                          camDes = false;
-                        }
-                      },
-                      child: TextField(
-                        maxLines: 5,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(150)
-                        ],
-                        controller: descriptionController,
-                        onChanged: (value) {
-                          setState(() {
-                            context
-                                .read(campaignProvider)
-                                .setDescription(value);
-                          });
+            FadeAnimation(
+              0.3,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Description:',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.299),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: FocusScope(
+                      child: Focus(
+                        onFocusChange: (focus2) {
+                          focused1 = !focused1;
+                          if (focused1 == true) {
+                            camDes = true;
+                          } else {
+                            camDes = false;
+                          }
                         },
-                        decoration: InputDecoration(
-                            focusColor: Color(0xff65BFB8),
-                            contentPadding: EdgeInsets.all(15),
-                            border: InputBorder.none),
+                        child: TextField(
+                          maxLines: 5,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(150)
+                          ],
+                          controller: descriptionController,
+                          onChanged: (value) {
+                            setState(() {
+                              context
+                                  .read(campaignProvider)
+                                  .setDescription(value);
+                            });
+                          },
+                          decoration: InputDecoration(
+                              focusColor: Color(0xff65BFB8),
+                              contentPadding: EdgeInsets.all(15),
+                              border: InputBorder.none),
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
             SizedBox(
               height: 15,
             ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  pageController.animateToPage(3,
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.fastOutSlowIn);
-                });
-              },
-              child: Container(
-                height: 55,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: Color(0xff65BFB8),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                child: Center(
-                  child: Text(
-                    'Next',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15),
+            FadeAnimation(
+              0.4,
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    pageController.animateToPage(3,
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.fastOutSlowIn);
+                  });
+                },
+                child: Container(
+                  height: 55,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Color(0xff65BFB8),
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  child: Center(
+                    child: Text(
+                      'Next',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15),
+                    ),
                   ),
                 ),
               ),
@@ -1475,146 +1495,162 @@ class _MapCampaignState extends State<MapCampaign>
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text('Campaign Information',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 23,
-                  color: Color(0xff65BFB8))),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-              'Input the City of the campaign, the meetup address and the desired date you want the campaign to start',
-              style: TextStyle(
-                  fontWeight: FontWeight.w300,
-                  fontSize: 14,
-                  color: Colors.grey)),
-          SizedBox(
-            height: 10,
+          FadeAnimation(
+            0.1,
+            Text('Campaign Information',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 23,
+                    color: Color(0xff65BFB8))),
           ),
           SizedBox(
             height: 10,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('City'),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.08),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                width: 200,
-                height: 50,
-                child: FocusScope(
-                  child: Focus(
-                    onFocusChange: (focus) {
-                      setState(() {
-                        focused2 = !focused2;
-                        if (focused2 == true) {
-                          camCity = true;
-                        } else {
-                          camCity = false;
-                        }
-                      });
-                    },
-                    child: TextField(
-                      controller: cityController,
-                      onChanged: (value) =>
-                          {context.read(campaignProvider).setCityName(value)},
-                      decoration: InputDecoration(
-                          focusColor: Color(0xff65BFB8),
-                          contentPadding: EdgeInsets.all(15),
-                          border: InputBorder.none),
-                    ),
-                  ),
-                ),
-              )
-            ],
+          FadeAnimation(
+            0.2,
+            Text(
+                'Input the City of the campaign, the meetup address and the desired date you want the campaign to start',
+                style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 14,
+                    color: Colors.grey)),
           ),
           SizedBox(
             height: 10,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Address'),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.08),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                width: 200,
-                height: 50,
-                child: FocusScope(
-                  child: Focus(
-                    onFocusChange: (focus) {
-                      setState(() {
-                        focused3 = !focused3;
-                        if (focused3 == true) {
-                          camAddress = true;
-                        } else {
-                          camAddress = false;
-                        }
-                      });
-                    },
-                    child: TextField(
-                      controller: addressController,
-                      onChanged: (value) =>
-                          {context.read(campaignProvider).setAddress(value)},
-                      decoration: InputDecoration(
-                          focusColor: Color(0xff65BFB8),
-                          contentPadding: EdgeInsets.all(15),
-                          border: InputBorder.none),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
           SizedBox(
             height: 10,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Date Start'),
-              GestureDetector(
-                onTap: () async {
-                  await _selectDate(context).whenComplete(() {
-                    // ignore: unnecessary_null_comparison
-                    if (selectedDate != null) {
-                      context
-                          .read(campaignProvider)
-                          .setStartingDate(selectedDate.toString());
-                    } else {
-                      Fluttertoast.showToast(msg: 'you did not select a date');
-                    }
-                  });
-                },
-                child: Container(
+          FadeAnimation(
+            0.3,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('City'),
+                Container(
                   decoration: BoxDecoration(
-                      color: Colors.orangeAccent.withOpacity(0.6),
+                      color: Colors.grey.withOpacity(0.08),
                       borderRadius: BorderRadius.all(Radius.circular(5))),
                   width: 200,
                   height: 50,
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                    child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(Icons.date_range),
-                            SizedBox(width: 20),
-                            Text(date)
-                          ],
-                        )),
+                  child: FocusScope(
+                    child: Focus(
+                      onFocusChange: (focus) {
+                        setState(() {
+                          focused2 = !focused2;
+                          if (focused2 == true) {
+                            camCity = true;
+                          } else {
+                            camCity = false;
+                          }
+                        });
+                      },
+                      child: TextField(
+                        controller: cityController,
+                        onChanged: (value) =>
+                            {context.read(campaignProvider).setCityName(value)},
+                        decoration: InputDecoration(
+                            focusColor: Color(0xff65BFB8),
+                            contentPadding: EdgeInsets.all(15),
+                            border: InputBorder.none),
+                      ),
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          FadeAnimation(
+            0.4,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Address'),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.08),
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  width: 200,
+                  height: 50,
+                  child: FocusScope(
+                    child: Focus(
+                      onFocusChange: (focus) {
+                        setState(() {
+                          focused3 = !focused3;
+                          if (focused3 == true) {
+                            camAddress = true;
+                          } else {
+                            camAddress = false;
+                          }
+                        });
+                      },
+                      child: TextField(
+                        controller: addressController,
+                        onChanged: (value) =>
+                            {context.read(campaignProvider).setAddress(value)},
+                        decoration: InputDecoration(
+                            focusColor: Color(0xff65BFB8),
+                            contentPadding: EdgeInsets.all(15),
+                            border: InputBorder.none),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          FadeAnimation(
+            0.5,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Date Start'),
+                GestureDetector(
+                  onTap: () async {
+                    await _selectDate(context).whenComplete(() {
+                      // ignore: unnecessary_null_comparison
+                      if (selectedDate != null) {
+                        context
+                            .read(campaignProvider)
+                            .setStartingDate(selectedDate.toString());
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: 'you did not select a date');
+                      }
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.orangeAccent.withOpacity(0.6),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    width: 200,
+                    height: 50,
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(Icons.date_range),
+                              SizedBox(width: 20),
+                              Text(date)
+                            ],
+                          )),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
           SizedBox(
             height: 10,
@@ -1622,66 +1658,69 @@ class _MapCampaignState extends State<MapCampaign>
           SizedBox(
             height: 10,
           ),
-          GestureDetector(
-            onTap: () {
-              const _chars =
-                  'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-              Random _rnd = Random();
+          FadeAnimation(
+            0.6,
+            GestureDetector(
+              onTap: () {
+                const _chars =
+                    'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+                Random _rnd = Random();
 
-              String getRandomString(int length) =>
-                  String.fromCharCodes(Iterable.generate(length,
-                      (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
-              String uniqueID = getRandomString(15);
-              setState(() {
-                dateCreated =
-                    formatDate(DateTime.now(), [yyyy, '-', mm, '-', dd]);
+                String getRandomString(int length) =>
+                    String.fromCharCodes(Iterable.generate(length,
+                        (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+                String uniqueID = getRandomString(30);
+                setState(() {
+                  dateCreated =
+                      formatDate(DateTime.now(), [yyyy, '-', mm, '-', dd]);
 
-                dateStart = formatDate(DateTime(2021, 10, 27, 2, 30, 50),
-                    [yyyy, '-', mm, '-', dd]);
+                  dateStart = formatDate(DateTime(2021, 10, 27, 2, 30, 50),
+                      [yyyy, '-', mm, '-', dd]);
 
-                dateEnded = formatDate(DateTime(2021, 10, 27, 2, 30, 50),
-                    [yyyy, '-', mm, '-', dd]);
+                  dateEnded = formatDate(DateTime(2021, 10, 27, 2, 30, 50),
+                      [yyyy, '-', mm, '-', dd]);
 
-                time = formatDate(
-                    DateTime(2021, 09, 27, 2, 30, 50), [HH, ':', nn, ':', ss]);
-              });
-              FirebaseMessaging.instance.getToken().then((value) {
-                context
-                    .read(authserviceProvider)
-                    .createCampaign(
-                        context.read(campaignProvider).getCampaignName,
-                        context.read(campaignProvider).getDescription,
-                        uniqueID,
-                        dateCreated,
-                        context.read(campaignProvider).getStartDate,
-                        dateEnded,
-                        context.read(campaignProvider).getAddress,
-                        context.read(campaignProvider).getCity,
-                        time,
-                        userUID,
-                        usernames,
-                        latitude,
-                        longitude,
-                        finalSeeds,
-                        currentDonations,
-                        finalFund,
-                        currentVolunteers,
-                        finalVolunteers,
-                        value!,
-                        finalRadius)
-                    .whenComplete(() => Navigator.pop(context));
-              });
-            },
-            child: Container(
-              height: 55,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Color(0xff65BFB8),
-                  borderRadius: BorderRadius.all(Radius.circular(5))),
-              child: Center(
-                child: Text(
-                  'Create Campaign Request',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  time = formatDate(DateTime(2021, 09, 27, 2, 30, 50),
+                      [HH, ':', nn, ':', ss]);
+                });
+                FirebaseMessaging.instance.getToken().then((value) {
+                  context
+                      .read(authserviceProvider)
+                      .createCampaign(
+                          context.read(campaignProvider).getCampaignName,
+                          context.read(campaignProvider).getDescription,
+                          uniqueID,
+                          dateCreated,
+                          context.read(campaignProvider).getStartDate,
+                          dateEnded,
+                          context.read(campaignProvider).getAddress,
+                          context.read(campaignProvider).getCity,
+                          time,
+                          userUID,
+                          usernames,
+                          latitude,
+                          longitude,
+                          finalSeeds,
+                          currentDonations,
+                          finalFund,
+                          currentVolunteers,
+                          finalVolunteers,
+                          value!,
+                          finalRadius)
+                      .whenComplete(() => Navigator.pop(context));
+                });
+              },
+              child: Container(
+                height: 55,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: Color(0xff65BFB8),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                child: Center(
+                  child: Text(
+                    'Create Campaign Request',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
                 ),
               ),
             ),

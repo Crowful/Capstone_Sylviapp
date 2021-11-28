@@ -67,17 +67,24 @@ dependencies:
   firebase_storage_mocks: ^0.5.0
   firebase_auth_mocks: ^0.8.1
   flutter_keyboard_visibility: ^5.1.0
+  flutter_launcher_icons: ^0.9.2
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  image_path: "assets/images/ohayefullblue.png"
+  android: true
+  ios: true
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
