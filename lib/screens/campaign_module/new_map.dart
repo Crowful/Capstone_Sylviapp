@@ -30,39 +30,47 @@ class MapCampaign extends StatefulWidget {
 
 class _MapCampaignState extends State<MapCampaign>
     with TickerProviderStateMixin {
-  final GlobalKey<ScaffoldState> _keyMap = GlobalKey<ScaffoldState>();
-
-  late AnimationController controller =
-      AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-
-  String uid = "";
-
-  bool isVerified = false;
-  late String userHolder;
-
+  //Keys
   GlobalKey _toolTipKey = GlobalKey();
-  bool showForest = false;
-  bool showActive = false;
-  bool showInProgress = false;
-  bool showInactive = false;
-  bool showLatLng = false;
-  bool showLayers = false;
-  bool shouldPop = true;
-  int numSeeds = 0;
+
+  //doubles
+  double latitude = 0;
+  double longitude = 0;
   double currentDonations = 0.00;
   double maxDonations = 0.00;
+
+  //integers
   int currentVolunteers = 0;
   int numberVolunteers = 0;
+  int numSeeds = 0;
+  int numberActive = 0;
+  int numberOngoing = 0;
+  int numberCompleted = 0;
+
+  //Strings
   String title = "title test";
   String description = " description test";
   late String dateCreated;
   late String dateStart;
   late String dateEnded;
+  String uid = "";
   String address = "address test";
   String city = "city test";
   late String time;
   var usernames;
   late lt.LatLng testlatlng;
+  late String userHolder;
+
+  //booleans
+  bool isVerified = false;
+  bool showForest = false;
+  bool showActive = true;
+  bool showInProgress = false;
+  bool showInactive = false;
+  bool showDone = false;
+  bool showLatLng = false;
+  bool showLayers = false;
+  bool shouldPop = true;
   bool focused = false;
   bool focused1 = false;
   bool focused2 = false;
@@ -71,9 +79,14 @@ class _MapCampaignState extends State<MapCampaign>
   bool camDes = false;
   bool camCity = false;
   bool camAddress = false;
-  double latitude = 0;
-  double longitude = 0;
   bool isPointValid = false;
+  bool isOrganizer = false;
+  bool createMode = false;
+  bool isOpened = false;
+  bool isApplicable = false;
+  bool showVolunteers = false;
+
+  //Lists
   List<lt.LatLng> latlngpolygonlistLamesa = List.empty(growable: true);
   List<lt.LatLng> latlngpolygonlistAngat = List.empty(growable: true);
   List<lt.LatLng> latlngpolygonlistPantabangan = List.empty(growable: true);
@@ -81,26 +94,21 @@ class _MapCampaignState extends State<MapCampaign>
   List<mtk.LatLng> mtkPolygonLamesa = List.empty(growable: true);
   List<mtk.LatLng> mtkPolygonAngat = List.empty(growable: true);
   List<mtk.LatLng> mtkPolygonPantabangan = List.empty(growable: true);
+  List<Map<String, dynamic>> existingCampaign = List.empty(growable: true);
+  List<Map<String, dynamic>> getVolunteers = List.empty(growable: true);
+  List<Map<String, dynamic>> getProgress = List.empty(growable: true);
+  List<Map<String, dynamic>> getDone = List.empty(growable: true);
+  lt.LatLng? _initialCameraPosition = lt.LatLng(14.7452, 121.0984);
+  List<Map<String, dynamic>> circleMarkersCampaigns =
+      List.empty(growable: true);
+
+  //Controllers
   fmap.MapController cntrler = fmap.MapController();
   PageController pageController = PageController();
   TextEditingController campaignNameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController cityController = TextEditingController();
-  bool isOrganizer = false;
-  bool createMode = false;
-  bool isOpened = false;
-  bool isApplicable = false;
-  List<Map<String, dynamic>> circleMarkersCampaigns =
-      List.empty(growable: true);
-
-  List<Map<String, dynamic>> existingCampaign = List.empty(growable: true);
-  List<Map<String, dynamic>> getVolunteers = List.empty(growable: true);
-  List<Map<String, dynamic>> getActive = List.empty(growable: true);
-  List<Map<String, dynamic>> getProgress = List.empty(growable: true);
-  List<Map<String, dynamic>> getDone = List.empty(growable: true);
-
-  lt.LatLng? _initialCameraPosition = lt.LatLng(14.7452, 121.0984);
 
   void getBalance() {
     FirebaseFirestore.instance
@@ -139,18 +147,85 @@ class _MapCampaignState extends State<MapCampaign>
     super.initState();
 
     getBalance();
+
+    //get user's username
     FirebaseFirestore.instance
         .collection('users')
         .doc(context.read(authserviceProvider).getCurrentUserUID())
         .get()
         .then((value) => usernames = AESCryptography()
             .decryptAES(enc.Encrypted.from64(value['username'])));
-
+//Is the user verify
     FirebaseFirestore.instance
         .collection('users')
         .doc(context.read(authserviceProvider).getCurrentUserUID())
         .get()
         .then((value) => isVerified = value['isVerify']);
+//Get sizes campaigns
+    FirebaseFirestore.instance
+        .collection('campaigns')
+        .where('isActive', isEqualTo: true)
+        .get()
+        .then((value) => numberActive = value.size);
+
+    FirebaseFirestore.instance
+        .collection('campaigns')
+        .where('isCompleted', isEqualTo: true)
+        .get()
+        .then((value) => numberCompleted = value.size);
+
+    FirebaseFirestore.instance
+        .collection('campaigns')
+        .where('inProgress', isEqualTo: true)
+        .get()
+        .then((value) => numberOngoing = value.size);
+
+    //Get layers stats
+    //get volunteers
+    FirebaseFirestore.instance
+        .collection('campaigns')
+        .where('isActive', isEqualTo: true)
+        .get()
+        .then((element) {
+      element.docs.forEach((elements) {
+        getVolunteers.add({
+          "latitude": elements['latitude'],
+          "longitude": elements['longitude'],
+          "volunteer": elements['number_volunteers'] as int,
+          "current_volunteer": elements['current_volunteers'] as int,
+          "campaignID": elements['campaignID']
+        });
+      });
+    });
+    //get inprogress
+    FirebaseFirestore.instance
+        .collection('campaigns')
+        .where('inProgress', isEqualTo: true)
+        .get()
+        .then((element) {
+      element.docs.forEach((elements) {
+        getProgress.add({
+          "latitude": elements['latitude'],
+          "longitude": elements['longitude'],
+          "volunteer": elements['number_volunteers'] as int,
+          "campaignID": elements['campaignID']
+        });
+      });
+    }); //get completed
+    FirebaseFirestore.instance
+        .collection('campaigns')
+        .where('isCompleted', isEqualTo: true)
+        .get()
+        .then((element) {
+      element.docs.forEach((elements) {
+        getDone.add({
+          "latitude": elements['latitude'],
+          "longitude": elements['longitude'],
+          "volunteer": elements['number_volunteers'] as int,
+          "campaignID": elements['campaignID']
+        });
+      });
+    });
   }
 
   @override
@@ -159,7 +234,6 @@ class _MapCampaignState extends State<MapCampaign>
   }
 
   void putCircle(double radius1, double latitude, double longitude) {
-    controller.forward();
     circleMarkersCampaigns.clear();
     circleMarkersCampaigns.add({
       "latitude": latitude,
@@ -187,7 +261,6 @@ class _MapCampaignState extends State<MapCampaign>
               return KeyboardDismissOnTap(
                 child: Scaffold(
                     resizeToAvoidBottomInset: true,
-                    key: _keyMap,
                     body: Container(
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
@@ -198,7 +271,7 @@ class _MapCampaignState extends State<MapCampaign>
                               .get(),
                           builder: (context, statusSnapshot) {
                             if (!statusSnapshot.hasData) {
-                              return CircularProgressIndicator();
+                              return Center(child: CircularProgressIndicator());
                             } else {
                               var status = statusSnapshot.data!.get('status');
                               return Stack(
@@ -211,7 +284,9 @@ class _MapCampaignState extends State<MapCampaign>
                                           .get(),
                                       builder: (context, snapshotLamesa) {
                                         if (!snapshotLamesa.hasData) {
-                                          return CircularProgressIndicator();
+                                          return Center(
+                                              child:
+                                                  CircularProgressIndicator());
                                         } else {
                                           snapshotLamesa.data!.docs
                                               .forEach((element) {
@@ -239,7 +314,9 @@ class _MapCampaignState extends State<MapCampaign>
                                               builder:
                                                   (context, snapshotAngat) {
                                                 if (!snapshotAngat.hasData) {
-                                                  return CircularProgressIndicator();
+                                                  return Center(
+                                                      child:
+                                                          CircularProgressIndicator());
                                                 } else {
                                                   snapshotAngat.data!.docs
                                                       .forEach((element) {
@@ -275,7 +352,9 @@ class _MapCampaignState extends State<MapCampaign>
                                                           snapshotPantabangan) {
                                                         if (!snapshotPantabangan
                                                             .hasData) {
-                                                          return CircularProgressIndicator();
+                                                          return Center(
+                                                              child:
+                                                                  CircularProgressIndicator());
                                                         } else {
                                                           snapshotPantabangan
                                                               .data!.docs
@@ -308,12 +387,18 @@ class _MapCampaignState extends State<MapCampaign>
                                                                   .instance
                                                                   .collection(
                                                                       'campaigns')
+                                                                  .where(
+                                                                      'isActive',
+                                                                      isEqualTo:
+                                                                          true)
                                                                   .get(),
                                                               builder: (context,
                                                                   snapshotCampaigns) {
                                                                 if (!snapshotCampaigns
                                                                     .hasData) {
-                                                                  return CircularProgressIndicator();
+                                                                  return Center(
+                                                                      child:
+                                                                          CircularProgressIndicator());
                                                                 } else {
                                                                   existingCampaign
                                                                       .clear();
@@ -401,11 +486,10 @@ class _MapCampaignState extends State<MapCampaign>
 
                                                                                         if (isPointValid == true) {
                                                                                           pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
-                                                                                          print('gana e');
+
                                                                                           latitude = latlng.latitude;
                                                                                           longitude = latlng.longitude;
                                                                                           testlatlng = latlng;
-                                                                                          controller.forward();
                                                                                           cntrler.move(lt.LatLng(latlng.latitude - 0.0050, latlng.longitude), 16);
                                                                                         } else if (isPointValid == false) {
                                                                                           print(isPointValid);
@@ -442,28 +526,12 @@ class _MapCampaignState extends State<MapCampaign>
                                                                               fmap.PolygonLayerOptions(polygons: [
                                                                                 fmap.Polygon(points: latlngpolygonlistAngat, color: Colors.green.withOpacity(0.5), borderColor: Colors.green, borderStrokeWidth: 1),
                                                                               ]),
-                                                                              for (var info in existingCampaign)
-                                                                                fmap.CircleLayerOptions(circles: [
-                                                                                  fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2)),
-                                                                                ]),
-                                                                              for (var info in existingCampaign)
-                                                                                fmap.MarkerLayerOptions(markers: [
-                                                                                  fmap.Marker(
-                                                                                      width: 120,
-                                                                                      point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
-                                                                                      builder: (context) {
-                                                                                        return GestureDetector(
-                                                                                            onTap: () {
-                                                                                              Navigator.push(context, MaterialPageRoute(builder: (context) => JoinDonateCampaign(uidOfCampaign: info.values.elementAt(3), uidOfOrganizer: info.values.elementAt(4), nameOfCampaign: info.values.elementAt(6), city: info.values.elementAt(7), currentFund: info.values.elementAt(8), currentVolunteer: info.values.elementAt(9), maxFund: info.values.elementAt(10), totalVolunteer: info.values.elementAt(11), address: info.values.elementAt(5), description: info.values.elementAt(12))));
-                                                                                            },
-                                                                                            child: Icon(
-                                                                                              Icons.ac_unit,
-                                                                                              color: Colors.transparent,
-                                                                                            ));
-                                                                                      })
-                                                                                ]),
-                                                                              if (showActive) ...[
-                                                                                for (var info in getActive)
+                                                                              if (showActive == true) ...[
+                                                                                for (var info in existingCampaign)
+                                                                                  fmap.CircleLayerOptions(circles: [
+                                                                                    fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2)),
+                                                                                  ]),
+                                                                                for (var info in existingCampaign)
                                                                                   fmap.MarkerLayerOptions(markers: [
                                                                                     fmap.Marker(
                                                                                         width: 120,
@@ -480,14 +548,29 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                         })
                                                                                   ]),
                                                                               ],
-                                                                              if (showLatLng) ...[
+                                                                              if (showInProgress == true) ...[
+                                                                                for (var info in getProgress)
+                                                                                  fmap.CircleLayerOptions(circles: [
+                                                                                    fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()), borderColor: Colors.blue, borderStrokeWidth: 1, color: Colors.blue.withOpacity(0.2)),
+                                                                                  ]),
+                                                                              ],
+                                                                              if (showDone == true) ...[
+                                                                                for (var info in getDone)
+                                                                                  fmap.CircleLayerOptions(circles: [
+                                                                                    fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()), borderColor: Colors.amber, borderStrokeWidth: 1, color: Colors.amber.withOpacity(0.2)),
+                                                                                  ]),
+                                                                              ],
+                                                                              if (showVolunteers) ...[
                                                                                 for (var info in getVolunteers)
                                                                                   fmap.MarkerLayerOptions(markers: [
                                                                                     fmap.Marker(
                                                                                         width: 120,
                                                                                         point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
                                                                                         builder: (context) {
-                                                                                          return Text(info.values.elementAt(2).toString() + " Volunteers");
+                                                                                          return Text(
+                                                                                            info.values.elementAt(2).toString() + " / " + info.values.elementAt(3).toString() + " Volunteers",
+                                                                                            style: TextStyle(color: Color(0xff2b2b2b)),
+                                                                                          );
                                                                                         })
                                                                                   ]),
                                                                               ],
@@ -887,38 +970,73 @@ class _MapCampaignState extends State<MapCampaign>
             padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
             child: Row(
               children: [
-                Container(
-                    width: 150,
-                    margin: EdgeInsets.all(5),
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    decoration: BoxDecoration(
-                        color: Color(0xff65BFB8),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Center(child: Text('Show Volunteers'))),
-                Container(
-                    width: 150,
-                    margin: EdgeInsets.all(5),
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    decoration: BoxDecoration(
-                        color: Color(0xff65BFB8),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Center(child: Text('10 ' + 'Active Campaign'))),
-                Container(
-                    width: 150,
-                    margin: EdgeInsets.all(5),
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    decoration: BoxDecoration(
-                        color: Color(0xff65BFB8),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Center(child: Text('10 ' + 'Active Campaign'))),
-                Container(
-                    width: 150,
-                    margin: EdgeInsets.all(5),
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    decoration: BoxDecoration(
-                        color: Color(0xff65BFB8),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Center(child: Text('10 ' + 'Active Campaign'))),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      showVolunteers = !showVolunteers;
+                    });
+                  },
+                  child: Container(
+                      width: 150,
+                      margin: EdgeInsets.all(5),
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      decoration: BoxDecoration(
+                          color: Color(0xff65BFB8),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Center(child: Text('Show Volunteers'))),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      print(showActive);
+                      showActive = !showActive;
+                    });
+                  },
+                  child: Container(
+                      width: 150,
+                      margin: EdgeInsets.all(5),
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      decoration: BoxDecoration(
+                          color: Color(0xff65BFB8),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Center(
+                          child: Text(
+                              numberActive.toString() + ' Active Campaign'))),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      showInProgress = !showInProgress;
+                    });
+                  },
+                  child: Container(
+                      width: 150,
+                      margin: EdgeInsets.all(5),
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      decoration: BoxDecoration(
+                          color: Color(0xff65BFB8),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Center(
+                          child: Text(
+                              numberOngoing.toString() + ' Ongoing Campaign'))),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      showDone = !showDone;
+                    });
+                  },
+                  child: Container(
+                      width: 150,
+                      margin: EdgeInsets.all(5),
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      decoration: BoxDecoration(
+                          color: Color(0xff65BFB8),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Center(
+                          child: Text(numberCompleted.toString() +
+                              ' Completed Campaign'))),
+                ),
               ],
             ),
           ),
@@ -1551,7 +1669,7 @@ class _MapCampaignState extends State<MapCampaign>
                         finalVolunteers,
                         value!,
                         finalRadius)
-                    .whenComplete(() => controller.reverse());
+                    .whenComplete(() => Navigator.pop(context));
               });
             },
             child: Container(
