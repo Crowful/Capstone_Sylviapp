@@ -563,7 +563,7 @@ class AuthService extends ChangeNotifier {
               deviceTokenOfOrganizer,
               campaignRadius)
           .whenComplete(() =>
-              Fluttertoast.showToast(msg: "Campaign Successfully Created"));
+              Fluttertoast.showToast(msg: "Campaign Successfully Submitted"));
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }

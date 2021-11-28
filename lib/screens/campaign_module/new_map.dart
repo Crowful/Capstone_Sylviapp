@@ -1,5 +1,8 @@
+import 'dart:async';
+import 'package:async/async.dart';
+import 'dart:ffi';
 import 'dart:math';
-
+import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -47,6 +50,8 @@ class _MapCampaignState extends State<MapCampaign>
   int numberOngoing = 0;
   int numberCompleted = 0;
   int balanse = 0;
+  double mainZoom = 13.0;
+  double toBeDeduct = 13;
 
   //Strings
   String title = "title test";
@@ -111,6 +116,12 @@ class _MapCampaignState extends State<MapCampaign>
   TextEditingController addressController = TextEditingController();
   TextEditingController cityController = TextEditingController();
 
+  final _streamController = StreamController<double>();
+  Stream<double> get onZoomChanged => _streamController.stream;
+
+  final _streamControllered = StreamController<double>();
+  Stream<double> get onZoomChangeded => _streamControllered.stream;
+
   void getBalance() {
     FirebaseFirestore.instance
         .collection('users')
@@ -118,7 +129,7 @@ class _MapCampaignState extends State<MapCampaign>
         .get()
         .then((value) {
       var balance = value.get('balance');
-      if (balance > 50) {
+      if (balance > 150) {
         setState(() {
           isApplicable = true;
         });
@@ -160,7 +171,7 @@ class _MapCampaignState extends State<MapCampaign>
         .collection('users')
         .doc(context.read(authserviceProvider).getCurrentUserUID())
         .get()
-        .then((value) => balanse = value.get('balance'));
+        .then((value) => balanse = value['balance']);
 //Is the user verify
     FirebaseFirestore.instance
         .collection('users')
@@ -236,6 +247,7 @@ class _MapCampaignState extends State<MapCampaign>
 
   @override
   void dispose() {
+    _streamController.close();
     super.dispose();
   }
 
@@ -463,6 +475,31 @@ class _MapCampaignState extends State<MapCampaign>
                                                                         child: fmap.FlutterMap(
                                                                             mapController: cntrler,
                                                                             options: fmap.MapOptions(
+                                                                                maxZoom: 16,
+                                                                                minZoom: 13,
+                                                                                onPositionChanged: (position, hasGesture) {
+                                                                                  mainZoom = position.zoom!;
+
+                                                                                  final subject = BehaviorSubject<double>();
+                                                                                  if (mainZoom != null) {
+                                                                                    _streamController.sink.add(mainZoom);
+                                                                                  }
+                                                                                  Stream<double> stream = Stream.value(mainZoom);
+                                                                                  List<Stream<double>> splitted = StreamSplitter.splitFrom(stream);
+                                                                                  _streamController.stream.pairwise().listen((event) {
+                                                                                    print(event.first);
+
+                                                                                    if (event.first > event.last) {
+                                                                                      setState(() {
+                                                                                        toBeDeduct = toBeDeduct + 0.3;
+                                                                                      });
+                                                                                    } else if (event.first < event.last) {
+                                                                                      setState(() {
+                                                                                        toBeDeduct = toBeDeduct - 0.3;
+                                                                                      });
+                                                                                    }
+                                                                                  });
+                                                                                },
                                                                                 onTap: (tapPosition, latlngs) {},
                                                                                 onLongPress: (tapPosition, latlng) {
                                                                                   if (createMode == true) {
@@ -510,7 +547,7 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                   }
                                                                                 },
                                                                                 center: _initialCameraPosition,
-                                                                                zoom: 13),
+                                                                                zoom: mainZoom),
                                                                             layers: [
                                                                               fmap.TileLayerOptions(
                                                                                 urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -535,7 +572,7 @@ class _MapCampaignState extends State<MapCampaign>
                                                                               if (showActive == true) ...[
                                                                                 for (var info in existingCampaign)
                                                                                   fmap.CircleLayerOptions(circles: [
-                                                                                    fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2)),
+                                                                                    fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()) - toBeDeduct.toDouble(), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2)),
                                                                                   ]),
                                                                                 for (var info in existingCampaign)
                                                                                   fmap.MarkerLayerOptions(markers: [
@@ -947,9 +984,11 @@ class _MapCampaignState extends State<MapCampaign>
           height: 5,
         ),
         FadeAnimation(
-          0.3,
-          Text('Current Balance: ' + balanse.toString(),
-              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13)),
+          0.2,
+          Text(
+            'Balance: ' + balanse.toString(),
+            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12),
+          ),
         ),
         Divider(
             height: 15,
