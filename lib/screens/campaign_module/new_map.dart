@@ -533,7 +533,7 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                           latitude = latlng.latitude;
                                                                                           longitude = latlng.longitude;
                                                                                           testlatlng = latlng;
-                                                                                          cntrler.move(lt.LatLng(latlng.latitude - 0.0050, latlng.longitude), 16);
+                                                                                          cntrler.move(lt.LatLng(latlng.latitude - 0.000, latlng.longitude), 16);
                                                                                         } else if (isPointValid == false) {
                                                                                           print(isPointValid);
                                                                                           Fluttertoast.showToast(msg: "You cannot put campaign there");
@@ -611,7 +611,7 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                         point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
                                                                                         builder: (context) {
                                                                                           return Text(
-                                                                                            info.values.elementAt(2).toString() + " / " + info.values.elementAt(3).toString() + " Volunteers",
+                                                                                            info.values.elementAt(3).toString() + " / " + info.values.elementAt(2).toString() + " Volunteers",
                                                                                             style: TextStyle(color: Color(0xff2b2b2b)),
                                                                                           );
                                                                                         })
@@ -1587,8 +1587,11 @@ class _MapCampaignState extends State<MapCampaign>
                       },
                       child: TextField(
                         controller: cityController,
-                        onChanged: (value) =>
-                            {context.read(campaignProvider).setCityName(value)},
+                        onChanged: (value) => {
+                          setState(() {
+                            context.read(campaignProvider).setCityName(value);
+                          })
+                        },
                         decoration: InputDecoration(
                             focusColor: Color(0xff65BFB8),
                             contentPadding: EdgeInsets.all(15),
@@ -1630,8 +1633,11 @@ class _MapCampaignState extends State<MapCampaign>
                       },
                       child: TextField(
                         controller: addressController,
-                        onChanged: (value) =>
-                            {context.read(campaignProvider).setAddress(value)},
+                        onChanged: (value) {
+                          setState(() {
+                            context.read(campaignProvider).setAddress(value);
+                          });
+                        },
                         decoration: InputDecoration(
                             focusColor: Color(0xff65BFB8),
                             contentPadding: EdgeInsets.all(15),
