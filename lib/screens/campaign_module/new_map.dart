@@ -20,7 +20,6 @@ import 'package:sylviapp_project/animation/pop_up.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:latlong2/latlong.dart' as lt;
 import 'package:sylviapp_project/screens/campaign_module/join_donate.dart';
-import 'package:sylviapp_project/widgets/campaign_module/slidable.dart';
 
 class MapCampaign extends StatefulWidget {
   const MapCampaign({Key? key}) : super(key: key);
@@ -62,8 +61,6 @@ class _MapCampaignState extends State<MapCampaign>
   String address = "address test";
   String city = "city test";
   late String time;
-  Curve _curve = Curves.easeOut;
-  double _fabHeight = 56.0;
   var usernames;
   late lt.LatLng testlatlng;
   bool focused = false;
@@ -958,19 +955,20 @@ class _MapCampaignState extends State<MapCampaign>
           0.8,
           GestureDetector(
             onTap: () {
-              // if (isVerified == true) {
-              //   setState(() {
-              //     createMode = !createMode;
-              //   });
+              if (isVerified == true) {
+                setState(() {
+                  createMode = !createMode;
+                });
 
-              //   if (createMode == true) {
-              //     Fluttertoast.showToast(msg: "In create mode.");
-              //   } else {
-              //     Fluttertoast.showToast(msg: "Disabled create mode.");
-              //   }
-              // }
-
-              pageController.jumpToPage(1);
+                if (createMode == true) {
+                  Fluttertoast.showToast(
+                      msg: "In create mode.", toastLength: Toast.LENGTH_SHORT);
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "Disabled create mode.",
+                      toastLength: Toast.LENGTH_SHORT);
+                }
+              }
             },
             child: Container(
               height: 50,
@@ -1467,6 +1465,7 @@ class _MapCampaignState extends State<MapCampaign>
               GestureDetector(
                 onTap: () async {
                   await _selectDate(context).whenComplete(() {
+                    // ignore: unnecessary_null_comparison
                     if (selectedDate != null) {
                       context
                           .read(campaignProvider)

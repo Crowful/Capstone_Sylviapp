@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:sylviapp_project/Domain/theme&language_notifier.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 
 class SliderWidget extends StatefulWidget {

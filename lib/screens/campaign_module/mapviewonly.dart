@@ -9,7 +9,6 @@ import 'package:flutter_map/flutter_map.dart' as fmap;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
 import 'package:encrypt/encrypt.dart' as enc;
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:latlong2/latlong.dart' as lt;
@@ -39,30 +38,8 @@ class _MapViewOnlyState extends State<MapViewOnly>
         ..addListener(() {
           setState(() {});
         });
-  late Animation<Color?> _buttonColor = ColorTween(
-    begin: Colors.blue,
-    end: Colors.red,
-  ).animate(CurvedAnimation(
-    parent: _animationController,
-    curve: Interval(
-      0.00,
-      1.00,
-      curve: Curves.linear,
-    ),
-  ));
-  late Animation<double> _animateIcon =
-      Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
-  late Animation<double> _translateButton = Tween<double>(
-    begin: _fabHeight,
-    end: -14.0,
-  ).animate(CurvedAnimation(
-    parent: _animationController,
-    curve: Interval(
-      0.0,
-      0.75,
-      curve: _curve,
-    ),
-  ));
+
+  
   bool clicked = false;
   bool showForest = false;
   bool showActive = true;
@@ -83,8 +60,6 @@ class _MapViewOnlyState extends State<MapViewOnly>
   String address = "address test";
   String city = "city test";
   late String time;
-  Curve _curve = Curves.easeOut;
-  double _fabHeight = 56.0;
   var usernames;
   late lt.LatLng testlatlng;
   double latitude = 0;
@@ -172,72 +147,8 @@ class _MapViewOnlyState extends State<MapViewOnly>
                 child: CircularProgressIndicator(),
               );
             } else {
-              var data = snapshot.data!.data();
-              bool isVerified = data!['isVerify'];
-              Widget add() {
-                return SizedBox(
-                  child: FloatingActionButton(
-                    heroTag: "herotag1",
-                    backgroundColor:
-                        isVerified ? Color(0xff65BFB8) : Colors.grey,
-                    onPressed: () {
-                      print(createMode);
-                      setState(() {
-                        if (isVerified == true) {
-                          createMode = !createMode;
+            
 
-                          if (createMode == true) {
-                            Fluttertoast.showToast(msg: "In create mode.");
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: "Disabled create mode.");
-                          }
-                        }
-                      });
-                    },
-                    child: Icon(Icons.add),
-                  ),
-                );
-              }
-
-              Widget image() {
-                return Container(
-                  child: FittedBox(
-                    child: AbsorbPointer(
-                      absorbing: isVerified ? false : true,
-                      child: FloatingActionButton(
-                        heroTag: "herotag2",
-                        backgroundColor: Color(0xff65BFB8),
-                        onPressed: () {
-                          setState(() {
-                            print(isVerified);
-                            showForest = !showForest;
-                          });
-                        },
-                        tooltip: 'Image',
-                        child: Icon(Icons.location_searching),
-                      ),
-                    ),
-                  ),
-                );
-              }
-
-              Widget toggle() {
-                return Container(
-                  child: FittedBox(
-                    child: FloatingActionButton(
-                      heroTag: "herotag3",
-                      backgroundColor: _buttonColor.value,
-                      onPressed: animate,
-                      tooltip: 'Toggle',
-                      child: AnimatedIcon(
-                        icon: AnimatedIcons.menu_close,
-                        progress: _animateIcon,
-                      ),
-                    ),
-                  ),
-                );
-              }
 
               return Scaffold(
                   key: _keyMap,
@@ -253,7 +164,6 @@ class _MapViewOnlyState extends State<MapViewOnly>
                           if (!statusSnapshot.hasData) {
                             return CircularProgressIndicator();
                           } else {
-                            var status = statusSnapshot.data!.get('status');
                             return Stack(
                               children: [
                                 FutureBuilder<QuerySnapshot>(

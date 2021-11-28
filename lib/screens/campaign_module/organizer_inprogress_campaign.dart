@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// ignore: must_be_immutable
 class InProgressCampaign extends StatefulWidget {
   String uidOfCampaign;
   InProgressCampaign({Key? key, required this.uidOfCampaign}) : super(key: key);
