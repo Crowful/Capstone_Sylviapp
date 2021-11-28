@@ -23,8 +23,8 @@ void main() async {
       await tester.pumpWidget(test(
         child: LoginScreen(),
       ));
-      var email = find.byType(TextField);
-      var password = find.byType(TextField);
+      var email = find.byType(TextFormField);
+      var password = find.byType(TextFormField);
       expect(email, findsOneWidget);
       await tester.enterText(email, 'trtryy@gmail.com');
       print('email');
