@@ -166,13 +166,13 @@ class _MapCampaignState extends State<MapCampaign>
         .get()
         .then((value) => usernames = AESCryptography()
             .decryptAES(enc.Encrypted.from64(value['username'])));
-    //get user's username
+    //get user's balance
     FirebaseFirestore.instance
         .collection('users')
         .doc(context.read(authserviceProvider).getCurrentUserUID())
         .get()
         .then((value) => balanse = value['balance']);
-//Is the user verify
+//Is the user verified
     FirebaseFirestore.instance
         .collection('users')
         .doc(context.read(authserviceProvider).getCurrentUserUID())

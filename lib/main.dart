@@ -34,6 +34,7 @@ import 'package:sylviapp_project/translations/codegen_loader.g.dart';
 import 'package:flutter/services.dart';
 
 Future<void> main() async {
+  Paint.enableDithering = true;
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await EasyLocalization.ensureInitialized();

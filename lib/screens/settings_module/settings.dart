@@ -109,7 +109,7 @@ class SettingsPage extends ConsumerWidget {
                     DropdownButton<String>(
                       // ignore: unrelated_type_equality_checks
                       value: null,
-                      style: const TextStyle(color: Colors.white),
+                      style: Theme.of(context).textTheme.headline6,
                       items: <String>['Filipino', 'English']
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
@@ -208,14 +208,6 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => OnboardingScreen()));
-                  },
-                  child: Text('onboarding'))
             ],
           ),
         ),
