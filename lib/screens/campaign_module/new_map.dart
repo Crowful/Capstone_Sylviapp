@@ -20,7 +20,7 @@ import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/animation/pop_up.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:latlong2/latlong.dart' as lt;
-import 'package:sylviapp_project/screens/campaign_module/campaign_inq.dart';
+
 import 'package:sylviapp_project/screens/campaign_module/join_donate.dart';
 
 class MapCampaign extends StatefulWidget {
@@ -1787,6 +1787,7 @@ class _MapCampaignState extends State<MapCampaign>
                           value!,
                           finalRadius)
                       .whenComplete(() => showDialog(
+                          barrierDismissible: false,
                           context: context,
                           builder: (context) {
                             return Container(
@@ -1816,7 +1817,11 @@ class _MapCampaignState extends State<MapCampaign>
                                               style: ElevatedButton.styleFrom(
                                                   primary: Color(0xff65BFB8)),
                                               onPressed: () {
-                                                Navigator.pop(context);
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            MapCampaign()));
                                               },
                                               child: Text('Back to Map')),
                                           SizedBox(
