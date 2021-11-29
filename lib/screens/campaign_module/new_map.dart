@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:async/async.dart';
+import 'package:flutter_map/plugin_api.dart';
 import 'dart:ffi';
 import 'dart:math';
 import 'package:rxdart/rxdart.dart';
@@ -129,7 +130,7 @@ class _MapCampaignState extends State<MapCampaign>
         .get()
         .then((value) {
       var balance = value.get('balance');
-      if (balance > 150) {
+      if (balance > 50) {
         setState(() {
           isApplicable = true;
         });
@@ -475,31 +476,7 @@ class _MapCampaignState extends State<MapCampaign>
                                                                         child: fmap.FlutterMap(
                                                                             mapController: cntrler,
                                                                             options: fmap.MapOptions(
-                                                                                maxZoom: 16,
-                                                                                minZoom: 13,
-                                                                                onPositionChanged: (position, hasGesture) {
-                                                                                  mainZoom = position.zoom!;
-
-                                                                                  final subject = BehaviorSubject<double>();
-                                                                                  if (mainZoom != null) {
-                                                                                    _streamController.sink.add(mainZoom);
-                                                                                  }
-                                                                                  Stream<double> stream = Stream.value(mainZoom);
-                                                                                  List<Stream<double>> splitted = StreamSplitter.splitFrom(stream);
-                                                                                  _streamController.stream.pairwise().listen((event) {
-                                                                                    print(event.first);
-
-                                                                                    if (event.first > event.last) {
-                                                                                      setState(() {
-                                                                                        toBeDeduct = toBeDeduct + 0.3;
-                                                                                      });
-                                                                                    } else if (event.first < event.last) {
-                                                                                      setState(() {
-                                                                                        toBeDeduct = toBeDeduct - 0.3;
-                                                                                      });
-                                                                                    }
-                                                                                  });
-                                                                                },
+                                                                              interactiveFlags: InteractiveFlag.drag | InteractiveFlag.pinchMove | InteractiveFlag.flingAnimation | InteractiveFlag.rotate,
                                                                                 onTap: (tapPosition, latlngs) {},
                                                                                 onLongPress: (tapPosition, latlng) {
                                                                                   if (createMode == true) {
@@ -973,22 +950,68 @@ class _MapCampaignState extends State<MapCampaign>
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FadeAnimation(
-          0.2,
-          Text(
-            'Hello, ' + usernames,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        FadeAnimation(
-          0.2,
-          Text(
-            'Balance: ' + balanse.toString(),
-            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12),
-          ),
+        Row(
+          children: [
+            Column(
+              children: [
+                FadeAnimation(
+                  0.2,
+                  Text(
+                    'Hello, ' + usernames,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                FadeAnimation(
+                  0.2,
+                  Text(
+                    'Balance: ' + balanse.toString(),
+                    style:
+                        TextStyle(fontWeight: FontWeight.normal, fontSize: 12),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              width: 175,
+            ),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  mainZoom = mainZoom - 0.2;
+                  toBeDeduct = toBeDeduct + 1;
+                });
+                cntrler.move(cntrler.center, mainZoom);
+              },
+              child: Container(
+                width: 40,
+                height: 40,
+                child: Card(
+                  elevation: 5,
+                  child: Center(child: Text('-')),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  mainZoom = mainZoom + 0.2;
+                  toBeDeduct = toBeDeduct - 1;
+                });
+                cntrler.move(cntrler.center, mainZoom);
+              },
+              child: Container(
+                width: 40,
+                height: 40,
+                child: Card(
+                  elevation: 5,
+                  child: Center(child: Text('+')),
+                ),
+              ),
+            ),
+          ],
         ),
         Divider(
             height: 15,
@@ -1295,7 +1318,7 @@ class _MapCampaignState extends State<MapCampaign>
                         inactiveColor: Color(0xff65BFB8).withOpacity(0.4),
                         value: finalRadius,
                         min: 0,
-                        max: 100,
+                        max: 20,
                         onChanged: (newValue) {
                           setState(() {
                             radius = newValue;
