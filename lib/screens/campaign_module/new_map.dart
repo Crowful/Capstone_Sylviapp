@@ -48,7 +48,7 @@ class _MapCampaignState extends State<MapCampaign>
   int numberActive = 0;
   int numberOngoing = 0;
   int numberCompleted = 0;
-  int balanse = 0;
+  var balanse;
   double mainZoom = 13.0;
   double toBeDeduct = 13;
 
@@ -157,7 +157,13 @@ class _MapCampaignState extends State<MapCampaign>
   @override
   void initState() {
     super.initState();
-
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(context.read(authserviceProvider).getCurrentUserUID())
+        .get()
+        .then((value) {
+      balanse = value.get('balance');
+    });
     getBalance();
     //get user's username
     FirebaseFirestore.instance
@@ -167,11 +173,7 @@ class _MapCampaignState extends State<MapCampaign>
         .then((value) => usernames = AESCryptography()
             .decryptAES(enc.Encrypted.from64(value['username'])));
     //get user's balance
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(context.read(authserviceProvider).getCurrentUserUID())
-        .get()
-        .then((value) => balanse = value.get('balance'));
+
 //Is the user verified
     FirebaseFirestore.instance
         .collection('users')
