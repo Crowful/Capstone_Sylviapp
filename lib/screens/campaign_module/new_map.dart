@@ -23,6 +23,7 @@ import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/animation/pop_up.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:latlong2/latlong.dart' as lt;
+import 'package:sylviapp_project/screens/campaign_module/campaign_inq.dart';
 import 'package:sylviapp_project/screens/campaign_module/join_donate.dart';
 
 class MapCampaign extends StatefulWidget {
@@ -172,7 +173,7 @@ class _MapCampaignState extends State<MapCampaign>
         .collection('users')
         .doc(context.read(authserviceProvider).getCurrentUserUID())
         .get()
-        .then((value) => balanse = value['balance']);
+        .then((value) => balanse = value.get('balance'));
 //Is the user verified
     FirebaseFirestore.instance
         .collection('users')
@@ -476,7 +477,7 @@ class _MapCampaignState extends State<MapCampaign>
                                                                         child: fmap.FlutterMap(
                                                                             mapController: cntrler,
                                                                             options: fmap.MapOptions(
-                                                                              interactiveFlags: InteractiveFlag.drag | InteractiveFlag.pinchMove | InteractiveFlag.flingAnimation | InteractiveFlag.rotate,
+                                                                                interactiveFlags: InteractiveFlag.drag | InteractiveFlag.pinchMove | InteractiveFlag.flingAnimation | InteractiveFlag.rotate,
                                                                                 onTap: (tapPosition, latlngs) {},
                                                                                 onLongPress: (tapPosition, latlng) {
                                                                                   if (createMode == true) {
@@ -510,6 +511,9 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                           latitude = latlng.latitude;
                                                                                           longitude = latlng.longitude;
                                                                                           testlatlng = latlng;
+                                                                                          setState(() {
+                                                                                            toBeDeduct = toBeDeduct - 5;
+                                                                                          });
                                                                                           cntrler.move(lt.LatLng(latlng.latitude - 0.000, latlng.longitude), 16);
                                                                                         } else if (isPointValid == false) {
                                                                                           print(isPointValid);
@@ -1775,7 +1779,56 @@ class _MapCampaignState extends State<MapCampaign>
                           finalVolunteers,
                           value!,
                           finalRadius)
-                      .whenComplete(() => Navigator.pop(context));
+                      .whenComplete(() => showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                                margin: EdgeInsets.fromLTRB(10, 250, 10, 300),
+                                child: Card(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        margin:
+                                            EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                        child: Text(
+                                            'Thank you for creating a campaign organizer, once your campaign accepted, your campaign will be displayed in the application. this will take up to 2 - 3 days to accept.'),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: Color(0xff65BFB8)),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Back to Map')),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: Color(0xff65BFB8)),
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                    context, '/home');
+                                              },
+                                              child: Text('Back to home')),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ));
+                          }));
                 });
               },
               child: Container(
