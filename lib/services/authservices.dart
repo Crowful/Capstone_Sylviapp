@@ -830,4 +830,17 @@ class AuthService extends ChangeNotifier {
       print(e);
     }
   }
+
+  deductInitialCampaign(String volunteerUID) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .deductInitialCamapaign(volunteerUID)
+          .whenComplete(() => Fluttertoast.showToast(msg: "Balance Deducted"));
+    } catch (e) {
+      print(e);
+    }
+  }
 }

@@ -332,4 +332,10 @@ class DatabaseService {
         .doc(volunteerUID)
         .update({"balance": FieldValue.increment(-newBalance)});
   }
+
+  Future deductInitialCamapaign(String volunteerUID) async {
+    return await userCollection
+        .doc(volunteerUID)
+        .update({"balance": FieldValue.increment(-500)});
+  }
 }

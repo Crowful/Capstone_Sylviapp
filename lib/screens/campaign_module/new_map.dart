@@ -129,7 +129,7 @@ class _MapCampaignState extends State<MapCampaign>
         .get()
         .then((value) {
       var balance = value.get('balance');
-      if (balance > 50) {
+      if (balance > 500) {
         setState(() {
           isApplicable = true;
         });
@@ -520,7 +520,7 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                               Fluttertoast.showToast(msg: "You cannot put campaign there");
                                                                                             }
                                                                                           } else {
-                                                                                            Fluttertoast.showToast(msg: 'You do not have enough balance to create a campaign');
+                                                                                            Fluttertoast.showToast(msg: 'You need 500 pesos as initial fund to the campaign');
                                                                                           }
                                                                                         }
                                                                                       } else {
@@ -1798,62 +1798,64 @@ class _MapCampaignState extends State<MapCampaign>
                             finalVolunteers,
                             value!,
                             finalRadius)
-                        .whenComplete(() => showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) {
-                              return Container(
-                                  margin: EdgeInsets.fromLTRB(10, 250, 10, 300),
-                                  child: Card(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          margin:
-                                              EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                          child: Text(
-                                              'Thank you for creating a campaign organizer, once your campaign accepted, your campaign will be displayed in the application. this will take up to 2 - 3 days to accept.'),
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                    primary: Color(0xff65BFB8)),
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              MapCampaign()));
-                                                },
-                                                child: Text('Back to Map')),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                    primary: Color(0xff65BFB8)),
-                                                onPressed: () {
-                                                  Navigator.pushNamed(
-                                                      context, '/home');
-                                                },
-                                                child: Text('Back to home')),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ));
-                            }));
+                        .then((value) {
+                          context.read(authserviceProvider).deductInitialCampaign(context.read(authserviceProvider).getCurrentUserUID());
+                      showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                                margin: EdgeInsets.fromLTRB(10, 250, 10, 300),
+                                child: Card(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        margin:
+                                            EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                        child: Text(
+                                            'Thank you for creating a campaign organizer, once your campaign accepted, your campaign will be displayed in the application. this will take up to 2 - 3 days to accept.'),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: Color(0xff65BFB8)),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            MapCampaign()));
+                                              },
+                                              child: Text('Back to Map')),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: Color(0xff65BFB8)),
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                    context, '/home');
+                                              },
+                                              child: Text('Back to home')),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ));
+                          });
+                    });
                   });
                 }
               },
