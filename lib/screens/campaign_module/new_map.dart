@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'package:async/async.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'dart:ffi';
 import 'dart:math';
-import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -120,6 +117,7 @@ class _MapCampaignState extends State<MapCampaign>
   final _streamController = StreamController<double>();
   Stream<double> get onZoomChanged => _streamController.stream;
 
+  // ignore: close_sinks
   final _streamControllered = StreamController<double>();
   Stream<double> get onZoomChangeded => _streamControllered.stream;
 
@@ -473,132 +471,179 @@ class _MapCampaignState extends State<MapCampaign>
                                                                       SizedBox(
                                                                         height: MediaQuery.of(context).size.height *
                                                                             0.6,
-                                                                        child: fmap.FlutterMap(
-                                                                            mapController: cntrler,
-                                                                            options: fmap.MapOptions(
-                                                                              interactiveFlags: InteractiveFlag.drag | InteractiveFlag.pinchMove | InteractiveFlag.flingAnimation | InteractiveFlag.rotate,
-                                                                                onTap: (tapPosition, latlngs) {},
-                                                                                onLongPress: (tapPosition, latlng) {
-                                                                                  if (createMode == true) {
-                                                                                    if (status == "ECQ" || status == "MECQ" || status == "GCQ") {
-                                                                                      Fluttertoast.showToast(msg: "The area is still in lockdown.");
-                                                                                    } else {
-                                                                                      if (isApplicable == true) {
-                                                                                        mtk.LatLng latlngtoMTK = mtk.LatLng(latlng.latitude, latlng.longitude);
+                                                                        child:
+                                                                            Stack(
+                                                                          children: [
+                                                                            fmap.FlutterMap(
+                                                                                mapController: cntrler,
+                                                                                options: fmap.MapOptions(
+                                                                                    interactiveFlags: InteractiveFlag.drag | InteractiveFlag.pinchMove | InteractiveFlag.flingAnimation | InteractiveFlag.rotate,
+                                                                                    onTap: (tapPosition, latlngs) {},
+                                                                                    onLongPress: (tapPosition, latlng) {
+                                                                                      if (createMode == true) {
+                                                                                        if (status == "ECQ" || status == "MECQ" || status == "GCQ") {
+                                                                                          Fluttertoast.showToast(msg: "The area is still in lockdown.");
+                                                                                        } else {
+                                                                                          if (isApplicable == true) {
+                                                                                            mtk.LatLng latlngtoMTK = mtk.LatLng(latlng.latitude, latlng.longitude);
 
-                                                                                        List<mtk.LatLng> mtkPolygonAngat = List.empty(growable: true);
-                                                                                        latlngpolygonlistAngat.forEach((element) {
-                                                                                          mtkPolygonAngat.add(mtk.LatLng(element.latitude, element.longitude));
-                                                                                        });
+                                                                                            List<mtk.LatLng> mtkPolygonAngat = List.empty(growable: true);
+                                                                                            latlngpolygonlistAngat.forEach((element) {
+                                                                                              mtkPolygonAngat.add(mtk.LatLng(element.latitude, element.longitude));
+                                                                                            });
 
-                                                                                        List<mtk.LatLng> mtkPolygonPanbatanbangan = List.empty(growable: true);
-                                                                                        latlngpolygonlistPantabangan.forEach((element) {
-                                                                                          mtkPolygonPanbatanbangan.add(mtk.LatLng(element.latitude, element.longitude));
-                                                                                        });
+                                                                                            List<mtk.LatLng> mtkPolygonPanbatanbangan = List.empty(growable: true);
+                                                                                            latlngpolygonlistPantabangan.forEach((element) {
+                                                                                              mtkPolygonPanbatanbangan.add(mtk.LatLng(element.latitude, element.longitude));
+                                                                                            });
 
-                                                                                        List<mtk.LatLng> mtkPolygonLamesa = List.empty(growable: true);
-                                                                                        latlngpolygonlistLamesa.forEach((element) {
-                                                                                          mtkPolygonLamesa.add(mtk.LatLng(element.latitude, element.longitude));
-                                                                                        });
-                                                                                        setState(() {
-                                                                                          isPointValid = mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonLamesa, false) || mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonAngat, false) || mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonPantabangan, false);
-                                                                                        });
+                                                                                            List<mtk.LatLng> mtkPolygonLamesa = List.empty(growable: true);
+                                                                                            latlngpolygonlistLamesa.forEach((element) {
+                                                                                              mtkPolygonLamesa.add(mtk.LatLng(element.latitude, element.longitude));
+                                                                                            });
+                                                                                            setState(() {
+                                                                                              isPointValid = mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonLamesa, false) || mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonAngat, false) || mtk.PolygonUtil.containsLocation(latlngtoMTK, mtkPolygonPantabangan, false);
+                                                                                            });
 
-                                                                                        if (isPointValid == true) {
-                                                                                          pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
+                                                                                            if (isPointValid == true) {
+                                                                                              pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
 
-                                                                                          latitude = latlng.latitude;
-                                                                                          longitude = latlng.longitude;
-                                                                                          testlatlng = latlng;
-                                                                                          cntrler.move(lt.LatLng(latlng.latitude - 0.000, latlng.longitude), 16);
-                                                                                        } else if (isPointValid == false) {
-                                                                                          print(isPointValid);
-                                                                                          Fluttertoast.showToast(msg: "You cannot put campaign there");
+                                                                                              latitude = latlng.latitude;
+                                                                                              longitude = latlng.longitude;
+                                                                                              testlatlng = latlng;
+                                                                                              cntrler.move(lt.LatLng(latlng.latitude - 0.000, latlng.longitude), 16);
+                                                                                            } else if (isPointValid == false) {
+                                                                                              print(isPointValid);
+                                                                                              Fluttertoast.showToast(msg: "You cannot put campaign there");
+                                                                                            }
+                                                                                          } else {
+                                                                                            Fluttertoast.showToast(msg: 'You do not have enough balance to create a campaign');
+                                                                                          }
                                                                                         }
                                                                                       } else {
-                                                                                        Fluttertoast.showToast(msg: 'You do not have enough balance to create a campaign');
+                                                                                        Fluttertoast.showToast(msg: "Please go into create mode before proceeding.");
                                                                                       }
-                                                                                    }
-                                                                                  } else {
-                                                                                    Fluttertoast.showToast(msg: "Please go into create mode before proceeding.");
-                                                                                  }
-                                                                                },
-                                                                                center: _initialCameraPosition,
-                                                                                zoom: mainZoom),
-                                                                            layers: [
-                                                                              fmap.TileLayerOptions(
-                                                                                urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                                                                subdomains: [
-                                                                                  'a',
-                                                                                  'b',
-                                                                                  'c'
+                                                                                    },
+                                                                                    center: _initialCameraPosition,
+                                                                                    zoom: mainZoom),
+                                                                                layers: [
+                                                                                  fmap.TileLayerOptions(
+                                                                                    urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                                                                    subdomains: [
+                                                                                      'a',
+                                                                                      'b',
+                                                                                      'c'
+                                                                                    ],
+                                                                                    attributionBuilder: (_) {
+                                                                                      return const Text("");
+                                                                                    },
+                                                                                  ),
+                                                                                  fmap.PolygonLayerOptions(polygons: [
+                                                                                    fmap.Polygon(points: latlngpolygonlistLamesa, color: Colors.green.withOpacity(0.5), borderColor: Colors.green, borderStrokeWidth: 1),
+                                                                                  ]),
+                                                                                  fmap.PolygonLayerOptions(polygons: [
+                                                                                    fmap.Polygon(points: latlngpolygonlistPantabangan, color: Colors.green.withOpacity(0.5), borderColor: Colors.green, borderStrokeWidth: 1),
+                                                                                  ]),
+                                                                                  fmap.PolygonLayerOptions(polygons: [
+                                                                                    fmap.Polygon(points: latlngpolygonlistAngat, color: Colors.green.withOpacity(0.5), borderColor: Colors.green, borderStrokeWidth: 1),
+                                                                                  ]),
+                                                                                  if (showActive == true) ...[
+                                                                                    for (var info in existingCampaign)
+                                                                                      fmap.CircleLayerOptions(circles: [
+                                                                                        fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()) - toBeDeduct.toDouble(), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2)),
+                                                                                      ]),
+                                                                                    for (var info in existingCampaign)
+                                                                                      fmap.MarkerLayerOptions(markers: [
+                                                                                        fmap.Marker(
+                                                                                            width: 120,
+                                                                                            point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
+                                                                                            builder: (context) {
+                                                                                              return GestureDetector(
+                                                                                                  onTap: () {
+                                                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => JoinDonateCampaign(uidOfCampaign: info.values.elementAt(3), uidOfOrganizer: info.values.elementAt(4), nameOfCampaign: info.values.elementAt(6), city: info.values.elementAt(7), currentFund: info.values.elementAt(8), currentVolunteer: info.values.elementAt(9), maxFund: info.values.elementAt(10), totalVolunteer: info.values.elementAt(11), address: info.values.elementAt(5), description: info.values.elementAt(12))));
+                                                                                                  },
+                                                                                                  child: Icon(
+                                                                                                    Icons.ac_unit,
+                                                                                                    color: Colors.transparent,
+                                                                                                  ));
+                                                                                            })
+                                                                                      ]),
+                                                                                  ],
+                                                                                  if (showInProgress == true) ...[
+                                                                                    for (var info in getProgress)
+                                                                                      fmap.CircleLayerOptions(circles: [
+                                                                                        fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()), borderColor: Colors.blue, borderStrokeWidth: 1, color: Colors.blue.withOpacity(0.2)),
+                                                                                      ]),
+                                                                                  ],
+                                                                                  if (showDone == true) ...[
+                                                                                    for (var info in getDone)
+                                                                                      fmap.CircleLayerOptions(circles: [
+                                                                                        fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()), borderColor: Colors.amber, borderStrokeWidth: 1, color: Colors.amber.withOpacity(0.2)),
+                                                                                      ]),
+                                                                                  ],
+                                                                                  if (showVolunteers) ...[
+                                                                                    for (var info in getVolunteers)
+                                                                                      fmap.MarkerLayerOptions(markers: [
+                                                                                        fmap.Marker(
+                                                                                            width: 120,
+                                                                                            point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
+                                                                                            builder: (context) {
+                                                                                              return Text(
+                                                                                                info.values.elementAt(3).toString() + " / " + info.values.elementAt(2).toString() + " Volunteers",
+                                                                                                style: TextStyle(color: Color(0xff2b2b2b)),
+                                                                                              );
+                                                                                            })
+                                                                                      ]),
+                                                                                  ],
+                                                                                  for (var info in circleMarkersCampaigns)
+                                                                                    fmap.CircleLayerOptions(circles: [
+                                                                                      fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: info.values.elementAt(2), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2))
+                                                                                    ])
+                                                                                ]),
+                                                                            Align(
+                                                                              alignment: Alignment.bottomRight,
+                                                                              child: Row(
+                                                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                                                children: [
+                                                                                  GestureDetector(
+                                                                                    onTap: () {
+                                                                                      setState(() {
+                                                                                        mainZoom = mainZoom - 0.2;
+                                                                                        toBeDeduct = toBeDeduct + 1;
+                                                                                      });
+                                                                                      cntrler.move(cntrler.center, mainZoom);
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      width: 40,
+                                                                                      height: 40,
+                                                                                      child: Card(
+                                                                                        elevation: 10,
+                                                                                        child: Center(child: Text('-')),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                  GestureDetector(
+                                                                                    onTap: () {
+                                                                                      setState(() {
+                                                                                        mainZoom = mainZoom + 0.2;
+                                                                                        toBeDeduct = toBeDeduct - 1;
+                                                                                      });
+                                                                                      cntrler.move(cntrler.center, mainZoom);
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      width: 40,
+                                                                                      height: 40,
+                                                                                      child: Card(
+                                                                                        elevation: 10,
+                                                                                        child: Center(child: Text('+')),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
                                                                                 ],
-                                                                                attributionBuilder: (_) {
-                                                                                  return const Text("");
-                                                                                },
                                                                               ),
-                                                                              fmap.PolygonLayerOptions(polygons: [
-                                                                                fmap.Polygon(points: latlngpolygonlistLamesa, color: Colors.green.withOpacity(0.5), borderColor: Colors.green, borderStrokeWidth: 1),
-                                                                              ]),
-                                                                              fmap.PolygonLayerOptions(polygons: [
-                                                                                fmap.Polygon(points: latlngpolygonlistPantabangan, color: Colors.green.withOpacity(0.5), borderColor: Colors.green, borderStrokeWidth: 1),
-                                                                              ]),
-                                                                              fmap.PolygonLayerOptions(polygons: [
-                                                                                fmap.Polygon(points: latlngpolygonlistAngat, color: Colors.green.withOpacity(0.5), borderColor: Colors.green, borderStrokeWidth: 1),
-                                                                              ]),
-                                                                              if (showActive == true) ...[
-                                                                                for (var info in existingCampaign)
-                                                                                  fmap.CircleLayerOptions(circles: [
-                                                                                    fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()) - toBeDeduct.toDouble(), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2)),
-                                                                                  ]),
-                                                                                for (var info in existingCampaign)
-                                                                                  fmap.MarkerLayerOptions(markers: [
-                                                                                    fmap.Marker(
-                                                                                        width: 120,
-                                                                                        point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
-                                                                                        builder: (context) {
-                                                                                          return GestureDetector(
-                                                                                              onTap: () {
-                                                                                                Navigator.push(context, MaterialPageRoute(builder: (context) => JoinDonateCampaign(uidOfCampaign: info.values.elementAt(3), uidOfOrganizer: info.values.elementAt(4), nameOfCampaign: info.values.elementAt(6), city: info.values.elementAt(7), currentFund: info.values.elementAt(8), currentVolunteer: info.values.elementAt(9), maxFund: info.values.elementAt(10), totalVolunteer: info.values.elementAt(11), address: info.values.elementAt(5), description: info.values.elementAt(12))));
-                                                                                              },
-                                                                                              child: Icon(
-                                                                                                Icons.ac_unit,
-                                                                                                color: Colors.transparent,
-                                                                                              ));
-                                                                                        })
-                                                                                  ]),
-                                                                              ],
-                                                                              if (showInProgress == true) ...[
-                                                                                for (var info in getProgress)
-                                                                                  fmap.CircleLayerOptions(circles: [
-                                                                                    fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()), borderColor: Colors.blue, borderStrokeWidth: 1, color: Colors.blue.withOpacity(0.2)),
-                                                                                  ]),
-                                                                              ],
-                                                                              if (showDone == true) ...[
-                                                                                for (var info in getDone)
-                                                                                  fmap.CircleLayerOptions(circles: [
-                                                                                    fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()), borderColor: Colors.amber, borderStrokeWidth: 1, color: Colors.amber.withOpacity(0.2)),
-                                                                                  ]),
-                                                                              ],
-                                                                              if (showVolunteers) ...[
-                                                                                for (var info in getVolunteers)
-                                                                                  fmap.MarkerLayerOptions(markers: [
-                                                                                    fmap.Marker(
-                                                                                        width: 120,
-                                                                                        point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)),
-                                                                                        builder: (context) {
-                                                                                          return Text(
-                                                                                            info.values.elementAt(3).toString() + " / " + info.values.elementAt(2).toString() + " Volunteers",
-                                                                                            style: TextStyle(color: Color(0xff2b2b2b)),
-                                                                                          );
-                                                                                        })
-                                                                                  ]),
-                                                                              ],
-                                                                              for (var info in circleMarkersCampaigns)
-                                                                                fmap.CircleLayerOptions(circles: [
-                                                                                  fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: info.values.elementAt(2), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2))
-                                                                                ])
-                                                                            ]),
+                                                                            )
+                                                                          ],
+                                                                        ),
                                                                       ),
                                                                       Expanded(
                                                                         child: Container(
@@ -953,6 +998,8 @@ class _MapCampaignState extends State<MapCampaign>
         Row(
           children: [
             Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FadeAnimation(
                   0.2,
@@ -967,49 +1014,12 @@ class _MapCampaignState extends State<MapCampaign>
                 FadeAnimation(
                   0.2,
                   Text(
-                    'Balance: ' + balanse.toString(),
+                    'Current Balance: ' + balanse.toString(),
                     style:
-                        TextStyle(fontWeight: FontWeight.normal, fontSize: 12),
+                        TextStyle(fontWeight: FontWeight.normal, fontSize: 13),
                   ),
                 ),
               ],
-            ),
-            SizedBox(
-              width: 175,
-            ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  mainZoom = mainZoom - 0.2;
-                  toBeDeduct = toBeDeduct + 1;
-                });
-                cntrler.move(cntrler.center, mainZoom);
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                child: Card(
-                  elevation: 5,
-                  child: Center(child: Text('-')),
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  mainZoom = mainZoom + 0.2;
-                  toBeDeduct = toBeDeduct - 1;
-                });
-                cntrler.move(cntrler.center, mainZoom);
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                child: Card(
-                  elevation: 5,
-                  child: Center(child: Text('+')),
-                ),
-              ),
             ),
           ],
         ),
