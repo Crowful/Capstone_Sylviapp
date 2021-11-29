@@ -21,17 +21,17 @@ class MapBackend extends ChangeNotifier {
 
   checkVolunteersNeeded(double valueRadius1) {
     int testCase = valueRadius1.round();
-    if (testCase < 10) {
+    if (testCase < 3) {
       volunteersRequired = 5;
-    } else if (testCase < 30) {
+    } else if (testCase < 10) {
       volunteersRequired = 25;
-    } else if (testCase < 50) {
+    } else if (testCase < 15) {
       volunteersRequired = 60;
-    } else if (testCase < 70) {
+    } else if (testCase < 20) {
       volunteersRequired = 60;
-    } else if (testCase < 80) {
+    } else if (testCase < 30) {
       volunteersRequired = 60;
-    } else if (testCase < 100) {
+    } else if (testCase < 40) {
       volunteersRequired = 75;
     }
 
@@ -40,17 +40,17 @@ class MapBackend extends ChangeNotifier {
 
   checkseedsNeeded(double valueRadius1) {
     int testCase = valueRadius1.round();
-    if (testCase < 10) {
+    if (testCase < 3) {
       seedsRequired = 20;
-    } else if (testCase < 30) {
+    } else if (testCase < 10) {
       seedsRequired = 50;
-    } else if (testCase < 50) {
+    } else if (testCase < 15) {
       seedsRequired = 80;
-    } else if (testCase < 70) {
+    } else if (testCase < 20) {
       seedsRequired = 120;
-    } else if (testCase < 80) {
+    } else if (testCase < 30) {
       seedsRequired = 170;
-    } else if (testCase < 100) {
+    } else if (testCase < 40) {
       seedsRequired = 200;
     }
 
@@ -59,17 +59,17 @@ class MapBackend extends ChangeNotifier {
 
   checkFundRequired(double valueRadius1) {
     int testCase = valueRadius1.round();
-    if (testCase < 10) {
+    if (testCase < 3) {
       fundRequired = 500;
-    } else if (testCase < 30) {
+    } else if (testCase < 10) {
       fundRequired = 1500;
-    } else if (testCase < 50) {
+    } else if (testCase < 15) {
       fundRequired = 2000;
-    } else if (testCase < 70) {
+    } else if (testCase < 20) {
       fundRequired = 4000;
-    } else if (testCase < 80) {
+    } else if (testCase < 30) {
       fundRequired = 8000;
-    } else if (testCase < 100) {
+    } else if (testCase < 40) {
       fundRequired = 10000;
     }
 

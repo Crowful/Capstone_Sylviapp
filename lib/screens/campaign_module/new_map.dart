@@ -508,7 +508,6 @@ class _MapCampaignState extends State<MapCampaign>
 
                                                                                             if (isPointValid == true) {
                                                                                               pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
-
                                                                                               latitude = latlng.latitude;
                                                                                               longitude = latlng.longitude;
                                                                                               testlatlng = latlng;
@@ -574,13 +573,13 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                   if (showInProgress == true) ...[
                                                                                     for (var info in getProgress)
                                                                                       fmap.CircleLayerOptions(circles: [
-                                                                                        fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()), borderColor: Colors.blue, borderStrokeWidth: 1, color: Colors.blue.withOpacity(0.2)),
+                                                                                        fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()) - toBeDeduct.toDouble(), borderColor: Colors.blue, borderStrokeWidth: 1, color: Colors.blue.withOpacity(0.2)),
                                                                                       ]),
                                                                                   ],
                                                                                   if (showDone == true) ...[
                                                                                     for (var info in getDone)
                                                                                       fmap.CircleLayerOptions(circles: [
-                                                                                        fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()), borderColor: Colors.amber, borderStrokeWidth: 1, color: Colors.amber.withOpacity(0.2)),
+                                                                                        fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: double.parse(info.values.elementAt(2).toString()) - toBeDeduct.toDouble(), borderColor: Colors.amber, borderStrokeWidth: 1, color: Colors.amber.withOpacity(0.2)),
                                                                                       ]),
                                                                                   ],
                                                                                   if (showVolunteers) ...[
@@ -599,7 +598,7 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                   ],
                                                                                   for (var info in circleMarkersCampaigns)
                                                                                     fmap.CircleLayerOptions(circles: [
-                                                                                      fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: info.values.elementAt(2), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2))
+                                                                                      fmap.CircleMarker(point: lt.LatLng(info.values.elementAt(0), info.values.elementAt(1)), radius: info.values.elementAt(2) - toBeDeduct.toDouble(), borderColor: Colors.red, borderStrokeWidth: 1, color: Colors.red.withOpacity(0.2))
                                                                                     ])
                                                                                 ]),
                                                                             Align(
@@ -1527,11 +1526,16 @@ class _MapCampaignState extends State<MapCampaign>
               0.4,
               GestureDetector(
                 onTap: () {
-                  setState(() {
-                    pageController.animateToPage(3,
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.fastOutSlowIn);
-                  });
+                  if (descriptionController.text == "" ||
+                      campaignNameController.text == "") {
+                    Fluttertoast.showToast(msg: 'Please Input Details');
+                  } else {
+                    setState(() {
+                      pageController.animateToPage(3,
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.fastOutSlowIn);
+                    });
+                  }
                 },
                 child: Container(
                   height: 55,
@@ -1742,107 +1746,114 @@ class _MapCampaignState extends State<MapCampaign>
             0.6,
             GestureDetector(
               onTap: () {
-                const _chars =
-                    'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-                Random _rnd = Random();
+                if (cityController.text == "" || addressController.text == "") {
+                  Fluttertoast.showToast(msg: 'Please Complete Details');
+                } else {
+                  const _chars =
+                      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+                  Random _rnd = Random();
 
-                String getRandomString(int length) =>
-                    String.fromCharCodes(Iterable.generate(length,
-                        (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
-                String uniqueID = getRandomString(30);
-                setState(() {
-                  dateCreated =
-                      formatDate(DateTime.now(), [yyyy, '-', mm, '-', dd]);
+                  String getRandomString(int length) =>
+                      String.fromCharCodes(Iterable.generate(
+                          length,
+                          (_) =>
+                              _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+                  String uniqueID = getRandomString(30);
+                  setState(() {
+                    dateCreated =
+                        formatDate(DateTime.now(), [yyyy, '-', mm, '-', dd]);
 
-                  dateStart = formatDate(DateTime(2021, 10, 27, 2, 30, 50),
-                      [yyyy, '-', mm, '-', dd]);
+                    dateStart = formatDate(DateTime(2021, 10, 27, 2, 30, 50),
+                        [yyyy, '-', mm, '-', dd]);
 
-                  dateEnded = formatDate(DateTime(2021, 10, 27, 2, 30, 50),
-                      [yyyy, '-', mm, '-', dd]);
+                    dateEnded = formatDate(DateTime(2021, 10, 27, 2, 30, 50),
+                        [yyyy, '-', mm, '-', dd]);
 
-                  time = formatDate(DateTime(2021, 09, 27, 2, 30, 50),
-                      [HH, ':', nn, ':', ss]);
-                });
-                FirebaseMessaging.instance.getToken().then((value) {
-                  context
-                      .read(authserviceProvider)
-                      .createCampaign(
-                          context.read(campaignProvider).getCampaignName,
-                          context.read(campaignProvider).getDescription,
-                          uniqueID,
-                          dateCreated,
-                          context.read(campaignProvider).getStartDate,
-                          dateEnded,
-                          context.read(campaignProvider).getAddress,
-                          context.read(campaignProvider).getCity,
-                          time,
-                          userUID,
-                          usernames,
-                          latitude,
-                          longitude,
-                          finalSeeds,
-                          currentDonations,
-                          finalFund,
-                          currentVolunteers,
-                          finalVolunteers,
-                          value!,
-                          finalRadius)
-                      .whenComplete(() => showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (context) {
-                            return Container(
-                                margin: EdgeInsets.fromLTRB(10, 250, 10, 300),
-                                child: Card(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        margin:
-                                            EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                        child: Text(
-                                            'Thank you for creating a campaign organizer, once your campaign accepted, your campaign will be displayed in the application. this will take up to 2 - 3 days to accept.'),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Color(0xff65BFB8)),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            MapCampaign()));
-                                              },
-                                              child: Text('Back to Map')),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Color(0xff65BFB8)),
-                                              onPressed: () {
-                                                Navigator.pushNamed(
-                                                    context, '/home');
-                                              },
-                                              child: Text('Back to home')),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ));
-                          }));
-                });
+                    time = formatDate(DateTime(2021, 09, 27, 2, 30, 50),
+                        [HH, ':', nn, ':', ss]);
+                  });
+                  FirebaseMessaging.instance.getToken().then((value) {
+                    context
+                        .read(authserviceProvider)
+                        .createCampaign(
+                            context.read(campaignProvider).getCampaignName,
+                            context.read(campaignProvider).getDescription,
+                            uniqueID,
+                            dateCreated,
+                            context.read(campaignProvider).getStartDate,
+                            dateEnded,
+                            context.read(campaignProvider).getAddress,
+                            context.read(campaignProvider).getCity,
+                            time,
+                            userUID,
+                            usernames,
+                            latitude,
+                            longitude,
+                            finalSeeds,
+                            currentDonations,
+                            finalFund,
+                            currentVolunteers,
+                            finalVolunteers,
+                            value!,
+                            finalRadius)
+                        .whenComplete(() => showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) {
+                              return Container(
+                                  margin: EdgeInsets.fromLTRB(10, 250, 10, 300),
+                                  child: Card(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                          child: Text(
+                                              'Thank you for creating a campaign organizer, once your campaign accepted, your campaign will be displayed in the application. this will take up to 2 - 3 days to accept.'),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: Color(0xff65BFB8)),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              MapCampaign()));
+                                                },
+                                                child: Text('Back to Map')),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: Color(0xff65BFB8)),
+                                                onPressed: () {
+                                                  Navigator.pushNamed(
+                                                      context, '/home');
+                                                },
+                                                child: Text('Back to home')),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ));
+                            }));
+                  });
+                }
               },
               child: Container(
                 height: 55,
