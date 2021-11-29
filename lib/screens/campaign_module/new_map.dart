@@ -700,7 +700,8 @@ class _MapCampaignState extends State<MapCampaign>
                                                   size: 30,
                                                 ),
                                                 onPressed: () {
-                                                  Navigator.pop(context);
+                                                  Navigator.pushNamed(
+                                                      context, '/home');
                                                 },
                                               ),
                                             ),
@@ -1799,7 +1800,10 @@ class _MapCampaignState extends State<MapCampaign>
                             value!,
                             finalRadius)
                         .then((value) {
-                          context.read(authserviceProvider).deductInitialCampaign(context.read(authserviceProvider).getCurrentUserUID());
+                      context.read(authserviceProvider).deductInitialCampaign(
+                          context
+                              .read(authserviceProvider)
+                              .getCurrentUserUID());
                       showDialog(
                           barrierDismissible: false,
                           context: context,
