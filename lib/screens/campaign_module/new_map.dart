@@ -512,6 +512,9 @@ class _MapCampaignState extends State<MapCampaign>
                                                                                               latitude = latlng.latitude;
                                                                                               longitude = latlng.longitude;
                                                                                               testlatlng = latlng;
+                                                                                              setState(() {
+                                                                                                toBeDeduct = toBeDeduct - 13;
+                                                                                              });
                                                                                               cntrler.move(lt.LatLng(latlng.latitude - 0.000, latlng.longitude), 16);
                                                                                             } else if (isPointValid == false) {
                                                                                               print(isPointValid);
