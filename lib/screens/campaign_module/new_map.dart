@@ -55,7 +55,7 @@ class _MapCampaignState extends State<MapCampaign>
   //Strings
   String title = "title test";
   String description = " description test";
-  late String dateCreated;
+  late DateTime dateCreated;
   late String dateStart;
   late String dateEnded;
   String uid = "";
@@ -284,11 +284,11 @@ class _MapCampaignState extends State<MapCampaign>
                     body: Container(
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
-                      child: FutureBuilder<DocumentSnapshot>(
-                          future: FirebaseFirestore.instance
+                      child: StreamBuilder<DocumentSnapshot>(
+                          stream: FirebaseFirestore.instance
                               .collection('quarantineStatus')
                               .doc('status')
-                              .get(),
+                              .snapshots(),
                           builder: (context, statusSnapshot) {
                             if (!statusSnapshot.hasData) {
                               return Center(child: CircularProgressIndicator());
@@ -1752,6 +1752,7 @@ class _MapCampaignState extends State<MapCampaign>
                 if (cityController.text == "" || addressController.text == "") {
                   Fluttertoast.showToast(msg: 'Please Complete Details');
                 } else {
+                  DateTime now = new DateTime.now();
                   const _chars =
                       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
                   Random _rnd = Random();
@@ -1763,8 +1764,7 @@ class _MapCampaignState extends State<MapCampaign>
                               _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
                   String uniqueID = getRandomString(30);
                   setState(() {
-                    dateCreated =
-                        formatDate(DateTime.now(), [yyyy, '-', mm, '-', dd]);
+                    dateCreated = now;
 
                     dateStart = formatDate(DateTime(2021, 10, 27, 2, 30, 50),
                         [yyyy, '-', mm, '-', dd]);

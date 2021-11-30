@@ -70,7 +70,7 @@ class DatabaseService {
       String title,
       String description,
       String campaignID,
-      String dateCreated,
+      DateTime dateCreated,
       String dateStart,
       String dateEnded,
       String address,

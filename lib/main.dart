@@ -25,7 +25,6 @@ import 'package:sylviapp_project/screens/account_module/login.dart';
 import 'package:sylviapp_project/screens/account_module/register.dart';
 import 'package:sylviapp_project/screens/donation_module/donation_screen.dart';
 import 'package:sylviapp_project/screens/layout_screen.dart';
-import 'package:sylviapp_project/screens/campaign_module/map.dart';
 import 'package:sylviapp_project/screens/settings_module/aboutus.dart';
 import 'package:sylviapp_project/screens/settings_module/privacy.dart';
 import 'package:sylviapp_project/screens/settings_module/sendfeedback.dart';
@@ -77,7 +76,6 @@ class MyApp extends ConsumerWidget {
               uid: context.read(authserviceProvider).getCurrentUserUID(),
             ),
         "/welcome": (_) => WelcomeScreen(),
-        "/map": (_) => MapScreen(),
         "/recent_activity": (_) => RecentActivity(),
         "/ongoing_campaign": (_) => OngoingCampaign(),
         "/edit_profile": (_) => EditProfile(),
