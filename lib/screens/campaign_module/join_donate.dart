@@ -125,339 +125,472 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
               if (!snapshot.hasData) {
                 return CircularProgressIndicator();
               } else {
-                return Stack(
-                  children: [
-                    NotificationListener(
-                      onNotification: _handleScrollNotification,
-                      child: SingleChildScrollView(
-                        child: Container(
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              FadeAnimation(
-                                0.3,
-                                Stack(
-                                  children: [
-                                    Container(
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              4.5,
-                                      decoration: BoxDecoration(
-                                          color: Colors.red,
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: NetworkImage(
-                                                "https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1374&q=80",
-                                              ))),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Align(
-                                        alignment: Alignment.topLeft,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: CircleAvatar(
-                                            radius: 15,
-                                            child: FittedBox(
-                                              child: Icon(Icons.arrow_back),
+                if (snapshot.data!.exists) {
+                  return Stack(
+                    children: [
+                      NotificationListener(
+                        onNotification: _handleScrollNotification,
+                        child: SingleChildScrollView(
+                          child: Container(
+                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                FadeAnimation(
+                                  0.3,
+                                  Stack(
+                                    children: [
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                4.5,
+                                        decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(
+                                                  "https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1374&q=80",
+                                                ))),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Align(
+                                          alignment: Alignment.topLeft,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: CircleAvatar(
+                                              radius: 15,
+                                              child: FittedBox(
+                                                child: Icon(Icons.arrow_back),
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(15, 0, 15, 15),
-                                  height:
-                                      MediaQuery.of(context).size.height / 1.39,
-                                  child: SingleChildScrollView(
-                                    child: Container(
-                                      padding: EdgeInsets.only(top: 15),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          FadeAnimation(
-                                            0.4,
-                                            Row(
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        15, 0, 15, 15),
+                                    height: MediaQuery.of(context).size.height /
+                                        1.39,
+                                    child: SingleChildScrollView(
+                                      child: Container(
+                                        padding: EdgeInsets.only(top: 15),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            FadeAnimation(
+                                              0.4,
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Stack(children: [
+                                                    CircleAvatar(
+                                                      radius: 35,
+                                                      backgroundColor:
+                                                          Color(0xff65BFB8),
+                                                      child: urlTest2 == ""
+                                                          ? CircleAvatar(
+                                                              radius: 32,
+                                                              child: FittedBox(
+                                                                child: Icon(Icons
+                                                                    .person),
+                                                              ),
+                                                              backgroundColor:
+                                                                  Colors.white
+                                                                      .withOpacity(
+                                                                          0.5),
+                                                            )
+                                                          : CircleAvatar(
+                                                              radius: 32,
+                                                              backgroundImage:
+                                                                  FadeInImage
+                                                                      .memoryNetwork(
+                                                                placeholder:
+                                                                    kTransparentImage,
+                                                                image: urlTest2,
+                                                                imageErrorBuilder:
+                                                                    (context,
+                                                                        error,
+                                                                        stackTrace) {
+                                                                  return CircularProgressIndicator();
+                                                                },
+                                                              ).image,
+                                                              backgroundColor:
+                                                                  Colors.white
+                                                                      .withOpacity(
+                                                                          0.5),
+                                                            ),
+                                                    ),
+                                                  ]),
+                                                  SizedBox(
+                                                    width: 13,
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        widget.nameOfCampaign
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 20),
+                                                      ),
+                                                      Text(
+                                                        widget.city,
+                                                        style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 13),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: [
-                                                Stack(children: [
-                                                  CircleAvatar(
-                                                    radius: 35,
-                                                    backgroundColor:
-                                                        Color(0xff65BFB8),
-                                                    child: urlTest2 == ""
-                                                        ? CircleAvatar(
-                                                            radius: 32,
-                                                            child: FittedBox(
-                                                              child: Icon(
-                                                                  Icons.person),
-                                                            ),
-                                                            backgroundColor:
-                                                                Colors.white
-                                                                    .withOpacity(
-                                                                        0.5),
-                                                          )
-                                                        : CircleAvatar(
-                                                            radius: 32,
-                                                            backgroundImage:
-                                                                FadeInImage
-                                                                    .memoryNetwork(
-                                                              placeholder:
-                                                                  kTransparentImage,
-                                                              image: urlTest2,
-                                                              imageErrorBuilder:
-                                                                  (context,
-                                                                      error,
-                                                                      stackTrace) {
-                                                                return CircularProgressIndicator();
-                                                              },
-                                                            ).image,
-                                                            backgroundColor:
-                                                                Colors.white
-                                                                    .withOpacity(
-                                                                        0.5),
-                                                          ),
-                                                  ),
-                                                ]),
-                                                SizedBox(
-                                                  width: 13,
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                Row(
                                                   children: [
                                                     Text(
-                                                      widget.nameOfCampaign
-                                                          .toString(),
+                                                      "₱" +
+                                                          snapshot.data!
+                                                              .get(
+                                                                  'current_donations')
+                                                              .toString() +
+                                                          " of " +
+                                                          "₱" +
+                                                          snapshot.data!
+                                                              .get(
+                                                                  'max_donation')
+                                                              .toString() +
+                                                          " raised",
                                                       style: TextStyle(
+                                                          fontSize: 15,
                                                           fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 20),
+                                                              FontWeight.w700,
+                                                          color: Color(
+                                                              0xff65BFB8)),
                                                     ),
-                                                    Text(
-                                                      widget.city,
-                                                      style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 13),
+                                                    SizedBox(
+                                                      width: 3.5,
                                                     ),
+                                                    Tooltip(
+                                                      message: "dsada",
+                                                      child: Icon(
+                                                        Icons.help_rounded,
+                                                        color: Colors.black
+                                                            .withOpacity(0.4),
+                                                        size: 13,
+                                                      ),
+                                                    )
                                                   ],
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "₱" +
-                                                        snapshot.data!
-                                                            .get(
-                                                                'current_donations')
-                                                            .toString() +
-                                                        " of " +
-                                                        "₱" +
-                                                        snapshot.data!
-                                                            .get('max_donation')
-                                                            .toString() +
-                                                        " raised",
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color:
-                                                            Color(0xff65BFB8)),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 3.5,
-                                                  ),
-                                                  Tooltip(
-                                                    message: "dsada",
-                                                    child: Icon(
-                                                      Icons.help_rounded,
-                                                      color: Colors.black
-                                                          .withOpacity(0.4),
-                                                      size: 13,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Container(
-                                                height: 13,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20))),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(20)),
-                                                  child:
-                                                      LinearProgressIndicator(
-                                                    semanticsLabel: "Donated",
-                                                    semanticsValue: "Donating",
-                                                    backgroundColor: Colors.grey
-                                                        .withOpacity(0.3),
-                                                    color: Color(0xff65BFB8),
-                                                    minHeight: 10,
-                                                    value: meterValue =
-                                                        snapshot.data!.get(
-                                                                'current_donations') /
-                                                            snapshot.data!.get(
-                                                                'max_donation'),
-                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                height: 4,
-                                              ),
-                                              Text(
-                                                widget.currentVolunteer
-                                                        .toString() +
-                                                    " / " +
-                                                    widget.totalVolunteer
-                                                        .toString() +
-                                                    " volunteers.",
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              SizedBox(
-                                                height: 20,
-                                              ),
-                                              FadeAnimation(
-                                                0.5,
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
                                                 Container(
+                                                  height: 13,
                                                   decoration: BoxDecoration(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.35),
                                                       borderRadius:
                                                           BorderRadius.all(
                                                               Radius.circular(
-                                                                  5))),
-                                                  padding: EdgeInsets.all(20),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () async {
-                                                          var request =
-                                                              BraintreeDropInRequest(
-                                                                  tokenizationKey:
-                                                                      'sandbox_mf5kvmgw_mhmfxcfrgwwftpcq',
-                                                                  collectDeviceData:
-                                                                      true,
-                                                                  paypalRequest:
-                                                                      BraintreePayPalRequest(
-                                                                    amount:
-                                                                        '10.00',
-                                                                    displayName:
-                                                                        'SylviaApp',
-                                                                  ),
-                                                                  cardEnabled:
-                                                                      true);
+                                                                  20))),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                20)),
+                                                    child:
+                                                        LinearProgressIndicator(
+                                                      semanticsLabel: "Donated",
+                                                      semanticsValue:
+                                                          "Donating",
+                                                      backgroundColor: Colors
+                                                          .grey
+                                                          .withOpacity(0.3),
+                                                      color: Color(0xff65BFB8),
+                                                      minHeight: 10,
+                                                      value: meterValue = snapshot
+                                                              .data!
+                                                              .get(
+                                                                  'current_donations') /
+                                                          snapshot.data!.get(
+                                                              'max_donation'),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 4,
+                                                ),
+                                                Text(
+                                                  widget.currentVolunteer
+                                                          .toString() +
+                                                      " / " +
+                                                      widget.totalVolunteer
+                                                          .toString() +
+                                                      " volunteers.",
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                FadeAnimation(
+                                                  0.5,
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.grey
+                                                            .withOpacity(0.35),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    5))),
+                                                    padding: EdgeInsets.all(20),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () async {
+                                                            var request =
+                                                                BraintreeDropInRequest(
+                                                                    tokenizationKey:
+                                                                        'sandbox_mf5kvmgw_mhmfxcfrgwwftpcq',
+                                                                    collectDeviceData:
+                                                                        true,
+                                                                    paypalRequest:
+                                                                        BraintreePayPalRequest(
+                                                                      amount:
+                                                                          '10.00',
+                                                                      displayName:
+                                                                          'SylviaApp',
+                                                                    ),
+                                                                    cardEnabled:
+                                                                        true);
 
-                                                          BraintreeDropInResult?
-                                                              result =
-                                                              await BraintreeDropIn
-                                                                  .start(
-                                                                      request);
+                                                            BraintreeDropInResult?
+                                                                result =
+                                                                await BraintreeDropIn
+                                                                    .start(
+                                                                        request);
 
-                                                          if (result != null) {
-                                                            DateTime now =
-                                                                DateTime.now();
-                                                            DateTime
-                                                                currentTime =
-                                                                new DateTime(
-                                                                    now.year,
-                                                                    now.month,
-                                                                    now.day,
-                                                                    now.hour,
-                                                                    now.minute);
-                                                            print(result
-                                                                .paymentMethodNonce
-                                                                .description);
-                                                            print(result
-                                                                .paymentMethodNonce
-                                                                .nonce);
+                                                            if (result !=
+                                                                null) {
+                                                              DateTime now =
+                                                                  DateTime
+                                                                      .now();
+                                                              DateTime
+                                                                  currentTime =
+                                                                  new DateTime(
+                                                                      now.year,
+                                                                      now.month,
+                                                                      now.day,
+                                                                      now.hour,
+                                                                      now.minute);
+                                                              print(result
+                                                                  .paymentMethodNonce
+                                                                  .description);
+                                                              print(result
+                                                                  .paymentMethodNonce
+                                                                  .nonce);
 
-                                                            final http.Response
-                                                                response =
-                                                                await http.post(
-                                                                    Uri.tryParse(
-                                                                        '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}')!);
+                                                              final http
+                                                                      .Response
+                                                                  response =
+                                                                  await http.post(
+                                                                      Uri.tryParse(
+                                                                          '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}')!);
 
-                                                            print(
-                                                                response.body);
+                                                              print(response
+                                                                  .body);
 
-                                                            context
-                                                                .read(
-                                                                    authserviceProvider)
-                                                                .donateCampaign(
-                                                                  widget
-                                                                      .uidOfCampaign,
-                                                                  10,
-                                                                  currentTime
-                                                                      .toString(),
-                                                                  context
-                                                                      .read(
-                                                                          authserviceProvider)
-                                                                      .getCurrentUserUID(),
-                                                                );
-                                                          } else {
-                                                            print(
-                                                                "FAILED PAYMENT PROCESS");
-                                                          }
-                                                        },
-                                                        child: Column(
+                                                              context
+                                                                  .read(
+                                                                      authserviceProvider)
+                                                                  .donateCampaign(
+                                                                    widget
+                                                                        .uidOfCampaign,
+                                                                    10,
+                                                                    currentTime
+                                                                        .toString(),
+                                                                    context
+                                                                        .read(
+                                                                            authserviceProvider)
+                                                                        .getCurrentUserUID(),
+                                                                  );
+                                                            } else {
+                                                              print(
+                                                                  "FAILED PAYMENT PROCESS");
+                                                            }
+                                                          },
+                                                          child: Column(
+                                                            children: [
+                                                              CircleAvatar(
+                                                                radius: 20,
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .orange,
+                                                                child: FittedBox(
+                                                                    child: IconButton(
+                                                                  onPressed:
+                                                                      () async {
+                                                                    amounToDonate
+                                                                            .text =
+                                                                        '0';
+                                                                    showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (context) {
+                                                                          return Container(
+                                                                            margin: EdgeInsets.fromLTRB(
+                                                                                60,
+                                                                                200,
+                                                                                60,
+                                                                                320),
+                                                                            child:
+                                                                                Card(
+                                                                              child: StreamBuilder<DocumentSnapshot>(
+                                                                                  stream: FirebaseFirestore.instance.collection('users').doc(context.read(authserviceProvider).getCurrentUserUID()).snapshots(),
+                                                                                  builder: (context, balanceSnapshot) {
+                                                                                    if (!balanceSnapshot.hasData) {
+                                                                                      return CircularProgressIndicator();
+                                                                                    } else {
+                                                                                      return Column(
+                                                                                        children: [
+                                                                                          Container(
+                                                                                              margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                                                                              child: Text(
+                                                                                                "Your Available Balance:",
+                                                                                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                                                                              )),
+                                                                                          SizedBox(
+                                                                                            height: 10,
+                                                                                          ),
+                                                                                          Container(child: Text(balanceSnapshot.data!.get('balance').toString() + ' pesos')),
+                                                                                          SizedBox(
+                                                                                            height: 20,
+                                                                                          ),
+                                                                                          Container(
+                                                                                              width: 80,
+                                                                                              height: 50,
+                                                                                              child: TextField(
+                                                                                                textAlign: TextAlign.center,
+                                                                                                controller: amounToDonate,
+                                                                                              )),
+                                                                                          SizedBox(
+                                                                                            height: 20,
+                                                                                          ),
+                                                                                          ElevatedButton(
+                                                                                              style: ElevatedButton.styleFrom(primary: Color(0xff65BFB8), shape: StadiumBorder()),
+                                                                                              onPressed: () async {
+                                                                                                if (balanceSnapshot.data!.get('balance') < double.parse(amounToDonate.text)) {
+                                                                                                  Fluttertoast.showToast(msg: 'You dont have enough balance');
+                                                                                                } else if (int.parse(amounToDonate.text) == 0) {
+                                                                                                  Fluttertoast.showToast(msg: 'Please Enter Valid Amount');
+                                                                                                } else {
+                                                                                                  DateTime now = DateTime.now();
+                                                                                                  DateTime currentTime = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
+
+                                                                                                  await context.read(authserviceProvider).donateCampaign(
+                                                                                                        widget.uidOfCampaign,
+                                                                                                        int.parse(amounToDonate.text),
+                                                                                                        currentTime.toString(),
+                                                                                                        context.read(authserviceProvider).getCurrentUserUID(),
+                                                                                                      );
+                                                                                                  setState(() {
+                                                                                                    meterValue = snapshot.data!.get('current_donations') / snapshot.data!.get('max_donation');
+                                                                                                  });
+
+                                                                                                  await context.read(authserviceProvider).donateCampaignUser(
+                                                                                                        widget.uidOfCampaign,
+                                                                                                        int.parse(amounToDonate.text),
+                                                                                                        currentTime.toString(),
+                                                                                                        context.read(authserviceProvider).getCurrentUserUID(),
+                                                                                                      );
+
+                                                                                                  await context.read(authserviceProvider).deductBalance(context.read(authserviceProvider).getCurrentUserUID(), double.parse(amounToDonate.text));
+                                                                                                  amounToDonate.clear();
+                                                                                                  Navigator.pop(context);
+                                                                                                }
+                                                                                              },
+                                                                                              child: Text("DONATE"))
+                                                                                        ],
+                                                                                      );
+                                                                                    }
+                                                                                  }),
+                                                                            ),
+                                                                          );
+                                                                        });
+                                                                  },
+                                                                  icon: Icon(Icons
+                                                                      .monetization_on_outlined),
+                                                                  color: Colors
+                                                                      .white,
+                                                                  iconSize: 25,
+                                                                )),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 3,
+                                                              ),
+                                                              Text(
+                                                                "Donate",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        13,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 20,
+                                                        ),
+                                                        Column(
                                                           children: [
                                                             CircleAvatar(
                                                               radius: 20,
                                                               backgroundColor:
-                                                                  Colors.orange,
+                                                                  Color(
+                                                                      0xffFF683A),
                                                               child: FittedBox(
                                                                   child:
                                                                       IconButton(
                                                                 onPressed:
                                                                     () async {
-                                                                  amounToDonate
-                                                                          .text =
-                                                                      '0';
                                                                   showDialog(
                                                                       context:
                                                                           context,
@@ -465,87 +598,46 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                           (context) {
                                                                         return Container(
                                                                           margin: EdgeInsets.fromLTRB(
-                                                                              60,
-                                                                              200,
-                                                                              60,
-                                                                              320),
+                                                                              30,
+                                                                              250,
+                                                                              30,
+                                                                              250),
                                                                           child:
                                                                               Card(
-                                                                            child: StreamBuilder<DocumentSnapshot>(
-                                                                                stream: FirebaseFirestore.instance.collection('users').doc(context.read(authserviceProvider).getCurrentUserUID()).snapshots(),
-                                                                                builder: (context, balanceSnapshot) {
-                                                                                  if (!balanceSnapshot.hasData) {
-                                                                                    return CircularProgressIndicator();
-                                                                                  } else {
-                                                                                    return Column(
-                                                                                      children: [
-                                                                                        Container(
-                                                                                            margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                                                                            child: Text(
-                                                                                              "Your Available Balance:",
-                                                                                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                                                                                            )),
-                                                                                        SizedBox(
-                                                                                          height: 10,
-                                                                                        ),
-                                                                                        Container(child: Text(balanceSnapshot.data!.get('balance').toString() + ' pesos')),
-                                                                                        SizedBox(
-                                                                                          height: 20,
-                                                                                        ),
-                                                                                        Container(
-                                                                                            width: 80,
-                                                                                            height: 50,
-                                                                                            child: TextField(
-                                                                                              textAlign: TextAlign.center,
-                                                                                              controller: amounToDonate,
-                                                                                            )),
-                                                                                        SizedBox(
-                                                                                          height: 20,
-                                                                                        ),
-                                                                                        ElevatedButton(
-                                                                                            style: ElevatedButton.styleFrom(primary: Color(0xff65BFB8), shape: StadiumBorder()),
-                                                                                            onPressed: () async {
-                                                                                              if (balanceSnapshot.data!.get('balance') < double.parse(amounToDonate.text)) {
-                                                                                                Fluttertoast.showToast(msg: 'You dont have enough balance');
-                                                                                              } else if (int.parse(amounToDonate.text) == 0) {
-                                                                                                Fluttertoast.showToast(msg: 'Please Enter Valid Amount');
-                                                                                              } else {
-                                                                                                DateTime now = DateTime.now();
-                                                                                                DateTime currentTime = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
-
-                                                                                                await context.read(authserviceProvider).donateCampaign(
-                                                                                                      widget.uidOfCampaign,
-                                                                                                      int.parse(amounToDonate.text),
-                                                                                                      currentTime.toString(),
-                                                                                                      context.read(authserviceProvider).getCurrentUserUID(),
-                                                                                                    );
-                                                                                                setState(() {
-                                                                                                  meterValue = snapshot.data!.get('current_donations') / snapshot.data!.get('max_donation');
-                                                                                                });
-
-                                                                                                await context.read(authserviceProvider).donateCampaignUser(
-                                                                                                      widget.uidOfCampaign,
-                                                                                                      int.parse(amounToDonate.text),
-                                                                                                      currentTime.toString(),
-                                                                                                      context.read(authserviceProvider).getCurrentUserUID(),
-                                                                                                    );
-
-                                                                                                await context.read(authserviceProvider).deductBalance(context.read(authserviceProvider).getCurrentUserUID(), double.parse(amounToDonate.text));
-                                                                                                amounToDonate.clear();
-                                                                                                Navigator.pop(context);
-                                                                                              }
-                                                                                            },
-                                                                                            child: Text("DONATE"))
-                                                                                      ],
-                                                                                    );
-                                                                                  }
-                                                                                }),
+                                                                            child:
+                                                                                Column(
+                                                                              children: [
+                                                                                Container(margin: EdgeInsets.fromLTRB(0, 10, 0, 0), child: Text("Report this campaign", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                                                                                Container(margin: EdgeInsets.fromLTRB(20, 10, 20, 10), child: Text("Select Type of Report you want for this campaign to review")),
+                                                                                ElevatedButton(
+                                                                                    style: ElevatedButton.styleFrom(primary: Colors.red),
+                                                                                    onPressed: () async {
+                                                                                      await context.read(authserviceProvider).addReportScam(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Scam");
+                                                                                      Navigator.pop(context);
+                                                                                    },
+                                                                                    child: Text("Scam")),
+                                                                                ElevatedButton(
+                                                                                    style: ElevatedButton.styleFrom(primary: Colors.red),
+                                                                                    onPressed: () async {
+                                                                                      await context.read(authserviceProvider).addReportAbuse(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Abuse");
+                                                                                      Navigator.pop(context);
+                                                                                    },
+                                                                                    child: Text("Abuse")),
+                                                                                ElevatedButton(
+                                                                                    style: ElevatedButton.styleFrom(primary: Colors.red),
+                                                                                    onPressed: () async {
+                                                                                      await context.read(authserviceProvider).addReportUIW(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Inappropriate words");
+                                                                                      Navigator.pop(context);
+                                                                                    },
+                                                                                    child: Text("Use of Inappropriate words")),
+                                                                              ],
+                                                                            ),
                                                                           ),
                                                                         );
                                                                       });
                                                                 },
                                                                 icon: Icon(Icons
-                                                                    .monetization_on_outlined),
+                                                                    .report),
                                                                 color: Colors
                                                                     .white,
                                                                 iconSize: 25,
@@ -555,7 +647,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                               height: 3,
                                                             ),
                                                             Text(
-                                                              "Donate",
+                                                              "Report",
                                                               style: TextStyle(
                                                                   fontSize: 13,
                                                                   fontWeight:
@@ -564,505 +656,440 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                             )
                                                           ],
                                                         ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Center(
+                                                  child: Container(
+                                                    width: 400,
+                                                    child: Divider(
+                                                      height: 35,
+                                                      thickness: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                                FadeAnimation(
+                                                  0.6,
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "About Campaign",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16.5),
                                                       ),
                                                       SizedBox(
-                                                        width: 20,
+                                                        height: 5,
                                                       ),
-                                                      Column(
-                                                        children: [
-                                                          CircleAvatar(
-                                                            radius: 20,
-                                                            backgroundColor:
-                                                                Color(
-                                                                    0xffFF683A),
-                                                            child: FittedBox(
-                                                                child:
-                                                                    IconButton(
-                                                              onPressed:
-                                                                  () async {
-                                                                showDialog(
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (context) {
-                                                                      return Container(
-                                                                        margin: EdgeInsets.fromLTRB(
-                                                                            30,
-                                                                            250,
-                                                                            30,
-                                                                            250),
-                                                                        child:
-                                                                            Card(
-                                                                          child:
-                                                                              Column(
-                                                                            children: [
-                                                                              Container(margin: EdgeInsets.fromLTRB(0, 10, 0, 0), child: Text("Report this campaign", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
-                                                                              Container(margin: EdgeInsets.fromLTRB(20, 10, 20, 10), child: Text("Select Type of Report you want for this campaign to review")),
-                                                                              ElevatedButton(
-                                                                                  style: ElevatedButton.styleFrom(primary: Colors.red),
-                                                                                  onPressed: () async {
-                                                                                    await context.read(authserviceProvider).addReportScam(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Scam");
-                                                                                    Navigator.pop(context);
-                                                                                  },
-                                                                                  child: Text("Scam")),
-                                                                              ElevatedButton(
-                                                                                  style: ElevatedButton.styleFrom(primary: Colors.red),
-                                                                                  onPressed: () async {
-                                                                                    await context.read(authserviceProvider).addReportAbuse(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Abuse");
-                                                                                    Navigator.pop(context);
-                                                                                  },
-                                                                                  child: Text("Abuse")),
-                                                                              ElevatedButton(
-                                                                                  style: ElevatedButton.styleFrom(primary: Colors.red),
-                                                                                  onPressed: () async {
-                                                                                    await context.read(authserviceProvider).addReportUIW(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Inappropriate words");
-                                                                                    Navigator.pop(context);
-                                                                                  },
-                                                                                  child: Text("Use of Inappropriate words")),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    });
-                                                              },
-                                                              icon: Icon(
-                                                                  Icons.report),
-                                                              color:
-                                                                  Colors.white,
-                                                              iconSize: 25,
-                                                            )),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 3,
-                                                          ),
-                                                          Text(
-                                                            "Report",
-                                                            style: TextStyle(
-                                                                fontSize: 13,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          )
-                                                        ],
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.all(10),
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.grey
+                                                                .withOpacity(
+                                                                    0.35),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            5))),
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        child: Text(
+                                                          widget.description
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.75)),
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                              Center(
-                                                child: Container(
-                                                  width: 400,
-                                                  child: Divider(
-                                                    height: 35,
-                                                    thickness: 1.5,
+                                                Center(
+                                                  child: Container(
+                                                    width: 400,
+                                                    child: Divider(
+                                                      height: 35,
+                                                      thickness: 1.5,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              FadeAnimation(
-                                                0.6,
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "About Campaign",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 16.5),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 5,
-                                                    ),
-                                                    Container(
-                                                      padding:
-                                                          EdgeInsets.all(10),
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.grey
-                                                              .withOpacity(
-                                                                  0.35),
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          5))),
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
-                                                      child: Text(
-                                                        widget.description
-                                                            .toString(),
+                                                FadeAnimation(
+                                                  0.7,
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "About the Organizer",
                                                         style: TextStyle(
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.75)),
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16.5),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Center(
-                                                child: Container(
-                                                  width: 400,
-                                                  child: Divider(
-                                                    height: 35,
-                                                    thickness: 1.5,
-                                                  ),
-                                                ),
-                                              ),
-                                              FadeAnimation(
-                                                0.7,
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "About the Organizer",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 16.5),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 5,
-                                                    ),
-                                                    StreamBuilder<
-                                                            DocumentSnapshot>(
-                                                        stream: FirebaseFirestore
-                                                            .instance
-                                                            .collection('users')
-                                                            .doc(widget
-                                                                .uidOfOrganizer)
-                                                            .snapshots(),
-                                                        builder: (context,
-                                                            snapshotOfUser) {
-                                                          if (!snapshotOfUser
-                                                              .hasData) {
-                                                            return Center(
-                                                              child:
-                                                                  CircularProgressIndicator(),
-                                                            );
-                                                          } else {
-                                                            var fullname = AESCryptography()
-                                                                .decryptAES(enc
-                                                                        .Encrypted
-                                                                    .fromBase64(
-                                                                        snapshotOfUser
-                                                                            .data!
-                                                                            .get('fullname')));
+                                                      SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      StreamBuilder<
+                                                              DocumentSnapshot>(
+                                                          stream: FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'users')
+                                                              .doc(widget
+                                                                  .uidOfOrganizer)
+                                                              .snapshots(),
+                                                          builder: (context,
+                                                              snapshotOfUser) {
+                                                            if (!snapshotOfUser
+                                                                .hasData) {
+                                                              return Center(
+                                                                child:
+                                                                    CircularProgressIndicator(),
+                                                              );
+                                                            } else {
+                                                              var fullname = AESCryptography().decryptAES(enc
+                                                                      .Encrypted
+                                                                  .fromBase64(
+                                                                      snapshotOfUser
+                                                                          .data!
+                                                                          .get(
+                                                                              'fullname')));
 
-                                                            String? gender = toBeginningOfSentenceCase(
-                                                                AESCryptography().decryptAES(enc
-                                                                        .Encrypted
-                                                                    .fromBase64(
-                                                                        snapshotOfUser
-                                                                            .data!
-                                                                            .get(("gender")))));
+                                                              String? gender = toBeginningOfSentenceCase(AESCryptography().decryptAES(enc
+                                                                      .Encrypted
+                                                                  .fromBase64(
+                                                                      snapshotOfUser
+                                                                          .data!
+                                                                          .get(
+                                                                              ("gender")))));
 
-                                                            var phoneNumber = AESCryptography()
-                                                                .decryptAES(enc
-                                                                        .Encrypted
-                                                                    .fromBase64(
-                                                                        snapshotOfUser
-                                                                            .data!
-                                                                            .get('phoneNumber')));
-                                                            return Container(
-                                                              width:
-                                                                  MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
-                                                              child: Row(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceEvenly,
-                                                                children: [
-                                                                  CircleAvatar(
-                                                                    radius: 30,
-                                                                    backgroundColor:
-                                                                        Color(
-                                                                            0xff65BFB8),
-                                                                    child:
-                                                                        CircleAvatar(
-                                                                      backgroundImage:
-                                                                          FadeInImage
-                                                                              .memoryNetwork(
-                                                                        placeholder:
-                                                                            kTransparentImage,
-                                                                        image:
-                                                                            urlTest2,
-                                                                        imageErrorBuilder: (context,
-                                                                            error,
-                                                                            stackTrace) {
-                                                                          return CircularProgressIndicator();
-                                                                        },
-                                                                      ).image,
+                                                              var phoneNumber = AESCryptography().decryptAES(enc
+                                                                      .Encrypted
+                                                                  .fromBase64(
+                                                                      snapshotOfUser
+                                                                          .data!
+                                                                          .get(
+                                                                              'phoneNumber')));
+                                                              return Container(
+                                                                width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                                child: Row(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceEvenly,
+                                                                  children: [
+                                                                    CircleAvatar(
                                                                       radius:
-                                                                          27,
-                                                                      child: Icon(
-                                                                          Icons
-                                                                              .person),
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 10,
-                                                                  ),
-                                                                  Expanded(
-                                                                    child:
-                                                                        Container(
-                                                                      padding:
-                                                                          EdgeInsets.all(
-                                                                              10),
-                                                                      decoration: BoxDecoration(
-                                                                          color: Colors.grey.withOpacity(
-                                                                              0.35),
-                                                                          borderRadius:
-                                                                              BorderRadius.all(Radius.circular(5))),
+                                                                          30,
+                                                                      backgroundColor:
+                                                                          Color(
+                                                                              0xff65BFB8),
                                                                       child:
-                                                                          Column(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.start,
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Text(
-                                                                            fullname,
-                                                                            style:
-                                                                                TextStyle(fontWeight: FontWeight.bold),
-                                                                          ),
-                                                                          Text(
-                                                                            gender!,
-                                                                            style:
-                                                                                TextStyle(fontWeight: FontWeight.w400),
-                                                                          ),
-                                                                          Text(
-                                                                            phoneNumber,
-                                                                            style:
-                                                                                TextStyle(fontWeight: FontWeight.w400),
-                                                                          ),
-                                                                        ],
+                                                                          CircleAvatar(
+                                                                        backgroundImage:
+                                                                            FadeInImage.memoryNetwork(
+                                                                          placeholder:
+                                                                              kTransparentImage,
+                                                                          image:
+                                                                              urlTest2,
+                                                                          imageErrorBuilder: (context,
+                                                                              error,
+                                                                              stackTrace) {
+                                                                            return CircularProgressIndicator();
+                                                                          },
+                                                                        ).image,
+                                                                        radius:
+                                                                            27,
+                                                                        child: Icon(
+                                                                            Icons.person),
                                                                       ),
                                                                     ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            );
-                                                          }
-                                                        }),
-                                                  ],
-                                                ),
-                                              ),
-                                              Center(
-                                                child: Container(
-                                                  width: 400,
-                                                  child: Divider(
-                                                    height: 35,
-                                                    thickness: 1.5,
+                                                                    SizedBox(
+                                                                      width: 10,
+                                                                    ),
+                                                                    Expanded(
+                                                                      child:
+                                                                          Container(
+                                                                        padding:
+                                                                            EdgeInsets.all(10),
+                                                                        decoration: BoxDecoration(
+                                                                            color:
+                                                                                Colors.grey.withOpacity(0.35),
+                                                                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                                        child:
+                                                                            Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.start,
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                              fullname,
+                                                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                                                            ),
+                                                                            Text(
+                                                                              gender!,
+                                                                              style: TextStyle(fontWeight: FontWeight.w400),
+                                                                            ),
+                                                                            Text(
+                                                                              phoneNumber,
+                                                                              style: TextStyle(fontWeight: FontWeight.w400),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            }
+                                                          }),
+                                                    ],
                                                   ),
                                                 ),
-                                              ),
-                                              FadeAnimation(
-                                                0.9,
-                                                StreamBuilder<DocumentSnapshot>(
-                                                    stream: FirebaseFirestore
-                                                        .instance
-                                                        .collection('campaigns')
-                                                        .doc(widget
-                                                            .uidOfCampaign)
-                                                        .snapshots(),
-                                                    builder: (context,
-                                                        snapshotCampaign) {
-                                                      if (!snapshotCampaign
-                                                          .hasData) {
-                                                        return CircularProgressIndicator();
-                                                      } else {
-                                                        var lat =
-                                                            snapshotCampaign
-                                                                .data!
-                                                                .get(
-                                                                    'latitude');
-                                                        var lng =
-                                                            snapshotCampaign
-                                                                .data!
-                                                                .get(
-                                                                    'longitude');
-                                                        var dateCreated =
-                                                            snapshotCampaign
-                                                                .data!
-                                                                .get(
-                                                                    'date_created');
+                                                Center(
+                                                  child: Container(
+                                                    width: 400,
+                                                    child: Divider(
+                                                      height: 35,
+                                                      thickness: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                                FadeAnimation(
+                                                  0.9,
+                                                  StreamBuilder<
+                                                          DocumentSnapshot>(
+                                                      stream: FirebaseFirestore
+                                                          .instance
+                                                          .collection(
+                                                              'campaigns')
+                                                          .doc(widget
+                                                              .uidOfCampaign)
+                                                          .snapshots(),
+                                                      builder: (context,
+                                                          snapshotCampaign) {
+                                                        if (!snapshotCampaign
+                                                            .hasData) {
+                                                          return CircularProgressIndicator();
+                                                        } else {
+                                                          var lat =
+                                                              snapshotCampaign
+                                                                  .data!
+                                                                  .get(
+                                                                      'latitude');
+                                                          var lng =
+                                                              snapshotCampaign
+                                                                  .data!
+                                                                  .get(
+                                                                      'longitude');
+                                                          var dateCreated =
+                                                              snapshotCampaign
+                                                                  .data!
+                                                                  .get(
+                                                                      'date_created');
 
-                                                        var city =
-                                                            snapshotCampaign
-                                                                .data!
-                                                                .get("city");
-                                                        return Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              "More information",
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize:
-                                                                      16.5),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 5,
-                                                            ),
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(10),
-                                                              decoration: BoxDecoration(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .withOpacity(
-                                                                          0.35),
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              5))),
-                                                              width:
-                                                                  MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Text(
-                                                                    "Latitude & Longitude: \n" +
-                                                                        lat.toString() +
-                                                                        " " +
-                                                                        lng.toString(),
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .black
-                                                                            .withOpacity(0.7)),
-                                                                  ),
-                                                                  Text(
-                                                                    "City: " +
-                                                                        city,
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .black
-                                                                            .withOpacity(0.7)),
-                                                                  ),
-                                                                  Text(
-                                                                    "Date Created: " +
-                                                                        dateCreated,
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .black
-                                                                            .withOpacity(0.7)),
-                                                                  ),
-                                                                ],
+                                                          var city =
+                                                              snapshotCampaign
+                                                                  .data!
+                                                                  .get("city");
+                                                          return Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                "More information",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        16.5),
                                                               ),
-                                                            ),
-                                                          ],
-                                                        );
-                                                      }
-                                                    }),
-                                              ),
-                                              Center(
-                                                child: Container(
-                                                  width: 400,
-                                                  child: Divider(
-                                                    height: 35,
-                                                    thickness: 1.5,
+                                                              SizedBox(
+                                                                height: 5,
+                                                              ),
+                                                              Container(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            10),
+                                                                decoration: BoxDecoration(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .withOpacity(
+                                                                            0.35),
+                                                                    borderRadius:
+                                                                        BorderRadius.all(
+                                                                            Radius.circular(5))),
+                                                                width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                      "Latitude & Longitude: \n" +
+                                                                          lat.toString() +
+                                                                          " " +
+                                                                          lng.toString(),
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .black
+                                                                              .withOpacity(0.7)),
+                                                                    ),
+                                                                    Text(
+                                                                      "City: " +
+                                                                          city,
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .black
+                                                                              .withOpacity(0.7)),
+                                                                    ),
+                                                                    Text(
+                                                                      "Date Created: " +
+                                                                          dateCreated,
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .black
+                                                                              .withOpacity(0.7)),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        }
+                                                      }),
+                                                ),
+                                                Center(
+                                                  child: Container(
+                                                    width: 400,
+                                                    child: Divider(
+                                                      height: 35,
+                                                      thickness: 1.5,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    FadeAnimation(
-                      1,
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: SizeTransition(
-                          sizeFactor: _hide,
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            height: 85,
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                              color: Color(0xff65BFB8),
-                            ),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  VolunteerFormScreen(
-                                                    campaignUID:
-                                                        widget.uidOfCampaign,
-                                                    organizerUID:
-                                                        widget.uidOfOrganizer,
-                                                  )));
-                                    },
-                                    child: Container(
-                                      height: 40,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5))),
-                                      child: Center(
-                                        child: Text(
-                                          'Join Campaign',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 17,
-                                              color: Color(0xff65BFB8)),
+                                              ],
+                                            )
+                                          ],
                                         ),
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    "More Volunteers needed",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white.withOpacity(0.4)),
-                                  )
-                                ],
-                              ),
+                                )
+                              ],
                             ),
                           ),
                         ),
                       ),
-                    )
-                  ],
-                );
+                      FadeAnimation(
+                        1,
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizeTransition(
+                            sizeFactor: _hide,
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              height: 85,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: Color(0xff65BFB8),
+                              ),
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    VolunteerFormScreen(
+                                                      campaignUID:
+                                                          widget.uidOfCampaign,
+                                                      organizerUID:
+                                                          widget.uidOfOrganizer,
+                                                    )));
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5))),
+                                        child: Center(
+                                          child: Text(
+                                            'Join Campaign',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17,
+                                                color: Color(0xff65BFB8)),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "More Volunteers needed",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white.withOpacity(0.4)),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                } else {
+                  return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('The Campaign has been deleted'),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/home');
+                                  },
+                                  child: Text('Go Home'))
+                            ]),
+                      ]);
+                }
               }
             }),
       ),
