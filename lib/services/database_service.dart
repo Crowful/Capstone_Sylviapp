@@ -289,13 +289,25 @@ class DatabaseService {
     });
   }
 
-  Future addReports(
+  Future addReportScam(
       String uidOfCampaign, String registeredUID, String typeOfReport) async {
     return await approvedCampaignCollection
         .doc(uidOfCampaign)
-        .collection("reports")
-        .doc(registeredUID)
-        .set({"report": typeOfReport});
+        .update({"reportScam": FieldValue.increment(1)});
+  }
+
+  Future addReportAbuse(
+      String uidOfCampaign, String registeredUID, String typeOfReport) async {
+    return await approvedCampaignCollection
+        .doc(uidOfCampaign)
+        .update({"reportAbuse": FieldValue.increment(1)});
+  }
+
+  Future addReportUIW(
+      String uidOfCampaign, String registeredUID, String typeOfReport) async {
+    return await approvedCampaignCollection
+        .doc(uidOfCampaign)
+        .update({"reportUIW": FieldValue.increment(1)});
   }
 
   Future addFeedbacks(

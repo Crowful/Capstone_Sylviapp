@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:encrypt/encrypt.dart' as enc;
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -586,33 +587,38 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                         (context) {
                                                                       return Container(
                                                                         margin: EdgeInsets.fromLTRB(
-                                                                            20,
                                                                             30,
+                                                                            250,
                                                                             30,
-                                                                            40),
+                                                                            250),
                                                                         child:
                                                                             Card(
                                                                           child:
                                                                               Column(
                                                                             children: [
+                                                                              Container(margin: EdgeInsets.fromLTRB(0, 10, 0, 0), child: Text("Report this campaign", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                                                                              Container(margin: EdgeInsets.fromLTRB(20, 10, 20, 10), child: Text("Select Type of Report you want for this campaign to review")),
                                                                               ElevatedButton(
+                                                                                  style: ElevatedButton.styleFrom(primary: Colors.red),
                                                                                   onPressed: () async {
-                                                                                    await context.read(authserviceProvider).addReport(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Scam");
+                                                                                    await context.read(authserviceProvider).addReportScam(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Scam");
                                                                                     Navigator.pop(context);
                                                                                   },
                                                                                   child: Text("Scam")),
                                                                               ElevatedButton(
+                                                                                  style: ElevatedButton.styleFrom(primary: Colors.red),
                                                                                   onPressed: () async {
-                                                                                    await context.read(authserviceProvider).addReport(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Abuse");
+                                                                                    await context.read(authserviceProvider).addReportAbuse(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Abuse");
                                                                                     Navigator.pop(context);
                                                                                   },
                                                                                   child: Text("Abuse")),
                                                                               ElevatedButton(
+                                                                                  style: ElevatedButton.styleFrom(primary: Colors.red),
                                                                                   onPressed: () async {
-                                                                                    await context.read(authserviceProvider).addReport(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Inappropriate words");
+                                                                                    await context.read(authserviceProvider).addReportUIW(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Inappropriate words");
                                                                                     Navigator.pop(context);
                                                                                   },
-                                                                                  child: Text("Used of Inappropriate words")),
+                                                                                  child: Text("Use of Inappropriate words")),
                                                                             ],
                                                                           ),
                                                                         ),

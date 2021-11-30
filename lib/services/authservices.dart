@@ -749,15 +749,46 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  addReport(
+  addReportScam(
       String uidOfCampaign, String uidOfVolunteer, String typeOfReport) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
-          .addReports(uidOfCampaign, uidOfVolunteer, typeOfReport)
-          .whenComplete(() => Fluttertoast.showToast(msg: "Reported"));
+          .addReportScam(uidOfCampaign, uidOfVolunteer, typeOfReport)
+          .whenComplete(() =>
+              Fluttertoast.showToast(msg: "Thank you for Submitting Report"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  addReportAbuse(
+      String uidOfCampaign, String uidOfVolunteer, String typeOfReport) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .addReportAbuse(uidOfCampaign, uidOfVolunteer, typeOfReport)
+          .whenComplete(() =>
+              Fluttertoast.showToast(msg: "Thank you for Submitting Report"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  addReportUIW(
+      String uidOfCampaign, String uidOfVolunteer, String typeOfReport) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .addReportUIW(uidOfCampaign, uidOfVolunteer, typeOfReport)
+          .whenComplete(() =>
+              Fluttertoast.showToast(msg: "Thank you for Submitting Report"));
     } catch (e) {
       print(e);
     }
