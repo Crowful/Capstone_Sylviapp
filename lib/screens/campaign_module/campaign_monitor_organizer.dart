@@ -412,118 +412,115 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                           });
                     }
                   }),
-              isShow == false
-                  ? AnimatedPositioned(
-                      top: isOpened
-                          ? MediaQuery.of(context).size.height - 80
-                          : MediaQuery.of(context).size.height - 350,
-                      duration: Duration(milliseconds: 500),
-                      child: FadeAnimation(
-                        0.9,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.end,
+              AnimatedPositioned(
+                top: isOpened
+                    ? MediaQuery.of(context).size.height - 80
+                    : MediaQuery.of(context).size.height - 350,
+                duration: Duration(milliseconds: 500),
+                child: FadeAnimation(
+                  0.2,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10))),
+                        padding: const EdgeInsets.all(20),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isOpened = !isOpened;
+                              _handleIcon();
+                            });
+                          },
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: AnimatedIcon(
+                              progress: _animationController,
+                              icon: AnimatedIcons.menu_close,
+                              size: 25,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        height: 400,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: Color(0xff65BFB8),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20)),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10))),
-                              padding: const EdgeInsets.all(20),
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isOpened = !isOpened;
-                                    _handleIcon();
-                                  });
-                                },
-                                child: Align(
-                                  alignment: Alignment.topRight,
-                                  child: AnimatedIcon(
-                                    progress: _animationController,
-                                    icon: AnimatedIcons.menu_close,
-                                    size: 25,
-                                  ),
+                            Text(
+                              "Campaign Settings",
+                              style: Theme.of(context).textTheme.headline1,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            ElevatedButton(
+                              onPressed: () =>
+                                  _selectDate(context).whenComplete(() {
+                                context
+                                    .read(authserviceProvider)
+                                    .setStartingDate(widget.uidOfCampaign,
+                                        selectedDate.toString());
+                              }),
+                              child: Center(
+                                child: Text(
+                                  "Set Start Date",
                                 ),
                               ),
                             ),
-                            Container(
-                              padding: const EdgeInsets.all(20),
-                              height: 400,
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                color: Color(0xff65BFB8),
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20)),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Campaign Settings",
-                                    style:
-                                        Theme.of(context).textTheme.headline1,
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () =>
-                                        _selectDate(context).whenComplete(() {
-                                      context
-                                          .read(authserviceProvider)
-                                          .setStartingDate(widget.uidOfCampaign,
-                                              selectedDate.toString());
-                                    }),
-                                    child: Center(
-                                      child: Text(
-                                        "Set Start Date",
-                                      ),
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () => context
-                                        .read(authserviceProvider)
-                                        .startTheCampaign(widget.uidOfCampaign),
-                                    child: Center(
-                                      child: Text(
-                                        "Start The Campaign now",
-                                      ),
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                            HeroDialogRoute(builder: (context) {
-                                          return postAnnouncement();
-                                        }));
-                                      },
-                                      child: Center(
-                                        child: Text("Announce"),
-                                      )),
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                            HeroDialogRoute(builder: (context) {
-                                          return Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  20, 200, 20, 400),
-                                              child: cancelCampaign());
-                                        }));
-                                      },
-                                      child: Center(
-                                        child: Text("Cancel Campaign"),
-                                      ))
-                                ],
+                            ElevatedButton(
+                              onPressed: () => context
+                                  .read(authserviceProvider)
+                                  .startTheCampaign(widget.uidOfCampaign),
+                              child: Center(
+                                child: Text(
+                                  "Start The Campaign now",
+                                ),
                               ),
                             ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .push(HeroDialogRoute(builder: (context) {
+                                    return postAnnouncement();
+                                  }));
+                                },
+                                child: Center(
+                                  child: Text("Announce"),
+                                )),
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .push(HeroDialogRoute(builder: (context) {
+                                    return Container(
+                                        margin: EdgeInsets.fromLTRB(
+                                            20, 200, 20, 400),
+                                        child: cancelCampaign());
+                                  }));
+                                },
+                                child: Center(
+                                  child: Text("Cancel Campaign"),
+                                ))
                           ],
                         ),
                       ),
-                    )
-                  : Text(''),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
