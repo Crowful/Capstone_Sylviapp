@@ -900,12 +900,18 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                   .data!
                                                                   .get(
                                                                       'longitude');
-                                                          var dateCreated =
+                                                          DateTime dateCreated =
                                                               snapshotCampaign
                                                                   .data!
                                                                   .get(
-                                                                      'date_created');
-
+                                                                      'date_created')
+                                                                  .toDate();
+                                                          var formatter =
+                                                              new DateFormat(
+                                                                  'yyyy-MM-dd');
+                                                          String formattedDate =
+                                                              formatter.format(
+                                                                  dateCreated);
                                                           var city =
                                                               snapshotCampaign
                                                                   .data!
@@ -969,7 +975,8 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                     ),
                                                                     Text(
                                                                       "Date Created: " +
-                                                                          dateCreated,
+                                                                          formattedDate
+                                                                              .toString(),
                                                                       style: TextStyle(
                                                                           color: Colors
                                                                               .black

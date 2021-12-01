@@ -1753,7 +1753,6 @@ class _MapCampaignState extends State<MapCampaign>
                   Fluttertoast.showToast(msg: 'Please Complete Details');
                 } else {
                   DateTime now = new DateTime.now();
-                  DateTime date = new DateTime(now.year, now.month, now.day);
                   const _chars =
                       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
                   Random _rnd = Random();
@@ -1765,7 +1764,7 @@ class _MapCampaignState extends State<MapCampaign>
                               _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
                   String uniqueID = getRandomString(30);
                   setState(() {
-                    dateCreated = date;
+                    dateCreated = now;
 
                     dateStart = formatDate(DateTime(2021, 10, 27, 2, 30, 50),
                         [yyyy, '-', mm, '-', dd]);

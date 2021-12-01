@@ -158,8 +158,11 @@ class _LoginScreenState extends State<LoginScreen>
                                   topRight: Radius.circular(15))),
                           width: double.infinity,
                           child: TextField(
-                            style:
-                                TextStyle(color: Theme.of(context).cardColor),
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline5!
+                                    .color),
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(30)
                             ],
@@ -195,8 +198,11 @@ class _LoginScreenState extends State<LoginScreen>
                                   bottomRight: Radius.circular(15))),
                           width: double.infinity,
                           child: TextField(
-                            style:
-                                TextStyle(color: Theme.of(context).cardColor),
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline5!
+                                    .color),
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(30)
                             ],
@@ -215,8 +221,8 @@ class _LoginScreenState extends State<LoginScreen>
                                       });
                                     },
                                     icon: isVisible == true
-                                        ? Icon(Icons.visibility)
-                                        : Icon(Icons.visibility_off)),
+                                        ? Icon(Icons.visibility_off)
+                                        : Icon(Icons.visibility)),
                                 contentPadding: EdgeInsets.all(15),
                                 border: InputBorder.none),
                           ),
