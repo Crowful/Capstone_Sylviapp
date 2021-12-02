@@ -680,8 +680,7 @@ class AuthService extends ChangeNotifier {
       }
 
       await DatabaseService(uid: _loggedInUser!.uid)
-          .endTheCampaign(campaignUID)
-          .whenComplete(() => Fluttertoast.showToast(msg: "CAMPAIGN ENDED"));
+          .endTheCampaign(campaignUID);
     } catch (e) {
       print(e);
     }

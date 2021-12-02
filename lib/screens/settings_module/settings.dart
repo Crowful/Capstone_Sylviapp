@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/screens/campaign_module/notApprovedVolunteer.dart';
 import 'package:sylviapp_project/translations/locale_keys.g.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -207,6 +208,14 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
               ),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NotApprovedVolunteer()));
+                  },
+                  child: Text('ehe'))
             ],
           ),
         ),

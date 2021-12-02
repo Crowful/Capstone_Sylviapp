@@ -122,7 +122,7 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
                   style: TextStyle(
                       color: Color(0xff65BFB8),
                       fontSize: 20,
-                      fontWeight: FontWeight.w900),
+                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -131,7 +131,6 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
             margin: EdgeInsets.fromLTRB(15, 20, 15, 0),
             child: Text(
               "As a Volunteer you need to submit the following in this form, also, you need to consider to bring the following safety gears and essentials items during the campaigns",
-              style: TextStyle(color: Colors.black54),
             ),
           ),
           Row(children: [
@@ -189,8 +188,8 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
               margin: EdgeInsets.fromLTRB(0, 20, 130, 0),
               child: Text("SAFETY CHECKLIST",
                   style: TextStyle(
-                      color: Colors.black,
                       fontSize: 25,
+                      color: Color(0xff65BFB8),
                       fontWeight: FontWeight.w900))),
           SizedBox(
             height: 10,
@@ -199,7 +198,7 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
             margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
             child: Text(
               "The following are the checklist you need to have in order to join this campaign, if you don't have any of this you can't join this campaign unless you complete the safety checklist of this campaign.",
-              style: TextStyle(color: Colors.black54),
+              style: TextStyle(color: Colors.grey),
             ),
           ),
           Row(children: [
@@ -212,7 +211,9 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
               },
               activeColor: Colors.greenAccent,
             ),
-            Text("Bottled Water", style: TextStyle(color: Colors.black54))
+            Text(
+              "Bottled Water",
+            )
           ]),
           Row(children: [
             Checkbox(
@@ -224,7 +225,9 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
               },
               activeColor: Colors.greenAccent,
             ),
-            Text("Proper Clothes", style: TextStyle(color: Colors.black54))
+            Text(
+              "Proper Clothes",
+            )
           ]),
           Row(children: [
             Checkbox(
@@ -236,7 +239,9 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
               },
               activeColor: Colors.greenAccent,
             ),
-            Text("Mobile Phone", style: TextStyle(color: Colors.black54))
+            Text(
+              "Mobile Phone",
+            )
           ]),
           Row(children: [
             Checkbox(
@@ -248,7 +253,9 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
               },
               activeColor: Colors.greenAccent,
             ),
-            Text("Gloves", style: TextStyle(color: Colors.black54))
+            Text(
+              "Gloves",
+            )
           ]),
           Row(children: [
             Checkbox(
@@ -260,14 +267,16 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
               },
               activeColor: Colors.greenAccent,
             ),
-            Text("Face Mask and Face Shield",
-                style: TextStyle(color: Colors.black54))
+            Text(
+              "Face Mask and Face Shield",
+            )
           ]),
           Container(
             margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
             width: 350,
             child: Text(
               "By Clicking the Submit Button you automatically accept the terms and conditions in this campaign, I will plant keme and I will follow the rules on this campaign.",
+              style: TextStyle(color: Colors.red[400]),
             ),
           ),
           Container(
