@@ -819,6 +819,7 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                 GestureDetector(
                   onTap: () async {
                     try {
+                      Navigator.pop(context);
                       await context.read(authserviceProvider).leaveCampaign(
                           widget.uidOfCampaign,
                           context
