@@ -12,8 +12,18 @@ class _NotApprovedVolunteerState extends State<NotApprovedVolunteer> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text(
-            'Thank you for submitting volunteer application, wait for the organizer to accept you as a volunteer. The organizer will review your credentials if you are qualified to join to this campaign. Thank you.'),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                  'Thank you for submitting volunteer application, wait for the organizer to accept you as a volunteer. The organizer will review your credentials if you are qualified to join to this campaign. Thank you.'),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home');
+                  },
+                  child: Text('Back to Home'))
+            ]),
       ),
     );
   }

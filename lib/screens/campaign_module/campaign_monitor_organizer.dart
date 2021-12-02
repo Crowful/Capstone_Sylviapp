@@ -65,6 +65,45 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
   void initState() {
     super.initState();
 
+    FirebaseFirestore.instance
+        .collection('campaigns')
+        .doc(widget.uidOfCampaign)
+        .get()
+        .then((value) {
+      DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+
+      DateTime dateTime = dateFormat.parse(value.get('date_start'));
+      if (DateTime.now().year == dateTime.year &&
+          DateTime.now().month == dateTime.month &&
+          DateTime.now().day == dateTime.day) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return Container(
+                  margin: EdgeInsets.fromLTRB(50, 300, 50, 350),
+                  child: Card(
+                    child: Column(children: [
+                      Text(
+                          'This is the day you set your campaign to be started, click start campaign'),
+                      ElevatedButton(
+                        onPressed: () {
+                          context
+                              .read(authserviceProvider)
+                              .startTheCampaign(widget.uidOfCampaign);
+                          Navigator.pop(context);
+                        },
+                        child: Center(
+                          child: Text(
+                            "Start The Campaign now",
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ));
+            });
+      }
+    });
+
     FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
         badge: true, sound: true, alert: true);
 
