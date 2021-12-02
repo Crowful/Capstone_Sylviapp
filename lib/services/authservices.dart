@@ -734,14 +734,12 @@ class AuthService extends ChangeNotifier {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
-      await DatabaseService(uid: _loggedInUser!.uid)
-          .addBalanceToUser(
-            uidOfCampaign,
-            amount,
-            dateDonated,
-            uidUser,
-          )
-          .whenComplete(() => Fluttertoast.showToast(msg: "Recorded"));
+      await DatabaseService(uid: _loggedInUser!.uid).addBalanceToUser(
+        uidOfCampaign,
+        amount,
+        dateDonated,
+        uidUser,
+      );
     } catch (e) {
       print(e);
     }

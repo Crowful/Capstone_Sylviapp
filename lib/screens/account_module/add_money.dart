@@ -328,6 +328,8 @@ class _AddmoneyScreenState extends State<AddmoneyScreen> {
 
                     double amountTobeAdded =
                         double.parse(amountController.text);
+
+                    Navigator.pop(context);
                     await context.read(authserviceProvider).addBalance(
                         context.read(authserviceProvider).getCurrentUserUID(),
                         amountTobeAdded);
