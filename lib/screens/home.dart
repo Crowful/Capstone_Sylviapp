@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:sylviapp_project/Domain/wrapperisApproved.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_organizer.dart';
@@ -552,10 +553,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                         Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                                builder: (context) =>
-                                                                    CampaignMonitorVolunteer(
-                                                                        uidOfCampaign:
-                                                                            e.id)));
+                                                                builder:
+                                                                    (context) =>
+                                                                        WrapperUsApproved(
+                                                                          campaignID:
+                                                                              e.id,
+                                                                          volunteerUID: context
+                                                                              .read(authserviceProvider)
+                                                                              .getCurrentUserUID(),
+                                                                        )));
                                                       } else if (isJoin ==
                                                               false &&
                                                           isOrganizer ==
@@ -955,11 +961,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>
-                                                              CampaignMonitorVolunteer(
-                                                                  uidOfCampaign:
-                                                                      snapshoteds
-                                                                          .data!
-                                                                          .id)));
+                                                              WrapperUsApproved(
+                                                                campaignID:
+                                                                    e.id,
+                                                                volunteerUID: context
+                                                                    .read(
+                                                                        authserviceProvider)
+                                                                    .getCurrentUserUID(),
+                                                              )));
                                                 }
                                               },
                                               child: FadeAnimation(
