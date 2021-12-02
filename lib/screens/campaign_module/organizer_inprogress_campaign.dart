@@ -14,7 +14,6 @@ class InProgressCampaign extends StatefulWidget {
 
 class _InProgressCampaignState extends State<InProgressCampaign> {
   final StopWatchTimer _stopWatchTimer = StopWatchTimer();
-  late String displayTime;
 
   @override
   void initState() {
@@ -71,22 +70,28 @@ class _InProgressCampaignState extends State<InProgressCampaign> {
               builder: (context, snap) {
                 final value = snap.data;
                 final displayTime = StopWatchTimer.getDisplayTime(value!);
-                return Text(displayTime.toString());
+                return Column(
+                  children: [
+                    Text(displayTime.toString()),
+                    Center(
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Color(0xff65BFB8),
+                              shape: StadiumBorder()),
+                          onPressed: () async {
+                            await context
+                                .read(authserviceProvider)
+                                .addDurationToCampaign(widget.uidOfCampaign,
+                                    StopWatchTimer.getDisplayTime(value));
+                            await context
+                                .read(authserviceProvider)
+                                .endTheCampaign(widget.uidOfCampaign);
+                          },
+                          child: Text('Campaign Done')),
+                    )
+                  ],
+                );
               }),
-          Center(
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: Color(0xff65BFB8), shape: StadiumBorder()),
-                onPressed: () async {
-                  await context
-                      .read(authserviceProvider)
-                      .endTheCampaign(widget.uidOfCampaign);
-
-                  await context.read(authserviceProvider).addDurationToCampaign(
-                      widget.uidOfCampaign, displayTime.toString());
-                },
-                child: Text('Campaign Done')),
-          ),
         ],
       ),
     ));

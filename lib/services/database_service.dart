@@ -378,6 +378,6 @@ class DatabaseService {
   Future addDurationToCampaign(String campaignUID, String duration) async {
     return await approvedCampaignCollection
         .doc(campaignUID)
-        .set({"duration": duration});
+        .set({"duration": duration}, SetOptions(merge: true));
   }
 }
