@@ -391,7 +391,7 @@ class _PasswordRegPageState extends State<PasswordRegPage>
                                         _isVisible = !_isVisible;
                                       });
                                     },
-                                    icon: _isVisibleCP
+                                    icon: _isVisible
                                         ? Icon(
                                             Icons.visibility,
                                             color: Colors.black,
