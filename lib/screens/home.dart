@@ -932,57 +932,84 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               ConnectionState.waiting) {
                                         return CircularProgressIndicator();
                                       } else {
-                                        return GestureDetector(
-                                            onTap: () {
-                                              if (context
-                                                      .read(authserviceProvider)
-                                                      .getCurrentUserUID() ==
-                                                  snapshoteds.data!
-                                                      .get('uid')) {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            CampaignMonitorOrganizer(
-                                                                uidOfCampaign:
-                                                                    snapshoteds
-                                                                        .data!
-                                                                        .id)));
-                                              } else {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            CampaignMonitorVolunteer(
-                                                                uidOfCampaign:
-                                                                    snapshoteds
-                                                                        .data!
-                                                                        .id)));
-                                              }
-                                            },
-                                            child: FadeAnimation(
-                                                (1.0 +
-                                                        snapshot.data!.docs
-                                                            .length) /
-                                                    4,
-                                                availableCampaign(
-                                                  uid: snapshoteds.data!
-                                                      .get("uid"),
-                                                  name: snapshoteds.data!
-                                                      .get("campaign_name"),
-                                                  description: snapshoteds.data!
-                                                      .get("description"),
-                                                  rfund: snapshoteds.data!
-                                                      .get("current_donations"),
-                                                  tfund: snapshoteds.data!
-                                                      .get("max_donation"),
-                                                  volunteerCurrent:
-                                                      snapshoteds.data!.get(
-                                                          "current_volunteers"),
-                                                  volunteerMax: snapshoteds
-                                                      .data!
-                                                      .get("number_volunteers"),
-                                                )));
+                                        if (snapshoteds.data!.exists) {
+                                          return GestureDetector(
+                                              onTap: () {
+                                                if (context
+                                                        .read(
+                                                            authserviceProvider)
+                                                        .getCurrentUserUID() ==
+                                                    snapshoteds.data!
+                                                        .get('uid')) {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              CampaignMonitorOrganizer(
+                                                                  uidOfCampaign:
+                                                                      snapshoteds
+                                                                          .data!
+                                                                          .id)));
+                                                } else {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              CampaignMonitorVolunteer(
+                                                                  uidOfCampaign:
+                                                                      snapshoteds
+                                                                          .data!
+                                                                          .id)));
+                                                }
+                                              },
+                                              child: FadeAnimation(
+                                                  (1.0 +
+                                                          snapshot.data!.docs
+                                                              .length) /
+                                                      4,
+                                                  availableCampaign(
+                                                    uid: snapshoteds.data!
+                                                        .get("uid"),
+                                                    name: snapshoteds.data!
+                                                        .get("campaign_name"),
+                                                    description: snapshoteds
+                                                        .data!
+                                                        .get("description"),
+                                                    rfund: snapshoteds.data!.get(
+                                                        "current_donations"),
+                                                    tfund: snapshoteds.data!
+                                                        .get("max_donation"),
+                                                    volunteerCurrent:
+                                                        snapshoteds.data!.get(
+                                                            "current_volunteers"),
+                                                    volunteerMax:
+                                                        snapshoteds.data!.get(
+                                                            "number_volunteers"),
+                                                  )));
+                                        } else {
+                                          return Center(
+                                            child: Container(
+                                              height: 100,
+                                              width: 400,
+                                              child: Card(
+                                                child: Column(children: [
+                                                  Text(
+                                                      'This Campaign has been deleted by the Admin'),
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                                        context
+                                                            .read(
+                                                                authserviceProvider)
+                                                            .deleteRecentCampaign(
+                                                                snapshoteds
+                                                                    .data!.id);
+                                                      },
+                                                      child: Text('remove')),
+                                                ]),
+                                              ),
+                                            ),
+                                          );
+                                        }
                                       }
                                     });
                               }).toList()),

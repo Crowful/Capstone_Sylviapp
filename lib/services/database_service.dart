@@ -260,6 +260,14 @@ class DatabaseService {
         .delete();
   }
 
+  Future deleteRecentCampaign(String uidOfActivity) async {
+    return await userCollection
+        .doc(uid)
+        .collection('campaigns')
+        .doc(uidOfActivity)
+        .delete();
+  }
+
   Future addBalanceToUser(
     String uidOfCampaign,
     int amount,

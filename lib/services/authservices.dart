@@ -862,6 +862,19 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  deleteRecentCampaign(String uidActivity) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .deleteRecentCampaign(uidActivity)
+          .whenComplete(() => Fluttertoast.showToast(msg: "Campaign Removed"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
   deductInitialCampaign(String volunteerUID) async {
     try {
       if (_loggedInUser == null) {
