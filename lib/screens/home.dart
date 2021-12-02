@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -1058,6 +1059,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     required int volunteerCurrent,
     required int volunteerMax,
   }) {
+    String? aydee = FirebaseAuth.instance.currentUser!.uid;
+    print(context.read(authserviceProvider).getCurrentUserUID.toString());
     double meterValue = rfund / tfund;
 
     int raisedFund = rfund;
@@ -1090,16 +1093,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         image: AssetImage("assets/images/placeholder.jpg"),
                         fit: BoxFit.cover)),
               ),
-              uid ==
-                      context
-                          .read(authserviceProvider)
-                          .getCurrentUserUID
-                          .toString()
+              uid == aydee
                   ? Padding(
                       padding: EdgeInsets.all(5),
                       child: Text('You are the Organizer here',
                           style: TextStyle(color: Colors.white)))
-                  : Padding(padding: EdgeInsets.all(5), child: Text('test'))
+                  : Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Icon(
+                        Icons.ac_unit,
+                        color: Colors.transparent,
+                      ))
             ]),
             SizedBox(width: 10),
             Column(

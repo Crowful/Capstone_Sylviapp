@@ -15,116 +15,177 @@ class RecentActivity extends StatefulWidget {
 class _RecentActivityState extends State<RecentActivity> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-          child: Container(
-        margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
-              child: Text(
-                LocaleKeys.recentactivity.tr(),
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff65BFB8)),
-              ),
-              alignment: Alignment.topLeft,
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(15, 10, 15, 0),
-              child: Text(
-                LocaleKeys.recentActivitymainSentence.tr(),
-                style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black54),
-              ),
-              alignment: Alignment.topLeft,
-            ),
-            StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(context.read(authserviceProvider).getCurrentUserUID())
-                    .collection('recent_activities')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return CircularProgressIndicator();
-                  } else {
-                    return Expanded(
-                      child: ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            DocumentSnapshot user = snapshot.data!.docs[index];
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Color(0xff65BFB8),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      Navigator.pop(context);
+                    });
+                  },
+                  color: Color(0xff403d55),
+                ),
+                Text(
+                  'Sylviapp',
+                  style: TextStyle(
+                      color: Color(0xff65BFB8),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  icon: Icon(Icons.bookmark_outline),
+                  onPressed: () {},
+                  color: Colors.transparent,
+                ),
+              ]),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        LocaleKeys.recentactivity.tr(),
+                        style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff65BFB8)),
+                      ),
+                      Text(
+                        LocaleKeys.recentActivitymainSentence.tr(),
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey),
+                      ),
+                      StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(context
+                                  .read(authserviceProvider)
+                                  .getCurrentUserUID())
+                              .collection('recent_activities')
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return CircularProgressIndicator();
+                            } else {
+                              return Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5))),
+                                  child: ListView.builder(
+                                      itemCount: snapshot.data!.docs.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        DocumentSnapshot user =
+                                            snapshot.data!.docs[index];
 
-                            Timestamp date = user.get('dateDonated');
-                            String amount = user.get('amount').toString();
-                            String type = user.get('type');
+                                        Timestamp date =
+                                            user.get('dateDonated');
+                                        String amount =
+                                            user.get('amount').toString();
+                                        String type = user.get('type');
 
-                            return Container(
-                              margin: EdgeInsets.fromLTRB(10, 0, 10, 15),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  type == 'donated'
-                                      ? Icon(
-                                          Icons.campaign_rounded,
-                                          size: 40,
-                                          color: Colors.grey,
-                                        )
-                                      : Icon(
-                                          Icons.monetization_on,
-                                          size: 40,
-                                          color: Colors.green,
-                                        ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Column(
-                                    children: [
-                                      Text(
-                                          DateTime.parse(
-                                                  date.toDate().toString())
-                                              .toString(),
-                                          style: TextStyle(
-                                            color: Colors.black54,
-                                          )),
-                                      Container(
-                                          margin:
-                                              EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                          child: type == 'donated'
-                                              ? Text(
-                                                  "Donated $amount to Campaign ")
-                                              : Text(
-                                                  "Added Balance of $amount"))
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      await context
-                                          .read(authserviceProvider)
-                                          .deleteActivity(user.id);
-                                    },
-                                    child: Text("Delete"),
-                                    style: ElevatedButton.styleFrom(
-                                        primary: Colors.red),
-                                  )
-                                ],
-                              ),
-                            );
-                          }),
-                    );
-                  }
-                })
-          ],
+                                        return Card(
+                                          elevation: 5,
+                                          child: Container(
+                                            margin: EdgeInsets.all(10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                type == 'donated'
+                                                    ? Icon(
+                                                        Icons.campaign_rounded,
+                                                        size: 40,
+                                                        color:
+                                                            Color(0xff65BFB8),
+                                                      )
+                                                    : Icon(
+                                                        Icons.monetization_on,
+                                                        size: 40,
+                                                        color:
+                                                            Color(0xff65BFB8),
+                                                      ),
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    type == 'donated'
+                                                        ? Text(
+                                                            "Donated ₱$amount to Campaign ",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                        .orange[
+                                                                    700],
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          )
+                                                        : Text(
+                                                            "Added Balance of ₱$amount",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                        .orange[
+                                                                    700],
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                    Text(
+                                                        DateTime.parse(date
+                                                                .toDate()
+                                                                .toString())
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 13)),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                ),
+                              );
+                            }
+                          })
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }

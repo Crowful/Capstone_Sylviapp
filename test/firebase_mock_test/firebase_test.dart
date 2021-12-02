@@ -123,62 +123,6 @@ void main() {
     });
 
     tearDown(() => testCount++);
-
-    setUp(() async {
-      user = kMockUser;
-      await auth!.signInAnonymously();
-    });
-
-    test('delete()', () async {
-      when(mockUserPlatform!.delete()).thenAnswer((i) async {});
-
-      await auth!.currentUser!.delete();
-
-      verify(mockUserPlatform!.delete());
-    });
-
-    test('getIdToken()', () async {
-      when(mockUserPlatform!.getIdToken(any)).thenAnswer((_) async => 'token');
-
-      final token = await auth!.currentUser!.getIdToken(true);
-
-      verify(mockUserPlatform!.getIdToken(true));
-      expect(token, isA<String>());
-    });
-
-    test('getIdTokenResult()', () async {
-      when(mockUserPlatform!.getIdTokenResult(any))
-          .thenAnswer((_) async => IdTokenResult(kMockIdTokenResult));
-
-      final idTokenResult = await auth!.currentUser!.getIdTokenResult(true);
-
-      verify(mockUserPlatform!.getIdTokenResult(true));
-      expect(idTokenResult, isA<IdTokenResult>());
-    });
-
-    test('sendEmailVerification()', () async {
-      when(mockUserPlatform!.sendEmailVerification(any))
-          .thenAnswer((i) async {});
-
-      final ActionCodeSettings actionCodeSettings =
-          ActionCodeSettings(url: 'test');
-
-      await auth!.currentUser!.sendEmailVerification(actionCodeSettings);
-
-      verify(mockUserPlatform!.sendEmailVerification(actionCodeSettings));
-    });
-
-    group('updatePassword()', () {
-      test('should call updatePassword()', () async {
-        when(mockUserPlatform!.updatePassword(any)).thenAnswer((i) async {});
-
-        const String newPassword = 'newPassword';
-
-        await auth!.currentUser!.updatePassword(newPassword);
-
-        verify(mockUserPlatform!.updatePassword(newPassword));
-      });
-    });
   });
 }
 

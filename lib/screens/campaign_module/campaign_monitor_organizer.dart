@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:intl/intl.dart';
@@ -56,6 +57,10 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
     }
   }
 
+  closeControls() {
+    isOpened = true;
+  }
+
   bool isOpened = false;
   late AnimationController _animationController = AnimationController(
     vsync: this,
@@ -70,38 +75,28 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
         .doc(widget.uidOfCampaign)
         .get()
         .then((value) {
-      DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+      FirebaseFirestore.instance
+          .collection('campaigns')
+          .doc(widget.uidOfCampaign)
+          .get()
+          .then((values) {
+        bool yes = values.get('isCompleted');
 
-      DateTime dateTime = dateFormat.parse(value.get('date_start'));
-      if (DateTime.now().year == dateTime.year &&
-          DateTime.now().month == dateTime.month &&
-          DateTime.now().day == dateTime.day) {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return Container(
-                  margin: EdgeInsets.fromLTRB(50, 300, 50, 350),
-                  child: Card(
-                    child: Column(children: [
-                      Text(
-                          'This is the day you set your campaign to be started, click start campaign'),
-                      ElevatedButton(
-                        onPressed: () {
-                          context
-                              .read(authserviceProvider)
-                              .startTheCampaign(widget.uidOfCampaign);
-                          Navigator.pop(context);
-                        },
-                        child: Center(
-                          child: Text(
-                            "Start The Campaign now",
-                          ),
-                        ),
-                      ),
-                    ]),
-                  ));
-            });
-      }
+        if (yes == false) {
+          DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+
+          DateTime dateTime = dateFormat.parse(value.get('date_start'));
+          if (DateTime.now().year == dateTime.year &&
+              DateTime.now().month == dateTime.month &&
+              DateTime.now().day == dateTime.day) {
+            Navigator.of(context).push(HeroDialogRoute(builder: (context) {
+              return startCampaign();
+            }));
+          }
+        } else {
+          isOpened = true;
+        }
+      });
     });
 
     FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
@@ -214,7 +209,9 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                               if (snapshotCampaign.data!.get('isCompleted') ==
                                   true) {
                                 isShow = false;
-                                return CampaignCompleted();
+                                return CampaignCompleted(
+                                  campaignUID: widget.uidOfCampaign,
+                                );
                               }
                               if (snapshotCampaign.data!.get('isActive') ==
                                   true) {
@@ -487,77 +484,132 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                           ),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        height: 400,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Color(0xff65BFB8),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20)),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Campaign Settings",
-                              style: Theme.of(context).textTheme.headline1,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            ElevatedButton(
-                              onPressed: () =>
-                                  _selectDate(context).whenComplete(() {
-                                context
-                                    .read(authserviceProvider)
-                                    .setStartingDate(widget.uidOfCampaign,
-                                        selectedDate.toString());
-                              }),
-                              child: Center(
-                                child: Text(
-                                  "Set Start Date",
-                                ),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () => context
-                                  .read(authserviceProvider)
-                                  .startTheCampaign(widget.uidOfCampaign),
-                              child: Center(
-                                child: Text(
-                                  "Start The Campaign now",
-                                ),
-                              ),
-                            ),
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .push(HeroDialogRoute(builder: (context) {
-                                    return postAnnouncement();
-                                  }));
-                                },
-                                child: Center(
-                                  child: Text("Announce"),
-                                )),
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .push(HeroDialogRoute(builder: (context) {
-                                    return Container(
-                                        margin: EdgeInsets.fromLTRB(
-                                            20, 200, 20, 400),
-                                        child: cancelCampaign());
-                                  }));
-                                },
-                                child: Center(
-                                  child: Text("Cancel Campaign"),
-                                ))
-                          ],
-                        ),
-                      ),
+                      StreamBuilder<DocumentSnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('quarantineStatus')
+                              .doc('status')
+                              .snapshots(),
+                          builder: (context, snapshotStatus) {
+                            if (!snapshotStatus.hasData) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              print(isOpened);
+                              var status = snapshotStatus.data!.get('status');
+                              return StreamBuilder<DocumentSnapshot>(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('campaigns')
+                                      .doc(widget.uidOfCampaign)
+                                      .snapshots(),
+                                  builder: (context, snapshotCompleted) {
+                                    if (!snapshotCompleted.hasData) {
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    } else {
+                                      bool done = snapshotCompleted.data!
+                                          .get('isCompleted');
+                                      return AbsorbPointer(
+                                        absorbing: done ? true : false,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(20),
+                                          height: 400,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          decoration: BoxDecoration(
+                                            color: Color(0xff65BFB8),
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(20),
+                                                topRight: Radius.circular(20)),
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Campaign Settings",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline1,
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () =>
+                                                    _selectDate(context)
+                                                        .whenComplete(() {
+                                                  context
+                                                      .read(authserviceProvider)
+                                                      .setStartingDate(
+                                                          widget.uidOfCampaign,
+                                                          selectedDate
+                                                              .toString());
+                                                }),
+                                                child: Center(
+                                                  child: Text(
+                                                    "Set Start Date",
+                                                  ),
+                                                ),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  if (status == "ECQ" ||
+                                                      status == "MECQ" ||
+                                                      status == "GCQ") {
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            "The area is still in lockdown, please wait until the lockdown is lifted.");
+                                                  } else {
+                                                    context
+                                                        .read(
+                                                            authserviceProvider)
+                                                        .startTheCampaign(widget
+                                                            .uidOfCampaign);
+                                                  }
+                                                },
+                                                child: Center(
+                                                  child: Text(
+                                                    "Start The Campaign now",
+                                                  ),
+                                                ),
+                                              ),
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).push(
+                                                        HeroDialogRoute(
+                                                            builder: (context) {
+                                                      return postAnnouncement();
+                                                    }));
+                                                  },
+                                                  child: Center(
+                                                    child: Text("Announce"),
+                                                  )),
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).push(
+                                                        HeroDialogRoute(
+                                                            builder: (context) {
+                                                      return Container(
+                                                          margin: EdgeInsets
+                                                              .fromLTRB(20, 200,
+                                                                  20, 400),
+                                                          child:
+                                                              cancelCampaign());
+                                                    }));
+                                                  },
+                                                  child: Center(
+                                                    child:
+                                                        Text("Cancel Campaign"),
+                                                  ))
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  });
+                            }
+                          }),
                     ],
                   ),
                 ),
@@ -800,6 +852,56 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
               ),
             )
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget startCampaign() {
+    return Dialog(
+      child: IntrinsicHeight(
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Reminder!',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                  'This is the day you set your campaign to be started, click start campaign.'),
+              SizedBox(
+                height: 10,
+              ),
+              GestureDetector(
+                onTap: () {
+                  context
+                      .read(authserviceProvider)
+                      .startTheCampaign(widget.uidOfCampaign);
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                      color: Color(0xff65BFB8)),
+                  child: Center(
+                    child: Text(
+                      "Start The Campaign now",
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
