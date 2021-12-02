@@ -1028,52 +1028,138 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                 color: Color(0xff65BFB8),
                               ),
                               child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    VolunteerFormScreen(
-                                                      campaignUID:
-                                                          widget.uidOfCampaign,
-                                                      organizerUID:
-                                                          widget.uidOfOrganizer,
-                                                    )));
-                                      },
-                                      child: Container(
-                                        height: 40,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5))),
-                                        child: Center(
-                                          child: Text(
-                                            'Join Campaign',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 17,
-                                                color: Color(0xff65BFB8)),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      "More Volunteers needed",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white.withOpacity(0.4)),
-                                    )
-                                  ],
-                                ),
+                                child: StreamBuilder<DocumentSnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('campaigns')
+                                        .doc(widget.uidOfCampaign)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                if (widget.currentVolunteer <
+                                                    widget.totalVolunteer) {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              VolunteerFormScreen(
+                                                                campaignUID: widget
+                                                                    .uidOfCampaign,
+                                                                organizerUID: widget
+                                                                    .uidOfOrganizer,
+                                                              )));
+                                                } else {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          'The Campaign is full, find other campaign');
+                                                }
+                                              },
+                                              child: Container(
+                                                height: 40,
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                5))),
+                                                child: Center(
+                                                  child: Text(
+                                                    'Join Campaign',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 17,
+                                                        color:
+                                                            Color(0xff65BFB8)),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              "More Volunteers needed",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white
+                                                      .withOpacity(0.4)),
+                                            )
+                                          ],
+                                        );
+                                      } else {
+                                        return Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                if (snapshot.data!.get(
+                                                        'current_volunteers') <
+                                                    snapshot.data!.get(
+                                                        'number_volunteers')) {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              VolunteerFormScreen(
+                                                                campaignUID: widget
+                                                                    .uidOfCampaign,
+                                                                organizerUID: widget
+                                                                    .uidOfOrganizer,
+                                                              )));
+                                                } else {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          'The Campaign is full, find other campaign');
+                                                }
+                                              },
+                                              child: Container(
+                                                height: 40,
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                5))),
+                                                child: Center(
+                                                  child: Text(
+                                                    'Join Campaign',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 17,
+                                                        color:
+                                                            Color(0xff65BFB8)),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              "More Volunteers needed",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white
+                                                      .withOpacity(0.4)),
+                                            )
+                                          ],
+                                        );
+                                      }
+                                    }),
                               ),
                             ),
                           ),
