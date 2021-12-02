@@ -12,6 +12,7 @@ import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/layout_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class CampaignMonitorVolunteer extends StatefulWidget {
@@ -605,7 +606,7 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                                     0.11,
                                     Container(
                                       padding: const EdgeInsets.all(10),
-                                      height: 360,
+                                      height: 300,
                                       decoration: BoxDecoration(
                                           color: Colors.grey.withOpacity(0.25)),
                                       child: ListView(
@@ -655,6 +656,37 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                                       }).toList()),
                                     ),
                                   ),
+                                  SizedBox(height: 10),
+                                  StreamBuilder<DocumentSnapshot>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('campaigns')
+                                          .doc(widget.uidOfCampaign)
+                                          .snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return LinearProgressIndicator();
+                                        } else {
+                                          DateFormat dateFormat =
+                                              DateFormat("yyyy-MM-dd");
+
+                                          DateTime dateTime = dateFormat.parse(
+                                              snapshot.data!.get('date_start'));
+
+                                          return Text(
+                                              'The Campaign will start in ' +
+                                                  DateFormat.MMMM()
+                                                      .format(DateTime(
+                                                          dateTime.year,
+                                                          dateTime.month,
+                                                          dateTime.day))
+                                                      .toString() +
+                                                  ' ' +
+                                                  dateTime.day.toString() +
+                                                  ', ' +
+                                                  dateTime.year.toString());
+                                        }
+                                      }),
+                                  SizedBox(height: 30),
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.of(context).push(

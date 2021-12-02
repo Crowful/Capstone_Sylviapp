@@ -653,8 +653,7 @@ class AuthService extends ChangeNotifier {
       }
 
       await DatabaseService(uid: _loggedInUser!.uid)
-          .setStartDateCampaign(campaignUID, date)
-          .whenComplete(() => Fluttertoast.showToast(msg: "DATE POSTED"));
+          .setStartDateCampaign(campaignUID, date);
     } catch (e) {
       print(e);
     }
@@ -668,7 +667,7 @@ class AuthService extends ChangeNotifier {
 
       await DatabaseService(uid: _loggedInUser!.uid)
           .starTheCampaign(campaignUID)
-          .whenComplete(() => Fluttertoast.showToast(msg: "CAMPAIGN STARTED"));
+          .then((value) => Fluttertoast.showToast(msg: "CAMPAIGN STARTED"));
     } catch (e) {
       print(e);
     }
