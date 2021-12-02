@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 // ignore: must_be_immutable
 class InProgressCampaign extends StatefulWidget {
@@ -12,6 +13,15 @@ class InProgressCampaign extends StatefulWidget {
 }
 
 class _InProgressCampaignState extends State<InProgressCampaign> {
+  final StopWatchTimer _stopWatchTimer = StopWatchTimer();
+  late String displayTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _stopWatchTimer.onExecute.add(StopWatchExecute.start);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -55,17 +65,28 @@ class _InProgressCampaignState extends State<InProgressCampaign> {
           SizedBox(
             height: 20,
           ),
+          StreamBuilder<int>(
+              initialData: 0,
+              stream: _stopWatchTimer.rawTime,
+              builder: (context, snap) {
+                final value = snap.data;
+                final displayTime = StopWatchTimer.getDisplayTime(value!);
+                return Text(displayTime.toString());
+              }),
           Center(
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: Color(0xff65BFB8), shape: StadiumBorder()),
-                onPressed: () {
-                  context
+                onPressed: () async {
+                  await context
                       .read(authserviceProvider)
                       .endTheCampaign(widget.uidOfCampaign);
+
+                  await context.read(authserviceProvider).addDurationToCampaign(
+                      widget.uidOfCampaign, displayTime.toString());
                 },
                 child: Text('Campaign Done')),
-          )
+          ),
         ],
       ),
     ));

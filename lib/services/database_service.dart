@@ -374,4 +374,10 @@ class DatabaseService {
         .doc(volunteerUID)
         .update({"isApprove": true});
   }
+
+  Future addDurationToCampaign(String campaignUID, String duration) async {
+    return await approvedCampaignCollection
+        .doc(campaignUID)
+        .set({"duration": duration});
+  }
 }

@@ -918,4 +918,16 @@ class AuthService extends ChangeNotifier {
       print(e);
     }
   }
+
+  addDurationToCampaign(String campaignID, String duration) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .addDurationToCampaign(campaignID, duration);
+    } catch (e) {
+      print(e);
+    }
+  }
 }
