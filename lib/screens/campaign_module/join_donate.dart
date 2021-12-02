@@ -58,9 +58,11 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
     try {
       taske2 = await firebaseStorageRef.getDownloadURL();
     } catch (e) {
-      setState(() {
-        errorText2 = e.toString();
-      });
+      if (this.mounted) {
+        setState(() {
+          errorText2 = e.toString();
+        });
+      }
     }
     if (this.mounted) {
       setState(() {

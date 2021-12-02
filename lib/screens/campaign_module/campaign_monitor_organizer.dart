@@ -214,7 +214,8 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                               if (snapshotCampaign.data!.get('isCompleted') ==
                                   true) {
                                 isShow = false;
-                                return CampaignCompleted();
+                                return CampaignCompleted(
+                                    uidOfCampaign: widget.uidOfCampaign);
                               }
                               if (snapshotCampaign.data!.get('isActive') ==
                                   true) {
