@@ -5,6 +5,7 @@ import 'package:sylviapp_project/screens/account_module/verification.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_volunteer.dart';
 import 'package:sylviapp_project/screens/campaign_module/notApprovedVolunteer.dart';
+import 'package:sylviapp_project/screens/layout_screen.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/verification/statusRole.dart';
 
 class WrapperUsApproved extends StatefulWidget {
@@ -34,13 +35,19 @@ class _WrapperUsApprovedState extends State<WrapperUsApproved> {
               'No Data...',
             );
           } else {
-            bool status = snapshot.data!.get('isApprove');
-            if (status == true) {
-              return CampaignMonitorVolunteer(
-                uidOfCampaign: widget.campaignID,
-              );
+            if (snapshot.data!.exists) {
+              bool status = snapshot.data!.get('isApprove');
+              if (status == true) {
+                return CampaignMonitorVolunteer(
+                  uidOfCampaign: widget.campaignID,
+                );
+              } else if (status == false) {
+                return NotApprovedVolunteer();
+              } else {
+                return LayoutScreen();
+              }
             } else {
-              return NotApprovedVolunteer();
+              return LayoutScreen();
             }
           }
         });
