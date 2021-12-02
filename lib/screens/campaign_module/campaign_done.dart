@@ -3,8 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CampaignCompleted extends StatefulWidget {
-  String uidOfCampaign;
-  CampaignCompleted({Key? key, required this.uidOfCampaign}) : super(key: key);
+  final String campaignUID;
+  const CampaignCompleted({Key? key, required this.campaignUID})
+      : super(key: key);
 
   @override
   _CampaignCompletedState createState() => _CampaignCompletedState();
@@ -15,107 +16,201 @@ class _CampaignCompletedState extends State<CampaignCompleted> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: StreamBuilder<DocumentSnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('campaigns')
-                .doc(widget.uidOfCampaign)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    child: CircularProgressIndicator(),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Color(0xff65BFB8),
+                ),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+                color: Color(0xff403d55),
+              ),
+              Text(
+                'Sylviapp',
+                style: TextStyle(
+                    color: Color(0xff65BFB8),
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                icon: Icon(Icons.bookmark_outline),
+                onPressed: () {},
+                color: Colors.transparent,
+              ),
+            ]),
+            Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.sentiment_very_satisfied,
+                    size: 100,
+                    color: Color(0xff65BFB8),
                   ),
-                );
-              } else {
-                if (snapshot.data!.exists) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.fromLTRB(20, 20, 0, 0),
-                        child: Text('Campaign Done',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Text(
-                            'Thank you for your efforts, time and dedicating yourself to save our forests in the philippines. In this Screen you can be able to see some information about your campaign.',
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 15,
-                              fontWeight: FontWeight.normal,
-                            )),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Text('Duration: ',
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 15,
-                              fontWeight: FontWeight.normal,
-                            )),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Text(snapshot.data!.get('duration').toString(),
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Text('Volunteers Participated: ',
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 15,
-                              fontWeight: FontWeight.normal,
-                            )),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Text(
-                            snapshot.data!.get('current_volunteers').toString(),
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Center(
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Color(0xff65BFB8),
-                                shape: StadiumBorder()),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/home');
-                            },
-                            child: Text('Go back Home')),
-                      )
-                    ],
-                  );
-                } else {
-                  return Column(children: [
-                    Text(
-                        'Something Went Wrong in retrieving the data, Please try again later'),
-                    ElevatedButton(
-                        onPressed: () {}, child: Text('Go back home'))
-                  ]);
-                }
-              }
-            }),
+                  Text('Campaign Done',
+                      style: TextStyle(
+                        color: Color(0xff65BFB8),
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                      'Thank you for your efforts, time and dedicating yourself to save our forests in the Philippines.',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('campaigns')
+                          .doc(widget.campaignUID)
+                          .snapshots(),
+                      builder: (context, snapshoted) {
+                        print(widget.campaignUID);
+                        if (!snapshoted.hasData) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else {
+                          var duration = snapshoted.data!.get('duration');
+                          var volunteers =
+                              snapshoted.data!.get('current_volunteers');
+                          var seed = snapshoted.data!.get('number_of_seeds');
+                          var donations =
+                              snapshoted.data!.get('current_donations');
+                          return Card(
+                            color: Colors.transparent,
+                            elevation: 15,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              padding: EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text('Stats of your campaign',
+                                      style: TextStyle(
+                                          color: Color(0xff65BFB8),
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold)),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Duration: ',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.normal,
+                                          )),
+                                      Text(duration.toString(),
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Volunteers Participated: ',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.normal,
+                                          )),
+                                      Text(volunteers.toString(),
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Total seeds planted: ',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.normal,
+                                          )),
+                                      Text(seed.toString(),
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Total seeds planted: ',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.normal,
+                                          )),
+                                      Text(donations.toString(),
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(context, '/home');
+                                    },
+                                    child: Container(
+                                      height: 50,
+                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xff65BFB8)),
+                                      child: Center(
+                                        child: Text('Go back Home'),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                      }),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -13,20 +13,20 @@ void main() {
     var mapbackend = MapBackend();
     var radiusAssigned = 30.4;
     mapbackend.checkVolunteersNeeded(radiusAssigned);
-    expect(mapbackend.volunteersRequired, 60);
+    expect(mapbackend.volunteersRequired, 75);
   });
 
   test('funds required is relative to the radius', () {
     var mapbackend = MapBackend();
     var radiusAssigned = 30.4;
     mapbackend.checkFundRequired(radiusAssigned);
-    expect(mapbackend.fundRequired, 2000.0);
+    expect(mapbackend.fundRequired, 10000.0);
   });
 
   test('seeds required is relative to the radius', () {
     var mapbackend = MapBackend();
     var radiusAssigned = 30.4;
     mapbackend.checkseedsNeeded(radiusAssigned);
-    expect(mapbackend.seedsRequired, 80);
+    expect(mapbackend.seedsRequired, 200);
   });
 }
