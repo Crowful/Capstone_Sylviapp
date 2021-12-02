@@ -146,8 +146,8 @@ class _MapCampaignState extends State<MapCampaign>
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now().add(Duration(days: 15)));
     if (picked != null && picked != DateTime.now())
       setState(() {
         selectedDate = picked;
