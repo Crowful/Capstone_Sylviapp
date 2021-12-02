@@ -2,11 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sylviapp_project/models/user_account.dart';
 
 void main() {
-  test('Title of test', () {
-    //Setup
-    //Run
-    //Verify
-  });
+  test('Title of test', () {});
 
   test('retrieve Exact username value in setters and getters .', () {
     var useraacount = UserAccount();

@@ -3,11 +3,9 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
-// import 'package:mockito/annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:mockito/mockito.dart';
 
-// import './user_test.mocks.dart';
 import '../mock.dart';
 
 Map<String, dynamic> kMockUser1 = <String, dynamic>{
@@ -15,11 +13,6 @@ Map<String, dynamic> kMockUser1 = <String, dynamic>{
   'emailVerified': false,
   'displayName': 'displayName',
 };
-
-// @GenerateMocks([], customMocks: [
-//   MockSpec<MockFirebaseAuthPlatformBase>(as: #MockFirebaseAuthPlatform),
-//   MockSpec<MockUserPlatformBase>(as: #MockUserPlatform),
-// ])
 void main() {
   setupFirebaseAuthMocks();
 
@@ -79,14 +72,11 @@ void main() {
 
   group('$User', () {
     Map<String, dynamic>? user;
-
-    // used to generate a unique application name for each test
     var testCount = 0;
 
     setUp(() async {
       FirebaseAuthPlatform.instance = mockAuthPlatform = MockFirebaseAuth();
 
-      // Each test uses a unique FirebaseApp instance to avoid sharing state
       final app = await Firebase.initializeApp(
         name: '$testCount',
         options: const FirebaseOptions(
@@ -140,7 +130,6 @@ void main() {
     });
 
     test('delete()', () async {
-      // Necessary as we otherwise get a "null is not a Future<void>" error
       when(mockUserPlatform!.delete()).thenAnswer((i) async {});
 
       await auth!.currentUser!.delete();
@@ -149,7 +138,6 @@ void main() {
     });
 
     test('getIdToken()', () async {
-      // Necessary as we otherwise get a "null is not a Future<void>" error
       when(mockUserPlatform!.getIdToken(any)).thenAnswer((_) async => 'token');
 
       final token = await auth!.currentUser!.getIdToken(true);
@@ -169,7 +157,6 @@ void main() {
     });
 
     test('sendEmailVerification()', () async {
-      // Necessary as we otherwise get a "null is not a Future<void>" error
       when(mockUserPlatform!.sendEmailVerification(any))
           .thenAnswer((i) async {});
 
@@ -183,7 +170,6 @@ void main() {
 
     group('updatePassword()', () {
       test('should call updatePassword()', () async {
-        // Necessary as we otherwise get a "null is not a Future<void>" error
         when(mockUserPlatform!.updatePassword(any)).thenAnswer((i) async {});
 
         const String newPassword = 'newPassword';
