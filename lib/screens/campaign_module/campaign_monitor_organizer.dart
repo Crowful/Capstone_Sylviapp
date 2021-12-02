@@ -381,15 +381,14 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                                                                           .id,
                                                                   orgID:
                                                                       orgName,
-                                                                  uid:
-                                                                      snapshotList
-                                                                          .data!
-                                                                          .id,
+                                                                  uid: e.id,
                                                                   name: AESCryptography()
                                                                       .decryptAES(enc.Encrypted.from64(snapshotList
                                                                           .data!
-                                                                          .get("fullname"))),
-                                                                  gender: sentence!),
+                                                                          .get(
+                                                                              "fullname"))),
+                                                                  gender:
+                                                                      sentence!),
                                                             );
                                                           }
                                                         });

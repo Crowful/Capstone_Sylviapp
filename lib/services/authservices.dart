@@ -862,14 +862,46 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  deleteRecentCampaign(String uidActivity) async {
+  deleteRecentCampaign(String uidActivity, String volunteerUID) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
-          .deleteRecentCampaign(uidActivity)
+          .deleteRecentCampaign(uidActivity, volunteerUID)
           .whenComplete(() => Fluttertoast.showToast(msg: "Campaign Removed"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  approveVolunteer(String campaignID, String volunteerID) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .approveVolunteer(campaignID, volunteerID)
+          .whenComplete(
+              () => Fluttertoast.showToast(msg: "volunteer approved"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  declineVolunteer(String campaignID, String volunteerID) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .declineVolunteer(campaignID, volunteerID)
+          .then((value) {
+        DatabaseService(uid: _loggedInUser!.uid)
+            .deleteRecentCampaign(campaignID, volunteerID);
+        DatabaseService(uid: _loggedInUser!.uid)
+            .removeVolunteerNumber(campaignID);
+      });
     } catch (e) {
       print(e);
     }

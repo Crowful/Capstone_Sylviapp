@@ -260,9 +260,9 @@ class DatabaseService {
         .delete();
   }
 
-  Future deleteRecentCampaign(String uidOfActivity) async {
+  Future deleteRecentCampaign(String uidOfActivity, String volunteerUID) async {
     return await userCollection
-        .doc(uid)
+        .doc(volunteerUID)
         .collection('campaigns')
         .doc(uidOfActivity)
         .delete();
@@ -357,5 +357,21 @@ class DatabaseService {
     return await userCollection
         .doc(volunteerUID)
         .update({"balance": FieldValue.increment(-500)});
+  }
+
+  Future declineVolunteer(String campaignUID, String volunteerUID) async {
+    return await approvedCampaignCollection
+        .doc(campaignUID)
+        .collection('volunteers')
+        .doc(volunteerUID)
+        .delete();
+  }
+
+  Future approveVolunteer(String campaignUID, String volunteerUID) async {
+    return await approvedCampaignCollection
+        .doc(campaignUID)
+        .collection('volunteers')
+        .doc(volunteerUID)
+        .update({"isApprove": true});
   }
 }

@@ -1002,7 +1002,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                 authserviceProvider)
                                                             .deleteRecentCampaign(
                                                                 snapshoteds
-                                                                    .data!.id);
+                                                                    .data!.id,
+                                                                context
+                                                                    .read(
+                                                                        authserviceProvider)
+                                                                    .getCurrentUserUID());
                                                       },
                                                       child: Text('remove')),
                                                 ]),

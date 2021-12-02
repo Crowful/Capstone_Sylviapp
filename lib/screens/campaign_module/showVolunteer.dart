@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/animation/pop_up.dart';
+import 'package:sylviapp_project/providers/providers.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ShowVolunteer extends StatefulWidget {
   final String organizerID;
@@ -281,15 +283,33 @@ class _ShowVolunteerState extends State<ShowVolunteer> {
                         height: 50,
                         child: Row(
                           children: [
-                            Container(
-                              color: Color(0xff65BFB8),
-                              width: 160,
-                              child: Center(child: Text("Approve")),
+                            GestureDetector(
+                              onTap: () async {
+                                context
+                                    .read(authserviceProvider)
+                                    .approveVolunteer(
+                                        widget.campaignID, widget.userID);
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                color: Color(0xff65BFB8),
+                                width: 160,
+                                child: Center(child: Text("Approve")),
+                              ),
                             ),
                             Expanded(
-                              child: Container(
-                                color: Color(0xffFF683A),
-                                child: Center(child: Text("Decline")),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await context
+                                      .read(authserviceProvider)
+                                      .declineVolunteer(
+                                          widget.campaignID, widget.userID);
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  color: Color(0xffFF683A),
+                                  child: Center(child: Text("Decline")),
+                                ),
                               ),
                             )
                           ],
