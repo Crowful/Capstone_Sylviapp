@@ -14,13 +14,13 @@ void main() async {
   print(instance.dump());
 
   final storage = MockFirebaseStorage();
-  final storageRef = storage.ref().child('filename');
-  final image = File('filename');
+  final storageRef = storage.ref().child('mockFirebaseSTorage/');
+  final image = File('mockFirebaseStorageFile');
   await storageRef.putFile(image);
-
   String? storageSnapshot = await storageRef.getDownloadURL();
 
   String? link = storageSnapshot.toString();
-
+  print(storage);
+  print(storageRef);
   print(link);
 }
