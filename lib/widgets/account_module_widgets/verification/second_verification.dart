@@ -225,6 +225,7 @@ class _GetVerifyState extends State<GetVerify> {
                                 textAlign: TextAlign.center,
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
                                   LengthLimitingTextInputFormatter(6)
                                 ],
                                 controller: idNumberController,
