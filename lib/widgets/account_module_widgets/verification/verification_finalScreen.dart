@@ -14,36 +14,92 @@ class _VerificationFinalScreenState extends State<VerificationFinalScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+        body: Container(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child: Text(
-                    "Application Submitted, wait for 3-10 days for verification of your account.",
-                    style: TextStyle(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.transparent,
+                      ),
+                      onPressed: () {},
+                      color: Color(0xff403d55),
+                    ),
+                    Text(
+                      'Sylviapp',
+                      style: TextStyle(
+                          color: Color(0xff65BFB8),
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.bookmark_outline),
+                      onPressed: () {},
+                      color: Colors.transparent,
+                    ),
+                  ],
+                ),
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.how_to_reg_outlined,
+                        size: 100,
                         color: Color(0xff65BFB8),
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  height: 40,
-                  width: 100,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary: Color(0xff65BFB8), shape: StadiumBorder()),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/home');
-                      },
-                      child: Text("home")),
-                )
-              ]),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Application Submitted!",
+                            style: TextStyle(
+                                color: Color(0xff65BFB8),
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "Wait for 2 - 10 days for us to verify your account.",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 15,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/home');
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Color(0xff65BFB8),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              height: 40,
+                              width: 110,
+                              child: Center(
+                                child: Text("Go to home"),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ]),
+                Icon(Icons.ac_unit, color: Colors.transparent)
+              ],
+            ),
+          ),
         ),
       ),
     );

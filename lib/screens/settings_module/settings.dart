@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/account_module/verify_email.dart';
-import 'package:sylviapp_project/screens/campaign_module/notApprovedVolunteer.dart';
 import 'package:sylviapp_project/translations/locale_keys.g.dart';
 
 class SettingsPage extends ConsumerWidget {
