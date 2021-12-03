@@ -355,12 +355,31 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
               child: GestureDetector(
                 onTap: () async {
                   print(deviceToken);
-                  context.read(authserviceProvider).addMessage(
+                  FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(
+                        context.read(authserviceProvider).getCurrentUserUID(),
+                      )
+                      .get()
+                      .then((value) {
+                    var fullname = AESCryptography().decryptAES(
+                        enc.Encrypted.fromBase64(value.get('fullname')));
+                    var gender = AESCryptography().decryptAES(
+                        enc.Encrypted.fromBase64(value.get('gender')));
+                    var phoneNumber = AESCryptography().decryptAES(
+                        enc.Encrypted.fromBase64(value.get('phoneNumber')));
+                    var address = AESCryptography().decryptAES(
+                        enc.Encrypted.fromBase64(value.get('address')));
+                    context.read(authserviceProvider).addMessage(
                         widget.uidOfCampaign,
                         orgID,
                         context.read(authserviceProvider).getCurrentUserUID(),
                         deviceToken,
-                      );
+                        fullname,
+                        phoneNumber,
+                        gender,
+                        address);
+                  });
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width,

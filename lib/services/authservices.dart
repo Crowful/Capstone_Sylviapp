@@ -814,15 +814,23 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  addMessage(String uidOfCampaign, String uidOfOrganizer, String uidOfVolunteer,
-      String devicetokenOfOrg) async {
+  addMessage(
+      String uidOfCampaign,
+      String uidOfOrganizer,
+      String uidOfVolunteer,
+      String devicetokenOfOrg,
+      String volunteerName,
+      String phoneNumber,
+      String gender,
+      String address) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
+
       await DatabaseService(uid: _loggedInUser!.uid)
-          .addMessage(
-              uidOfCampaign, uidOfOrganizer, uidOfVolunteer, devicetokenOfOrg)
+          .addMessage(uidOfCampaign, uidOfOrganizer, uidOfVolunteer,
+              devicetokenOfOrg, volunteerName, phoneNumber, gender, address)
           .whenComplete(() =>
               Fluttertoast.showToast(msg: "DISTRESS SUBMITTED TO ORGANIZER"));
     } catch (e) {

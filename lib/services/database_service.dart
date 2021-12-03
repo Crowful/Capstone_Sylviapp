@@ -325,8 +325,15 @@ class DatabaseService {
         .set({"feedback": feedback, "uid": uidOfVolunteer, "date": date});
   }
 
-  Future addMessage(String uidOfCampaign, String uidOfOrganizer,
-      String uidOfVolunteer, String devicetokenOfOrg) async {
+  Future addMessage(
+      String uidOfCampaign,
+      String uidOfOrganizer,
+      String uidOfVolunteer,
+      String devicetokenOfOrg,
+      String volunteerName,
+      String phoneNumber,
+      String gender,
+      String address) async {
     return await approvedCampaignCollection
         .doc(uidOfCampaign)
         .collection('distress')
@@ -336,8 +343,12 @@ class DatabaseService {
       'volunteerUID': uidOfVolunteer,
       'organizerUID': uidOfOrganizer,
       'deviceToken': devicetokenOfOrg,
-      'title': 'A SPECIFIC VOLUNTEER NEEDS HELP!!!',
-      'body': 'This volunteer need some attention go now'
+      'title': 'ATTENTION: DISTRESS FROM ONE OF YOUR VOLUNTEER',
+      'body': '''Name: $volunteerName 
+      Phone : $phoneNumber
+      address: $address
+      gender: $gender
+      '''
     });
   }
 
