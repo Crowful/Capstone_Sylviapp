@@ -56,10 +56,8 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
       _controller.complete(controller);
       LatLngBounds bound =
           LatLngBounds(southwest: userLatLng, northeast: campaignLatLng);
-
-      CameraUpdate u2 = CameraUpdate.newLatLngBounds(bound, 50);
-      this.mapController.animateCamera(u2).then((void v) {
-        check(u2, this.mapController);
+      setState(() {
+        controller.animateCamera(CameraUpdate.newLatLngBounds(bound, 50));
       });
     } else {}
   }
