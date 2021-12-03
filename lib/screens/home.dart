@@ -8,8 +8,6 @@ import 'package:sylviapp_project/Domain/wrapperisApproved.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_organizer.dart';
-import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_volunteer.dart';
-
 import 'analytics_module/bar_graph.dart';
 import 'campaign_module/join_donate.dart';
 import 'package:easy_localization/easy_localization.dart';

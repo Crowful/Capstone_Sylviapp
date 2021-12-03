@@ -673,6 +673,17 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  willPopBack(bool allow) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      allow = true;
+    } catch (e) {
+      print(e);
+    }
+  }
+
   endTheCampaign(String campaignUID) async {
     try {
       if (_loggedInUser == null) {

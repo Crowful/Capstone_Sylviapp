@@ -174,13 +174,14 @@ class _MapCampaignState extends State<MapCampaign>
             .decryptAES(enc.Encrypted.from64(value['username'])));
     //get user's balance
 
-//Is the user verified
+    //Is the user verified
     FirebaseFirestore.instance
         .collection('users')
         .doc(context.read(authserviceProvider).getCurrentUserUID())
         .get()
         .then((value) => isVerified = value['isVerify']);
-//Get sizes campaigns
+
+    //Get sizes campaigns
     FirebaseFirestore.instance
         .collection('campaigns')
         .where('isActive', isEqualTo: true)
@@ -216,6 +217,7 @@ class _MapCampaignState extends State<MapCampaign>
         });
       });
     });
+
     //get inprogress
     FirebaseFirestore.instance
         .collection('campaigns')
@@ -230,7 +232,9 @@ class _MapCampaignState extends State<MapCampaign>
           "campaignID": elements['campaignID']
         });
       });
-    }); //get completed
+    });
+
+    //get completed
     FirebaseFirestore.instance
         .collection('campaigns')
         .where('isCompleted', isEqualTo: true)

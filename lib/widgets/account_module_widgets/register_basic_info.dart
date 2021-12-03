@@ -234,7 +234,10 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                               width: double.infinity,
                               child: TextField(
                                 style: TextStyle(
-                                    color: Theme.of(context).cardColor),
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline5!
+                                        .color),
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(30)
                                 ],
@@ -311,7 +314,10 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                               width: double.infinity,
                               child: TextField(
                                 style: TextStyle(
-                                    color: Theme.of(context).cardColor),
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline5!
+                                        .color),
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(60)
                                 ],
@@ -348,7 +354,10 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                               width: double.infinity,
                               child: TextField(
                                 style: TextStyle(
-                                    color: Theme.of(context).cardColor),
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline5!
+                                        .color),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(11)

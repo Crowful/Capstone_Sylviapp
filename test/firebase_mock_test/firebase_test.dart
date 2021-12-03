@@ -16,8 +16,10 @@ Map<String, dynamic> kMockUser1 = <String, dynamic>{
 void main() {
   setupFirebaseAuthMocks();
 
+  // ignore: unused_local_variable
   FirebaseAuth? auth;
 
+  // ignore: unused_local_variable
   const Map<String, dynamic> kMockIdTokenResult = <String, dynamic>{
     'token': '12345',
     'expirationTimestamp': 123456,

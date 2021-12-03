@@ -329,6 +329,11 @@ class _UserRegPageState extends State<UserRegPage>
                                     topRight: Radius.circular(15))),
                             width: double.infinity,
                             child: TextField(
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline5!
+                                      .color),
                               inputFormatters: [
                                 LengthLimitingTextInputFormatter(15)
                               ],
@@ -364,6 +369,11 @@ class _UserRegPageState extends State<UserRegPage>
                                     topRight: Radius.circular(15))),
                             width: double.infinity,
                             child: TextField(
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline5!
+                                      .color),
                               inputFormatters: [
                                 LengthLimitingTextInputFormatter(30)
                               ],

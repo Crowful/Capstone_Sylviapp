@@ -14,71 +14,81 @@ class InProgressCampaign extends StatefulWidget {
 
 class _InProgressCampaignState extends State<InProgressCampaign> {
   final StopWatchTimer _stopWatchTimer = StopWatchTimer();
-
+  bool allows = false;
   @override
   void initState() {
     super.initState();
     _stopWatchTimer.onExecute.add(StopWatchExecute.start);
+    allows = false;
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: EdgeInsets.fromLTRB(20, 20, 0, 0),
-            child: Text('Campaign in Progress',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                )),
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(20, 10, 0, 0),
-            child: Text(
-                'Start planting trees, As an organizer guide the volunteers to the exact location of the forest. You are responsible for the execution of this campaign.',
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 15,
-                  fontWeight: FontWeight.normal,
-                )),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(20, 10, 0, 0),
-            child: Text(
-                'Dont leave your phone behind, distress from volunteers should be monitored accordingly.',
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 15,
-                  fontWeight: FontWeight.normal,
-                )),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          StreamBuilder<int>(
-              initialData: 0,
-              stream: _stopWatchTimer.rawTime,
-              builder: (context, snap) {
-                final value = snap.data;
-                final displayTime = StopWatchTimer.getDisplayTime(value!);
-                return Column(
-                  children: [
-                    Text(displayTime.toString()),
-                    Center(
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              primary: Color(0xff65BFB8),
-                              shape: StadiumBorder()),
-                          onPressed: () async {
+        child: WillPopScope(
+      onWillPop: () {
+        return Future.value(allows); // if true allow back else block it
+      },
+      child: Scaffold(
+        body: Container(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Campaign in Progress',
+                  style: TextStyle(
+                    color: Color(0xff65BFB8),
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  )),
+              Text(
+                  'Start planting trees, As an organizer guide the volunteers to the exact location of the forest. You are responsible for the execution of this campaign.',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                  )),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                  'Dont leave your phone behind, distress from volunteers should be monitored accordingly.',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                  )),
+              SizedBox(
+                height: 20,
+              ),
+              StreamBuilder<int>(
+                  initialData: 0,
+                  stream: _stopWatchTimer.rawTime,
+                  builder: (context, snap) {
+                    final value = snap.data;
+                    final displayTime = StopWatchTimer.getDisplayTime(value!);
+                    return Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Duration: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(displayTime.toString()),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              allows = true;
+                            });
                             await context
                                 .read(authserviceProvider)
                                 .addDurationToCampaign(widget.uidOfCampaign,
@@ -87,12 +97,23 @@ class _InProgressCampaignState extends State<InProgressCampaign> {
                                 .read(authserviceProvider)
                                 .endTheCampaign(widget.uidOfCampaign);
                           },
-                          child: Text('Campaign Done')),
-                    )
-                  ],
-                );
-              }),
-        ],
+                          child: Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: Color(0xff65BFB8),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            child: Center(
+                              child: Text('Campaign Done'),
+                            ),
+                          ),
+                        )
+                      ],
+                    );
+                  }),
+            ],
+          ),
+        ),
       ),
     ));
   }

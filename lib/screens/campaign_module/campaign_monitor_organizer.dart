@@ -561,6 +561,9 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                                                         msg:
                                                             "The area is still in lockdown, please wait until the lockdown is lifted.");
                                                   } else {
+                                                    setState(() {
+                                                      isOpened = !isOpened;
+                                                    });
                                                     context
                                                         .read(
                                                             authserviceProvider)

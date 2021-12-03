@@ -12,6 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:http/http.dart' as http;
+import 'package:sylviapp_project/animation/pop_up.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/campaign_module/volunteer_form.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -470,91 +471,17 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                     amounToDonate
                                                                             .text =
                                                                         '0';
-                                                                    showDialog(
-                                                                        context:
-                                                                            context,
-                                                                        builder:
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .push(HeroDialogRoute(builder:
                                                                             (context) {
-                                                                          return Container(
-                                                                            margin: EdgeInsets.fromLTRB(
-                                                                                60,
-                                                                                200,
-                                                                                60,
-                                                                                320),
-                                                                            child:
-                                                                                Card(
-                                                                              child: StreamBuilder<DocumentSnapshot>(
-                                                                                  stream: FirebaseFirestore.instance.collection('users').doc(context.read(authserviceProvider).getCurrentUserUID()).snapshots(),
-                                                                                  builder: (context, balanceSnapshot) {
-                                                                                    if (!balanceSnapshot.hasData) {
-                                                                                      return CircularProgressIndicator();
-                                                                                    } else {
-                                                                                      return Column(
-                                                                                        children: [
-                                                                                          Container(
-                                                                                              margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                                                                              child: Text(
-                                                                                                "Your Available Balance:",
-                                                                                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                                                                                              )),
-                                                                                          SizedBox(
-                                                                                            height: 10,
-                                                                                          ),
-                                                                                          Container(child: Text(balanceSnapshot.data!.get('balance').toString() + ' pesos')),
-                                                                                          SizedBox(
-                                                                                            height: 20,
-                                                                                          ),
-                                                                                          Container(
-                                                                                              width: 80,
-                                                                                              height: 50,
-                                                                                              child: TextField(
-                                                                                                textAlign: TextAlign.center,
-                                                                                                controller: amounToDonate,
-                                                                                              )),
-                                                                                          SizedBox(
-                                                                                            height: 20,
-                                                                                          ),
-                                                                                          ElevatedButton(
-                                                                                              style: ElevatedButton.styleFrom(primary: Color(0xff65BFB8), shape: StadiumBorder()),
-                                                                                              onPressed: () async {
-                                                                                                if (balanceSnapshot.data!.get('balance') < double.parse(amounToDonate.text)) {
-                                                                                                  Fluttertoast.showToast(msg: 'You dont have enough balance');
-                                                                                                } else if (int.parse(amounToDonate.text) == 0) {
-                                                                                                  Fluttertoast.showToast(msg: 'Please Enter Valid Amount');
-                                                                                                } else {
-                                                                                                  DateTime now = DateTime.now();
-                                                                                                  DateTime currentTime = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
-
-                                                                                                  await context.read(authserviceProvider).donateCampaign(
-                                                                                                        widget.uidOfCampaign,
-                                                                                                        int.parse(amounToDonate.text),
-                                                                                                        currentTime.toString(),
-                                                                                                        context.read(authserviceProvider).getCurrentUserUID(),
-                                                                                                      );
-                                                                                                  setState(() {
-                                                                                                    meterValue = snapshot.data!.get('current_donations') / snapshot.data!.get('max_donation');
-                                                                                                  });
-
-                                                                                                  await context.read(authserviceProvider).donateCampaignUser(
-                                                                                                        widget.uidOfCampaign,
-                                                                                                        int.parse(amounToDonate.text),
-                                                                                                        currentTime.toString(),
-                                                                                                        context.read(authserviceProvider).getCurrentUserUID(),
-                                                                                                      );
-
-                                                                                                  await context.read(authserviceProvider).deductBalance(context.read(authserviceProvider).getCurrentUserUID(), double.parse(amounToDonate.text));
-                                                                                                  amounToDonate.clear();
-                                                                                                  Navigator.pop(context);
-                                                                                                }
-                                                                                              },
-                                                                                              child: Text("DONATE"))
-                                                                                        ],
-                                                                                      );
-                                                                                    }
-                                                                                  }),
-                                                                            ),
-                                                                          );
-                                                                        });
+                                                                      return showDonateDialog(
+                                                                          current: snapshot.data!.get(
+                                                                              'current_donations'),
+                                                                          max: snapshot
+                                                                              .data!
+                                                                              .get('max_donation'));
+                                                                    }));
                                                                   },
                                                                   icon: Icon(Icons
                                                                       .monetization_on_outlined),
@@ -591,52 +518,14 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                               child: FittedBox(
                                                                   child:
                                                                       IconButton(
-                                                                onPressed:
-                                                                    () async {
-                                                                  showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (context) {
-                                                                        return Container(
-                                                                          margin: EdgeInsets.fromLTRB(
-                                                                              30,
-                                                                              250,
-                                                                              30,
-                                                                              250),
-                                                                          child:
-                                                                              Card(
-                                                                            child:
-                                                                                Column(
-                                                                              children: [
-                                                                                Container(margin: EdgeInsets.fromLTRB(0, 10, 0, 0), child: Text("Report this campaign", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
-                                                                                Container(margin: EdgeInsets.fromLTRB(20, 10, 20, 10), child: Text("Select Type of Report you want for this campaign to review")),
-                                                                                ElevatedButton(
-                                                                                    style: ElevatedButton.styleFrom(primary: Colors.red),
-                                                                                    onPressed: () async {
-                                                                                      await context.read(authserviceProvider).addReportScam(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Scam");
-                                                                                      Navigator.pop(context);
-                                                                                    },
-                                                                                    child: Text("Scam")),
-                                                                                ElevatedButton(
-                                                                                    style: ElevatedButton.styleFrom(primary: Colors.red),
-                                                                                    onPressed: () async {
-                                                                                      await context.read(authserviceProvider).addReportAbuse(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Abuse");
-                                                                                      Navigator.pop(context);
-                                                                                    },
-                                                                                    child: Text("Abuse")),
-                                                                                ElevatedButton(
-                                                                                    style: ElevatedButton.styleFrom(primary: Colors.red),
-                                                                                    onPressed: () async {
-                                                                                      await context.read(authserviceProvider).addReportUIW(widget.uidOfCampaign, context.read(authserviceProvider).getCurrentUserUID(), "Inappropriate words");
-                                                                                      Navigator.pop(context);
-                                                                                    },
-                                                                                    child: Text("Use of Inappropriate words")),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                        );
-                                                                      });
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .push(HeroDialogRoute(
+                                                                          builder:
+                                                                              (context) {
+                                                                    return showReportDialog();
+                                                                  }));
                                                                 },
                                                                 icon: Icon(Icons
                                                                     .report),
@@ -1187,6 +1076,196 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                 }
               }
             }),
+      ),
+    );
+  }
+
+  Widget showDonateDialog({required int current, required int max}) {
+    return Dialog(
+        child: IntrinsicHeight(
+      child: Container(
+        width: 100,
+        margin: EdgeInsets.all(20),
+        child: StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .doc(context.read(authserviceProvider).getCurrentUserUID())
+                .snapshots(),
+            builder: (context, balanceSnapshot) {
+              if (!balanceSnapshot.hasData) {
+                return CircularProgressIndicator();
+              } else {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Your Available Balance:",
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xff65BFB8),
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(balanceSnapshot.data!.get('balance').toString() +
+                        ' pesos'),
+                    TextField(
+                      textAlign: TextAlign.center,
+                      controller: amounToDonate,
+                    ),
+                    GestureDetector(
+                        onTap: () async {
+                          if (balanceSnapshot.data!.get('balance') <
+                              double.parse(amounToDonate.text)) {
+                            Fluttertoast.showToast(
+                                msg: 'You dont have enough balance');
+                          } else if (int.parse(amounToDonate.text) == 0) {
+                            Fluttertoast.showToast(
+                                msg: 'Please Enter Valid Amount');
+                          } else {
+                            DateTime now = DateTime.now();
+                            DateTime currentTime = new DateTime(now.year,
+                                now.month, now.day, now.hour, now.minute);
+
+                            await context
+                                .read(authserviceProvider)
+                                .donateCampaign(
+                                  widget.uidOfCampaign,
+                                  int.parse(amounToDonate.text),
+                                  currentTime.toString(),
+                                  context
+                                      .read(authserviceProvider)
+                                      .getCurrentUserUID(),
+                                );
+                            setState(() {
+                              meterValue = current / max;
+                            });
+
+                            await context
+                                .read(authserviceProvider)
+                                .donateCampaignUser(
+                                  widget.uidOfCampaign,
+                                  int.parse(amounToDonate.text),
+                                  currentTime.toString(),
+                                  context
+                                      .read(authserviceProvider)
+                                      .getCurrentUserUID(),
+                                );
+
+                            await context
+                                .read(authserviceProvider)
+                                .deductBalance(
+                                    context
+                                        .read(authserviceProvider)
+                                        .getCurrentUserUID(),
+                                    double.parse(amounToDonate.text));
+                            amounToDonate.clear();
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: Color(0xff65BFB8),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            child: Center(child: Text("DONATE")))),
+                  ],
+                );
+              }
+            }),
+      ),
+    ));
+  }
+
+  Widget showReportDialog() {
+    return Dialog(
+      child: Container(
+        padding: EdgeInsets.all(20),
+        height: 300,
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text("Report this campaign",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              "Select Type of Report you want for this campaign to review.",
+              style: TextStyle(color: Colors.grey),
+            ),
+            Expanded(
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        await context.read(authserviceProvider).addReportScam(
+                            widget.uidOfCampaign,
+                            context
+                                .read(authserviceProvider)
+                                .getCurrentUserUID(),
+                            "Scam");
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                          width: double.infinity,
+                          child: Center(child: Text("Scam"))),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        await context.read(authserviceProvider).addReportAbuse(
+                            widget.uidOfCampaign,
+                            context
+                                .read(authserviceProvider)
+                                .getCurrentUserUID(),
+                            "Abuse");
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                          width: double.infinity,
+                          child: Center(child: Text("Abuse"))),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        await context.read(authserviceProvider).addReportUIW(
+                            widget.uidOfCampaign,
+                            context
+                                .read(authserviceProvider)
+                                .getCurrentUserUID(),
+                            "Use of Inappropriate words");
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                          width: double.infinity,
+                          child: Center(
+                              child: Text("Use of Inappropriate words"))),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

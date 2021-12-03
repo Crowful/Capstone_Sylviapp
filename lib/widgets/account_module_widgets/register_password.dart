@@ -373,8 +373,11 @@ class _PasswordRegPageState extends State<PasswordRegPage>
                                     topRight: Radius.circular(15))),
                             width: double.infinity,
                             child: TextField(
-                              style:
-                                  TextStyle(color: Theme.of(context).cardColor),
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline5!
+                                      .color),
                               inputFormatters: [
                                 LengthLimitingTextInputFormatter(30)
                               ],
@@ -429,8 +432,11 @@ class _PasswordRegPageState extends State<PasswordRegPage>
                                     topRight: Radius.circular(15))),
                             width: double.infinity,
                             child: TextField(
-                              style:
-                                  TextStyle(color: Theme.of(context).cardColor),
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline5!
+                                      .color),
                               inputFormatters: [
                                 LengthLimitingTextInputFormatter(30)
                               ],

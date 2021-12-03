@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sylviapp_project/providers/providers.dart';
-import 'package:sylviapp_project/screens/account_module/verification.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_volunteer.dart';
 import 'package:sylviapp_project/screens/campaign_module/notApprovedVolunteer.dart';
 import 'package:sylviapp_project/screens/layout_screen.dart';
-import 'package:sylviapp_project/widgets/account_module_widgets/verification/statusRole.dart';
 
+// ignore: must_be_immutable
 class WrapperUsApproved extends StatefulWidget {
   String campaignID;
   String volunteerUID;

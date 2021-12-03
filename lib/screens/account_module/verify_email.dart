@@ -12,21 +12,55 @@ class VerifyEmail extends StatefulWidget {
 class _VerifyEmailState extends State<VerifyEmail> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          margin: EdgeInsets.fromLTRB(0, 200, 0, 0),
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          padding: EdgeInsets.all(20),
+          alignment: Alignment.center,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("AN EMAIL VERFICATION HAS BEEN SENT TO YOUR EMAIL"),
-              Text(
-                  "Please Check your email for verification before logging in"),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/login");
-                    context.read(authserviceProvider).signOut();
-                  },
-                  child: Text("Go Login"))
+              Icon(
+                Icons.forward_to_inbox,
+                size: 80,
+                color: Color(0xff65BFB8),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "Email Verification Sent!",
+                    style: TextStyle(
+                        color: Color(0xff65BFB8),
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Please check your email for verification to access Sylviapp.",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, "/login");
+                  context.read(authserviceProvider).signOut();
+                },
+                child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Color(0xff65BFB8),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Center(child: Text("Go Login"))),
+              )
             ],
           ),
         ),
