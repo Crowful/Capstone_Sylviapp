@@ -297,6 +297,15 @@ class DatabaseService {
     });
   }
 
+  Future addDonationToOrganizer(
+    String uidOfOrganizer,
+    int amount,
+  ) async {
+    return await userCollection.doc(uidOfOrganizer).update({
+      'balance': FieldValue.increment(amount),
+    });
+  }
+
   Future addReportScam(
       String uidOfCampaign, String registeredUID, String typeOfReport) async {
     return await approvedCampaignCollection

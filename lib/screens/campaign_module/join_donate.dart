@@ -438,20 +438,18 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                               print(response
                                                                   .body);
 
-                                                              context
-                                                                  .read(
-                                                                      authserviceProvider)
-                                                                  .donateCampaign(
-                                                                    widget
-                                                                        .uidOfCampaign,
-                                                                    10,
-                                                                    currentTime
-                                                                        .toString(),
-                                                                    context
-                                                                        .read(
-                                                                            authserviceProvider)
-                                                                        .getCurrentUserUID(),
-                                                                  );
+                                                              context.read(authserviceProvider).donateCampaign(
+                                                                  widget
+                                                                      .uidOfCampaign,
+                                                                  10,
+                                                                  currentTime
+                                                                      .toString(),
+                                                                  context
+                                                                      .read(
+                                                                          authserviceProvider)
+                                                                      .getCurrentUserUID(),
+                                                                  widget
+                                                                      .uidOfOrganizer);
                                                             } else {
                                                               print(
                                                                   "FAILED PAYMENT PROCESS");
@@ -1129,13 +1127,13 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                             await context
                                 .read(authserviceProvider)
                                 .donateCampaign(
-                                  widget.uidOfCampaign,
-                                  int.parse(amounToDonate.text),
-                                  currentTime.toString(),
-                                  context
-                                      .read(authserviceProvider)
-                                      .getCurrentUserUID(),
-                                );
+                                    widget.uidOfCampaign,
+                                    int.parse(amounToDonate.text),
+                                    currentTime.toString(),
+                                    context
+                                        .read(authserviceProvider)
+                                        .getCurrentUserUID(),
+                                    widget.uidOfOrganizer);
                             setState(() {
                               meterValue = current / max;
                             });

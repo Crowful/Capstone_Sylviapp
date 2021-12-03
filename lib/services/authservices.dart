@@ -698,15 +698,20 @@ class AuthService extends ChangeNotifier {
   }
 
   donateCampaign(String uidOfCampaign, int amount, String dateDonated,
-      String uidUser) async {
+      String uidUser, String organizerUID) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .donatedToCampaign(uidOfCampaign, amount, dateDonated, uidUser)
-          .whenComplete(() => DatabaseService(uid: _loggedInUser!.uid)
-              .incrementDonation(uidOfCampaign, amount));
+          .whenComplete(() {
+        DatabaseService(uid: _loggedInUser!.uid)
+            .incrementDonation(uidOfCampaign, amount);
+
+        DatabaseService(uid: _loggedInUser!.uid)
+            .addDonationToOrganizer(organizerUID, amount);
+      });
     } catch (e) {
       print(e);
     }
