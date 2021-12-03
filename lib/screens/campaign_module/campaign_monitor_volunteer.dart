@@ -51,15 +51,17 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-    _controller.complete(controller);
-    LatLngBounds bound =
-        LatLngBounds(southwest: userLatLng, northeast: campaignLatLng);
+    if (!_controller.isCompleted) {
+      mapController = controller;
+      _controller.complete(controller);
+      LatLngBounds bound =
+          LatLngBounds(southwest: userLatLng, northeast: campaignLatLng);
 
-    CameraUpdate u2 = CameraUpdate.newLatLngBounds(bound, 50);
-    this.mapController.animateCamera(u2).then((void v) {
-      check(u2, this.mapController);
-    });
+      CameraUpdate u2 = CameraUpdate.newLatLngBounds(bound, 50);
+      this.mapController.animateCamera(u2).then((void v) {
+        check(u2, this.mapController);
+      });
+    } else {}
   }
 
   @override
@@ -221,13 +223,23 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                         children: [
                           Text(
                             campaignName,
-                            style: Theme.of(context).textTheme.headline1!,
+                            style: TextStyle(
+                                fontSize: 35,
+                                color: Color(0xff65BFB8),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            'The campaign is ongoing please do, plant trees.🌲',
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500),
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           Text(
-                            "Instructions",
+                            "Location Overview",
                             style: TextStyle(
                                 fontSize: Theme.of(context)
                                         .textTheme
@@ -240,7 +252,7 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                                     .fontWeight),
                           ),
                           Text(
-                            "Information below may be used during the campaign.",
+                            "The markers below are both you and your organizer, so please do tap send distress when you need a help.",
                             style: TextStyle(fontSize: 15, color: Colors.grey),
                           ),
                           SizedBox(
@@ -269,55 +281,6 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                           ),
                           SizedBox(
                             height: 10,
-                          ),
-                          FadeAnimation(
-                            0.4,
-                            Text(
-                              "What to do during the campaign?",
-                              style: TextStyle(
-                                  fontSize: Theme.of(context)
-                                          .textTheme
-                                          .headline1!
-                                          .fontSize! -
-                                      5,
-                                  fontWeight: Theme.of(context)
-                                      .textTheme
-                                      .headline1!
-                                      .fontWeight),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          FadeAnimation(
-                            0.5,
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  height: 200,
-                                  width: MediaQuery.of(context).size.width / 2 -
-                                      25,
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey.withOpacity(0.25),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5))),
-                                  child: Text("DO's"),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  height: 200,
-                                  width: MediaQuery.of(context).size.width / 2 -
-                                      25,
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey.withOpacity(0.25),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5))),
-                                  child: Text("DONT's"),
-                                )
-                              ],
-                            ),
                           ),
                           SizedBox(
                             height: 10,
