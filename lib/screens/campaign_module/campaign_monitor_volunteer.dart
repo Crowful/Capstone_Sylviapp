@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -26,20 +28,71 @@ class CampaignMonitorVolunteer extends StatefulWidget {
 }
 
 class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
-  late LatLng currentPostion = LatLng(14.5995, 120.9842);
+  late LatLng userLatLng = LatLng(0, 0);
+  late LatLng campaignLatLng = LatLng(0, 0);
+  Completer<GoogleMapController> _controller = Completer();
+  late GoogleMapController mapController;
 
-  void _getUserLocation() async {
-    var position = await GeolocatorPlatform.instance
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  void _onCameraMove(CameraPosition position) {
+    userLatLng = position.target;
+  }
 
-    setState(() {
-      currentPostion = LatLng(position.latitude, position.longitude);
+  final markers = Set<Marker>();
+
+  void check(CameraUpdate u, GoogleMapController c) async {
+    c.animateCamera(u);
+    mapController.animateCamera(u);
+    LatLngBounds l1 = await c.getVisibleRegion();
+    LatLngBounds l2 = await c.getVisibleRegion();
+    print(l1.toString());
+    print(l2.toString());
+    if (l1.southwest.latitude == -90 || l2.southwest.latitude == -90)
+      check(u, c);
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+    _controller.complete(controller);
+    LatLngBounds bound =
+        LatLngBounds(southwest: userLatLng, northeast: campaignLatLng);
+
+    CameraUpdate u2 = CameraUpdate.newLatLngBounds(bound, 50);
+    this.mapController.animateCamera(u2).then((void v) {
+      check(u2, this.mapController);
     });
   }
 
   @override
   void initState() {
-    _getUserLocation();
+    Geolocator.getCurrentPosition().then((currLocation) {
+      setState(() {
+        userLatLng = LatLng(14.7452, 121.0984);
+        // new LatLng(currLocation.latitude, currLocation.longitude);
+      });
+    }).whenComplete(() {
+      markers.add(
+        Marker(
+          icon: BitmapDescriptor.defaultMarker,
+          markerId: MarkerId(userLatLng.toString()),
+          position: userLatLng,
+        ),
+      );
+      FirebaseFirestore.instance
+          .collection('campaigns')
+          .doc(widget.uidOfCampaign)
+          .get()
+          .then((value) {
+        campaignLatLng = LatLng(value.get('latitude'), value.get('longitude'));
+        markers.add(
+          Marker(
+            icon: BitmapDescriptor.defaultMarker,
+            markerId: MarkerId(value.get('uid')),
+            position: campaignLatLng,
+          ),
+        );
+      });
+    });
+
     FirebaseMessaging.onMessage.listen((event) {
       showDialog(
           context: context,
@@ -66,9 +119,6 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
 
   @override
   Widget build(BuildContext context) {
-    final _initialCameraPosition =
-        CameraPosition(target: currentPostion, zoom: 15);
-
     return SafeArea(
       child: new LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -100,7 +150,8 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                         secondPage(
                           orgID: orgID,
                           campaignName: campaignName,
-                          initialCameraPosition: _initialCameraPosition,
+                          initialCameraPosition:
+                              CameraPosition(target: userLatLng, zoom: 14),
                           deviceToken: deviceTokenOrganizer,
                         ),
                       ],
@@ -119,7 +170,7 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
 
   Widget secondPage(
       {required String campaignName,
-      required CameraPosition initialCameraPosition,
+      CameraPosition? initialCameraPosition,
       required String orgID,
       required String deviceToken}) {
     return Container(
@@ -200,14 +251,20 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                             Container(
                               height: 200,
                               width: double.infinity,
-                              child: GoogleMap(
-                                buildingsEnabled: false,
-                                trafficEnabled: false,
-                                indoorViewEnabled: false,
-                                mapType: MapType.normal,
-                                initialCameraPosition: initialCameraPosition,
-                                zoomControlsEnabled: false,
-                              ),
+                              child: userLatLng == null
+                                  ? Center(child: CircularProgressIndicator())
+                                  : GoogleMap(
+                                      onCameraMove: _onCameraMove,
+                                      onMapCreated: _onMapCreated,
+                                      markers: markers,
+                                      buildingsEnabled: false,
+                                      trafficEnabled: false,
+                                      indoorViewEnabled: false,
+                                      mapType: MapType.normal,
+                                      initialCameraPosition:
+                                          initialCameraPosition!,
+                                      zoomControlsEnabled: false,
+                                    ),
                             ),
                           ),
                           SizedBox(
