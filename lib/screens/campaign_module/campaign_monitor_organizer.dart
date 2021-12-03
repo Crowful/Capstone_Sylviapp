@@ -107,7 +107,7 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("Notification"),
+              title: Text(event.notification!.title!),
               content: Text(event.notification!.body!),
               actions: [
                 TextButton(
