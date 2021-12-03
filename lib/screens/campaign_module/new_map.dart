@@ -228,6 +228,7 @@ class _MapCampaignState extends State<MapCampaign>
         getProgress.add({
           "latitude": elements['latitude'],
           "longitude": elements['longitude'],
+          "radius": elements['radius'],
           "volunteer": elements['number_volunteers'] as int,
           "campaignID": elements['campaignID']
         });
@@ -244,6 +245,7 @@ class _MapCampaignState extends State<MapCampaign>
         getDone.add({
           "latitude": elements['latitude'],
           "longitude": elements['longitude'],
+          "radius": elements['radius'],
           "volunteer": elements['number_volunteers'] as int,
           "campaignID": elements['campaignID']
         });
