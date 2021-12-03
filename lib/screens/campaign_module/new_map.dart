@@ -1168,6 +1168,9 @@ class _MapCampaignState extends State<MapCampaign>
                       msg: "Disabled create mode.",
                       toastLength: Toast.LENGTH_SHORT);
                 }
+              } else {
+                Fluttertoast.showToast(
+                    msg: 'You are not an organizer, be an organizer first');
               }
             },
             child: Container(
