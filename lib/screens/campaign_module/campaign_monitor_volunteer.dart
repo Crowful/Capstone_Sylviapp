@@ -28,8 +28,8 @@ class CampaignMonitorVolunteer extends StatefulWidget {
 }
 
 class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
-  late LatLng userLatLng;
-  late LatLng campaignLatLng;
+  late LatLng userLatLng = LatLng(0, 0);
+  late LatLng campaignLatLng = LatLng(0, 0);
   Completer<GoogleMapController> _controller = Completer();
   late GoogleMapController mapController;
 
@@ -61,10 +61,7 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
       this.mapController.animateCamera(u2).then((void v) {
         check(u2, this.mapController);
       });
-    } else {
-      //other calling, later is true,
-      //don't call again completer()
-    }
+    } else {}
   }
 
   @override
