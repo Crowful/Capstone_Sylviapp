@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sylviapp_project/Domain/wrapperisApproved.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/providers/providers.dart';
@@ -565,33 +566,47 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                               false &&
                                                           isOrganizer ==
                                                               false) {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        JoinDonateCampaign(
-                                                                          uidOfCampaign:
-                                                                              e.id,
-                                                                          uidOfOrganizer:
-                                                                              e.get("uid"),
-                                                                          nameOfCampaign:
-                                                                              e.get("campaign_name"),
-                                                                          city:
-                                                                              e.get("city"),
-                                                                          currentFund:
-                                                                              e.get("current_donations"),
-                                                                          currentVolunteer:
-                                                                              e.get("current_volunteers"),
-                                                                          totalVolunteer:
-                                                                              e.get("number_volunteers"),
-                                                                          maxFund:
-                                                                              e.get("max_donation"),
-                                                                          address:
-                                                                              e.get("address"),
-                                                                          description:
-                                                                              e.get("description"),
-                                                                        )));
+                                                        if (e.get(
+                                                                'inProgress') ==
+                                                            true) {
+                                                          Fluttertoast.showToast(
+                                                              msg:
+                                                                  'This campaign is in progress');
+                                                        } else if (e.get(
+                                                                'isCompleted') ==
+                                                            true) {
+                                                          Fluttertoast.showToast(
+                                                              msg:
+                                                                  'This campaign is already done');
+                                                        } else {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          JoinDonateCampaign(
+                                                                            uidOfCampaign:
+                                                                                e.id,
+                                                                            uidOfOrganizer:
+                                                                                e.get("uid"),
+                                                                            nameOfCampaign:
+                                                                                e.get("campaign_name"),
+                                                                            city:
+                                                                                e.get("city"),
+                                                                            currentFund:
+                                                                                e.get("current_donations"),
+                                                                            currentVolunteer:
+                                                                                e.get("current_volunteers"),
+                                                                            totalVolunteer:
+                                                                                e.get("number_volunteers"),
+                                                                            maxFund:
+                                                                                e.get("max_donation"),
+                                                                            address:
+                                                                                e.get("address"),
+                                                                            description:
+                                                                                e.get("description"),
+                                                                          )));
+                                                        }
                                                       } else if (isOrganizer ==
                                                           true) {
                                                         Navigator.push(
