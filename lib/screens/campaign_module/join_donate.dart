@@ -9,6 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:http/http.dart' as http;
@@ -504,7 +505,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                           ),
                                                         ),
                                                         SizedBox(
-                                                          width: 20,
+                                                          width: 10,
                                                         ),
                                                         Column(
                                                           children: [
@@ -537,6 +538,42 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                             ),
                                                             Text(
                                                               "Report",
+                                                              style: TextStyle(
+                                                                  fontSize: 13,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Column(
+                                                          children: [
+                                                            CircleAvatar(
+                                                              radius: 20,
+                                                              backgroundColor:
+                                                                  Colors.green,
+                                                              child: FittedBox(
+                                                                  child:
+                                                                      IconButton(
+                                                                onPressed: () {
+                                                                  Share.share(
+                                                                      'https://sylviapp-introductory.web.app/#/');
+                                                                },
+                                                                icon: Icon(Icons
+                                                                    .share),
+                                                                color: Colors
+                                                                    .white,
+                                                                iconSize: 25,
+                                                              )),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 3,
+                                                            ),
+                                                            Text(
+                                                              "Share",
                                                               style: TextStyle(
                                                                   fontSize: 13,
                                                                   fontWeight:
