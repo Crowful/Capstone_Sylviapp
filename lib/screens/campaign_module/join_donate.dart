@@ -1151,6 +1151,14 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
 
                             await context
                                 .read(authserviceProvider)
+                                .addDonationLeaderBoard(
+                                    context
+                                        .read(authserviceProvider)
+                                        .getCurrentUserUID(),
+                                    int.parse(amounToDonate.text));
+
+                            await context
+                                .read(authserviceProvider)
                                 .deductBalance(
                                     context
                                         .read(authserviceProvider)

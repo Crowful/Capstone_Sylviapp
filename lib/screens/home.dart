@@ -3,8 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/Domain/wrapperisApproved.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/providers/providers.dart';
@@ -14,6 +16,7 @@ import 'campaign_module/join_donate.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:sylviapp_project/translations/locale_keys.g.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:encrypt/encrypt.dart' as enc;
 
 class HomePage extends StatefulWidget {
   final AnimationController controller;
@@ -660,116 +663,240 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget thirdHome() {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 15),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            !menuOpen
-                ? IconButton(
-                    icon: Icon(
-                      Icons.menu,
-                      color: Color(0xff65BFB8),
+    return SingleChildScrollView(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 1600,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 15),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              !menuOpen
+                  ? IconButton(
+                      icon: Icon(
+                        Icons.menu,
+                        color: Color(0xff65BFB8),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          print(menuOpen);
+                          widget.controller.forward();
+                          menuOpen = true;
+                        });
+                      },
+                    )
+                  : IconButton(
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        color: Color(0xff65BFB8),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          widget.controller.reverse();
+                          menuOpen = false;
+                        });
+                      },
+                      color: Color(0xff403d55),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        print(menuOpen);
-                        widget.controller.forward();
-                        menuOpen = true;
-                      });
-                    },
-                  )
-                : IconButton(
-                    icon: Icon(
-                      Icons.arrow_back_ios,
-                      color: Color(0xff65BFB8),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        widget.controller.reverse();
-                        menuOpen = false;
-                      });
-                    },
-                    color: Color(0xff403d55),
-                  ),
+              Text(
+                'Sylviapp',
+                style: TextStyle(
+                    color: Color(0xff65BFB8),
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                icon: Icon(Icons.bookmark_outline),
+                onPressed: () {},
+                color: Colors.transparent,
+              ),
+            ]),
+            SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Text(
+                LocaleKeys.analyticsinoverallreforestation.tr(),
+                style: Theme.of(context).textTheme.headline1,
+              ),
+            ),
+            StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection("campaigns")
+                    .where('isActive', isEqualTo: true)
+                    .snapshots(),
+                builder: (context, snapshotAnalyticsActive) {
+                  if (!snapshotAnalyticsActive.hasData) {
+                    return CircularProgressIndicator();
+                  } else {
+                    return StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection("campaigns")
+                            .where('inProgress', isEqualTo: true)
+                            .snapshots(),
+                        builder: (context, snapshotAnalyticsProgress) {
+                          if (!snapshotAnalyticsProgress.hasData) {
+                            return CircularProgressIndicator();
+                          } else {
+                            return Expanded(
+                              child: StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance
+                                      .collection("campaigns")
+                                      .where('isCompleted', isEqualTo: true)
+                                      .snapshots(),
+                                  builder: (context, snapshotAnalyticsDone) {
+                                    if (!snapshotAnalyticsDone.hasData) {
+                                      return CircularProgressIndicator();
+                                    } else {
+                                      int campaignDone =
+                                          snapshotAnalyticsDone.data!.size;
+                                      int campaignInProgress =
+                                          snapshotAnalyticsProgress.data!.size;
+                                      int campaignActive =
+                                          snapshotAnalyticsActive.data!.size;
+                                      return RefreshIndicator(
+                                        onRefresh: () async {},
+                                        child: Container(
+                                            width: double.infinity,
+                                            child: FadeAnimation(
+                                                1,
+                                                Chart(
+                                                  campaignInProgress:
+                                                      campaignInProgress,
+                                                  doneCampaign: campaignDone,
+                                                  activeCampaign:
+                                                      campaignActive,
+                                                ))),
+                                      );
+                                    }
+                                  }),
+                            );
+                          }
+                        });
+                  }
+                }),
             Text(
-              'Sylviapp',
+              'Leaderboard Joined',
               style: TextStyle(
+                  fontSize: 30,
                   color: Color(0xff65BFB8),
-                  fontSize: 22,
                   fontWeight: FontWeight.bold),
             ),
-            IconButton(
-              icon: Icon(Icons.bookmark_outline),
-              onPressed: () {},
-              color: Colors.transparent,
+            StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .orderBy('campaignsJoined', descending: true)
+                    .limit(10)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  int topplace = 0;
+                  if (snapshot.hasData) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 400,
+                      child: ListView(
+                          physics: NeverScrollableScrollPhysics(),
+                          children: snapshot.data!.docs.map((e) {
+                            topplace++;
+                            if (snapshot.data!.docs.isNotEmpty) {
+                              return Container(
+                                height: 35,
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          width: 60,
+                                          child: Text("Top " +
+                                              topplace.toString() +
+                                              " ")),
+                                      Container(
+                                        width: 130,
+                                        child: Text(AESCryptography()
+                                            .decryptAES(
+                                                enc.Encrypted.fromBase64(
+                                                    e.get('fullname')))),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      Text(e.get('campaignsJoined').toString())
+                                    ]),
+                              );
+                            } else {
+                              return Text('wala laman');
+                            }
+                          }).toList()),
+                    );
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                }),
+            SizedBox(
+              height: 30,
             ),
-          ]),
-          SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-              LocaleKeys.analyticsinoverallreforestation.tr(),
-              style: Theme.of(context).textTheme.headline1,
+            Text(
+              'Leaderboard Donation',
+              style: TextStyle(
+                  fontSize: 30,
+                  color: Color(0xff65BFB8),
+                  fontWeight: FontWeight.bold),
             ),
-          ),
-          StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("campaigns")
-                  .where('isActive', isEqualTo: true)
-                  .snapshots(),
-              builder: (context, snapshotAnalyticsActive) {
-                if (!snapshotAnalyticsActive.hasData) {
-                  return CircularProgressIndicator();
-                } else {
-                  return StreamBuilder<QuerySnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection("campaigns")
-                          .where('inProgress', isEqualTo: true)
-                          .snapshots(),
-                      builder: (context, snapshotAnalyticsProgress) {
-                        if (!snapshotAnalyticsProgress.hasData) {
-                          return CircularProgressIndicator();
-                        } else {
-                          return Expanded(
-                            child: StreamBuilder<QuerySnapshot>(
-                                stream: FirebaseFirestore.instance
-                                    .collection("campaigns")
-                                    .where('isCompleted', isEqualTo: true)
-                                    .snapshots(),
-                                builder: (context, snapshotAnalyticsDone) {
-                                  if (!snapshotAnalyticsDone.hasData) {
-                                    return CircularProgressIndicator();
-                                  } else {
-                                    int campaignDone =
-                                        snapshotAnalyticsDone.data!.size;
-                                    int campaignInProgress =
-                                        snapshotAnalyticsProgress.data!.size;
-                                    int campaignActive =
-                                        snapshotAnalyticsActive.data!.size;
-                                    return RefreshIndicator(
-                                      onRefresh: () async {},
-                                      child: Container(
-                                          width: double.infinity,
-                                          child: FadeAnimation(
-                                              1,
-                                              Chart(
-                                                campaignInProgress:
-                                                    campaignInProgress,
-                                                doneCampaign: campaignDone,
-                                                activeCampaign: campaignActive,
-                                              ))),
-                                    );
-                                  }
-                                }),
-                          );
-                        }
-                      });
-                }
-              })
-        ],
+            StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .orderBy('overallDonation', descending: true)
+                    .limit(10)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  int topplace = 0;
+                  if (snapshot.hasData) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 400,
+                      child: ListView(
+                          physics: NeverScrollableScrollPhysics(),
+                          children: snapshot.data!.docs.map((e) {
+                            topplace++;
+                            if (snapshot.data!.docs.isNotEmpty) {
+                              return Container(
+                                height: 35,
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          width: 60,
+                                          child: Text("Top " +
+                                              topplace.toString() +
+                                              " ")),
+                                      Container(
+                                        width: 130,
+                                        child: Text(AESCryptography()
+                                            .decryptAES(
+                                                enc.Encrypted.fromBase64(
+                                                    e.get('fullname')))),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      Text(e.get('overallDonation').toString())
+                                    ]),
+                              );
+                            } else {
+                              return Text('wala laman');
+                            }
+                          }).toList()),
+                    );
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                }),
+          ],
+        ),
       ),
     );
     // return Column(

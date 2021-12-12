@@ -285,10 +285,14 @@ class _ShowVolunteerState extends State<ShowVolunteer> {
                           children: [
                             GestureDetector(
                               onTap: () async {
-                                context
+                                await context
                                     .read(authserviceProvider)
                                     .approveVolunteer(
                                         widget.campaignID, widget.userID);
+
+                                context
+                                    .read(authserviceProvider)
+                                    .addJoinedLeaderboard(widget.userID, 1);
                                 Navigator.pop(context);
                               },
                               child: Container(

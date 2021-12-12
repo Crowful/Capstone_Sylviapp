@@ -46,6 +46,8 @@ class DatabaseService {
       'isVerify': false,
       'deviceToken': deviceToken,
       'balance': 00.00,
+      'campaignsJoined': 0,
+      'overallDonation': 0,
     });
   }
 
@@ -399,5 +401,17 @@ class DatabaseService {
     return await approvedCampaignCollection
         .doc(campaignUID)
         .set({"duration": duration}, SetOptions(merge: true));
+  }
+
+  Future addJoinedLeaderBoard(String volunteerUID, int amount) async {
+    return await userCollection.doc(volunteerUID).update(
+      {"campaignsJoined": FieldValue.increment(amount)},
+    );
+  }
+
+  Future addDonationLeaderboard(String volunteerUID, int amount) async {
+    return await userCollection.doc(volunteerUID).update(
+      {"overallDonation": FieldValue.increment(amount)},
+    );
   }
 }

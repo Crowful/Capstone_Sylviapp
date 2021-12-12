@@ -951,4 +951,28 @@ class AuthService extends ChangeNotifier {
       print(e);
     }
   }
+
+  addJoinedLeaderboard(String volunteerUID, int amount) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .addDonationLeaderboard(volunteerUID, amount);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  addDonationLeaderBoard(String volunteerUID, int amount) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .addDonationLeaderboard(volunteerUID, amount);
+    } catch (e) {
+      print(e);
+    }
+  }
 }
