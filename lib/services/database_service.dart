@@ -15,6 +15,9 @@ class DatabaseService {
   final CollectionReference feedbackCollection =
       FirebaseFirestore.instance.collection('feedbacks');
 
+  final CollectionReference suggestionCollection =
+      FirebaseFirestore.instance.collection('suggestions');
+
   final CollectionReference verificationCollection =
       FirebaseFirestore.instance.collection('verification');
 
@@ -334,6 +337,13 @@ class DatabaseService {
     return await feedbackCollection
         .doc()
         .set({"feedback": feedback, "uid": uidOfVolunteer, "date": date});
+  }
+
+  Future addSuggestions(
+      String suggestion, String uidOfVolunteer, String date) async {
+    return await suggestionCollection
+        .doc()
+        .set({"suggestion": suggestion, "uid": uidOfVolunteer, "date": date});
   }
 
   Future addMessage(

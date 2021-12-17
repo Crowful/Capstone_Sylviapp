@@ -819,6 +819,19 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  addSuggestion(String suggestion, String uidOfVolunteer, String date) async {
+    try {
+      if (_loggedInUser == null) {
+        _loggedInUser = FirebaseAuth.instance.currentUser;
+      }
+      await DatabaseService(uid: _loggedInUser!.uid)
+          .addSuggestions(suggestion, uidOfVolunteer, date)
+          .whenComplete(() => Fluttertoast.showToast(msg: "Submitted"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
   addMessage(
       String uidOfCampaign,
       String uidOfOrganizer,

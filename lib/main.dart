@@ -27,6 +27,7 @@ import 'package:sylviapp_project/screens/donation_module/donation_screen.dart';
 import 'package:sylviapp_project/screens/layout_screen.dart';
 import 'package:sylviapp_project/screens/settings_module/aboutus.dart';
 import 'package:sylviapp_project/screens/settings_module/privacy.dart';
+import 'package:sylviapp_project/screens/settings_module/sendSuggestion.dart';
 import 'package:sylviapp_project/screens/settings_module/sendfeedback.dart';
 import 'package:sylviapp_project/screens/settings_module/settings.dart';
 import 'package:sylviapp_project/translations/codegen_loader.g.dart';
@@ -95,6 +96,7 @@ class MyApp extends ConsumerWidget {
         '/privacy': (_) => PrivacyScreen(),
         '/aboutus': (_) => AboutUsScreen(),
         '/sendfeedback': (_) => SendFeedbackScreen(),
+        '/sendsuggestion': (_) => SendSuggestion(),
       },
     );
   }

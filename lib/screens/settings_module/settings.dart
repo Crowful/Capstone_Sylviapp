@@ -182,6 +182,35 @@ class SettingsPage extends ConsumerWidget {
               Divider(),
               GestureDetector(
                 onTap: () {
+                  Navigator.pushNamed(context, '/sendsuggestion');
+                },
+                child: Container(
+                  height: 30,
+                  padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                  width: width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text.rich(TextSpan(children: [
+                        WidgetSpan(
+                            child: Icon(
+                          Icons.location_searching,
+                          color: Colors.green,
+                          size: 17,
+                        )),
+                        TextSpan(
+                            text: '    ' + 'Send Area Suggestion',
+                            style: TextStyle(
+                              color: Colors.green,
+                            ))
+                      ])),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(),
+              GestureDetector(
+                onTap: () {
                   Navigator.pushNamed(context, '/sendfeedback');
                 },
                 child: Container(
@@ -208,12 +237,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => VerifyEmail()));
-                  },
-                  child: Text('ehe'))
+              Divider(),
             ],
           ),
         ),
