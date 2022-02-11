@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:sylviapp_project/providers/providers.dart';
 
 class PasswordRegPage extends StatefulWidget {
   final double height;
@@ -14,21 +15,52 @@ class PasswordRegPage extends StatefulWidget {
       required this.nextButton,
       required this.previousButton})
       : super(key: key);
-
   @override
   _PasswordRegPageState createState() => _PasswordRegPageState();
 }
 
-class _PasswordRegPageState extends State<PasswordRegPage> {
+class _PasswordRegPageState extends State<PasswordRegPage>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController =
+      AnimationController(vsync: this, duration: const Duration(seconds: 2))
+        ..repeat(reverse: true);
+
+  late AnimationController _widgetController =
+      AnimationController(vsync: this, duration: Duration(seconds: 1));
+
+  //TextControllers and Validation
   final TextEditingController _primaryPaswword = TextEditingController();
+
   final TextEditingController _confirmPassword = TextEditingController();
+
   final userName = "";
+
   bool _isVisible = false;
+
   bool _isPasswordEightCharacters = false;
+
   bool _hasPasswordOneNumber = false;
+
   bool _isMatch = false;
+
   bool _isVisibleCP = false;
+
   bool _overall = false;
+
+  //INIT STATE and DISPOSE
+  void initState() {
+    super.initState();
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 3))
+          ..repeat(reverse: true);
+    _widgetController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   onValidate() {
     setState(() {
@@ -37,6 +69,8 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
           _hasPasswordOneNumber == true &&
           _isPasswordEightCharacters == true) {
         _overall = true;
+
+        context.read(userAccountProvider).setPassword(_primaryPaswword.text);
       }
     });
   }
@@ -70,239 +104,403 @@ class _PasswordRegPageState extends State<PasswordRegPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(18),
-      height: widget.height,
-      width: widget.width,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                height: 200,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/register1.png"),
-                        fit: BoxFit.contain))),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Set up your password',
-              style: GoogleFonts.openSans(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xff63FF7D)),
-            ),
-            SizedBox(
-              height: 0,
-            ),
-            Text(
-              'Enter your password for your account and make sure it contains atleast 1 number and has a length of 8 characters.',
-              style: GoogleFonts.openSans(
-                  fontSize: 13,
-                  color: Colors.black.withOpacity(0.5),
-                  fontWeight: FontWeight.w600),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              child: TextField(
-                controller: _primaryPaswword,
-                onChanged: (password) => onPasswordChanged(password),
-                obscureText: !_isVisible,
-                decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isVisible = !_isVisible;
-                      });
-                    },
-                    icon: _isVisible
-                        ? Icon(
-                            Icons.visibility,
-                            color: Colors.black,
-                          )
-                        : Icon(
-                            Icons.visibility_off,
-                            color: Colors.grey,
-                          ),
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.black)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Color(0xff403d55))),
-                  hintText: "Password",
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              child: TextField(
-                controller: _confirmPassword,
-                onChanged: (password) => onConfirmPasswordChange(password),
-                obscureText: !_isVisibleCP,
-                decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isVisibleCP = !_isVisibleCP;
-                      });
-                    },
-                    icon: _isVisibleCP
-                        ? Icon(
-                            Icons.visibility,
-                            color: Colors.black,
-                          )
-                        : Icon(
-                            Icons.visibility_off,
-                            color: Colors.grey,
-                          ),
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.black)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Color(0xff403d55))),
-                  hintText: "Confirm Password",
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 500),
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                      color: _isPasswordEightCharacters
-                          ? Colors.green
-                          : Colors.transparent,
-                      border: _isPasswordEightCharacters
-                          ? Border.all(color: Colors.transparent)
-                          : Border.all(color: Colors.grey.withOpacity(0.5)),
-                      borderRadius: BorderRadius.circular(50)),
-                  child: Center(
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size: 15,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("Contains at least 8 characters")
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(children: [
-              AnimatedContainer(
-                duration: Duration(milliseconds: 500),
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                    color: _hasPasswordOneNumber
-                        ? Colors.green
-                        : Colors.transparent,
-                    border: _hasPasswordOneNumber
-                        ? Border.all(color: Colors.transparent)
-                        : Border.all(color: Colors.grey.withOpacity(0.5)),
-                    borderRadius: BorderRadius.circular(50)),
-                child: Center(
-                  child: Icon(
-                    Icons.check,
-                    color: Colors.white,
-                    size: 15,
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text("Contains at least 1 number"),
-            ]),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 500),
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                      color: _isMatch ? Colors.green : Colors.transparent,
-                      border: _isMatch
-                          ? Border.all(color: Colors.transparent)
-                          : Border.all(color: Colors.grey.withOpacity(0.5)),
-                      borderRadius: BorderRadius.circular(50)),
-                  child: Center(
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size: 15,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("Password Matched"),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
+    final Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+            height: size.height,
+            width: size.width,
+            color: Color(0xff65BFB8),
+            child: Stack(children: [
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: FadeTransition(
+                    opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                            parent: _widgetController,
+                            curve: Interval(0.1, 1.0, curve: Curves.easeIn))),
                     child: Container(
-                        padding: EdgeInsets.all(5),
-                        height: 30,
-                        color: Colors.red[300],
-                        child: widget.previousButton)),
-                Expanded(
-                  child: AbsorbPointer(
-                    absorbing: _overall ? false : true,
-                    child: AnimatedContainer(
-                      padding: EdgeInsets.all(5),
-                      duration: Duration(milliseconds: 500),
-                      height: 30,
-                      curve: Curves.ease,
-                      child: widget.nextButton,
+                      height: 300,
+                      width: size.width,
                       decoration: BoxDecoration(
-                        color: _hasPasswordOneNumber &&
-                                _isPasswordEightCharacters &&
-                                _isMatch
-                            ? Colors.green
-                            : Colors.grey,
-                      ),
+                          color: null,
+                          image: DecorationImage(
+                              image: AssetImage("assets/images/userpass.png"),
+                              fit: BoxFit.cover)),
+                    ),
+                  )),
+              Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        widget.previousButton,
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Create your account',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  SizedBox(
+                    height: 120,
+                  ),
+                  Column(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          FadeTransition(
+                            opacity: Tween<double>(begin: 0.0, end: 1.0)
+                                .animate(CurvedAnimation(
+                                    parent: _widgetController,
+                                    curve: Interval(0.2, 1.0,
+                                        curve: Curves.easeIn))),
+                            child: Text(
+                              'Set your password!',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff2b2b2b)),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          FadeTransition(
+                            opacity: Tween<double>(begin: 0.0, end: 1.0)
+                                .animate(CurvedAnimation(
+                                    parent: _widgetController,
+                                    curve: Interval(0.2, 1.0,
+                                        curve: Curves.easeIn))),
+                            child: SlideTransition(
+                              position: Tween<Offset>(
+                                      begin: Offset(0, -0.5), end: Offset.zero)
+                                  .animate(CurvedAnimation(
+                                      parent: _widgetController,
+                                      curve: Curves.easeIn)),
+                              child: Text(
+                                  'Enter your desired password, it must have enough complexity to protect your own information.',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                      color:
+                                          Color(0xff3b3b3b).withOpacity(0.8))),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          FadeTransition(
+                            opacity: Tween<double>(begin: 0.0, end: 1.0)
+                                .animate(CurvedAnimation(
+                                    parent: _widgetController,
+                                    curve: Interval(0.2, 1.0,
+                                        curve: Curves.easeIn))),
+                            child: SlideTransition(
+                              position: Tween<Offset>(
+                                      begin: Offset(0, -0.5), end: Offset.zero)
+                                  .animate(CurvedAnimation(
+                                      parent: _widgetController,
+                                      curve: Interval(0.7, 1,
+                                          curve: Curves.easeIn))),
+                              child: Row(
+                                children: [
+                                  AnimatedContainer(
+                                    duration: Duration(milliseconds: 500),
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                        color: _isPasswordEightCharacters
+                                            ? Color(0xff2b2b2b)
+                                            : Colors.transparent,
+                                        border: _isPasswordEightCharacters
+                                            ? Border.all(
+                                                color: Colors.transparent)
+                                            : Border.all(
+                                                color: Color(0xff2b2b2b)),
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.check,
+                                        color: _isPasswordEightCharacters
+                                            ? Colors.white
+                                            : Color(0xff2b2b2b),
+                                        size: 15,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text("Contains at least 8 characters")
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          FadeTransition(
+                            opacity: Tween<double>(begin: 0.0, end: 1.0)
+                                .animate(CurvedAnimation(
+                                    parent: _widgetController,
+                                    curve: Interval(0.2, 1.0,
+                                        curve: Curves.easeIn))),
+                            child: SlideTransition(
+                              position: Tween<Offset>(
+                                      begin: Offset(0, -0.5), end: Offset.zero)
+                                  .animate(CurvedAnimation(
+                                      parent: _widgetController,
+                                      curve: Interval(0.7, 1,
+                                          curve: Curves.easeIn))),
+                              child: Row(children: [
+                                AnimatedContainer(
+                                  duration: Duration(milliseconds: 500),
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                      color: _hasPasswordOneNumber
+                                          ? Color(0xff2b2b2b)
+                                          : Colors.transparent,
+                                      border: _hasPasswordOneNumber
+                                          ? Border.all(
+                                              color: Colors.transparent)
+                                          : Border.all(
+                                              color: Color(0xff2b2b2b)),
+                                      borderRadius: BorderRadius.circular(50)),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.check,
+                                      color: _hasPasswordOneNumber
+                                          ? Colors.white
+                                          : Color(0xff2b2b2b),
+                                      size: 15,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text("Contains at least 1 number"),
+                              ]),
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Row(
+                            children: [
+                              FadeTransition(
+                                opacity: Tween<double>(begin: 0.0, end: 1.0)
+                                    .animate(CurvedAnimation(
+                                        parent: _widgetController,
+                                        curve: Interval(0.2, 1.0,
+                                            curve: Curves.easeIn))),
+                                child: SlideTransition(
+                                  position: Tween<Offset>(
+                                          begin: Offset(0, -0.5),
+                                          end: Offset.zero)
+                                      .animate(CurvedAnimation(
+                                          parent: _widgetController,
+                                          curve: Interval(0.7, 1,
+                                              curve: Curves.easeIn))),
+                                  child: AnimatedContainer(
+                                    duration: Duration(milliseconds: 500),
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                        color: _isMatch
+                                            ? Color(0xff2b2b2b)
+                                            : Colors.transparent,
+                                        border: _isMatch
+                                            ? Border.all(
+                                                color: Colors.transparent)
+                                            : Border.all(
+                                                color: Color(0xff2b2b2b)),
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.check,
+                                        color: _isMatch
+                                            ? Colors.white
+                                            : Color(0xff2b2b2b),
+                                        size: 15,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text("Password Matched"),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(15),
+                                    bottomRight: Radius.circular(15),
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15))),
+                            width: double.infinity,
+                            child: TextField(
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline5!
+                                      .color),
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(30)
+                              ],
+                              obscureText: !_isVisible,
+                              controller: _primaryPaswword,
+                              onChanged: (password) => {
+                                onPasswordChanged(password),
+                                onConfirmPasswordChange(password)
+                              },
+                              decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _isVisible = !_isVisible;
+                                      });
+                                    },
+                                    icon: _isVisible
+                                        ? Icon(
+                                            Icons.visibility,
+                                            color: Colors.black,
+                                          )
+                                        : Icon(
+                                            Icons.visibility_off,
+                                            color: Colors.grey,
+                                          ),
+                                  ),
+                                  focusColor: Colors.white,
+                                  labelText: "Password",
+                                  prefixIcon: Icon(Icons.password),
+                                  contentPadding: EdgeInsets.all(15),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(15),
+                                    bottomRight: Radius.circular(15),
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15))),
+                            width: double.infinity,
+                            child: TextField(
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline5!
+                                      .color),
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(30)
+                              ],
+                              obscureText: !_isVisibleCP,
+                              controller: _confirmPassword,
+                              onChanged: (password) =>
+                                  onConfirmPasswordChange(password),
+                              decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _isVisibleCP = !_isVisibleCP;
+                                      });
+                                    },
+                                    icon: _isVisibleCP
+                                        ? Icon(
+                                            Icons.visibility,
+                                            color: Colors.black,
+                                          )
+                                        : Icon(
+                                            Icons.visibility_off,
+                                            color: Colors.grey,
+                                          ),
+                                  ),
+                                  focusColor: Colors.white,
+                                  labelText: "Confirm Password",
+                                  prefixIcon: Icon(Icons.password),
+                                  contentPadding: EdgeInsets.all(15),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Align(
+                              alignment: Alignment.bottomRight,
+                              child: AbsorbPointer(
+                                absorbing: _overall && _isMatch ? false : true,
+                                child: AnimatedContainer(
+                                    curve: Curves.fastOutSlowIn,
+                                    duration:
+                                        const Duration(milliseconds: 1000),
+                                    height: 40,
+                                    width: _overall && _isMatch ? 500 : 90,
+                                    decoration: BoxDecoration(
+                                        color: _overall && _isMatch
+                                            ? Color(0xff3b3b3b)
+                                            : Color(0xff3b3b3b)
+                                                .withOpacity(0.5),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
+                                    child: Center(child: widget.nextButton)),
+                              ))
+                        ],
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ]),
+          ),
         ),
       ),
     );
