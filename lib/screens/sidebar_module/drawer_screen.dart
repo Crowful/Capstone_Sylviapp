@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
-import 'package:sylviapp_project/screens/sidebar_module/menu_item.dart';
+import 'package:sylviapp_project/screens/sidebar_module/menu_item.dart' as menu;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:sylviapp_project/translations/locale_keys.g.dart';
@@ -150,19 +150,19 @@ class _DrawerScreenState extends State<DrawerScreen> {
               )
             ]),
             SizedBox(height: 30),
-            MenuItem(
+            menu.MenuItem(
                 route: "/account_management",
                 title: LocaleKeys.myaccount.tr(),
                 icon: Icons.person),
-            MenuItem(
+            menu.MenuItem(
                 route: "/recent_activity",
                 title: LocaleKeys.recentactivity.tr(),
                 icon: Icons.history),
-            MenuItem(
+            menu.MenuItem(
                 route: "/add_money",
                 title: LocaleKeys.balance.tr(),
                 icon: Icons.money),
-            MenuItem(
+            menu.MenuItem(
               route: "/settings",
               title: LocaleKeys.settings.tr(),
               icon: Icons.settings,
