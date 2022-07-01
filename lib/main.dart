@@ -58,6 +58,7 @@ class MyApp extends ConsumerWidget {
     final isDark = watch(themingProvider);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       locale: context.locale,
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,
