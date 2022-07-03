@@ -158,7 +158,7 @@ class _BasicInfoPageState extends State<BasicInfoPage>
                     ),
                   ),
                   SizedBox(
-                    height: 80,
+                    height: 50,
                   ),
                   Column(
                     children: [

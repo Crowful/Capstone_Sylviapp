@@ -94,333 +94,327 @@ class _UserRegPageState extends State<UserRegPage>
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-            height: size.height,
-            width: size.width,
-            color: Color(0xff65BFB8),
-            child: Stack(children: [
-              Align(
-                  alignment: Alignment.bottomCenter,
-                  child: FadeTransition(
-                    opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
-                        CurvedAnimation(
-                            parent: _widgetController,
-                            curve: Interval(0.1, 1.0, curve: Curves.easeIn))),
-                    child: Container(
-                      height: 400,
-                      width: size.width,
-                      decoration: BoxDecoration(
-                          color: null,
-                          image: DecorationImage(
-                              image: AssetImage("assets/images/userrreg.png"),
-                              fit: BoxFit.cover)),
-                    ),
-                  )),
-              Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(15),
-                    child: Row(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+          height: size.height,
+          width: size.width,
+          color: Color(0xff65BFB8),
+          child: Stack(children: [
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: FadeTransition(
+                  opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+                      CurvedAnimation(
+                          parent: _widgetController,
+                          curve: Interval(0.1, 1.0, curve: Curves.easeIn))),
+                  child: Container(
+                    height: 400,
+                    width: size.width,
+                    decoration: BoxDecoration(
+                        color: null,
+                        image: DecorationImage(
+                            image: AssetImage("assets/images/userrreg.png"),
+                            fit: BoxFit.cover)),
+                  ),
+                )),
+            Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, "/login");
+                          },
+                          child:
+                              Icon(Icons.arrow_back_ios, color: Colors.white)),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Create your account',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                Column(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, "/login");
-                            },
-                            child: Icon(Icons.arrow_back_ios,
-                                color: Colors.white)),
-                        Align(
-                          alignment: Alignment.center,
+                        FadeTransition(
+                          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+                              CurvedAnimation(
+                                  parent: _widgetController,
+                                  curve: Interval(0.2, 1.0,
+                                      curve: Curves.easeIn))),
                           child: Text(
-                            'Create your account',
+                            'Setup your email and username',
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white),
+                                color: Color(0xff2b2b2b)),
                           ),
-                        )
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        FadeTransition(
+                          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+                              CurvedAnimation(
+                                  parent: _widgetController,
+                                  curve: Interval(0.2, 1.0,
+                                      curve: Curves.easeIn))),
+                          child: SlideTransition(
+                            position: Tween<Offset>(
+                                    begin: Offset(0, -0.5), end: Offset.zero)
+                                .animate(CurvedAnimation(
+                                    parent: _widgetController,
+                                    curve: Curves.easeIn)),
+                            child: Text(
+                                'Enter your username and e-mail that you will be using in our beloved application Sylviapp!',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xff3b3b3b).withOpacity(0.8))),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        FadeTransition(
+                          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+                              CurvedAnimation(
+                                  parent: _widgetController,
+                                  curve: Interval(0.2, 1.0,
+                                      curve: Curves.easeIn))),
+                          child: SlideTransition(
+                            position: Tween<Offset>(
+                                    begin: Offset(0, -0.5), end: Offset.zero)
+                                .animate(CurvedAnimation(
+                                    parent: _widgetController,
+                                    curve: Interval(0.7, 1,
+                                        curve: Curves.easeIn))),
+                            child: Row(
+                              children: [
+                                AnimatedContainer(
+                                  duration: Duration(milliseconds: 500),
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                      color: _isUserFourCharacters
+                                          ? Color(0xff2b2b2b)
+                                          : Colors.transparent,
+                                      border: _isUserFourCharacters
+                                          ? Border.all(
+                                              color: Colors.transparent)
+                                          : Border.all(
+                                              color: Color(0xff2b2b2b)),
+                                      borderRadius: BorderRadius.circular(50)),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.check,
+                                      color: _isUserFourCharacters
+                                          ? Colors.white
+                                          : Color(0xff2b2b2b),
+                                      size: 15,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Contains at least 4 characters",
+                                  style: TextStyle(
+                                      color: _isUserFourCharacters
+                                          ? Color(0xff2b2b2b)
+                                          : Colors.white),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        FadeTransition(
+                          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+                              CurvedAnimation(
+                                  parent: _widgetController,
+                                  curve: Interval(0.2, 1.0,
+                                      curve: Curves.easeIn))),
+                          child: SlideTransition(
+                            position: Tween<Offset>(
+                                    begin: Offset(0, -0.5), end: Offset.zero)
+                                .animate(CurvedAnimation(
+                                    parent: _widgetController,
+                                    curve: Interval(0.7, 1,
+                                        curve: Curves.easeIn))),
+                            child: Row(
+                              children: [
+                                AnimatedContainer(
+                                  duration: Duration(milliseconds: 500),
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                      color: _isValidEmail
+                                          ? Color(0xff2b2b2b)
+                                          : Colors.transparent,
+                                      border: _isValidEmail
+                                          ? Border.all(
+                                              color: Colors.transparent)
+                                          : Border.all(
+                                              color: Color(0xff2b2b2b)),
+                                      borderRadius: BorderRadius.circular(50)),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.check,
+                                      color: _isValidEmail
+                                          ? Colors.white
+                                          : Color(0xff2b2b2b),
+                                      size: 15,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text("Valid Email",
+                                    style: TextStyle(
+                                        color: _isValidEmail
+                                            ? Color(0xff2b2b2b)
+                                            : Colors.white))
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 120,
-                  ),
-                  Column(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          FadeTransition(
-                            opacity: Tween<double>(begin: 0.0, end: 1.0)
-                                .animate(CurvedAnimation(
-                                    parent: _widgetController,
-                                    curve: Interval(0.2, 1.0,
-                                        curve: Curves.easeIn))),
-                            child: Text(
-                              'Setup your email and username',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff2b2b2b)),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          FadeTransition(
-                            opacity: Tween<double>(begin: 0.0, end: 1.0)
-                                .animate(CurvedAnimation(
-                                    parent: _widgetController,
-                                    curve: Interval(0.2, 1.0,
-                                        curve: Curves.easeIn))),
-                            child: SlideTransition(
-                              position: Tween<Offset>(
-                                      begin: Offset(0, -0.5), end: Offset.zero)
-                                  .animate(CurvedAnimation(
-                                      parent: _widgetController,
-                                      curve: Curves.easeIn)),
-                              child: Text(
-                                  'Enter your username and e-mail that you will be using in our beloved application Sylviapp!',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400,
-                                      color:
-                                          Color(0xff3b3b3b).withOpacity(0.8))),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          FadeTransition(
-                            opacity: Tween<double>(begin: 0.0, end: 1.0)
-                                .animate(CurvedAnimation(
-                                    parent: _widgetController,
-                                    curve: Interval(0.2, 1.0,
-                                        curve: Curves.easeIn))),
-                            child: SlideTransition(
-                              position: Tween<Offset>(
-                                      begin: Offset(0, -0.5), end: Offset.zero)
-                                  .animate(CurvedAnimation(
-                                      parent: _widgetController,
-                                      curve: Interval(0.7, 1,
-                                          curve: Curves.easeIn))),
-                              child: Row(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: Duration(milliseconds: 500),
-                                    width: 20,
-                                    height: 20,
-                                    decoration: BoxDecoration(
-                                        color: _isUserFourCharacters
-                                            ? Color(0xff2b2b2b)
-                                            : Colors.transparent,
-                                        border: _isUserFourCharacters
-                                            ? Border.all(
-                                                color: Colors.transparent)
-                                            : Border.all(
-                                                color: Color(0xff2b2b2b)),
-                                        borderRadius:
-                                            BorderRadius.circular(50)),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.check,
-                                        color: _isUserFourCharacters
-                                            ? Colors.white
-                                            : Color(0xff2b2b2b),
-                                        size: 15,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    "Contains at least 4 characters",
-                                    style: TextStyle(
-                                        color: _isUserFourCharacters
-                                            ? Color(0xff2b2b2b)
-                                            : Colors.white),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          FadeTransition(
-                            opacity: Tween<double>(begin: 0.0, end: 1.0)
-                                .animate(CurvedAnimation(
-                                    parent: _widgetController,
-                                    curve: Interval(0.2, 1.0,
-                                        curve: Curves.easeIn))),
-                            child: SlideTransition(
-                              position: Tween<Offset>(
-                                      begin: Offset(0, -0.5), end: Offset.zero)
-                                  .animate(CurvedAnimation(
-                                      parent: _widgetController,
-                                      curve: Interval(0.7, 1,
-                                          curve: Curves.easeIn))),
-                              child: Row(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: Duration(milliseconds: 500),
-                                    width: 20,
-                                    height: 20,
-                                    decoration: BoxDecoration(
-                                        color: _isValidEmail
-                                            ? Color(0xff2b2b2b)
-                                            : Colors.transparent,
-                                        border: _isValidEmail
-                                            ? Border.all(
-                                                color: Colors.transparent)
-                                            : Border.all(
-                                                color: Color(0xff2b2b2b)),
-                                        borderRadius:
-                                            BorderRadius.circular(50)),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.check,
-                                        color: _isValidEmail
-                                            ? Colors.white
-                                            : Color(0xff2b2b2b),
-                                        size: 15,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text("Valid Email",
-                                      style: TextStyle(
-                                          color: _isValidEmail
-                                              ? Color(0xff2b2b2b)
-                                              : Colors.white))
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    spreadRadius: 1,
-                                    blurRadius: 2,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(15),
-                                    bottomRight: Radius.circular(15),
-                                    topLeft: Radius.circular(15),
-                                    topRight: Radius.circular(15))),
-                            width: double.infinity,
-                            child: TextField(
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headline5!
-                                      .color),
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(15)
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(0, 2),
+                                ),
                               ],
-                              controller: _usernameController,
-                              onChanged: (user) => {onUserChanged(user)},
-                              decoration: InputDecoration(
-                                  focusColor: Colors.white,
-                                  labelText: "Username",
-                                  hintText: "user123",
-                                  prefixIcon: Icon(Icons.person),
-                                  contentPadding: EdgeInsets.all(15),
-                                  border: InputBorder.none),
-                            ),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(15),
+                                  bottomRight: Radius.circular(15),
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15))),
+                          width: double.infinity,
+                          child: TextField(
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline5!
+                                    .color),
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(15)
+                            ],
+                            controller: _usernameController,
+                            onChanged: (user) => {onUserChanged(user)},
+                            decoration: InputDecoration(
+                                focusColor: Colors.white,
+                                labelText: "Username",
+                                hintText: "user123",
+                                prefixIcon: Icon(Icons.person),
+                                contentPadding: EdgeInsets.all(15),
+                                border: InputBorder.none),
                           ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    spreadRadius: 1,
-                                    blurRadius: 2,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(15),
-                                    bottomRight: Radius.circular(15),
-                                    topLeft: Radius.circular(15),
-                                    topRight: Radius.circular(15))),
-                            width: double.infinity,
-                            child: TextField(
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headline5!
-                                      .color),
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(30)
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(0, 2),
+                                ),
                               ],
-                              controller: _emailController,
-                              onChanged: (email) => onEmailChanged(email),
-                              decoration: InputDecoration(
-                                  focusColor: Colors.white,
-                                  labelText: "Email",
-                                  hintText: "email@mail.com",
-                                  prefixIcon: Icon(Icons.email),
-                                  contentPadding: EdgeInsets.all(15),
-                                  border: InputBorder.none),
-                            ),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(15),
+                                  bottomRight: Radius.circular(15),
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15))),
+                          width: double.infinity,
+                          child: TextField(
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline5!
+                                    .color),
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(30)
+                            ],
+                            controller: _emailController,
+                            onChanged: (email) => onEmailChanged(email),
+                            decoration: InputDecoration(
+                                focusColor: Colors.white,
+                                labelText: "Email",
+                                hintText: "email@mail.com",
+                                prefixIcon: Icon(Icons.email),
+                                contentPadding: EdgeInsets.all(15),
+                                border: InputBorder.none),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Align(
-                              alignment: Alignment.bottomRight,
-                              child: AbsorbPointer(
-                                absorbing: overall ? false : true,
-                                child: AnimatedContainer(
-                                    curve: Curves.fastOutSlowIn,
-                                    duration:
-                                        const Duration(milliseconds: 1000),
-                                    height: 40,
-                                    width: overall ? 500 : 90,
-                                    decoration: BoxDecoration(
-                                        color: overall
-                                            ? Color(0xff3b3b3b)
-                                            : Color(0xff3b3b3b)
-                                                .withOpacity(0.5),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10))),
-                                    child: Center(child: widget.nextButton)),
-                              ))
-                        ],
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ]),
-          ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Align(
+                            alignment: Alignment.bottomRight,
+                            child: AbsorbPointer(
+                              absorbing: overall ? false : true,
+                              child: AnimatedContainer(
+                                  curve: Curves.fastOutSlowIn,
+                                  duration: const Duration(milliseconds: 1000),
+                                  height: 40,
+                                  width: overall ? 500 : 90,
+                                  decoration: BoxDecoration(
+                                      color: overall
+                                          ? Color(0xff3b3b3b)
+                                          : Color(0xff3b3b3b).withOpacity(0.5),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                  child: Center(child: widget.nextButton)),
+                            ))
+                      ],
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ]),
         ),
       ),
     );

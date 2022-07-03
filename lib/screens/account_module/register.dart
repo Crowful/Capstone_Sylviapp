@@ -38,46 +38,16 @@ class _RegisterPageState extends State<RegisterPage> {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: PageView(
-      physics: NeverScrollableScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      controller: registerPageController,
-      children: [
-        UserRegPage(
-          height: height,
-          width: width,
-          previousButton: GestureDetector(
-              onTap: () {
-                registerPageController.animateToPage(
-                    registerPageController.page!.toInt() - 1,
-                    duration: Duration(milliseconds: 1000),
-                    curve: Curves.fastOutSlowIn);
-              },
-              child: Icon(Icons.arrow_back_ios, color: Colors.white)),
-          nextButton: InkWell(
-              onTap: () {
-                registerPageController.animateToPage(
-                    registerPageController.page!.toInt() + 1,
-                    duration: Duration(milliseconds: 1000),
-                    curve: Curves.fastOutSlowIn);
-              },
-              child: Center(
-                  child: Text(
-                'Next',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ))),
-        ),
-        PasswordRegPage(
-          height: height,
-          width: width,
-          previousButton: currentPage == 0
-              ? SizedBox(
-                  width: 0,
-                )
-              : GestureDetector(
+          physics: NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          controller: registerPageController,
+          children: [
+            UserRegPage(
+              height: height,
+              width: width,
+              previousButton: GestureDetector(
                   onTap: () {
                     registerPageController.animateToPage(
                         registerPageController.page!.toInt() - 1,
@@ -85,71 +55,102 @@ class _RegisterPageState extends State<RegisterPage> {
                         curve: Curves.fastOutSlowIn);
                   },
                   child: Icon(Icons.arrow_back_ios, color: Colors.white)),
-          nextButton: InkWell(
-              onTap: () {
-                registerPageController.animateToPage(
-                    registerPageController.page!.toInt() + 1,
-                    duration: Duration(milliseconds: 1000),
-                    curve: Curves.fastOutSlowIn);
-
-                print(context.read(userAccountProvider).getEmail);
-                print(context.read(userAccountProvider).getPassword);
-              },
-              child: Center(
-                  child: Text(
-                'Next',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ))),
-        ),
-        BasicInfoPage(
-          height: height,
-          width: width,
-          previousButton: currentPage == 0
-              ? SizedBox(
-                  width: 0,
-                )
-              : GestureDetector(
+              nextButton: InkWell(
                   onTap: () {
                     registerPageController.animateToPage(
-                        registerPageController.page!.toInt() - 1,
+                        registerPageController.page!.toInt() + 1,
                         duration: Duration(milliseconds: 1000),
                         curve: Curves.fastOutSlowIn);
                   },
-                  child: Icon(Icons.arrow_back_ios, color: Colors.white)),
-          nextButton: InkWell(
-              onTap: () {
-                context
-                    .read(authserviceProvider)
-                    .signUp(
-                      context.read(userAccountProvider).getEmail,
-                      context.read(userAccountProvider).getPassword,
-                      AESCryptography().encryptAES(
-                          context.read(userAccountProvider).getFullname),
-                      AESCryptography().encryptAES(
-                          context.read(userAccountProvider).getAddress),
-                      AESCryptography().encryptAES(
-                          context.read(userAccountProvider).getGender),
-                      AESCryptography().encryptAES(
-                          context.read(userAccountProvider).getContact),
-                      AESCryptography().encryptAES(
-                          context.read(userAccountProvider).getUserName),
+                  child: Center(
+                      child: Text(
+                    'Next',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ))),
+            ),
+            PasswordRegPage(
+              height: height,
+              width: width,
+              previousButton: currentPage == 0
+                  ? SizedBox(
+                      width: 0,
                     )
-                    .whenComplete(() =>
-                        Navigator.pushNamed(context, "/wrapperCatchSignup"));
-              },
-              child: Center(
-                  child: Text(
-                'Next',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ))),
-        )
-      ],
-    ));
+                  : GestureDetector(
+                      onTap: () {
+                        registerPageController.animateToPage(
+                            registerPageController.page!.toInt() - 1,
+                            duration: Duration(milliseconds: 1000),
+                            curve: Curves.fastOutSlowIn);
+                      },
+                      child: Icon(Icons.arrow_back_ios, color: Colors.white)),
+              nextButton: InkWell(
+                  onTap: () {
+                    registerPageController.animateToPage(
+                        registerPageController.page!.toInt() + 1,
+                        duration: Duration(milliseconds: 1000),
+                        curve: Curves.fastOutSlowIn);
+
+                    print(context.read(userAccountProvider).getEmail);
+                    print(context.read(userAccountProvider).getPassword);
+                  },
+                  child: Center(
+                      child: Text(
+                    'Next',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ))),
+            ),
+            BasicInfoPage(
+              height: height,
+              width: width,
+              previousButton: currentPage == 0
+                  ? SizedBox(
+                      width: 0,
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        registerPageController.animateToPage(
+                            registerPageController.page!.toInt() - 1,
+                            duration: Duration(milliseconds: 1000),
+                            curve: Curves.fastOutSlowIn);
+                      },
+                      child: Icon(Icons.arrow_back_ios, color: Colors.white)),
+              nextButton: InkWell(
+                  onTap: () {
+                    context
+                        .read(authserviceProvider)
+                        .signUp(
+                          context.read(userAccountProvider).getEmail,
+                          context.read(userAccountProvider).getPassword,
+                          AESCryptography().encryptAES(
+                              context.read(userAccountProvider).getFullname),
+                          AESCryptography().encryptAES(
+                              context.read(userAccountProvider).getAddress),
+                          AESCryptography().encryptAES(
+                              context.read(userAccountProvider).getGender),
+                          AESCryptography().encryptAES(
+                              context.read(userAccountProvider).getContact),
+                          AESCryptography().encryptAES(
+                              context.read(userAccountProvider).getUserName),
+                        )
+                        .whenComplete(() => Navigator.pushNamed(
+                            context, "/wrapperCatchSignup"));
+                  },
+                  child: Center(
+                      child: Text(
+                    'Next',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ))),
+            )
+          ],
+        ));
   }
 }
