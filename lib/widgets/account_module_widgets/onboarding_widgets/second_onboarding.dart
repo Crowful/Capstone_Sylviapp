@@ -55,7 +55,7 @@ class _SecondOnboardingState extends State<SecondOnboarding> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                        'Donation model to fund reforestation campaigns for local communities.\n\nVisualize the reforestation activities and accomplishments.',
+                        'Donation model to fund reforestation campaigns for local communities.\nVisualize the reforestation activities and accomplishments.',
                         style: GoogleFonts.roboto(
                             fontWeight: FontWeight.w500, fontSize: 17)),
                   )

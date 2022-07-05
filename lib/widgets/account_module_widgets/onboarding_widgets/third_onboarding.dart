@@ -22,7 +22,7 @@ class _ThirdOnboardingState extends State<ThirdOnboarding> {
               child: Column(
                 children: [
                   Text(
-                    'That\' all! ',
+                    'Verify your email',
                     style: GoogleFonts.roboto(
                         fontWeight: FontWeight.bold, fontSize: 25),
                   ),
@@ -36,7 +36,7 @@ class _ThirdOnboardingState extends State<ThirdOnboarding> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Now let\'s dive in to Sylviapp!',
+                      'Before we dive in to Sylviapp, you must verify your email',
                       style: GoogleFonts.roboto(
                           fontWeight: FontWeight.w700,
                           fontSize: 20,
@@ -49,7 +49,7 @@ class _ThirdOnboardingState extends State<ThirdOnboarding> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                        'Enjoy and help each other to facilitate reforestation campaigns.',
+                        'Click get started button to send an email verification to your email',
                         style: GoogleFonts.roboto(
                             fontWeight: FontWeight.w500, fontSize: 17)),
                   )

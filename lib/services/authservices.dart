@@ -59,6 +59,10 @@ class AuthService extends ChangeNotifier {
     return currentUser!.displayName.toString();
   }
 
+  Future requestForNewVerificationEmail() async {
+    _loggedInUser!.sendEmailVerification();
+  }
+
   //Service Methods
 
   Future signIn(String email, String password) async {

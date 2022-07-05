@@ -43,6 +43,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         child: Padding(
           padding: EdgeInsets.only(top: 30.0),
@@ -65,7 +66,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ))),
               ),
               Container(
-                  height: height / 1.3,
+                  height: height / 1.2,
                   width: width,
                   child: PageView(
                     physics: ClampingScrollPhysics(),
@@ -86,7 +87,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: _buildPageIndicator(),
               ),
               SizedBox(
-                height: 80,
+                height: 20,
               ),
               _currentPage != _numPages - 1
                   ? Expanded(
@@ -128,7 +129,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               alignment: Alignment.center,
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(context, "/login");
+                                  Navigator.pushNamed(context, "/verify_email");
                                 },
                                 child: Text(
                                   'Get Started',
