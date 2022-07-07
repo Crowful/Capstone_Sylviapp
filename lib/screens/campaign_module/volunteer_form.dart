@@ -315,7 +315,8 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
 
                     await context.read(authserviceProvider).joinCampaign(
                         widget.campaignUID,
-                        context.read(authserviceProvider).getCurrentUserUID());
+                        context.read(authserviceProvider).getCurrentUserUID(),
+                        context);
 
                     Navigator.push(
                         context,

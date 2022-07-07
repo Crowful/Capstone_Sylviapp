@@ -371,7 +371,8 @@ class _EditProfileState extends State<EditProfile> {
                                                       phoneNumberController
                                                           .text,
                                                       addressController.text
-                                                          .trim());
+                                                          .trim(),
+                                                      context);
                                             }
                                           },
                                           child: Container(

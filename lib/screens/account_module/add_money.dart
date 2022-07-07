@@ -332,7 +332,8 @@ class _AddmoneyScreenState extends State<AddmoneyScreen> {
                     Navigator.pop(context);
                     await context.read(authserviceProvider).addBalance(
                         context.read(authserviceProvider).getCurrentUserUID(),
-                        amountTobeAdded);
+                        amountTobeAdded,
+                        context);
 
                     await context
                         .read(authserviceProvider)

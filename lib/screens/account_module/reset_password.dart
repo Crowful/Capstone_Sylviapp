@@ -190,7 +190,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                                     await context
                                         .read(authserviceProvider)
                                         .updatePassword(
-                                            newPasswordController.text);
+                                            newPasswordController.text,
+                                            context);
                                   } else {
                                     Fluttertoast.showToast(
                                         msg: "INVALID PASSWORD INPUT");

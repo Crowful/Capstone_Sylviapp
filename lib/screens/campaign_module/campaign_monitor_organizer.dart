@@ -567,8 +567,10 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                                                     context
                                                         .read(
                                                             authserviceProvider)
-                                                        .startTheCampaign(widget
-                                                            .uidOfCampaign);
+                                                        .startTheCampaign(
+                                                            widget
+                                                                .uidOfCampaign,
+                                                            context);
                                                   }
                                                 },
                                                 child: Center(
@@ -838,7 +840,9 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
             GestureDetector(
               onTap: () async {
                 await context.read(authserviceProvider).addAnnouncement(
-                    widget.uidOfCampaign, announcementTextController.text);
+                    widget.uidOfCampaign,
+                    announcementTextController.text,
+                    context);
 
                 announcementTextController.clear();
 
@@ -886,7 +890,7 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                 onTap: () {
                   context
                       .read(authserviceProvider)
-                      .startTheCampaign(widget.uidOfCampaign);
+                      .startTheCampaign(widget.uidOfCampaign, context);
                   Navigator.pop(context);
                 },
                 child: Container(

@@ -113,7 +113,8 @@ class _SendSuggestionState extends State<SendSuggestion> {
                   context.read(authserviceProvider).addSuggestion(
                       _suggestionController.text,
                       context.read(authserviceProvider).getCurrentUserUID(),
-                      dateCreated);
+                      dateCreated,
+                      context);
                   _suggestionController.clear();
                 }
               },

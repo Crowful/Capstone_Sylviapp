@@ -125,19 +125,19 @@ class _RegisterPageState extends State<RegisterPage> {
                     context
                         .read(authserviceProvider)
                         .signUp(
-                          context.read(userAccountProvider).getEmail,
-                          context.read(userAccountProvider).getPassword,
-                          AESCryptography().encryptAES(
-                              context.read(userAccountProvider).getFullname),
-                          AESCryptography().encryptAES(
-                              context.read(userAccountProvider).getAddress),
-                          AESCryptography().encryptAES(
-                              context.read(userAccountProvider).getGender),
-                          AESCryptography().encryptAES(
-                              context.read(userAccountProvider).getContact),
-                          AESCryptography().encryptAES(
-                              context.read(userAccountProvider).getUserName),
-                        )
+                            context.read(userAccountProvider).getEmail,
+                            context.read(userAccountProvider).getPassword,
+                            AESCryptography().encryptAES(
+                                context.read(userAccountProvider).getFullname),
+                            AESCryptography().encryptAES(
+                                context.read(userAccountProvider).getAddress),
+                            AESCryptography().encryptAES(
+                                context.read(userAccountProvider).getGender),
+                            AESCryptography().encryptAES(
+                                context.read(userAccountProvider).getContact),
+                            AESCryptography().encryptAES(
+                                context.read(userAccountProvider).getUserName),
+                            context)
                         .whenComplete(() => Navigator.pushNamed(
                             context, "/wrapperCatchSignup"));
                   },

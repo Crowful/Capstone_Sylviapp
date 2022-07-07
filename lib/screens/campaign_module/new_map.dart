@@ -1812,7 +1812,7 @@ class _MapCampaignState extends State<MapCampaign>
                       context.read(authserviceProvider).deductInitialCampaign(
                           context
                               .read(authserviceProvider)
-                              .getCurrentUserUID());
+                              .getCurrentUserUID(), context);
                       showDialog(
                           barrierDismissible: false,
                           context: context,

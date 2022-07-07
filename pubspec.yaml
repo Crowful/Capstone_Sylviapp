@@ -71,6 +71,7 @@ dependencies:
   stop_watch_timer: ^1.1.0+1
   share_plus: ^3.0.4
   lottie: ^1.2.2
+  flutter_svg: ^1.0.3
 
 
 dev_dependencies:

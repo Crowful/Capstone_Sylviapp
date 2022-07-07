@@ -1156,7 +1156,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                 context
                                                                     .read(
                                                                         authserviceProvider)
-                                                                    .getCurrentUserUID());
+                                                                    .getCurrentUserUID(),
+                                                                context);
                                                       },
                                                       child: Text('remove')),
                                                 ]),

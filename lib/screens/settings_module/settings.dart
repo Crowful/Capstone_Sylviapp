@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/account_module/verify_email.dart';
 import 'package:sylviapp_project/translations/locale_keys.g.dart';

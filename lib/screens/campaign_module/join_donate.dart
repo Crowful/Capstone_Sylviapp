@@ -1178,13 +1178,13 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                             await context
                                 .read(authserviceProvider)
                                 .donateCampaignUser(
-                                  widget.uidOfCampaign,
-                                  int.parse(amounToDonate.text),
-                                  currentTime.toString(),
-                                  context
-                                      .read(authserviceProvider)
-                                      .getCurrentUserUID(),
-                                );
+                                    widget.uidOfCampaign,
+                                    int.parse(amounToDonate.text),
+                                    currentTime.toString(),
+                                    context
+                                        .read(authserviceProvider)
+                                        .getCurrentUserUID(),
+                                    context);
 
                             await context
                                 .read(authserviceProvider)
@@ -1200,7 +1200,8 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                     context
                                         .read(authserviceProvider)
                                         .getCurrentUserUID(),
-                                    double.parse(amounToDonate.text));
+                                    double.parse(amounToDonate.text),
+                                    context);
                             amounToDonate.clear();
                             Navigator.pop(context);
                           }
@@ -1252,7 +1253,8 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                             context
                                 .read(authserviceProvider)
                                 .getCurrentUserUID(),
-                            "Scam");
+                            "Scam",
+                            context);
                         Navigator.pop(context);
                       },
                       child: Container(
@@ -1271,7 +1273,8 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                             context
                                 .read(authserviceProvider)
                                 .getCurrentUserUID(),
-                            "Abuse");
+                            "Abuse",
+                            context);
                         Navigator.pop(context);
                       },
                       child: Container(
@@ -1290,7 +1293,8 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                             context
                                 .read(authserviceProvider)
                                 .getCurrentUserUID(),
-                            "Use of Inappropriate words");
+                            "Use of Inappropriate words",
+                            context);
                         Navigator.pop(context);
                       },
                       child: Container(

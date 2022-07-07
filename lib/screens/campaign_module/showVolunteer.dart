@@ -287,8 +287,8 @@ class _ShowVolunteerState extends State<ShowVolunteer> {
                               onTap: () async {
                                 await context
                                     .read(authserviceProvider)
-                                    .approveVolunteer(
-                                        widget.campaignID, widget.userID);
+                                    .approveVolunteer(widget.campaignID,
+                                        widget.userID, context);
 
                                 context
                                     .read(authserviceProvider)

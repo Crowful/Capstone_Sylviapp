@@ -88,7 +88,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     } else {
                       context
                           .read(authserviceProvider)
-                          .resetPass(_emailController.text);
+                          .resetPass(_emailController.text, context);
 
                       _emailController.clear();
                     }

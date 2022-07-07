@@ -109,7 +109,8 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
                   context.read(authserviceProvider).addFeedback(
                       _feedbackController.text,
                       context.read(authserviceProvider).getCurrentUserUID(),
-                      dateCreated);
+                      dateCreated,
+                      context);
                   _feedbackController.clear();
                 }
               },

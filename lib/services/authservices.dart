@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/widgets/account_module_widgets/verification/verification_finalScreen.dart';
+import 'package:sylviapp_project/widgets/snackbar_widgets/custom_snackbar.dart';
 import 'database_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -65,7 +66,7 @@ class AuthService extends ChangeNotifier {
 
   //Service Methods
 
-  Future signIn(String email, String password) async {
+  Future signIn(String email, String password, context) async {
     try {
       final signedInUser = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -74,44 +75,64 @@ class AuthService extends ChangeNotifier {
       print(e.code);
       switch (e.code) {
         case "wrong-password":
-          Fluttertoast.showToast(
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orangeAccent,
+              "Oops Wrong Password",
+              "The password you logged in is incorrect please try again, thank you.");
           break;
         case "invalid-email":
-          Fluttertoast.showToast(
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orangeAccent,
+              "Oops Invalid Email",
+              "The email you logged in is invalid, please try another email or create a new one");
           break;
         case "user-not-found":
-          Fluttertoast.showToast(
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orangeAccent,
+              "Oops We cannot find your account",
+              "If you're not registered yet, please create a new account to access sylviapp features");
+          break;
+        case "too-many-requests":
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orangeAccent,
+              "Oops Try Again later",
+              "You exceed the times of loging in, please try again later.");
           break;
       }
     } on PlatformException catch (e) {
       print(e.code);
       switch (e.code) {
         case "wrong-password":
-          Fluttertoast.showToast(
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orangeAccent,
+              "Oops Wrong Password",
+              "The password you logged in is incorrect please try again, thank you.");
           break;
         case "invalid-email":
-          Fluttertoast.showToast(
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orangeAccent,
+              "Oops Invalid Email",
+              "The email you logged in is invalid, please try another email or create a new one");
           break;
         case "user-not-found":
-          Fluttertoast.showToast(
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orangeAccent,
+              "Oops We cannot find your account",
+              "If you're not registered yet, please create a new account to access sylviapp features");
+          break;
+        case "too-many-requests":
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orangeAccent,
+              "Oops Try Again later",
+              "You exceed the times of loging in, please try again later.");
           break;
       }
     }
@@ -128,7 +149,7 @@ class AuthService extends ChangeNotifier {
   }
 
   Future signUp(String email, String password, String fullname, String address,
-      String gender, String phoneNumber, String username) async {
+      String gender, String phoneNumber, String username, context) async {
     try {
       final newUser = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -141,145 +162,145 @@ class AuthService extends ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "email-already-in-use":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orangeAccent,
+              "Oops Email is already taken",
+              "Please log in to your old email, or try another email that has not registered before, thank you.");
           break;
       }
     } on PlatformException catch (e) {
       switch (e.code) {
         case "email-already-in-use":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orangeAccent,
+              "Oops Email is already taken",
+              "Please log in to your old email, or try another email that has not registered before, thank you.");
 
           break;
       }
     }
   }
 
-  Future resetPass(String email) async {
+  Future resetPass(String email, context) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "unknown":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.red,
+              "Oops Something went wrong",
+              "Sorry, Sylviapp encountered unknown error, don't worry we are this error is on our side, please try again, thank you");
 
           break;
         case "invalid-email":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid email",
+              "Please make sure that the email you typed is correct and make sure there are no mistyped word, please try again.");
 
           break;
         case "missing-android-pkg-name":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.red,
+              "Oops Encountered Error",
+              "Error 1056, this error is due to the missing android pkg name, please contact customer service, thankyou.");
 
           break;
         case "missing-continue-uri":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.red,
+              "Oops Encountered Error",
+              "Error 1057, this error is due to the missing Continue URI, please contact customer service, thankyou.");
 
           break;
         case "missing-ios-bundle-id":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.red,
+              "Oops Encountered Error",
+              "Error 1058, this error is due to the missing Ios bundle ID, please contact customer service, thankyou.");
 
           break;
         case "unauthorized-continue-uri":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.red,
+              "Oops Encountered Error",
+              "Error 1058, this error is due to the unauthorized continue URI, please contact customer service, thankyou.");
 
           break;
         case "user-not-found":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.red,
+              "Oops We Cannot find that user",
+              "Please make sure that you typed is correct for both email and password, Please try again.");
 
           break;
       }
     } on PlatformException catch (e) {
       switch (e.code) {
         case "unknown":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.red,
+              "Oops Something went wrong",
+              "Sorry, Sylviapp encountered unknown error, don't worry we are this error is on our side, please try again, thank you");
 
           break;
         case "invalid-email":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid email",
+              "Please make sure that the email you typed is correct and make sure there are no mistyped word, please try again.");
 
           break;
         case "missing-android-pkg-name":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.red,
+              "Oops Encountered Error",
+              "Error 1056, this error is due to the missing android pkg name, please contact customer service, thankyou.");
 
           break;
         case "missing-continue-uri":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.red,
+              "Oops Encountered Error",
+              "Error 1057, this error is due to the missing Continue URI, please contact customer service, thankyou.");
 
           break;
         case "missing-ios-bundle-id":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.red,
+              "Oops Encountered Error",
+              "Error 1058, this error is due to the missing Ios bundle ID, please contact customer service, thankyou.");
 
           break;
         case "unauthorized-continue-uri":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.red,
+              "Oops Encountered Error",
+              "Error 1058, this error is due to the unauthorized continue URI, please contact customer service, thankyou.");
 
           break;
         case "user-not-found":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops We Cannot find that user",
+              "Please make sure that you typed is correct for both email and password, Please try again.");
 
           break;
       }
@@ -304,126 +325,124 @@ class AuthService extends ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "requires-recent-login":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Recent Login is required",
+              "Please make sure that your account is logged in before, for more information contact customer support.");
 
           break;
         case "user-mismatch":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops User is Mismatch",
+              "Please make sure all the credentials are correct, please try again.");
 
           break;
         case "invalid-credential":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid Credential",
+              "Please make sure all the credentials are correct, please try again. Thank you");
 
           break;
         case "invalid-email":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid Email",
+              "Please make sure the email is correct, please try again. Thank you");
 
           break;
         case "wrong-password":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Wrong Password",
+              "Please make sure the password is correct, please try again. Thank you");
 
           break;
         case "invalid-verification-code":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid Verification Code",
+              "Please make sure the Verification Code is correct, please try again. Thank you");
 
           break;
         case "invalid_verification_id":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
-
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid Verification ID",
+              "Please make sure the Verification ID is correct, please try again. Thank you");
           break;
       }
     } on PlatformException catch (e) {
       switch (e.code) {
         case "requires-recent-login":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Recent Login is required",
+              "Please make sure that your account is logged in before, for more information contact customer support.");
 
           break;
         case "user-mismatch":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops User is Mismatch",
+              "Please make sure all the credentials are correct, please try again.");
 
           break;
         case "invalid-credential":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid Credential",
+              "Please make sure all the credentials are correct, please try again. Thank you");
 
           break;
         case "invalid-email":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid Email",
+              "Please make sure the email is correct, please try again. Thank you");
 
           break;
         case "wrong-password":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Wrong Password",
+              "Please make sure the password is correct, please try again. Thank you");
 
           break;
         case "invalid-verification-code":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid Verification Code",
+              "Please make sure the Verification Code is correct, please try again. Thank you");
 
           break;
         case "invalid_verification_id":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
-
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid Verification ID",
+              "Please make sure the Verification ID is correct, please try again. Thank you");
           break;
       }
     }
   }
 
-  Future updateAcc(
-      String newFullName, String phoneNumber, String newAddress) async {
+  Future updateAcc(String newFullName, String phoneNumber, String newAddress,
+      context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
@@ -436,83 +455,83 @@ class AuthService extends ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "invalid-email":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
-
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid Email",
+              "Please make sure the email is a valid email format, please try again. Thank you");
           break;
+
         case "email-already-in-use":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Email is already in use",
+              "Please try another email that not registered in the application before, Thank you");
 
           break;
         case "requires-recent-login":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Requires recent login",
+              "Sylviapp says that your account needs recent login to proceed, Thank you.");
 
           break;
       }
     } on PlatformException catch (e) {
       switch (e.code) {
         case "invalid-email":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
-
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid Email",
+              "Please make sure the email is a valid email format, please try again. Thank you");
           break;
+
         case "email-already-in-use":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Email is already in use",
+              "Please try another email that not registered in the application before, Thank you");
 
           break;
         case "requires-recent-login":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Requires recent login",
+              "Sylviapp says that your account needs recent login to proceed, Thank you.");
 
           break;
       }
     }
   }
 
-  Future updatePassword(String newpass) async {
+  Future updatePassword(String newpass, context) async {
     try {
       await _loggedInUser!.updatePassword(newpass).whenComplete(
           () => Fluttertoast.showToast(msg: "Password Sucessfully Changed"));
     } on FirebaseAuthException catch (e) {
+      print(e.code);
       switch (e.code) {
         case "invalid-email":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
-
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid Email",
+              "Please make sure the email is a valid email format, please try again. Thank you");
           break;
       }
     } on PlatformException catch (e) {
       switch (e.code) {
         case "invalid-email":
-          Fluttertoast.showToast(
-              toastLength: Toast.LENGTH_LONG,
-              msg: e.message.toString(),
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.black);
+          CustomSnackBar().showCustomSnackBar(
+              context,
+              Colors.orange,
+              "Oops Invalid Email",
+              "Please make sure the email is a valid email format, please try again. Thank you");
 
           break;
       }
@@ -590,8 +609,11 @@ class AuthService extends ChangeNotifier {
           .saveVerification(validIDUrl, idNumber, pictureURL,
               reasonForApplication, doHaveExperience, verified)
           .then((value) {
-        Fluttertoast.showToast(
-            msg: "Application for Organizer is Successfully sent");
+        CustomSnackBar().showCustomSnackBar(
+            context,
+            Color(0xff65BFB8),
+            "Application Success",
+            "Your application was submitted successfully, please wait for your application to be approve. Thank you");
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => VerificationFinalScreen()));
       });
@@ -602,14 +624,18 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  joinCampaign(String campaignUID, volunteerUID) async {
+  joinCampaign(String campaignUID, volunteerUID, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .joinCampaign(campaignUID, volunteerUID)
-          .whenComplete(() => Fluttertoast.showToast(msg: "J O I N E D"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Campaign Joined",
+              "You joined a campaign, thank you for spreading love to earth. Check Activities in the home screen"));
       await DatabaseService(uid: _loggedInUser!.uid)
           .addVolunteerNumber(campaignUID);
       await DatabaseService(uid: _loggedInUser!.uid)
@@ -636,7 +662,7 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  addAnnouncement(String campaignUID, String announcement) async {
+  addAnnouncement(String campaignUID, String announcement, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
@@ -644,7 +670,11 @@ class AuthService extends ChangeNotifier {
 
       await DatabaseService(uid: _loggedInUser!.uid)
           .addAnnouncement(campaignUID, announcement)
-          .whenComplete(() => Fluttertoast.showToast(msg: "POSTED"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Announcement Posted",
+              "Hi Organizer, we've posted your announcement to your fellow volunteers. thank you"));
     } catch (e) {
       print(e);
     }
@@ -663,7 +693,7 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  startTheCampaign(String campaignUID) async {
+  startTheCampaign(String campaignUID, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
@@ -671,7 +701,11 @@ class AuthService extends ChangeNotifier {
 
       await DatabaseService(uid: _loggedInUser!.uid)
           .starTheCampaign(campaignUID)
-          .then((value) => Fluttertoast.showToast(msg: "CAMPAIGN STARTED"));
+          .then((value) => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Campaign Started",
+              "Greeny green, the campaign is started go and be safe for spreading green to the earth."));
     } catch (e) {
       print(e);
     }
@@ -721,12 +755,8 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  donateCampaignUser(
-    String uidOfCampaign,
-    int amount,
-    String dateDonated,
-    String uidUser,
-  ) async {
+  donateCampaignUser(String uidOfCampaign, int amount, String dateDonated,
+      String uidUser, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
@@ -738,7 +768,11 @@ class AuthService extends ChangeNotifier {
             dateDonated,
             uidUser,
           )
-          .whenComplete(() => Fluttertoast.showToast(msg: "Donated"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Successfully Donated",
+              "Thank you for your wonderful donation, this means a lot for mother nature."));
     } catch (e) {
       print(e);
     }
@@ -765,72 +799,91 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  addReportScam(
-      String uidOfCampaign, String uidOfVolunteer, String typeOfReport) async {
+  addReportScam(String uidOfCampaign, String uidOfVolunteer,
+      String typeOfReport, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .addReportScam(uidOfCampaign, uidOfVolunteer, typeOfReport)
-          .whenComplete(() =>
-              Fluttertoast.showToast(msg: "Thank you for Submitting Report"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Report Submitted",
+              "Thank you for your concern, the report will be monitored accordingly by the system thank you."));
     } catch (e) {
       print(e);
     }
   }
 
-  addReportAbuse(
-      String uidOfCampaign, String uidOfVolunteer, String typeOfReport) async {
+  addReportAbuse(String uidOfCampaign, String uidOfVolunteer,
+      String typeOfReport, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .addReportAbuse(uidOfCampaign, uidOfVolunteer, typeOfReport)
-          .whenComplete(() =>
-              Fluttertoast.showToast(msg: "Thank you for Submitting Report"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Report Submitted",
+              "Thank you for your concern, the report will be monitored accordingly by the system thank you."));
     } catch (e) {
       print(e);
     }
   }
 
-  addReportUIW(
-      String uidOfCampaign, String uidOfVolunteer, String typeOfReport) async {
+  addReportUIW(String uidOfCampaign, String uidOfVolunteer, String typeOfReport,
+      context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .addReportUIW(uidOfCampaign, uidOfVolunteer, typeOfReport)
-          .whenComplete(() =>
-              Fluttertoast.showToast(msg: "Thank you for Submitting Report"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Report Submitted",
+              "Thank you for your concern, the report will be monitored accordingly by the system thank you."));
     } catch (e) {
       print(e);
     }
   }
 
-  addFeedback(String feedback, String uidOfVolunteer, String date) async {
+  addFeedback(
+      String feedback, String uidOfVolunteer, String date, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .addFeedbacks(feedback, uidOfVolunteer, date)
-          .whenComplete(() => Fluttertoast.showToast(msg: "Submitted"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Feedback Submitted",
+              "Thank you for your feedback, sylviapp is open for suggestion to improve the experience of user."));
     } catch (e) {
       print(e);
     }
   }
 
-  addSuggestion(String suggestion, String uidOfVolunteer, String date) async {
+  addSuggestion(
+      String suggestion, String uidOfVolunteer, String date, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .addSuggestions(suggestion, uidOfVolunteer, date)
-          .whenComplete(() => Fluttertoast.showToast(msg: "Submitted"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Suggestion Submitted",
+              "Thank you for your Suggestion, sylviapp is open for suggestion to improve the experience of user."));
     } catch (e) {
       print(e);
     }
@@ -844,7 +897,8 @@ class AuthService extends ChangeNotifier {
       String volunteerName,
       String phoneNumber,
       String gender,
-      String address) async {
+      String address,
+      context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
@@ -853,74 +907,96 @@ class AuthService extends ChangeNotifier {
       await DatabaseService(uid: _loggedInUser!.uid)
           .addMessage(uidOfCampaign, uidOfOrganizer, uidOfVolunteer,
               devicetokenOfOrg, volunteerName, phoneNumber, gender, address)
-          .whenComplete(() =>
-              Fluttertoast.showToast(msg: "DISTRESS SUBMITTED TO ORGANIZER"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Distress Submitted",
+              "The organizer has receieved your distress, please stand by and go to safe place"));
     } catch (e) {
       print(e);
     }
   }
 
-  addBalance(String volunteerUID, double newBalance) async {
+  addBalance(String volunteerUID, double newBalance, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .addBalance(volunteerUID, newBalance)
-          .whenComplete(() => Fluttertoast.showToast(msg: "Balance Updated"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Balance Updated",
+              "Your new balance has been updated, to check your balance check the card and you will see your current balance."));
     } catch (e) {
       print(e);
     }
   }
 
-  deductBalance(String volunteerUID, double newBalance) async {
+  deductBalance(String volunteerUID, double newBalance, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .deductBalance(volunteerUID, newBalance)
-          .whenComplete(() => Fluttertoast.showToast(msg: "Balance Updated"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Balance Updated",
+              "Your new balance has been updated, to check your balance check the card and you will see your current balance."));
     } catch (e) {
       print(e);
     }
   }
 
-  deleteActivity(String uidActivity) async {
+  deleteActivity(String uidActivity, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .deleteRecentActivity(uidActivity)
-          .whenComplete(() => Fluttertoast.showToast(msg: "Activity Deleted"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Activity Deleted",
+              "Deleting your activity means there are not turning back, you will not see this activity anymore."));
     } catch (e) {
       print(e);
     }
   }
 
-  deleteRecentCampaign(String uidActivity, String volunteerUID) async {
+  deleteRecentCampaign(String uidActivity, String volunteerUID, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .deleteRecentCampaign(uidActivity, volunteerUID)
-          .whenComplete(() => Fluttertoast.showToast(msg: "Campaign Removed"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Recent Activity Deleted",
+              "Deleting your recent activity means there are not turning back, you will not see this activity anymore."));
     } catch (e) {
       print(e);
     }
   }
 
-  approveVolunteer(String campaignID, String volunteerID) async {
+  approveVolunteer(String campaignID, String volunteerID, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .approveVolunteer(campaignID, volunteerID)
-          .whenComplete(
-              () => Fluttertoast.showToast(msg: "volunteer approved"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Volunteer Approved",
+              "The volunteer is approve to be part of the campaign, monitor them and take care of them."));
     } catch (e) {
       print(e);
     }
@@ -944,14 +1020,18 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  deductInitialCampaign(String volunteerUID) async {
+  deductInitialCampaign(String volunteerUID, context) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
       }
       await DatabaseService(uid: _loggedInUser!.uid)
           .deductInitialCamapaign(volunteerUID)
-          .whenComplete(() => Fluttertoast.showToast(msg: "Balance Deducted"));
+          .whenComplete(() => CustomSnackBar().showCustomSnackBar(
+              context,
+              Color(0xff65BFB8),
+              "Balance Deducted",
+              "This means that there are charge of the initial campaign that deducted to your account, thank you"));
     } catch (e) {
       print(e);
     }

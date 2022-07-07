@@ -300,7 +300,7 @@ class _LoginScreenState extends State<LoginScreen>
                           await context
                               .read(authserviceProvider)
                               .signIn(_etEmailController.text,
-                                  _etPasswordController.text)
+                                  _etPasswordController.text, context)
                               .whenComplete(() =>
                                   Navigator.pushNamed(context, "/wrapperAuth"));
                         },
