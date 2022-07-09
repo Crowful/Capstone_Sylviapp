@@ -33,6 +33,26 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool isJoin = false;
   bool isOrganizer = false;
+  String _dropDownValue = 'Active';
+
+  Stream<QuerySnapshot<Object?>>? getFliterCampaign() {
+    if (_dropDownValue == 'Active') {
+      return FirebaseFirestore.instance
+          .collection('campaigns')
+          .where('isActive', isEqualTo: true)
+          .snapshots();
+    } else if (_dropDownValue == 'Done') {
+      return FirebaseFirestore.instance
+          .collection('campaigns')
+          .where('isCompleted', isEqualTo: true)
+          .snapshots();
+    } else if (_dropDownValue == 'In Progress') {
+      return FirebaseFirestore.instance
+          .collection('campaigns')
+          .where('inProgress', isEqualTo: true)
+          .snapshots();
+    }
+  }
 
 //Animation
   bool hold = false;
@@ -436,18 +456,44 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           SizedBox(height: 15),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Text(
-              LocaleKeys.allreforestationcampaign.tr(),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Color(0xff65BFB8)),
-            ),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    LocaleKeys.allreforestationcampaign.tr(),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color(0xff65BFB8)),
+                  ),
+                  SizedBox(height: 20),
+                  DropdownButton<String>(
+                    value: _dropDownValue,
+                    icon: Icon(
+                      Icons.filter_list,
+                      color: Color(0xff65BFB8),
+                    ),
+                    items: <String>[
+                      'Active',
+                      'Done',
+                      'In Progress',
+                    ].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _dropDownValue = value!;
+                      });
+                    },
+                  ),
+                ]),
           ),
           StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('campaigns')
-                  .snapshots(),
+              stream: getFliterCampaign(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Expanded(
