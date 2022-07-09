@@ -7,7 +7,7 @@ class CustomSnackBar {
       content: Stack(clipBehavior: Clip.none, children: [
         Container(
           padding: EdgeInsets.all(10),
-          height: 75,
+          height: 85,
           width: MediaQuery.of(context).size.width - 2,
           decoration: BoxDecoration(
               color: color,

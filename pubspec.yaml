@@ -72,6 +72,7 @@ dependencies:
   share_plus: ^3.0.4
   lottie: ^1.2.2
   flutter_svg: ^1.0.3
+  skeletons: ^0.0.3
 
 
 dev_dependencies:

@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:skeletons/skeletons.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/Domain/wrapperisApproved.dart';
 import 'package:sylviapp_project/animation/FadeAnimation.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:sylviapp_project/screens/campaign_module/campaign_monitor_organizer.dart';
+import 'package:sylviapp_project/widgets/snackbar_widgets/custom_snackbar.dart';
 import 'analytics_module/bar_graph.dart';
 import 'campaign_module/join_donate.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -372,7 +374,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                     onPressed: () {
                       setState(() {
-                        print(menuOpen);
                         widget.controller.forward();
                         menuOpen = true;
                       });
@@ -464,7 +465,45 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         .snapshots(),
                                     builder: (context, snapshotedsd) {
                                       if (!snapshotedsd.hasData) {
-                                        return CircularProgressIndicator();
+                                        return Skeleton(
+                                            isLoading: true,
+                                            skeleton: SkeletonItem(
+                                              child: Column(children: [
+                                                Container(
+                                                    height: 130,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            10,
+                                                    child: Card()),
+                                                Container(
+                                                    height: 130,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            10,
+                                                    child: Card()),
+                                                Container(
+                                                    height: 130,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            10,
+                                                    child: Card()),
+                                                Container(
+                                                    height: 130,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            10,
+                                                    child: Card()),
+                                              ]),
+                                            ),
+                                            child: Text('content'));
                                       } else {
                                         return StreamBuilder<DocumentSnapshot>(
                                             stream: FirebaseFirestore.instance
@@ -572,15 +611,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                         if (e.get(
                                                                 'inProgress') ==
                                                             true) {
-                                                          Fluttertoast.showToast(
-                                                              msg:
-                                                                  'This campaign is in progress');
+                                                          CustomSnackBar()
+                                                              .showCustomSnackBar(
+                                                                  context,
+                                                                  Color(
+                                                                      0xff65BFB8),
+                                                                  "This Campaign is in Progress",
+                                                                  "This campaign is in progress, you can click other campaigns to donate or join. Thank you.");
                                                         } else if (e.get(
                                                                 'isCompleted') ==
                                                             true) {
-                                                          Fluttertoast.showToast(
-                                                              msg:
-                                                                  'This campaign is already done');
+                                                          CustomSnackBar()
+                                                              .showCustomSnackBar(
+                                                                  context,
+                                                                  Color(
+                                                                      0xff65BFB8),
+                                                                  "This Campaign is already done",
+                                                                  "This campaign is not accepting any volunteer nor donation because the campaign was successfully done, Thank you.");
                                                         } else {
                                                           Navigator.push(
                                                               context,
@@ -681,7 +728,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       ),
                       onPressed: () {
                         setState(() {
-                          print(menuOpen);
                           widget.controller.forward();
                           menuOpen = true;
                         });
@@ -728,7 +774,57 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     .snapshots(),
                 builder: (context, snapshotAnalyticsActive) {
                   if (!snapshotAnalyticsActive.hasData) {
-                    return CircularProgressIndicator();
+                    return Skeleton(
+                        isLoading: true,
+                        skeleton: SkeletonItem(
+                          child: Column(
+                            children: [
+                              Center(
+                                child: Container(
+                                  height: 200,
+                                  width: 200,
+                                  child: Card(),
+                                ),
+                              ),
+                              Container(
+                                  height: 50,
+                                  width:
+                                      MediaQuery.of(context).size.width - 100,
+                                  child: Card()),
+                              SizedBox(
+                                height: 40,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                      height: 150, width: 150, child: Card()),
+                                  SizedBox(
+                                    width: 40,
+                                  ),
+                                  Container(
+                                      height: 150, width: 150, child: Card()),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 40,
+                              ),
+                              Container(
+                                  height: 50,
+                                  width: MediaQuery.of(context).size.width - 40,
+                                  child: Card()),
+                              Container(
+                                  height: 50,
+                                  width: MediaQuery.of(context).size.width - 40,
+                                  child: Card()),
+                              Container(
+                                  height: 50,
+                                  width: MediaQuery.of(context).size.width - 40,
+                                  child: Card()),
+                            ],
+                          ),
+                        ),
+                        child: Text('content'));
                   } else {
                     return StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance
@@ -737,7 +833,73 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             .snapshots(),
                         builder: (context, snapshotAnalyticsProgress) {
                           if (!snapshotAnalyticsProgress.hasData) {
-                            return CircularProgressIndicator();
+                            return Skeleton(
+                                isLoading: true,
+                                skeleton: SkeletonItem(
+                                  child: Column(
+                                    children: [
+                                      Center(
+                                        child: Container(
+                                          height: 200,
+                                          width: 200,
+                                          child: Card(),
+                                        ),
+                                      ),
+                                      Container(
+                                          height: 50,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              100,
+                                          child: Card()),
+                                      SizedBox(
+                                        height: 40,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                              height: 150,
+                                              width: 150,
+                                              child: Card()),
+                                          SizedBox(
+                                            width: 40,
+                                          ),
+                                          Container(
+                                              height: 150,
+                                              width: 150,
+                                              child: Card()),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 40,
+                                      ),
+                                      Container(
+                                          height: 50,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              40,
+                                          child: Card()),
+                                      Container(
+                                          height: 50,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              40,
+                                          child: Card()),
+                                      Container(
+                                          height: 50,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              40,
+                                          child: Card()),
+                                    ],
+                                  ),
+                                ),
+                                child: Text('content'));
                           } else {
                             return Expanded(
                               child: StreamBuilder<QuerySnapshot>(
@@ -747,7 +909,77 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       .snapshots(),
                                   builder: (context, snapshotAnalyticsDone) {
                                     if (!snapshotAnalyticsDone.hasData) {
-                                      return CircularProgressIndicator();
+                                      return Skeleton(
+                                          isLoading: true,
+                                          skeleton: SkeletonItem(
+                                            child: Column(
+                                              children: [
+                                                Center(
+                                                  child: Container(
+                                                    height: 200,
+                                                    width: 200,
+                                                    child: Card(),
+                                                  ),
+                                                ),
+                                                Container(
+                                                    height: 50,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            100,
+                                                    child: Card()),
+                                                SizedBox(
+                                                  height: 40,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                        height: 150,
+                                                        width: 150,
+                                                        child: Card()),
+                                                    SizedBox(
+                                                      width: 40,
+                                                    ),
+                                                    Container(
+                                                        height: 150,
+                                                        width: 150,
+                                                        child: Card()),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 40,
+                                                ),
+                                                Container(
+                                                    height: 50,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            40,
+                                                    child: Card()),
+                                                Container(
+                                                    height: 50,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            40,
+                                                    child: Card()),
+                                                Container(
+                                                    height: 50,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            40,
+                                                    child: Card()),
+                                              ],
+                                            ),
+                                          ),
+                                          child: Text('content'));
                                     } else {
                                       int campaignDone =
                                           snapshotAnalyticsDone.data!.size;
@@ -831,7 +1063,57 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           }).toList()),
                     );
                   } else {
-                    return CircularProgressIndicator();
+                    return Skeleton(
+                        isLoading: true,
+                        skeleton: SkeletonItem(
+                          child: Column(
+                            children: [
+                              Center(
+                                child: Container(
+                                  height: 200,
+                                  width: 200,
+                                  child: Card(),
+                                ),
+                              ),
+                              Container(
+                                  height: 50,
+                                  width:
+                                      MediaQuery.of(context).size.width - 100,
+                                  child: Card()),
+                              SizedBox(
+                                height: 40,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                      height: 150, width: 150, child: Card()),
+                                  SizedBox(
+                                    width: 40,
+                                  ),
+                                  Container(
+                                      height: 150, width: 150, child: Card()),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 40,
+                              ),
+                              Container(
+                                  height: 50,
+                                  width: MediaQuery.of(context).size.width - 40,
+                                  child: Card()),
+                              Container(
+                                  height: 50,
+                                  width: MediaQuery.of(context).size.width - 40,
+                                  child: Card()),
+                              Container(
+                                  height: 50,
+                                  width: MediaQuery.of(context).size.width - 40,
+                                  child: Card()),
+                            ],
+                          ),
+                        ),
+                        child: Text('content'));
                   }
                 }),
             SizedBox(
@@ -892,7 +1174,57 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           }).toList()),
                     );
                   } else {
-                    return CircularProgressIndicator();
+                    return Skeleton(
+                        isLoading: true,
+                        skeleton: SkeletonItem(
+                          child: Column(
+                            children: [
+                              Center(
+                                child: Container(
+                                  height: 200,
+                                  width: 200,
+                                  child: Card(),
+                                ),
+                              ),
+                              Container(
+                                  height: 50,
+                                  width:
+                                      MediaQuery.of(context).size.width - 100,
+                                  child: Card()),
+                              SizedBox(
+                                height: 40,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                      height: 150, width: 150, child: Card()),
+                                  SizedBox(
+                                    width: 40,
+                                  ),
+                                  Container(
+                                      height: 150, width: 150, child: Card()),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 40,
+                              ),
+                              Container(
+                                  height: 50,
+                                  width: MediaQuery.of(context).size.width - 40,
+                                  child: Card()),
+                              Container(
+                                  height: 50,
+                                  width: MediaQuery.of(context).size.width - 40,
+                                  child: Card()),
+                              Container(
+                                  height: 50,
+                                  width: MediaQuery.of(context).size.width - 40,
+                                  child: Card()),
+                            ],
+                          ),
+                        ),
+                        child: Text('content'));
                   }
                 }),
           ],
@@ -922,7 +1254,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                     onPressed: () {
                       setState(() {
-                        print(menuOpen);
                         widget.controller.forward();
                         menuOpen = true;
                       });
@@ -984,7 +1315,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           color: Colors.black,
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           image: DecorationImage(
-                              image: AssetImage("assets/images/map.jpg"),
+                              colorFilter: ColorFilter.mode(
+                                  Colors.black, BlendMode.dstOver),
+                              image:
+                                  AssetImage("assets/images/versionTwoMap.png"),
                               fit: BoxFit.cover)),
                     ),
                   )),
@@ -1010,7 +1344,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return CircularProgressIndicator();
+                  return Skeleton(
+                      isLoading: true,
+                      skeleton: SkeletonItem(
+                        child: Column(children: [
+                          Container(
+                              height: 100,
+                              width: MediaQuery.of(context).size.width - 10,
+                              child: Card()),
+                          Container(
+                              height: 100,
+                              width: MediaQuery.of(context).size.width - 10,
+                              child: Card()),
+                          Container(
+                              height: 100,
+                              width: MediaQuery.of(context).size.width - 10,
+                              child: Card()),
+                          Container(
+                              height: 100,
+                              width: MediaQuery.of(context).size.width - 10,
+                              child: Card()),
+                        ]),
+                      ),
+                      child: Text('content'));
                 } else if (snapshot.data!.docs.isEmpty) {
                   return FadeAnimation(
                     1,
@@ -1201,7 +1557,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     required int volunteerMax,
   }) {
     String? aydee = FirebaseAuth.instance.currentUser!.uid;
-    print(context.read(authserviceProvider).getCurrentUserUID.toString());
+
     double meterValue = rfund / tfund;
 
     int raisedFund = rfund;
