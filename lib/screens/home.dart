@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/Domain/wrapperisApproved.dart';
@@ -34,6 +36,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool isJoin = false;
   bool isOrganizer = false;
   String _dropDownValue = 'Active';
+  late final AnimationController _analyticsControllerAnimation;
 
   Stream<QuerySnapshot<Object?>>? getFliterCampaign() {
     if (_dropDownValue == 'Active') {
@@ -54,6 +57,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
   }
 
+  TextStyle getColorOfTops(place) {
+    if (place == 1) {
+      return TextStyle(
+          fontSize: 18, fontWeight: FontWeight.w800, color: Colors.yellow);
+    } else if (place == 2) {
+      return TextStyle(
+          fontSize: 18, fontWeight: FontWeight.w800, color: Colors.grey);
+    } else if (place == 3) {
+      return TextStyle(
+          fontSize: 18, fontWeight: FontWeight.w800, color: Colors.brown);
+    } else {
+      return TextStyle(
+          fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white);
+    }
+  }
+
 //Animation
   bool hold = false;
   bool menuOpen = false;
@@ -68,6 +87,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     //
     super.initState();
+
+    _analyticsControllerAnimation = AnimationController(vsync: this);
     _hide =
         AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     _hide.forward();
@@ -81,6 +102,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    _analyticsControllerAnimation.dispose();
+    homePageController.dispose();
     _hide.dispose();
     super.dispose();
   }
@@ -759,7 +782,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return SingleChildScrollView(
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: 1600,
+        height: 1900,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -947,336 +970,469 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 ),
                                 child: Text('content'));
                           } else {
-                            return Expanded(
-                              child: StreamBuilder<QuerySnapshot>(
-                                  stream: FirebaseFirestore.instance
-                                      .collection("campaigns")
-                                      .where('isCompleted', isEqualTo: true)
-                                      .snapshots(),
-                                  builder: (context, snapshotAnalyticsDone) {
-                                    if (!snapshotAnalyticsDone.hasData) {
-                                      return Skeleton(
-                                          isLoading: true,
-                                          skeleton: SkeletonItem(
-                                            child: Column(
-                                              children: [
-                                                Center(
-                                                  child: Container(
-                                                    height: 200,
-                                                    width: 200,
-                                                    child: Card(),
+                            return StreamBuilder<QuerySnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection("campaigns")
+                                    .where('isCompleted', isEqualTo: true)
+                                    .snapshots(),
+                                builder: (context, snapshotAnalyticsDone) {
+                                  if (!snapshotAnalyticsDone.hasData) {
+                                    return Skeleton(
+                                        isLoading: true,
+                                        skeleton: SkeletonItem(
+                                          child: Column(
+                                            children: [
+                                              Center(
+                                                child: Container(
+                                                  height: 200,
+                                                  width: 200,
+                                                  child: Card(),
+                                                ),
+                                              ),
+                                              Container(
+                                                  height: 50,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      100,
+                                                  child: Card()),
+                                              SizedBox(
+                                                height: 40,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                      height: 150,
+                                                      width: 150,
+                                                      child: Card()),
+                                                  SizedBox(
+                                                    width: 40,
                                                   ),
-                                                ),
-                                                Container(
-                                                    height: 50,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width -
-                                                            100,
-                                                    child: Card()),
-                                                SizedBox(
-                                                  height: 40,
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                        height: 150,
-                                                        width: 150,
-                                                        child: Card()),
-                                                    SizedBox(
-                                                      width: 40,
-                                                    ),
-                                                    Container(
-                                                        height: 150,
-                                                        width: 150,
-                                                        child: Card()),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 40,
-                                                ),
-                                                Container(
-                                                    height: 50,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width -
-                                                            40,
-                                                    child: Card()),
-                                                Container(
-                                                    height: 50,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width -
-                                                            40,
-                                                    child: Card()),
-                                                Container(
-                                                    height: 50,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width -
-                                                            40,
-                                                    child: Card()),
-                                              ],
-                                            ),
+                                                  Container(
+                                                      height: 150,
+                                                      width: 150,
+                                                      child: Card()),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 40,
+                                              ),
+                                              Container(
+                                                  height: 50,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      40,
+                                                  child: Card()),
+                                              Container(
+                                                  height: 50,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      40,
+                                                  child: Card()),
+                                              Container(
+                                                  height: 50,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      40,
+                                                  child: Card()),
+                                            ],
                                           ),
-                                          child: Text('content'));
-                                    } else {
-                                      int campaignDone =
-                                          snapshotAnalyticsDone.data!.size;
-                                      int campaignInProgress =
-                                          snapshotAnalyticsProgress.data!.size;
-                                      int campaignActive =
-                                          snapshotAnalyticsActive.data!.size;
-                                      return RefreshIndicator(
-                                        onRefresh: () async {},
-                                        child: Container(
-                                            width: double.infinity,
-                                            child: FadeAnimation(
-                                                1,
-                                                Chart(
-                                                  campaignInProgress:
-                                                      campaignInProgress,
-                                                  doneCampaign: campaignDone,
-                                                  activeCampaign:
-                                                      campaignActive,
-                                                ))),
-                                      );
-                                    }
-                                  }),
-                            );
+                                        ),
+                                        child: Text('content'));
+                                  } else {
+                                    int campaignDone =
+                                        snapshotAnalyticsDone.data!.size;
+                                    int campaignInProgress =
+                                        snapshotAnalyticsProgress.data!.size;
+                                    int campaignActive =
+                                        snapshotAnalyticsActive.data!.size;
+                                    return RefreshIndicator(
+                                      onRefresh: () async {},
+                                      child: Container(
+                                          width: double.infinity,
+                                          child: FadeAnimation(
+                                              1,
+                                              Chart(
+                                                campaignInProgress:
+                                                    campaignInProgress,
+                                                doneCampaign: campaignDone,
+                                                activeCampaign: campaignActive,
+                                              ))),
+                                    );
+                                  }
+                                });
                           }
                         });
                   }
                 }),
-            Text(
-              'Leaderboard Joined',
-              style: TextStyle(
-                  fontSize: 30,
-                  color: Color(0xff65BFB8),
-                  fontWeight: FontWeight.bold),
-            ),
-            StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('users')
-                    .orderBy('campaignsJoined', descending: true)
-                    .limit(10)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  int topplace = 0;
-                  if (snapshot.hasData) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 400,
-                      child: ListView(
-                          physics: NeverScrollableScrollPhysics(),
-                          children: snapshot.data!.docs.map((e) {
-                            topplace++;
-                            if (snapshot.data!.docs.isNotEmpty) {
-                              return Container(
-                                height: 35,
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                          width: 60,
-                                          child: Text("Top " +
-                                              topplace.toString() +
-                                              " ")),
-                                      Container(
-                                        width: 130,
-                                        child: Text(AESCryptography()
-                                            .decryptAES(
-                                                enc.Encrypted.fromBase64(
-                                                    e.get('fullname')))),
+            Container(
+              height: 700,
+              padding: EdgeInsets.only(top: 100),
+              child: Column(children: [
+                Text(
+                  'Leaderboard Joined',
+                  style: TextStyle(
+                      fontSize: 30,
+                      color: Color(0xff65BFB8),
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .orderBy('campaignsJoined', descending: true)
+                        .limit(10)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      int topplace = 0;
+                      if (snapshot.hasData) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 500,
+                          child: ListView(
+                              physics: NeverScrollableScrollPhysics(),
+                              children: snapshot.data!.docs.map((e) {
+                                topplace++;
+                                if (snapshot.data!.docs.isNotEmpty) {
+                                  return Column(children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          color: Color(0xff65BFB8),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
+                                      height: 150,
+                                      width: MediaQuery.of(context).size.width -
+                                          40,
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                30,
+                                        child: Row(children: [
+                                          Container(
+                                            width: 200,
+                                            child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                      width: 100,
+                                                      padding:
+                                                          EdgeInsets.fromLTRB(
+                                                              20, 20, 20, 20),
+                                                      child: Text(
+                                                        "Top " +
+                                                            topplace
+                                                                .toString() +
+                                                            " ",
+                                                        style: getColorOfTops(
+                                                            topplace),
+                                                      )),
+                                                  Container(
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            20, 0, 0, 20),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            50,
+                                                    child: Text(
+                                                      AESCryptography()
+                                                          .decryptAES(
+                                                              enc.Encrypted
+                                                                  .fromBase64(
+                                                        e.get('fullname'),
+                                                      )),
+                                                      style: TextStyle(
+                                                          fontSize: 25,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  Container(
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            20, 0, 0, 0),
+                                                    child: Text(
+                                                      e
+                                                              .get(
+                                                                  'campaignsJoined')
+                                                              .toString() +
+                                                          ' Campaign Joined',
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.white),
+                                                    ),
+                                                  )
+                                                ]),
+                                          ),
+                                          topplace == 1
+                                              ? LottieBuilder.asset(
+                                                  'assets/images/crown.json')
+                                              : Container(),
+                                          topplace == 2
+                                              ? LottieBuilder.asset(
+                                                  'assets/images/silver.json',
+                                                  controller:
+                                                      _analyticsControllerAnimation,
+                                                  onLoaded: (composition) {
+                                                    _analyticsControllerAnimation
+                                                            .duration =
+                                                        composition.duration;
+                                                    _analyticsControllerAnimation
+                                                        .repeat(
+                                                            min: 0.5, max: 0.8);
+                                                  },
+                                                )
+                                              : Container(),
+                                          topplace == 3
+                                              ? LottieBuilder.asset(
+                                                  'assets/images/bronze.json',
+                                                  controller:
+                                                      _analyticsControllerAnimation,
+                                                  onLoaded: (composition) {
+                                                    _analyticsControllerAnimation
+                                                            .duration =
+                                                        composition.duration;
+                                                    _analyticsControllerAnimation
+                                                        .repeat(
+                                                            min: 0.5, max: 0.6);
+                                                  },
+                                                )
+                                              : Container(),
+                                        ]),
                                       ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Text(e.get('campaignsJoined').toString())
-                                    ]),
-                              );
-                            } else {
-                              return Text('wala laman');
-                            }
-                          }).toList()),
-                    );
-                  } else {
-                    return Skeleton(
-                        isLoading: true,
-                        skeleton: SkeletonItem(
-                          child: Column(
-                            children: [
-                              Center(
-                                child: Container(
-                                  height: 200,
-                                  width: 200,
-                                  child: Card(),
-                                ),
-                              ),
-                              Container(
-                                  height: 50,
-                                  width:
-                                      MediaQuery.of(context).size.width - 100,
-                                  child: Card()),
-                              SizedBox(
-                                height: 40,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                  ]);
+                                } else {
+                                  return Text('Nothing to see here');
+                                }
+                              }).toList()),
+                        );
+                      } else {
+                        return Skeleton(
+                            isLoading: true,
+                            skeleton: SkeletonItem(
+                              child: Column(
                                 children: [
-                                  Container(
-                                      height: 150, width: 150, child: Card()),
-                                  SizedBox(
-                                    width: 40,
+                                  Center(
+                                    child: Container(
+                                      height: 200,
+                                      width: 200,
+                                      child: Card(),
+                                    ),
                                   ),
                                   Container(
-                                      height: 150, width: 150, child: Card()),
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width -
+                                          100,
+                                      child: Card()),
+                                  SizedBox(
+                                    height: 40,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          height: 150,
+                                          width: 150,
+                                          child: Card()),
+                                      SizedBox(
+                                        width: 40,
+                                      ),
+                                      Container(
+                                          height: 150,
+                                          width: 150,
+                                          child: Card()),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 40,
+                                  ),
+                                  Container(
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width -
+                                          40,
+                                      child: Card()),
+                                  Container(
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width -
+                                          40,
+                                      child: Card()),
+                                  Container(
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width -
+                                          40,
+                                      child: Card()),
                                 ],
                               ),
-                              SizedBox(
-                                height: 40,
-                              ),
-                              Container(
-                                  height: 50,
-                                  width: MediaQuery.of(context).size.width - 40,
-                                  child: Card()),
-                              Container(
-                                  height: 50,
-                                  width: MediaQuery.of(context).size.width - 40,
-                                  child: Card()),
-                              Container(
-                                  height: 50,
-                                  width: MediaQuery.of(context).size.width - 40,
-                                  child: Card()),
-                            ],
-                          ),
-                        ),
-                        child: Text('content'));
-                  }
-                }),
+                            ),
+                            child: Text('content'));
+                      }
+                    }),
+              ]),
+            ),
             SizedBox(
-              height: 30,
+              height: 20,
             ),
-            Text(
-              'Leaderboard Donation',
-              style: TextStyle(
-                  fontSize: 30,
-                  color: Color(0xff65BFB8),
-                  fontWeight: FontWeight.bold),
-            ),
-            StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('users')
-                    .orderBy('overallDonation', descending: true)
-                    .limit(10)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  int topplace = 0;
-                  if (snapshot.hasData) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 400,
-                      child: ListView(
-                          physics: NeverScrollableScrollPhysics(),
-                          children: snapshot.data!.docs.map((e) {
-                            topplace++;
-                            if (snapshot.data!.docs.isNotEmpty) {
-                              return Container(
-                                height: 35,
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                          width: 60,
-                                          child: Text("Top " +
-                                              topplace.toString() +
-                                              " ")),
-                                      Container(
-                                        width: 130,
-                                        child: Text(AESCryptography()
-                                            .decryptAES(
-                                                enc.Encrypted.fromBase64(
-                                                    e.get('fullname')))),
+            Container(
+              padding: EdgeInsets.only(top: 0),
+              child: Column(children: [
+                Text(
+                  'Leaderboard Donation',
+                  style: TextStyle(
+                      fontSize: 30,
+                      color: Color(0xff65BFB8),
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .orderBy('overallDonation', descending: true)
+                        .limit(10)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      int topplace = 0;
+                      if (snapshot.hasData) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 400,
+                          child: ListView(
+                              physics: NeverScrollableScrollPhysics(),
+                              children: snapshot.data!.docs.map((e) {
+                                topplace++;
+                                if (snapshot.data!.docs.isNotEmpty) {
+                                  return Container(
+                                    height: 80,
+                                    width:
+                                        MediaQuery.of(context).size.width - 20,
+                                    child: Card(
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        height: 35,
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                  width: 60,
+                                                  child: Text("Top " +
+                                                      topplace.toString() +
+                                                      " ")),
+                                              Container(
+                                                width: 130,
+                                                child: Text(AESCryptography()
+                                                    .decryptAES(enc.Encrypted
+                                                        .fromBase64(e
+                                                            .get('fullname')))),
+                                              ),
+                                              SizedBox(
+                                                width: 20,
+                                              ),
+                                              Text('₱ ' +
+                                                  e
+                                                      .get('overallDonation')
+                                                      .toString())
+                                            ]),
                                       ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Text(e.get('overallDonation').toString())
-                                    ]),
-                              );
-                            } else {
-                              return Text('wala laman');
-                            }
-                          }).toList()),
-                    );
-                  } else {
-                    return Skeleton(
-                        isLoading: true,
-                        skeleton: SkeletonItem(
-                          child: Column(
-                            children: [
-                              Center(
-                                child: Container(
-                                  height: 200,
-                                  width: 200,
-                                  child: Card(),
-                                ),
-                              ),
-                              Container(
-                                  height: 50,
-                                  width:
-                                      MediaQuery.of(context).size.width - 100,
-                                  child: Card()),
-                              SizedBox(
-                                height: 40,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                    ),
+                                  );
+                                } else {
+                                  return Text('wala laman');
+                                }
+                              }).toList()),
+                        );
+                      } else {
+                        return Skeleton(
+                            isLoading: true,
+                            skeleton: SkeletonItem(
+                              child: Column(
                                 children: [
-                                  Container(
-                                      height: 150, width: 150, child: Card()),
-                                  SizedBox(
-                                    width: 40,
+                                  Center(
+                                    child: Container(
+                                      height: 200,
+                                      width: 200,
+                                      child: Card(),
+                                    ),
                                   ),
                                   Container(
-                                      height: 150, width: 150, child: Card()),
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width -
+                                          100,
+                                      child: Card()),
+                                  SizedBox(
+                                    height: 40,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          height: 150,
+                                          width: 150,
+                                          child: Card()),
+                                      SizedBox(
+                                        width: 40,
+                                      ),
+                                      Container(
+                                          height: 150,
+                                          width: 150,
+                                          child: Card()),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 40,
+                                  ),
+                                  Container(
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width -
+                                          40,
+                                      child: Card()),
+                                  Container(
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width -
+                                          40,
+                                      child: Card()),
+                                  Container(
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width -
+                                          40,
+                                      child: Card()),
                                 ],
                               ),
-                              SizedBox(
-                                height: 40,
-                              ),
-                              Container(
-                                  height: 50,
-                                  width: MediaQuery.of(context).size.width - 40,
-                                  child: Card()),
-                              Container(
-                                  height: 50,
-                                  width: MediaQuery.of(context).size.width - 40,
-                                  child: Card()),
-                              Container(
-                                  height: 50,
-                                  width: MediaQuery.of(context).size.width - 40,
-                                  child: Card()),
-                            ],
-                          ),
-                        ),
-                        child: Text('content'));
-                  }
-                }),
+                            ),
+                            child: Text('content'));
+                      }
+                    }),
+              ]),
+            ),
           ],
         ),
       ),
     );
+
     // return Column(
     //   children: [
     //     Container(height: 250, width: 360, child: BarChartSample3()),

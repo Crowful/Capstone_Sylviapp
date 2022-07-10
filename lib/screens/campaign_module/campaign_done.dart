@@ -82,7 +82,6 @@ class _CampaignCompletedState extends State<CampaignCompleted> {
                           .doc(widget.campaignUID)
                           .snapshots(),
                       builder: (context, snapshoted) {
-                        print(widget.campaignUID);
                         if (!snapshoted.hasData) {
                           return Center(
                             child: CircularProgressIndicator(),

@@ -10,6 +10,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:skeletons/skeletons.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -177,7 +178,19 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                       },
                                     ).image
                                   : null)
-                          : CircularProgressIndicator(),
+                          : Skeleton(
+                              isLoading: true,
+                              skeleton: SkeletonItem(
+                                child: CircleAvatar(
+                                  child: Icon(
+                                    Icons.person,
+                                    color: Colors.red,
+                                    size: 40,
+                                  ),
+                                ),
+                              ),
+                              child: Text('content'),
+                            ),
                     ),
                     Wrap(children: [
                       StreamBuilder<DocumentSnapshot>(
