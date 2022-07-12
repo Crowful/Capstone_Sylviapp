@@ -121,7 +121,7 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
           });
     });
     FirebaseMessaging.instance.getToken().then((value) {
-      print(value);
+
     });
 
     _animationController = AnimationController(
@@ -493,7 +493,7 @@ class _CampaignMonitorOrganizerState extends State<CampaignMonitorOrganizer>
                             if (!snapshotStatus.hasData) {
                               return Center(child: CircularProgressIndicator());
                             } else {
-                              print(isOpened);
+                              
                               var status = snapshotStatus.data!.get('status');
                               return StreamBuilder<DocumentSnapshot>(
                                   stream: FirebaseFirestore.instance

@@ -67,13 +67,11 @@ class _ShowVolunteerState extends State<ShowVolunteer> {
     } catch (e) {
       setState(() {
         errorText1 = e.toString();
-        print('it aint workin`');
       });
     }
     if (this.mounted) {
       setState(() {
         urlTest1 = taske1.toString();
-        print('it is workin`');
       });
     }
   }
@@ -113,12 +111,10 @@ class _ShowVolunteerState extends State<ShowVolunteer> {
         campaignID: widget.campaignID,
         userID: widget.userID);
     showProfile(widget.userID);
-    print(urlTest);
   }
 
   @override
   Widget build(BuildContext context) {
-    print(urlTest);
     return Dialog(
       elevation: 3,
       child: StreamBuilder<DocumentSnapshot>(

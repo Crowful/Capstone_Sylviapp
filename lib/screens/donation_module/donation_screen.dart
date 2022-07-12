@@ -28,11 +28,7 @@ class _DonationScreenState extends State<DonationScreen> {
                 await BraintreeDropIn.start(request);
 
             if (result != null) {
-              print(result.paymentMethodNonce.description);
-              print(result.paymentMethodNonce.nonce);
-            } else {
-              print("FAILED PAYMENT PROCESS");
-            }
+            } else {}
           },
           child: Text("Donate"),
         ),

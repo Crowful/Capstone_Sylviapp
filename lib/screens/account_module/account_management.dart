@@ -46,7 +46,6 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
 
     setState(() {
       _image = File(image!.path);
-      print('image Path $_image');
       uploadStatus = 'Uploading';
     });
   }

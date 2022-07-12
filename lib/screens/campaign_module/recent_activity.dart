@@ -82,6 +82,25 @@ class _RecentActivityState extends State<RecentActivity> {
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
                               return CircularProgressIndicator();
+                            } else if (snapshot.data!.size == 0) {
+                              return Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5))),
+                                  child: Center(
+                                      child: Container(
+                                          child: Text(
+                                    'No Recent Activity',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.grey),
+                                  ))),
+                                ),
+                              );
                             } else {
                               return Expanded(
                                 child: Container(

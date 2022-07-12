@@ -63,7 +63,7 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
 
     setState(() {
       _imageOfVac = File(image!.path);
-      print('image Path $_imageOfVac');
+
       uploadStatus = 'Uploading';
     });
   }
@@ -75,7 +75,7 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
 
     setState(() {
       _imageOfMed = File(image!.path);
-      print('image Path $_imageOfMed');
+
       uploadStatus = 'Uploading';
     });
   }

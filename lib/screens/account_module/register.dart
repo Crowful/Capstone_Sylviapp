@@ -92,9 +92,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         registerPageController.page!.toInt() + 1,
                         duration: Duration(milliseconds: 1000),
                         curve: Curves.fastOutSlowIn);
-
-                    print(context.read(userAccountProvider).getEmail);
-                    print(context.read(userAccountProvider).getPassword);
                   },
                   child: Center(
                       child: Text(

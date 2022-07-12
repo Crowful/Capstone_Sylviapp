@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sylviapp_project/Domain/aes_cryptography.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/widgets/snackbar_widgets/custom_snackbar.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -36,30 +37,37 @@ class _EditProfileState extends State<EditProfile> {
         // ignore: invalid_use_of_visible_for_testing_member
         await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    setState(() {
-      _image = File(image!.path);
-      print('image Path $_image');
-      uploadStatus = 'Uploading';
-    });
+    if (image == null) {
+    } else {
+      setState(() {
+        _image = File(image.path);
+
+        uploadStatus = 'Uploading';
+      });
+    }
   }
 
   Future uploadPicture(String uid) async {
-    String fileName = "pic";
-    final destination = 'files/users/$uid/ProfilePicture/$fileName';
+    if (_image == null) {
+    } else {
+      String fileName = "pic";
+      final destination = 'files/users/$uid/ProfilePicture/$fileName';
 
-    Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
-    task = firebaseStorageRef.putFile(_image!);
+      Reference firebaseStorageRef = FirebaseStorage.instance.ref(destination);
 
-    final snapshot = await task!.whenComplete(() => {
-          setState(() {
-            uploadStatus = 'Sucessfully Uploaded (Wait for the Confirmation)';
-          })
-        });
-    String urlDownload = await snapshot.ref.getDownloadURL();
+      task = firebaseStorageRef.putFile(_image!);
 
-    setState(() {
-      urlTest = urlDownload;
-    });
+      final snapshot = await task!.whenComplete(() => {
+            setState(() {
+              uploadStatus = 'Sucessfully Uploaded (Wait for the Confirmation)';
+            })
+          });
+      String urlDownload = await snapshot.ref.getDownloadURL();
+
+      setState(() {
+        urlTest = urlDownload;
+      });
+    }
   }
 
   Future showProfile(uid) async {
@@ -70,7 +78,6 @@ class _EditProfileState extends State<EditProfile> {
     try {
       taske = await firebaseStorageRef.getDownloadURL();
     } on FirebaseException catch (e) {
-      print(e.code);
       setState(() {
         urlTest = null;
         errorText = e.toString();
@@ -150,9 +157,6 @@ class _EditProfileState extends State<EditProfile> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 15,
-              ),
               StreamBuilder<DocumentSnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection('users')
@@ -178,80 +182,88 @@ class _EditProfileState extends State<EditProfile> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Stack(children: [
-                                  urlTest != ""
-                                      ? CircleAvatar(
-                                          child: Icon(
-                                            Icons.person,
-                                            color: Colors.green,
-                                            size: 40,
-                                          ),
-                                          foregroundImage: urlTest != "null"
-                                              ? Image.network(
-                                                  urlTest.toString(),
-                                                ).image
-                                              : null,
-                                          radius: 50,
-                                          backgroundColor: Colors.white12,
-                                        )
-                                      : CircleAvatar(
-                                          child: Icon(
-                                            Icons.person,
-                                            color: Colors.green,
-                                            size: 40,
-                                          ),
-                                          radius: 50,
-                                          backgroundColor: Colors.white,
-                                        ),
-                                  Positioned(
-                                    top: 73,
-                                    right: 5,
-                                    child: GestureDetector(
-                                      onTap: () async {
-                                        await getImage();
-                                        await uploadPicture(context
-                                                .read(authserviceProvider)
-                                                .getCurrentUserUID())
-                                            .whenComplete(() => showProfile(
-                                                (context
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xff65BFB8),
+                                      borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(10),
+                                          bottomRight: Radius.circular(10))),
+                                  child: Column(children: [
+                                    Stack(children: [
+                                      urlTest != ""
+                                          ? CircleAvatar(
+                                              child: Icon(
+                                                Icons.person,
+                                                color: Colors.brown,
+                                                size: 40,
+                                              ),
+                                              foregroundImage: urlTest != "null"
+                                                  ? Image.network(
+                                                      urlTest.toString(),
+                                                    ).image
+                                                  : null,
+                                              radius: 50,
+                                              backgroundColor: Colors.white12,
+                                            )
+                                          : CircleAvatar(
+                                              child: Icon(
+                                                Icons.person,
+                                                color: Colors.green,
+                                                size: 40,
+                                              ),
+                                              radius: 50,
+                                              backgroundColor: Colors.white,
+                                            ),
+                                      Positioned(
+                                        top: 73,
+                                        right: 5,
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            await getImage();
+                                            await uploadPicture(context
                                                     .read(authserviceProvider)
-                                                    .getCurrentUserUID())));
-                                      },
-                                      child: CircleAvatar(
-                                        radius: 12,
-                                        backgroundColor: Colors.blue,
-                                        child: Icon(
-                                          Icons.edit,
-                                          size: 15,
+                                                    .getCurrentUserUID())
+                                                .whenComplete(() => showProfile(
+                                                    (context
+                                                        .read(
+                                                            authserviceProvider)
+                                                        .getCurrentUserUID())));
+                                          },
+                                          child: CircleAvatar(
+                                            radius: 12,
+                                            backgroundColor: Colors.blue,
+                                            child: Icon(
+                                              Icons.edit,
+                                              size: 15,
+                                            ),
+                                          ),
                                         ),
                                       ),
+                                    ]),
+                                    SizedBox(
+                                      height: 13,
                                     ),
-                                  ),
-                                ]),
-                                SizedBox(
-                                  height: 13,
-                                ),
-                                Text(
-                                  fullname,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  verify ? "Organizer" : "Volunteer",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey,
-                                      fontSize: 15),
-                                ),
-                                SizedBox(
-                                  height: 20,
+                                    Text(
+                                      fullname,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      verify ? "Organizer" : "Volunteer",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey,
+                                          fontSize: 15),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                  ]),
                                 ),
                                 Expanded(
                                     child: Container(
@@ -337,7 +349,7 @@ class _EditProfileState extends State<EditProfile> {
                                         ],
                                       ),
                                       SizedBox(
-                                        height: 20,
+                                        height: 30,
                                       ),
                                       Align(
                                         alignment: Alignment.bottomRight,
@@ -358,9 +370,6 @@ class _EditProfileState extends State<EditProfile> {
                                                   msg:
                                                       "Please Input valid information");
                                             } else {
-                                              print(fullnameController.text);
-                                              print(emailController.text);
-                                              print(phoneNumberController.text);
                                               await context
                                                   .read(authserviceProvider)
                                                   .updateAcc(
@@ -375,19 +384,22 @@ class _EditProfileState extends State<EditProfile> {
                                                       context);
                                             }
                                           },
-                                          child: Container(
-                                            height: 50,
-                                            width: 100,
-                                            decoration: BoxDecoration(
-                                                color: Color(0xff65BFB8),
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5))),
-                                            child: Center(
-                                              child: Text(
-                                                "Update",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 15),
+                                          child: Center(
+                                            child: Container(
+                                              height: 50,
+                                              width: 130,
+                                              decoration: BoxDecoration(
+                                                  color: Color(0xff65BFB8),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(5))),
+                                              child: Center(
+                                                child: Text(
+                                                  "Save Changes",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 15),
+                                                ),
                                               ),
                                             ),
                                           ),

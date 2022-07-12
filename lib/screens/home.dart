@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,6 +38,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool isOrganizer = false;
   String _dropDownValue = 'Active';
   late final AnimationController _analyticsControllerAnimation;
+
+  String getRandomPicture() {
+    int pickedNumber = Random().nextInt(4);
+    switch (pickedNumber) {
+      case 1:
+        return 'assets/images/plant1.jpg';
+      case 2:
+        return 'assets/images/plant2.jpg';
+      case 3:
+        return 'assets/images/plant3.jpg';
+      case 4:
+        return 'assets/images/placeholder.jpg';
+      default:
+        return 'assets/images/placeholder.jpg';
+    }
+  }
 
   Stream<QuerySnapshot<Object?>>? getFliterCampaign() {
     if (_dropDownValue == 'Active') {
@@ -738,9 +755,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                               e.id,
                                                                         )));
                                                       }
-                                                    } catch (e) {
-                                                      print(e);
-                                                    }
+                                                    } catch (e) {}
                                                   },
                                                   child: FadeAnimation(
                                                       (1.0 +
@@ -1761,7 +1776,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     String? aydee = FirebaseAuth.instance.currentUser!.uid;
 
     double meterValue = rfund / tfund;
-
+    String imageUrl = getRandomPicture();
     int raisedFund = rfund;
     int totalFund = tfund;
     return Container(
@@ -1789,8 +1804,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         topLeft: Radius.circular(7.5),
                         topRight: Radius.circular(7.5)),
                     image: DecorationImage(
-                        image: AssetImage("assets/images/placeholder.jpg"),
-                        fit: BoxFit.cover)),
+                        image: AssetImage(imageUrl), fit: BoxFit.cover)),
               ),
               uid == aydee
                   ? Padding(

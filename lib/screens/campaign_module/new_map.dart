@@ -22,6 +22,7 @@ import 'package:sylviapp_project/providers/providers.dart';
 import 'package:latlong2/latlong.dart' as lt;
 
 import 'package:sylviapp_project/screens/campaign_module/join_donate.dart';
+import 'package:sylviapp_project/widgets/snackbar_widgets/custom_snackbar.dart';
 
 class MapCampaign extends StatefulWidget {
   const MapCampaign({Key? key}) : super(key: key);
@@ -522,7 +523,6 @@ class _MapCampaignState extends State<MapCampaign>
 
                                                                                               cntrler.move(lt.LatLng(latlng.latitude - 0.000, latlng.longitude), 16);
                                                                                             } else if (isPointValid == false) {
-                                                                                              print(isPointValid);
                                                                                               Fluttertoast.showToast(msg: "You cannot put campaign there");
                                                                                             }
                                                                                           } else {
@@ -1069,14 +1069,17 @@ class _MapCampaignState extends State<MapCampaign>
                       margin: EdgeInsets.all(5),
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                       decoration: BoxDecoration(
-                          color: Color(0xff65BFB8),
+                          color: Colors.black,
                           borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Center(child: Text('Show Volunteers'))),
+                      child: Center(
+                          child: Text(
+                        'Show Volunteers',
+                        style: TextStyle(color: Colors.white),
+                      ))),
                 ),
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      print(showActive);
                       showActive = !showActive;
                     });
                   },
@@ -1085,7 +1088,7 @@ class _MapCampaignState extends State<MapCampaign>
                       margin: EdgeInsets.all(5),
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                       decoration: BoxDecoration(
-                          color: Color(0xff65BFB8),
+                          color: Colors.redAccent,
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       child: Center(
                           child: Text(
@@ -1102,7 +1105,7 @@ class _MapCampaignState extends State<MapCampaign>
                       margin: EdgeInsets.all(5),
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                       decoration: BoxDecoration(
-                          color: Color(0xff65BFB8),
+                          color: Colors.blue,
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       child: Center(
                           child: Text(
@@ -1119,7 +1122,7 @@ class _MapCampaignState extends State<MapCampaign>
                       margin: EdgeInsets.all(5),
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                       decoration: BoxDecoration(
-                          color: Color(0xff65BFB8),
+                          color: Colors.yellowAccent,
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       child: Center(
                           child: Text(numberCompleted.toString() +
@@ -1175,8 +1178,11 @@ class _MapCampaignState extends State<MapCampaign>
                       toastLength: Toast.LENGTH_SHORT);
                 }
               } else {
-                Fluttertoast.showToast(
-                    msg: 'You are not an organizer, be an organizer first');
+                CustomSnackBar().showCustomSnackBar(
+                    context,
+                    Colors.deepOrange,
+                    'Apply as an organizer first',
+                    'You can create campaigns by being an organizer, to be one go to my account and get verified.');
               }
             },
             child: Container(
@@ -1810,9 +1816,8 @@ class _MapCampaignState extends State<MapCampaign>
                             finalRadius)
                         .then((value) {
                       context.read(authserviceProvider).deductInitialCampaign(
-                          context
-                              .read(authserviceProvider)
-                              .getCurrentUserUID(), context);
+                          context.read(authserviceProvider).getCurrentUserUID(),
+                          context);
                       showDialog(
                           barrierDismissible: false,
                           context: context,

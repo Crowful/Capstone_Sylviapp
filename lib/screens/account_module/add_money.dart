@@ -312,10 +312,6 @@ class _AddmoneyScreenState extends State<AddmoneyScreen> {
                 );
 
                 if (result != null) {
-                  print(result.paymentMethodNonce.description);
-                  print(result.paymentMethodNonce.nonce);
-                  print(result.deviceData);
-
                   final http.Response response = await http.post(Uri.tryParse(
                       '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}')!);
 
@@ -345,7 +341,6 @@ class _AddmoneyScreenState extends State<AddmoneyScreen> {
                         );
                   }
                 } else if (result == null) {
-                  print("Braintree Result is null");
                   Fluttertoast.showToast(
                       msg: "Something Went Wrong, Please Try Again later");
                 }

@@ -86,7 +86,6 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
         AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     _hide.forward();
     showProfile(widget.uidOfOrganizer);
-    print(urlTest2);
   }
 
   @override
@@ -422,12 +421,6 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                       now.day,
                                                                       now.hour,
                                                                       now.minute);
-                                                              print(result
-                                                                  .paymentMethodNonce
-                                                                  .description);
-                                                              print(result
-                                                                  .paymentMethodNonce
-                                                                  .nonce);
 
                                                               final http
                                                                       .Response
@@ -435,9 +428,6 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                   await http.post(
                                                                       Uri.tryParse(
                                                                           '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}')!);
-
-                                                              print(response
-                                                                  .body);
 
                                                               context.read(authserviceProvider).donateCampaign(
                                                                   widget
@@ -451,10 +441,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                                                       .getCurrentUserUID(),
                                                                   widget
                                                                       .uidOfOrganizer);
-                                                            } else {
-                                                              print(
-                                                                  "FAILED PAYMENT PROCESS");
-                                                            }
+                                                            } else {}
                                                           },
                                                           child: Column(
                                                             children: [

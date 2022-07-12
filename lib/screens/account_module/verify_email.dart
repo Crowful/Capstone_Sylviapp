@@ -120,7 +120,7 @@ class _VerifyEmailState extends State<VerifyEmail>
                   if (_getData != 'nothing') {
                     var _date = DateTime.parse(prefs.getString('lastPressed')!)
                         .add(Duration(minutes: 3));
-                    print(_date);
+
                     if (_date.isBefore(DateTime.now())) {
                       setState(() {
                         limitRequest = false;
@@ -143,8 +143,6 @@ class _VerifyEmailState extends State<VerifyEmail>
                           msg: "You can request again after 3 minutes");
                     }
                   } else {
-                    print('ediw wow');
-
                     if (limitRequest == false) {
                       context
                           .read(authserviceProvider)

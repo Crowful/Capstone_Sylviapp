@@ -44,8 +44,7 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
     mapController.animateCamera(u);
     LatLngBounds l1 = await c.getVisibleRegion();
     LatLngBounds l2 = await c.getVisibleRegion();
-    print(l1.toString());
-    print(l2.toString());
+
     if (l1.southwest.latitude == -90 || l2.southwest.latitude == -90)
       check(u, c);
   }
@@ -372,7 +371,6 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
               alignment: Alignment.bottomCenter,
               child: GestureDetector(
                 onTap: () async {
-                  print(deviceToken);
                   FirebaseFirestore.instance
                       .collection('users')
                       .doc(
@@ -870,9 +868,7 @@ class _CampaignMonitorVolunteerState extends State<CampaignMonitorVolunteer> {
                               builder: (context) => LayoutScreen()));
 
                       Fluttertoast.showToast(msg: "You left the campaign");
-                    } catch (e) {
-                      print(e.toString());
-                    }
+                    } catch (e) {}
                   },
                   child: Text(
                     "Yes",
