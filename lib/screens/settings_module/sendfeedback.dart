@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 
 class SendFeedbackScreen extends StatefulWidget {
@@ -13,7 +14,9 @@ class SendFeedbackScreen extends StatefulWidget {
   _SendFeedbackScreenState createState() => _SendFeedbackScreenState();
 }
 
-class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
+class _SendFeedbackScreenState extends State<SendFeedbackScreen>
+    with TickerProviderStateMixin {
+  late final AnimationController _feedbackAnimationController;
   TextEditingController _feedbackController = TextEditingController();
 
   String nameOfUser = "";
@@ -29,6 +32,8 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
         nameOfUser = value.get('fullname');
       });
     });
+
+    _feedbackAnimationController = AnimationController(vsync: this);
     super.initState();
   }
 
@@ -79,8 +84,14 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
                   fontWeight: FontWeight.bold,
                   fontSize: 25),
             ),
+            LottieBuilder.asset('assets/images/feedback.json',
+                controller: _feedbackAnimationController,
+                onLoaded: (composition) {
+              _feedbackAnimationController.duration = composition.duration;
+              _feedbackAnimationController.repeat();
+            }),
             Text(
-              "Send feedback to the application, limit of 100 characters only!",
+              "Send feedback to the application, any comments or suggestions would be entertain and be included in the future fixes and updates, limit of 100 characters only!",
               style: TextStyle(color: Colors.grey),
             ),
             SizedBox(

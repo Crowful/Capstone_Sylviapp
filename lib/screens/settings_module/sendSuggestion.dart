@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 
 class SendSuggestion extends StatefulWidget {
@@ -14,7 +15,9 @@ class SendSuggestion extends StatefulWidget {
   _SendSuggestionState createState() => _SendSuggestionState();
 }
 
-class _SendSuggestionState extends State<SendSuggestion> {
+class _SendSuggestionState extends State<SendSuggestion>
+    with TickerProviderStateMixin {
+  late final AnimationController _areaController;
   TextEditingController _suggestionController = TextEditingController();
   String nameOfUser = "";
 
@@ -29,7 +32,14 @@ class _SendSuggestionState extends State<SendSuggestion> {
         nameOfUser = value.get('fullname');
       });
     });
+    _areaController = AnimationController(vsync: this);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _areaController.dispose();
+    super.dispose();
   }
 
   @override
@@ -79,6 +89,22 @@ class _SendSuggestionState extends State<SendSuggestion> {
                   fontWeight: FontWeight.bold,
                   fontSize: 25),
             ),
+            SizedBox(
+              height: 5,
+            ),
+            Center(
+              child: LottieBuilder.asset(
+                'assets/images/area.json',
+                height: 250,
+                width: 250,
+                controller: _areaController,
+                onLoaded: (composition) {
+                  _areaController.duration = composition.duration;
+
+                  _areaController.repeat();
+                },
+              ),
+            ),
             Text(
               "Input the name of the forest that have the most deforestation activities. Sylviapp is automatically adjusting where the available forest to plant trees, however sylviapp is glad to hear some suggestions of the places you wanted to have in our application. ",
               style: TextStyle(
@@ -87,7 +113,7 @@ class _SendSuggestionState extends State<SendSuggestion> {
                   fontWeight: FontWeight.normal),
             ),
             SizedBox(
-              height: 10,
+              height: 20,
             ),
             Container(
                 padding: EdgeInsets.all(10),

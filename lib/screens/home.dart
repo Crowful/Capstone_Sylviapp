@@ -99,7 +99,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late Animation<double> _scaleAnimation =
       Tween<double>(begin: 1, end: 0.6).animate(widget.controller);
 
-  final PageController homePageController = PageController(initialPage: 0);
+  final PageController homePageController =
+      PageController(initialPage: 0, keepPage: true);
   @override
   void initState() {
     //
@@ -181,6 +182,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           child: Scaffold(
             body: Stack(children: [
               PageView(
+                  pageSnapping: true,
                   scrollDirection: Axis.horizontal,
                   controller: homePageController,
                   children: [firstHome(), secondHome(), thirdHome()]),
@@ -765,19 +767,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                   .length) /
                                                           4,
                                                       availableCampaign(
-                                                          uid: e['uid'],
-                                                          name: e[
-                                                              'campaign_name'],
-                                                          description:
-                                                              e['description'],
-                                                          rfund: e[
-                                                              'current_donations'],
-                                                          tfund:
-                                                              e['max_donation'],
-                                                          volunteerCurrent: e[
-                                                              'current_volunteers'],
-                                                          volunteerMax: e[
-                                                              'number_volunteers'])),
+                                                        uid: e['uid'],
+                                                        name:
+                                                            e['campaign_name'],
+                                                        description:
+                                                            e['description'],
+                                                        rfund: e[
+                                                            'current_donations'],
+                                                        tfund:
+                                                            e['max_donation'],
+                                                        volunteerCurrent: e[
+                                                            'current_volunteers'],
+                                                        volunteerMax: e[
+                                                            'number_volunteers'],
+                                                      )),
                                                 );
                                               }
                                             });
@@ -797,7 +800,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return SingleChildScrollView(
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: 1900,
+        height: 2100,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1086,8 +1089,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   }
                 }),
             Container(
-              height: 700,
-              padding: EdgeInsets.only(top: 100),
+              height: 765,
+              padding: EdgeInsets.only(top: 50),
               child: Column(children: [
                 Text(
                   'Leaderboard Joined',
@@ -1752,31 +1755,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget campaignDialog() {
-    return Dialog(
-      child: Container(
-        height: 20,
-        width: 20,
-        child: Center(
-          child: Text('sds'),
-        ),
-      ),
-    );
-  }
-
-  Widget availableCampaign({
-    String? name,
-    required String description,
-    required String uid,
-    required int rfund,
-    required int tfund,
-    required int volunteerCurrent,
-    required int volunteerMax,
-  }) {
+  Widget availableCampaign(
+      {String? name,
+      required String description,
+      required String uid,
+      required int rfund,
+      required int tfund,
+      required int volunteerCurrent,
+      required int volunteerMax}) {
     String? aydee = FirebaseAuth.instance.currentUser!.uid;
 
     double meterValue = rfund / tfund;
-    String imageUrl = getRandomPicture();
+
     int raisedFund = rfund;
     int totalFund = tfund;
     return Container(
@@ -1804,7 +1794,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         topLeft: Radius.circular(7.5),
                         topRight: Radius.circular(7.5)),
                     image: DecorationImage(
-                        image: AssetImage(imageUrl), fit: BoxFit.cover)),
+                        image: AssetImage(getRandomPicture()),
+                        fit: BoxFit.cover)),
               ),
               uid == aydee
                   ? Padding(

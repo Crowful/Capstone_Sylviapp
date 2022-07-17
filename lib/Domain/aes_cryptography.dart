@@ -11,7 +11,6 @@ class AESCryptography {
 
   decryptAES(enc.Encrypted text) {
     final decrypted = encrypter.decrypt(text, iv: iv).toString();
-    print(decrypted);
 
     return decrypted;
   }

@@ -18,6 +18,7 @@ import 'package:encrypt/encrypt.dart' as enc;
 import 'package:sylviapp_project/screens/account_module/add_money.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:sylviapp_project/translations/locale_keys.g.dart';
+import 'package:sylviapp_project/widgets/snackbar_widgets/custom_snackbar.dart';
 
 class AccountManagementScreen extends StatefulWidget {
   final String uid;
@@ -459,9 +460,12 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                           CupertinoDialogAction(
                                               onPressed: () async {
                                                 if (numberOfCampaigns > 0) {
-                                                  Fluttertoast.showToast(
-                                                      msg:
-                                                          'you have have campaigns to finish, you cannot delete your account');
+                                                  CustomSnackBar()
+                                                      .showCustomSnackBar(
+                                                          context,
+                                                          Color(0xff65BFB8),
+                                                          'You have Campaigns',
+                                                          'You cannot delete your account if you have campaigns created or ongoing. Sorry.');
                                                 } else {
                                                   showDialog(
                                                       context: context,

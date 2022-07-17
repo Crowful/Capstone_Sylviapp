@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class AboutUsScreen extends StatefulWidget {
   const AboutUsScreen({Key? key}) : super(key: key);
@@ -7,7 +8,22 @@ class AboutUsScreen extends StatefulWidget {
   _AboutUsScreenState createState() => _AboutUsScreenState();
 }
 
-class _AboutUsScreenState extends State<AboutUsScreen> {
+class _AboutUsScreenState extends State<AboutUsScreen>
+    with TickerProviderStateMixin {
+  late final AnimationController _forestAnimationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _forestAnimationController = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _forestAnimationController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -56,16 +72,29 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                   fontSize: 25),
             ),
             Text(
-              "Lorem ipsum dolor sit amet, consectetur.Lorem ipsum dolor sit amet, consectetur.Lorem ipsum dolor sit amet, consectetur.Lorem ipsum dolor sit amet, consectetur.",
+              'Sylviapp is a startup made by students in Technological Institute of the Philippines to solve the current problem of deforestation. ',
               style: TextStyle(color: Colors.grey),
               textAlign: TextAlign.justify,
             ),
             SizedBox(
               height: 20,
             ),
-            Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-              textAlign: TextAlign.justify,
+            LottieBuilder.asset(
+              'assets/images/forest.json',
+              controller: _forestAnimationController,
+              onLoaded: (composition) {
+                _forestAnimationController.duration = composition.duration;
+                _forestAnimationController.forward();
+              },
+            ),
+            Card(
+              child: Container(
+                margin: EdgeInsets.all(15),
+                child: Text(
+                  'Joshua Peralta, Alfie Tribaco, and Rheanne Ongmanchi are the three students who came up with the idea of Sylviapp. Deforestation is still relevant today despite of huge community of volunteers that have no solid platform to settle their manpower and produce help to the environment. Sylviapp offers map as visual representation of deforestation in few forests which is actually operated by the officials in other end.',
+                  textAlign: TextAlign.justify,
+                ),
+              ),
             )
           ],
         ),

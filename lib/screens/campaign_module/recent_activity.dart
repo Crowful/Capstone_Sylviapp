@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:skeletons/skeletons.dart';
 import 'package:sylviapp_project/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -81,7 +82,18 @@ class _RecentActivityState extends State<RecentActivity> {
                               .snapshots(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
-                              return CircularProgressIndicator();
+                              return Skeleton(
+                                  isLoading: true,
+                                  skeleton: SkeletonItem(
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height:
+                                          MediaQuery.of(context).size.height -
+                                              182,
+                                      child: Card(),
+                                    ),
+                                  ),
+                                  child: Text('content'));
                             } else if (snapshot.data!.size == 0) {
                               return Expanded(
                                 child: Container(
