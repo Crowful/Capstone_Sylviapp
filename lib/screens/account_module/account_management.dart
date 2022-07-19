@@ -443,77 +443,149 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                 : 0;
                             return GestureDetector(
                               onTap: () {
-                                showCupertinoDialog(
+                                showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return CupertinoAlertDialog(
-                                        title: Text(
-                                            "Are You sure you want to Delete your account?"),
-                                        content: Text(
-                                            "There's no turning back once this deletion is done."),
-                                        actions: [
-                                          CupertinoDialogAction(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text("no")),
-                                          CupertinoDialogAction(
-                                              onPressed: () async {
-                                                if (numberOfCampaigns > 0) {
-                                                  CustomSnackBar()
-                                                      .showCustomSnackBar(
-                                                          context,
-                                                          Color(0xff65BFB8),
-                                                          'You have Campaigns',
-                                                          'You cannot delete your account if you have campaigns created or ongoing. Sorry.');
-                                                } else {
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (context) {
-                                                        TextEditingController
-                                                            emailReAuthController =
-                                                            TextEditingController();
-                                                        TextEditingController
-                                                            passwordReAuthController =
-                                                            TextEditingController();
-                                                        return Container(
-                                                          margin: EdgeInsets
-                                                              .fromLTRB(50, 100,
-                                                                  50, 200),
-                                                          child: Card(
-                                                            child: Column(
-                                                              children: [
-                                                                TextField(
-                                                                  controller:
-                                                                      emailReAuthController,
-                                                                ),
-                                                                TextField(
-                                                                  controller:
-                                                                      passwordReAuthController,
-                                                                ),
-                                                                ElevatedButton(
-                                                                    onPressed:
-                                                                        () async {
-                                                                      await context.read(authserviceProvider).deleteAcc(
-                                                                          emailReAuthController
-                                                                              .text,
-                                                                          passwordReAuthController
-                                                                              .text,
-                                                                          context);
-                                                                    },
-                                                                    child: Text(
-                                                                        'Delete'))
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        );
-                                                      });
-                                                }
-                                              },
-                                              child: Text("yes")),
-                                        ],
-                                      );
+                                      return Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              20, 200, 20, 300),
+                                          width: 200,
+                                          height: 200,
+                                          child: Card(
+                                            child: Container(
+                                              margin: EdgeInsets.all(20),
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                      'Are you sure you want to delete your account?',
+                                                      style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  SizedBox(height: 10),
+                                                  Text(
+                                                      '''Note: You cannot delete your account if you're an organizer of current campaign, if not deleting your account cannot be undone.  ''',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w300,
+                                                          color: Colors.grey,
+                                                          fontSize: 15)),
+                                                  SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      Container(
+                                                        height: 50,
+                                                        width: 120,
+                                                        child: ElevatedButton(
+                                                            style: ButtonStyle(
+                                                                backgroundColor:
+                                                                    MaterialStateProperty
+                                                                        .all(Colors
+                                                                            .redAccent)),
+                                                            onPressed: () {},
+                                                            child:
+                                                                Text('Delete')),
+                                                      ),
+                                                      Container(
+                                                        height: 50,
+                                                        width: 120,
+                                                        child: ElevatedButton(
+                                                            style: ButtonStyle(
+                                                                backgroundColor:
+                                                                    MaterialStateProperty
+                                                                        .all(Color(
+                                                                            0xff65BFB8))),
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child:
+                                                                Text('Cancel')),
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ));
                                     });
+
+                                // showCupertinoDialog(
+                                //     context: context,
+                                //     builder: (BuildContext context) {
+                                //       return CupertinoAlertDialog(
+                                //         title: Text(
+                                //             "Are You sure you want to Delete your account?"),
+                                //         content: Text(
+                                //             "There's no turning back once this deletion is done."),
+                                //         actions: [
+                                //           CupertinoDialogAction(
+                                //               onPressed: () {
+                                //                 Navigator.pop(context);
+                                //               },
+                                //               child: Text("no")),
+                                //           CupertinoDialogAction(
+                                //               onPressed: () async {
+                                //                 if (numberOfCampaigns > 0) {
+                                //                   CustomSnackBar()
+                                //                       .showCustomSnackBar(
+                                //                           context,
+                                //                           Color(0xff65BFB8),
+                                //                           'You have Campaigns',
+                                //                           'You cannot delete your account if you have campaigns created or ongoing. Sorry.');
+                                //                 } else {
+                                //                   showDialog(
+                                //                       context: context,
+                                //                       builder: (context) {
+                                //                         TextEditingController
+                                //                             emailReAuthController =
+                                //                             TextEditingController();
+                                //                         TextEditingController
+                                //                             passwordReAuthController =
+                                //                             TextEditingController();
+                                //                         return Container(
+                                //                           margin: EdgeInsets
+                                //                               .fromLTRB(50, 100,
+                                //                                   50, 200),
+                                //                           child: Card(
+                                //                             child: Column(
+                                //                               children: [
+                                //                                 TextField(
+                                //                                   controller:
+                                //                                       emailReAuthController,
+                                //                                 ),
+                                //                                 TextField(
+                                //                                   controller:
+                                //                                       passwordReAuthController,
+                                //                                 ),
+                                //                                 ElevatedButton(
+                                //                                     onPressed:
+                                //                                         () async {
+                                //                                       await context.read(authserviceProvider).deleteAcc(
+                                //                                           emailReAuthController
+                                //                                               .text,
+                                //                                           passwordReAuthController
+                                //                                               .text,
+                                //                                           context);
+                                //                                     },
+                                //                                     child: Text(
+                                //                                         'Delete'))
+                                //                               ],
+                                //                             ),
+                                //                           ),
+                                //                         );
+                                //                       });
+                                //                 }
+                                //               },
+                                //               child: Text("yes")),
+                                //         ],
+                                //       );
+                                // });
                               },
                               child: Text('Delete Account',
                                   style: TextStyle(

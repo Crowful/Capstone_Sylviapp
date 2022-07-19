@@ -38,6 +38,12 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen>
   }
 
   @override
+  void dispose() {
+    _feedbackAnimationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
