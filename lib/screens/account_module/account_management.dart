@@ -464,7 +464,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                                               FontWeight.bold)),
                                                   SizedBox(height: 10),
                                                   Text(
-                                                      '''Note: You cannot delete your account if you're an organizer of current campaign, if not deleting your account cannot be undone.  ''',
+                                                      '''Note: You cannot delete your account if you're an organizer of current campaign, if not, deleting your account cannot be undone.  ''',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w300,
@@ -487,7 +487,108 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                                                     MaterialStateProperty
                                                                         .all(Colors
                                                                             .redAccent)),
-                                                            onPressed: () {},
+                                                            onPressed:
+                                                                () async {
+                                                              showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (contexto) {
+                                                                    bool
+                                                                        _confirmCredentialsError =
+                                                                        false;
+                                                                    TextEditingController
+                                                                        emailReAuthController =
+                                                                        TextEditingController();
+                                                                    TextEditingController
+                                                                        passwordReAuthController =
+                                                                        TextEditingController();
+                                                                    return StatefulBuilder(builder: ((BuildContext
+                                                                            context,
+                                                                        StateSetter
+                                                                            setState) {
+                                                                      return Container(
+                                                                        margin: EdgeInsets.fromLTRB(
+                                                                            50,
+                                                                            200,
+                                                                            50,
+                                                                            300),
+                                                                        child:
+                                                                            Card(
+                                                                          child:
+                                                                              Container(
+                                                                            margin:
+                                                                                EdgeInsets.all(10),
+                                                                            child:
+                                                                                Column(
+                                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                                              children: [
+                                                                                Text('Confirm Credentials', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+                                                                                SizedBox(
+                                                                                  height: 10,
+                                                                                ),
+                                                                                Align(alignment: Alignment.centerLeft, child: Text('Email')),
+                                                                                Container(
+                                                                                  decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.all(Radius.circular(10))),
+                                                                                  width: double.infinity - 10,
+                                                                                  height: 35,
+                                                                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                                                                  child: TextField(
+                                                                                    decoration: InputDecoration(enabledBorder: InputBorder.none, focusedBorder: InputBorder.none),
+                                                                                    controller: emailReAuthController,
+                                                                                  ),
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  height: 10,
+                                                                                ),
+                                                                                Align(alignment: Alignment.centerLeft, child: Text('Password')),
+                                                                                Container(
+                                                                                  decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.all(Radius.circular(10))),
+                                                                                  width: double.infinity - 10,
+                                                                                  height: 35,
+                                                                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                                                                  child: TextField(
+                                                                                    decoration: InputDecoration(enabledBorder: InputBorder.none, focusedBorder: InputBorder.none),
+                                                                                    controller: passwordReAuthController,
+                                                                                  ),
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  height: 10,
+                                                                                ),
+                                                                                Visibility(visible: _confirmCredentialsError, child: Align(alignment: Alignment.centerLeft, child: Text('Oops Invalid Input', style: TextStyle(color: Colors.red)))),
+                                                                                SizedBox(
+                                                                                  height: 10,
+                                                                                ),
+                                                                                Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                                                                                  ElevatedButton(
+                                                                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.redAccent)),
+                                                                                      onPressed: () async {
+                                                                                        if (emailReAuthController.text == '' && passwordReAuthController.text == '') {
+                                                                                          print('eto nangyayari');
+                                                                                          setState(() {
+                                                                                            _confirmCredentialsError = true;
+                                                                                          });
+                                                                                        } else {
+                                                                                          print('eto nangyayari 2');
+                                                                                          await context.read(authserviceProvider).deleteAcc(emailReAuthController.text, passwordReAuthController.text, context);
+                                                                                        }
+                                                                                      },
+                                                                                      child: Text('Delete')),
+                                                                                  ElevatedButton(
+                                                                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xff65BFB8))),
+                                                                                      onPressed: () {
+                                                                                        Navigator.pop(context);
+                                                                                      },
+                                                                                      child: Text('Cancel'))
+                                                                                ])
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      );
+                                                                    }));
+                                                                  });
+                                                            },
                                                             child:
                                                                 Text('Delete')),
                                                       ),
@@ -514,78 +615,6 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                             ),
                                           ));
                                     });
-
-                                // showCupertinoDialog(
-                                //     context: context,
-                                //     builder: (BuildContext context) {
-                                //       return CupertinoAlertDialog(
-                                //         title: Text(
-                                //             "Are You sure you want to Delete your account?"),
-                                //         content: Text(
-                                //             "There's no turning back once this deletion is done."),
-                                //         actions: [
-                                //           CupertinoDialogAction(
-                                //               onPressed: () {
-                                //                 Navigator.pop(context);
-                                //               },
-                                //               child: Text("no")),
-                                //           CupertinoDialogAction(
-                                //               onPressed: () async {
-                                //                 if (numberOfCampaigns > 0) {
-                                //                   CustomSnackBar()
-                                //                       .showCustomSnackBar(
-                                //                           context,
-                                //                           Color(0xff65BFB8),
-                                //                           'You have Campaigns',
-                                //                           'You cannot delete your account if you have campaigns created or ongoing. Sorry.');
-                                //                 } else {
-                                //                   showDialog(
-                                //                       context: context,
-                                //                       builder: (context) {
-                                //                         TextEditingController
-                                //                             emailReAuthController =
-                                //                             TextEditingController();
-                                //                         TextEditingController
-                                //                             passwordReAuthController =
-                                //                             TextEditingController();
-                                //                         return Container(
-                                //                           margin: EdgeInsets
-                                //                               .fromLTRB(50, 100,
-                                //                                   50, 200),
-                                //                           child: Card(
-                                //                             child: Column(
-                                //                               children: [
-                                //                                 TextField(
-                                //                                   controller:
-                                //                                       emailReAuthController,
-                                //                                 ),
-                                //                                 TextField(
-                                //                                   controller:
-                                //                                       passwordReAuthController,
-                                //                                 ),
-                                //                                 ElevatedButton(
-                                //                                     onPressed:
-                                //                                         () async {
-                                //                                       await context.read(authserviceProvider).deleteAcc(
-                                //                                           emailReAuthController
-                                //                                               .text,
-                                //                                           passwordReAuthController
-                                //                                               .text,
-                                //                                           context);
-                                //                                     },
-                                //                                     child: Text(
-                                //                                         'Delete'))
-                                //                               ],
-                                //                             ),
-                                //                           ),
-                                //                         );
-                                //                       });
-                                //                 }
-                                //               },
-                                //               child: Text("yes")),
-                                //         ],
-                                //       );
-                                // });
                               },
                               child: Text('Delete Account',
                                   style: TextStyle(
@@ -612,36 +641,108 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          showCupertinoDialog(
+                          showDialog(
                               context: context,
-                              builder: (BuildContext context) {
-                                return CupertinoAlertDialog(
-                                  title: Text(
-                                      "Are You sure you want to log out ?"),
-                                  content: Text(
-                                      "this will log out your account in this device"),
-                                  actions: [
-                                    CupertinoDialogAction(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("no")),
-                                    CupertinoDialogAction(
-                                        onPressed: () async {
-                                          await context
-                                              .read(authserviceProvider)
-                                              .signOut();
+                              builder: (context) {
+                                return Container(
+                                  margin: EdgeInsets.fromLTRB(30, 250, 30, 320),
+                                  child: Card(
+                                    child: Container(
+                                      margin: EdgeInsets.all(10),
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Are you sure you want to logout?',
+                                              style: TextStyle(
+                                                  fontSize: 21,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                                'this will log out your account to this device. Press yes if you want to log out and no to cancel.',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w300,
+                                                    color: Colors.grey)),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                ElevatedButton(
+                                                    style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .redAccent)),
+                                                    onPressed: () async {
+                                                      await context
+                                                          .read(
+                                                              authserviceProvider)
+                                                          .signOut();
 
-                                          await Navigator.of(context)
-                                              .pushNamedAndRemoveUntil(
-                                                  '/wrapperAuth',
-                                                  (Route<dynamic> route) =>
-                                                      false);
-                                        },
-                                        child: Text("yes")),
-                                  ],
+                                                      await Navigator.of(
+                                                              context)
+                                                          .pushNamedAndRemoveUntil(
+                                                              '/wrapperAuth',
+                                                              (Route<dynamic>
+                                                                      route) =>
+                                                                  false);
+                                                    },
+                                                    child: Text('logout')),
+                                                ElevatedButton(
+                                                    style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Color(
+                                                                    0xff65BFB8))),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text('cancel'))
+                                              ],
+                                            ),
+                                          ]),
+                                    ),
+                                  ),
                                 );
                               });
+                          // showCupertinoDialog(
+                          //     context: context,
+                          //     builder: (BuildContext context) {
+                          //       return CupertinoAlertDialog(
+                          //         title: Text(
+                          //             "Are You sure you want to log out ?"),
+                          //         content: Text(
+                          //             "this will log out your account in this device"),
+                          //         actions: [
+                          //           CupertinoDialogAction(
+                          //               onPressed: () {
+                          //                 Navigator.pop(context);
+                          //               },
+                          //               child: Text("no")),
+                          //           CupertinoDialogAction(
+                          //               onPressed: () async {
+                          //                 await context
+                          //                     .read(authserviceProvider)
+                          //                     .signOut();
+
+                          //                 await Navigator.of(context)
+                          //                     .pushNamedAndRemoveUntil(
+                          //                         '/wrapperAuth',
+                          //                         (Route<dynamic> route) =>
+                          //                             false);
+                          //               },
+                          //               child: Text("yes")),
+                          //         ],
+                          //       );
+                          //     });
                         },
                         child: Text(LocaleKeys.logout.tr(),
                             style: TextStyle(

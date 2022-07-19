@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/widgets/snackbar_widgets/custom_snackbar.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({Key? key}) : super(key: key);
@@ -15,13 +16,30 @@ class _ResetPasswordState extends State<ResetPassword> {
   TextEditingController verifyCurrentPasswordController =
       TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
+  bool fieldsAreValid = false;
 
   checkVerification() {
-    if (currentPasswordController.text ==
-        verifyCurrentPasswordController.text) {
-      return true;
+    if (currentPasswordController.text == '' &&
+        verifyCurrentPasswordController.text == '' &&
+        newPasswordController.text == '') {
+      CustomSnackBar().showCustomSnackBar(
+          context,
+          Colors.orange,
+          'Oops Something went wrong',
+          'Please make sure that all fields have input value, this error is because you input nothing to the fields please make sure all the fields have value');
     } else {
-      return false;
+      if (currentPasswordController.text !=
+          verifyCurrentPasswordController.text) {
+        CustomSnackBar().showCustomSnackBar(
+            context,
+            Colors.orange,
+            'Oops Something went wrong',
+            'the password not matched correctly, make sure you typed it correctly. the current password must be the same with the verified password field. ');
+      } else {
+        setState(() {
+          fieldsAreValid = true;
+        });
+      }
     }
   }
 
@@ -91,8 +109,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                         ),
                         Container(
                           child: TextField(
-                            style:
-                                TextStyle(color: Theme.of(context).cardColor),
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor),
                             controller: currentPasswordController,
                             decoration: InputDecoration(
                               prefixIcon: IconButton(
@@ -124,8 +142,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                         ),
                         Container(
                           child: TextField(
-                            style:
-                                TextStyle(color: Theme.of(context).cardColor),
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor),
                             controller: verifyCurrentPasswordController,
                             decoration: InputDecoration(
                               prefixIcon: IconButton(
@@ -157,8 +175,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                         ),
                         Container(
                           child: TextField(
-                            style:
-                                TextStyle(color: Theme.of(context).cardColor),
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor),
                             controller: newPasswordController,
                             decoration: InputDecoration(
                               prefixIcon: IconButton(
@@ -186,16 +204,14 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 style: ElevatedButton.styleFrom(
                                     primary: Color(0xff65BFB8)),
                                 onPressed: () async {
-                                  if (checkVerification() == true) {
+                                  checkVerification();
+                                  if (fieldsAreValid == true) {
                                     await context
                                         .read(authserviceProvider)
                                         .updatePassword(
                                             newPasswordController.text,
                                             context);
-                                  } else {
-                                    Fluttertoast.showToast(
-                                        msg: "INVALID PASSWORD INPUT");
-                                  }
+                                  } else {}
                                 },
                                 child: Text("Change Password"))),
                       ],
