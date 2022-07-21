@@ -82,6 +82,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
   @override
   void initState() {
     super.initState();
+
     _hide =
         AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     _hide.forward();
@@ -150,7 +151,7 @@ class _JoinDonateCampaignState extends State<JoinDonateCampaign>
                                             MediaQuery.of(context).size.height /
                                                 4.5,
                                         decoration: BoxDecoration(
-                                            color: Colors.red,
+                                            color: Colors.grey,
                                             image: DecorationImage(
                                                 fit: BoxFit.cover,
                                                 image: NetworkImage(

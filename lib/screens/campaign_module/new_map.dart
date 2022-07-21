@@ -123,6 +123,22 @@ class _MapCampaignState extends State<MapCampaign>
   final _streamControllered = StreamController<double>();
   Stream<double> get onZoomChangeded => _streamControllered.stream;
 
+  String getRandomPicture() {
+    int pickedNumber = Random().nextInt(4);
+    switch (pickedNumber) {
+      case 1:
+        return 'assets/images/plant1.jpg';
+      case 2:
+        return 'assets/images/plant2.jpg';
+      case 3:
+        return 'assets/images/plant3.jpg';
+      case 4:
+        return 'assets/images/placeholder.jpg';
+      default:
+        return 'assets/images/placeholder.jpg';
+    }
+  }
+
   void getBalance() {
     FirebaseFirestore.instance
         .collection('users')
@@ -1767,6 +1783,8 @@ class _MapCampaignState extends State<MapCampaign>
                 if (cityController.text == "" || addressController.text == "") {
                   Fluttertoast.showToast(msg: 'Please Complete Details');
                 } else {
+                  String campaignPicture = getRandomPicture();
+
                   DateTime now = new DateTime.now();
                   const _chars =
                       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
@@ -1813,7 +1831,8 @@ class _MapCampaignState extends State<MapCampaign>
                             currentVolunteers,
                             finalVolunteers,
                             value!,
-                            finalRadius)
+                            finalRadius,
+                            campaignPicture)
                         .then((value) {
                       context.read(authserviceProvider).deductInitialCampaign(
                           context.read(authserviceProvider).getCurrentUserUID(),

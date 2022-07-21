@@ -558,7 +558,8 @@ class AuthService extends ChangeNotifier {
       int currentVolunteers,
       int numberVolunteers,
       String deviceTokenOfOrganizer,
-      double campaignRadius) async {
+      double campaignRadius,
+      String campaignPicture) async {
     try {
       if (_loggedInUser == null) {
         _loggedInUser = FirebaseAuth.instance.currentUser;
@@ -584,7 +585,8 @@ class AuthService extends ChangeNotifier {
               currentVolunteers,
               numberVolunteers,
               deviceTokenOfOrganizer,
-              campaignRadius)
+              campaignRadius,
+              campaignPicture)
           .whenComplete(() =>
               Fluttertoast.showToast(msg: "Campaign Successfully Submitted"));
     } catch (e) {

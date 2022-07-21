@@ -91,8 +91,10 @@ class DatabaseService {
       int currentVolunteers,
       int numberVolunteers,
       String deviceTokenOfOrganizer,
-      double campaignRadius) async {
+      double campaignRadius,
+      String campaignPicture) async {
     return await campaignCollection.doc(campaignID).set({
+      'header_picture': campaignPicture,
       'campaignID': campaignID,
       'campaign_name': title,
       'description': description,

@@ -624,142 +624,131 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                 // ignore: unrelated_type_equality_checks
                                               } else {
                                                 return GestureDetector(
-                                                  onTap: () async {
-                                                    try {
-                                                      if (snapshotyarn.data!
-                                                              .get('uid') ==
-                                                          context
-                                                              .read(
-                                                                  authserviceProvider)
-                                                              .getCurrentUserUID()) {
-                                                        setState(() {
-                                                          isOrganizer = true;
-                                                        });
-                                                      } else {
-                                                        setState(() {
-                                                          isOrganizer = false;
-                                                        });
-
-                                                        if (snapshotedsd.data!
-                                                            .docs.isEmpty) {
+                                                    onTap: () async {
+                                                      try {
+                                                        if (snapshotyarn.data!
+                                                                .get('uid') ==
+                                                            context
+                                                                .read(
+                                                                    authserviceProvider)
+                                                                .getCurrentUserUID()) {
                                                           setState(() {
-                                                            isJoin = false;
+                                                            isOrganizer = true;
                                                           });
                                                         } else {
-                                                          snapshotedsd
-                                                              .data!.docs
-                                                              .forEach(
-                                                                  (element) {
-                                                            if (context
-                                                                    .read(
-                                                                        authserviceProvider)
-                                                                    .getCurrentUserUID() ==
-                                                                element.get(
-                                                                    "volunteerUID")) {
-                                                              setState(() {
-                                                                isJoin = true;
-                                                              });
-                                                            } else if (context
-                                                                    .read(
-                                                                        authserviceProvider)
-                                                                    .getCurrentUserUID() !=
-                                                                element.get(
-                                                                    "volunteerUID")) {
-                                                              setState(() {
-                                                                isJoin = false;
-                                                              });
-                                                            } else {
-                                                              setState(() {
-                                                                isJoin = false;
-                                                              });
-                                                            }
+                                                          setState(() {
+                                                            isOrganizer = false;
                                                           });
-                                                        }
-                                                      }
 
-                                                      if (isJoin == true &&
-                                                          isOrganizer ==
-                                                              false) {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        WrapperUsApproved(
-                                                                          campaignID:
-                                                                              e.id,
-                                                                          volunteerUID: context
-                                                                              .read(authserviceProvider)
-                                                                              .getCurrentUserUID(),
-                                                                        )));
-                                                      } else if (isJoin ==
-                                                              false &&
-                                                          isOrganizer ==
-                                                              false) {
-                                                        if (e.get(
-                                                                'inProgress') ==
-                                                            true) {
-                                                          CustomSnackBar()
-                                                              .showCustomSnackBar(
-                                                                  context,
-                                                                  Color(
-                                                                      0xff65BFB8),
-                                                                  "This Campaign is in Progress",
-                                                                  "This campaign is in progress, you can click other campaigns to donate or join. Thank you.");
-                                                        } else if (e.get(
-                                                                'isCompleted') ==
-                                                            true) {
-                                                          CustomSnackBar()
-                                                              .showCustomSnackBar(
-                                                                  context,
-                                                                  Color(
-                                                                      0xff65BFB8),
-                                                                  "This Campaign is already done",
-                                                                  "This campaign is not accepting any volunteer nor donation because the campaign was successfully done, Thank you.");
-                                                        } else {
+                                                          if (snapshotedsd.data!
+                                                              .docs.isEmpty) {
+                                                            setState(() {
+                                                              isJoin = false;
+                                                            });
+                                                          } else {
+                                                            snapshotedsd
+                                                                .data!.docs
+                                                                .forEach(
+                                                                    (element) {
+                                                              if (context
+                                                                      .read(
+                                                                          authserviceProvider)
+                                                                      .getCurrentUserUID() ==
+                                                                  element.get(
+                                                                      "volunteerUID")) {
+                                                                setState(() {
+                                                                  isJoin = true;
+                                                                });
+                                                              } else if (context
+                                                                      .read(
+                                                                          authserviceProvider)
+                                                                      .getCurrentUserUID() !=
+                                                                  element.get(
+                                                                      "volunteerUID")) {
+                                                                setState(() {
+                                                                  isJoin =
+                                                                      false;
+                                                                });
+                                                              } else {
+                                                                setState(() {
+                                                                  isJoin =
+                                                                      false;
+                                                                });
+                                                              }
+                                                            });
+                                                          }
+                                                        }
+
+                                                        if (isJoin == true &&
+                                                            isOrganizer ==
+                                                                false) {
                                                           Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
                                                                   builder:
                                                                       (context) =>
-                                                                          JoinDonateCampaign(
+                                                                          WrapperUsApproved(
+                                                                            campaignID:
+                                                                                e.id,
+                                                                            volunteerUID:
+                                                                                context.read(authserviceProvider).getCurrentUserUID(),
+                                                                          )));
+                                                        } else if (isJoin ==
+                                                                false &&
+                                                            isOrganizer ==
+                                                                false) {
+                                                          if (e.get(
+                                                                  'inProgress') ==
+                                                              true) {
+                                                            CustomSnackBar().showCustomSnackBar(
+                                                                context,
+                                                                Color(
+                                                                    0xff65BFB8),
+                                                                "This Campaign is in Progress",
+                                                                "This campaign is in progress, you can click other campaigns to donate or join. Thank you.");
+                                                          } else if (e.get(
+                                                                  'isCompleted') ==
+                                                              true) {
+                                                            CustomSnackBar().showCustomSnackBar(
+                                                                context,
+                                                                Color(
+                                                                    0xff65BFB8),
+                                                                "This Campaign is already done",
+                                                                "This campaign is not accepting any volunteer nor donation because the campaign was successfully done, Thank you.");
+                                                          } else {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            JoinDonateCampaign(
+                                                                              uidOfCampaign: e.id,
+                                                                              uidOfOrganizer: e.get("uid"),
+                                                                              nameOfCampaign: e.get("campaign_name"),
+                                                                              city: e.get("city"),
+                                                                              currentFund: e.get("current_donations"),
+                                                                              currentVolunteer: e.get("current_volunteers"),
+                                                                              totalVolunteer: e.get("number_volunteers"),
+                                                                              maxFund: e.get("max_donation"),
+                                                                              address: e.get("address"),
+                                                                              description: e.get("description"),
+                                                                            )));
+                                                          }
+                                                        } else if (isOrganizer ==
+                                                            true) {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          CampaignMonitorOrganizer(
                                                                             uidOfCampaign:
                                                                                 e.id,
-                                                                            uidOfOrganizer:
-                                                                                e.get("uid"),
-                                                                            nameOfCampaign:
-                                                                                e.get("campaign_name"),
-                                                                            city:
-                                                                                e.get("city"),
-                                                                            currentFund:
-                                                                                e.get("current_donations"),
-                                                                            currentVolunteer:
-                                                                                e.get("current_volunteers"),
-                                                                            totalVolunteer:
-                                                                                e.get("number_volunteers"),
-                                                                            maxFund:
-                                                                                e.get("max_donation"),
-                                                                            address:
-                                                                                e.get("address"),
-                                                                            description:
-                                                                                e.get("description"),
                                                                           )));
                                                         }
-                                                      } else if (isOrganizer ==
-                                                          true) {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        CampaignMonitorOrganizer(
-                                                                          uidOfCampaign:
-                                                                              e.id,
-                                                                        )));
-                                                      }
-                                                    } catch (e) {}
-                                                  },
-                                                  child: FadeAnimation(
+                                                      } catch (e) {}
+                                                    },
+                                                    child: FadeAnimation(
                                                       (1.0 +
                                                               snapshot
                                                                   .data!
@@ -767,21 +756,27 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                   .length) /
                                                           4,
                                                       availableCampaign(
-                                                        uid: e['uid'],
-                                                        name:
-                                                            e['campaign_name'],
-                                                        description:
-                                                            e['description'],
-                                                        rfund: e[
-                                                            'current_donations'],
-                                                        tfund:
-                                                            e['max_donation'],
-                                                        volunteerCurrent: e[
-                                                            'current_volunteers'],
-                                                        volunteerMax: e[
-                                                            'number_volunteers'],
-                                                      )),
-                                                );
+                                                          uid: e['uid'],
+                                                          name: e[
+                                                              'campaign_name'],
+                                                          description:
+                                                              e['description'],
+                                                          rfund: e[
+                                                              'current_donations'],
+                                                          tfund:
+                                                              e['max_donation'],
+                                                          volunteerCurrent: e[
+                                                              'current_volunteers'],
+                                                          volunteerMax: e[
+                                                              'number_volunteers'],
+                                                          campaignPicture: e
+                                                                  .data()
+                                                                  .toString()
+                                                                  .contains(
+                                                                      'header_picture')
+                                                              ? e['header_picture']
+                                                              : 'assets/images/placeholder.jpg'),
+                                                    ));
                                               }
                                             });
                                       }
@@ -1689,29 +1684,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                 }
                                               },
                                               child: FadeAnimation(
-                                                  (1.0 +
-                                                          snapshot.data!.docs
-                                                              .length) /
+                                                  (1.0 + snapshot.data!.docs.length) /
                                                       4,
                                                   availableCampaign(
-                                                    uid: snapshoteds.data!
-                                                        .get("uid"),
-                                                    name: snapshoteds.data!
-                                                        .get("campaign_name"),
-                                                    description: snapshoteds
-                                                        .data!
-                                                        .get("description"),
-                                                    rfund: snapshoteds.data!.get(
-                                                        "current_donations"),
-                                                    tfund: snapshoteds.data!
-                                                        .get("max_donation"),
-                                                    volunteerCurrent:
-                                                        snapshoteds.data!.get(
-                                                            "current_volunteers"),
-                                                    volunteerMax:
-                                                        snapshoteds.data!.get(
-                                                            "number_volunteers"),
-                                                  )));
+                                                      uid: snapshoteds.data!
+                                                          .get("uid"),
+                                                      name: snapshoteds.data!
+                                                          .get("campaign_name"),
+                                                      description: snapshoteds.data!
+                                                          .get("description"),
+                                                      rfund: snapshoteds.data!.get(
+                                                          "current_donations"),
+                                                      tfund: snapshoteds.data!
+                                                          .get("max_donation"),
+                                                      volunteerCurrent: snapshoteds.data!.get(
+                                                          "current_volunteers"),
+                                                      volunteerMax: snapshoteds.data!.get(
+                                                          "number_volunteers"),
+                                                      campaignPicture: e
+                                                              .data()
+                                                              .toString()
+                                                              .contains('header_picture')
+                                                          ? e['header_picture']
+                                                          : 'assets/images/placeholder.jpg')));
                                         } else {
                                           return Center(
                                             child: Container(
@@ -1762,7 +1757,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       required int rfund,
       required int tfund,
       required int volunteerCurrent,
-      required int volunteerMax}) {
+      required int volunteerMax,
+      required String campaignPicture}) {
     String? aydee = FirebaseAuth.instance.currentUser!.uid;
 
     double meterValue = rfund / tfund;
@@ -1794,8 +1790,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         topLeft: Radius.circular(7.5),
                         topRight: Radius.circular(7.5)),
                     image: DecorationImage(
-                        image: AssetImage(getRandomPicture()),
-                        fit: BoxFit.cover)),
+                        image: AssetImage(campaignPicture), fit: BoxFit.cover)),
               ),
               uid == aydee
                   ? Padding(

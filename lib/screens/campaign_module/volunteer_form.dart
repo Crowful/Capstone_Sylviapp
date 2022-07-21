@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sylviapp_project/Domain/wrapperisApproved.dart';
 import 'package:sylviapp_project/providers/providers.dart';
+import 'package:sylviapp_project/widgets/snackbar_widgets/custom_snackbar.dart';
 
 // ignore: must_be_immutable
 class VolunteerFormScreen extends StatefulWidget {
@@ -130,6 +131,7 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
             margin: EdgeInsets.fromLTRB(15, 20, 15, 0),
             child: Text(
               "As a Volunteer you need to submit the following in this form, also, you need to consider to bring the following safety gears and essentials items during the campaigns",
+              textAlign: TextAlign.justify,
             ),
           ),
           Row(children: [
@@ -197,6 +199,7 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
             margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
             child: Text(
               "The following are the checklist you need to have in order to join this campaign, if you don't have any of this you can't join this campaign unless you complete the safety checklist of this campaign.",
+              textAlign: TextAlign.justify,
               style: TextStyle(color: Colors.grey),
             ),
           ),
@@ -271,11 +274,14 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
             )
           ]),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
             width: 350,
             child: Text(
-              "By Clicking the Submit Button you automatically accept the terms and conditions in this campaign, I will plant keme and I will follow the rules on this campaign.",
-              style: TextStyle(color: Colors.red[400]),
+              "By Clicking the Submit Button you automatically accept the terms and conditions in this campaign, guidelines and rules must be followed.",
+              textAlign: TextAlign.justify,
+              style: TextStyle(
+                color: Colors.grey,
+              ),
             ),
           ),
           Container(
@@ -284,23 +290,34 @@ class _VolunteerFormScreenState extends State<VolunteerFormScreen> {
               margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
               child: ElevatedButton(
                 onPressed: () async {
-                  if (_imageOfMed == null) {
-                    Fluttertoast.showToast(
-                        msg: "Please Upload Medical Picture");
+                  if (_imageOfMed == null && _imageOfVac == null) {
+                    CustomSnackBar().showCustomSnackBar(
+                        context,
+                        Colors.deepOrangeAccent,
+                        'Upload Med/Vac Picture',
+                        'Vacinnation/Medical information is important to submit. this will serve as your pass for the safety of campaign');
                   } else if (_imageOfVac == null) {
-                    Fluttertoast.showToast(
-                        msg: "Please Upload Vaccination Picture");
-                  } else if (_imageOfMed == null && _imageOfVac == null) {
-                    Fluttertoast.showToast(
-                        msg: "Please submit required pictures");
+                    CustomSnackBar().showCustomSnackBar(
+                        context,
+                        Colors.deepOrangeAccent,
+                        'Upload Vaccination Picture',
+                        'Vacinnation information is important to submit. this will serve as your pass if you are safe to do a campaign with other volunteers.');
+                  } else if (_imageOfMed == null) {
+                    CustomSnackBar().showCustomSnackBar(
+                        context,
+                        Colors.deepOrangeAccent,
+                        'Upload Medical Picture',
+                        'Medical information about your health is important to submit. this will serve as your pass if you are capable to do a campaign.');
                   } else if (isHaveBottledWater == false ||
                       isHaveFaceMaskandShield == false ||
                       isHaveGloves == false ||
                       isHaveMobilePhone == false ||
                       isHaveProperClothes == false) {
-                    Fluttertoast.showToast(
-                        msg:
-                            "you're not eligible for this campaign because you did not met the following safety gears");
+                    CustomSnackBar().showCustomSnackBar(
+                        context,
+                        Colors.deepOrangeAccent,
+                        'You are not eligible to join',
+                        '''you're not eligible to join for this campaign because you did not met the following safety gears''');
                   } else if (_imageOfMed != null &&
                       _imageOfVac != null &&
                       isHaveBottledWater == true &&
